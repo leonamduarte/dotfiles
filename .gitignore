@@ -1,0 +1,36 @@
+# Ignora TUDO no diretório .config
+/*
+# Exceto estas pastas (e seus conteúdos)
+!.config/
+# Permite arquivos específicos na raiz
+!.zshrc
+!.gitignore
+# ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
+.config/*
+# shell
+!.config/fish/
+!.config/zsh/
+# terminal
+!.config/alacritty/
+!.config/kitty/
+# window managers
+!.config/polybar/
+!.config/qtile/
+!.config/rofi/
+!.config/picom/
+# editors
+!.config/emacs/
+!.config/doom/
+!.config/nvim/
+!.config/neovide/
+!.config/astronvim/
+!.config/lazynvim/
+!.config/nvchad/
+# general
+!.config/autostart/
+!.local/share/fonts/
+!.fonts/
+*Zone.Identifier*
+# windows stuff
+!.doom.d/
+!.emacs.d/
