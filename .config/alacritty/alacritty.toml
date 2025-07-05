@@ -1,0 +1,49 @@
+[colors.normal]
+black = "#282a36"
+blue = "#6272a4"
+cyan = "#8be9fd"
+green = "#50fa7b"
+magenta = "#bd93f9"
+red = "#ff5555"
+white = "#ff79c6"
+yellow = "#f1fa8c"
+
+[colors.primary]
+background = "#282a36"
+foreground = "#f8f8f2"
+
+[font]
+size = 12.0
+
+[font.bold]
+family = "MesloLGS Nerd Font"
+style = "Bold"
+
+[font.bold_italic]
+family = "MesloLGS Nerd Font"
+style = "Bold Italic"
+
+[font.italic]
+family = "MesloLGS Nerd Font"
+style = "Italic"
+
+[font.normal]
+family = "MesloLGS Nerd Font"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "F11"
+
+[scrolling]
+history = 50000
+
+[window]
+opacity = 0.9
+startup_mode = "Maximized" # Corrigido para "Maximized" (com 'z')
+decorations = "None"       # Correção ortográfica
+
+# [terminal]
+# [terminal.shell]
+# program = "/usr/bin/zsh"
+# args = []
