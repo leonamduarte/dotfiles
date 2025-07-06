@@ -109,10 +109,10 @@ return {
       -- vim.cmd([[colorscheme tokyodark]])
     end,
   },
-  {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "rose-pine-moon",
-    },
-  },
+  -- {
+  --  "LazyVim/LazyVim",
+  -- opts = {
+  --    colorscheme = "rose-pine-moon",
+  -- },
+  --},
 }

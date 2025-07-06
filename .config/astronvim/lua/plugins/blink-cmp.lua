@@ -25,7 +25,7 @@ return {
     -- C-k: Toggle signature help (if signature.enabled = true)
     --
     -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = "default", ["<C-Z>"] = { "accept", "fallback" } },
+    keymap = { preset = "default", ["<C-F>"] = { "accept", "fallback" } },
 
     appearance = {
       -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -74,9 +74,10 @@ return {
           name = "LSP",
           module = "blink.cmp.sources.lsp",
           transform_items = function(_, items)
-            return vim.tbl_filter(function(item)
-              return item.kind ~= require("blink.cmp.types").CompletionItemKind.Keyword
-            end, items)
+            return vim.tbl_filter(
+              function(item) return item.kind ~= require("blink.cmp.types").CompletionItemKind.Keyword end,
+              items
+            )
           end,
         },
       },
