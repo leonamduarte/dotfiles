@@ -113,6 +113,7 @@ alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
 alias clone='git clone'
 alias cddev='cd /run/media/lm/dev/'
+alias gitr='git remote set-url origin'
 # ------------------------------
 # doom aliases 
 # ------------------------------
