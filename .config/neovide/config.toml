@@ -15,7 +15,8 @@ vsync = true
 wsl = false
 
 [font]
-normal =  "BlexMono Nerd Font Mono"
+# normal =  "BlexMono Nerd Font Mono"
+normal =  "Hack Nerd Font Mono"
 size = 12.0
 
 [box-drawing]
