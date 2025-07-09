@@ -16,8 +16,8 @@ wsl = false
 
 [font]
 # normal =  "BlexMono Nerd Font Mono"
-normal =  "Hack Nerd Font Mono"
-size = 12.0
+normal =  "JetBrainsMono Nerd Font Mono"
+size = 11.0
 
 [box-drawing]
 # "font-glyph", "native" or "selected-native"
