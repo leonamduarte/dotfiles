@@ -32,5 +32,5 @@
 !.fonts/
 *Zone.Identifier*
 # windows stuff
-!.doom.d/
-!.emacs.d/
+# !.doom.d/
+# !.emacs.d/
