@@ -57,7 +57,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 	desc = "Highlight yank",
 })
-vim.cmd("colorscheme astrotheme")
+vim.cmd("colorscheme tokyonight")
 -- ----------------
 -- neovide configs
 -- ----------------
