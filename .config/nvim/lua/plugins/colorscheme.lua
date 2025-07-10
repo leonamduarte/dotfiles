@@ -192,41 +192,53 @@ return {
 			plugins = { -- Allows for individual plugin overrides using plugin name and value from above.
 				["bufferline.nvim"] = false,
 			},
-
-			-- palettes = {
-			-- 	global = { -- Globally accessible palettes, theme palettes take priority.
-			-- 		my_grey = "#ebebeb",
-			-- 		my_color = "#ffffff",
-			-- 	},
-			-- 	astrodark = { -- Extend or modify astrodarks palette colors
-			-- 		ui = {
-			-- 			red = "#800010", -- Overrides astrodarks red UI color
-			-- 			accent = "#CC83E3", -- Changes the accent color of astrodark.
-			-- 		},
-			-- 		syntax = {
-			-- 			cyan = "#800010", -- Overrides astrodarks cyan syntax color
-			-- 			comments = "#CC83E3", -- Overrides astrodarks comment color.
-			-- 		},
-			-- 		my_color = "#000000", -- Overrides global.my_color
-			-- 	},
-			-- },
-			--
-			-- highlights = {
-			-- 	global = { -- Add or modify hl groups globally, theme specific hl groups take priority.
-			-- 		modify_hl_groups = function(hl, c)
-			-- 			hl.PluginColor4 = { fg = c.my_grey, bg = c.none }
-			-- 		end,
-			-- 		["@String"] = { fg = "#ff00ff", bg = "NONE" },
-			-- 	},
-			-- 	astrodark = {
-			-- 		-- first parameter is the highlight table and the second parameter is the color palette table
-			-- 		modify_hl_groups = function(hl, c) -- modify_hl_groups function allows you to modify hl groups,
-			-- 			hl.Comment.fg = c.my_color
-			-- 			hl.Comment.italic = true
-			-- 		end,
-			-- 		["@String"] = { fg = "#ff00ff", bg = "NONE" },
-			-- 	},
-			-- },
+		},
+	},
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = { -- use the night style
+			style = "storm",
+			-- disable italic for functions
+			styles = {
+				functions = {},
+			},
+			-- Change the "hint" color to the "orange" color, and make the "error" color bright red
+			on_colors = function(colors)
+				colors.hint = colors.orange
+				colors.error = "#ff0000"
+			end,
+			on_highlights = function(hl, c)
+				local prompt = "#2d3149"
+				hl.TelescopeNormal = {
+					bg = c.bg_dark,
+					fg = c.fg_dark,
+				}
+				hl.TelescopeBorder = {
+					bg = c.bg_dark,
+					fg = c.bg_dark,
+				}
+				hl.TelescopePromptNormal = {
+					bg = prompt,
+				}
+				hl.TelescopePromptBorder = {
+					bg = prompt,
+					fg = prompt,
+				}
+				hl.TelescopePromptTitle = {
+					bg = prompt,
+					fg = prompt,
+				}
+				hl.TelescopePreviewTitle = {
+					bg = c.bg_dark,
+					fg = c.bg_dark,
+				}
+				hl.TelescopeResultsTitle = {
+					bg = c.bg_dark,
+					fg = c.bg_dark,
+				}
+			end,
 		},
 	},
 }
