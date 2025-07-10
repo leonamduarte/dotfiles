@@ -1,8 +1,10 @@
 vim.keymap.set("n", "-", "<cmd>Oil --float<CR>", { desc = "Open Parent Directory in Oil Float Mode" })
-vim.keymap.set("n", "<leader>Ls", "<cmd>Lazy sync<CR>", { desc = "Open Lazy Sync" })
-vim.keymap.set("n", "<leader>Lu", "<cmd>Lazy update<CR>", { desc = "Open Lazy Update" })
-vim.keymap.set("n", "<leader>Li", "<cmd>Lazy install<CR>", { desc = "Open Lazy" })
+vim.keymap.set("n", "<leader>ls", "<cmd>Lazy sync<CR>", { desc = "Open [L]azy [S]ync" })
+vim.keymap.set("n", "<leader>lu", "<cmd>Lazy update<CR>", { desc = "Open [L]azy [U]pdate" })
+vim.keymap.set("n", "<leader>li", "<cmd>Lazy install<CR>", { desc = "Open Lazy" })
 vim.keymap.set("n", "<leader>h", "<cmd>noh<CR>", { desc = "Unselect search" })
+vim.keymap.set("n", "<leader>l", "", { desc = "[l]eo keymaps" })
+vim.keymap.set("n", "<leader>ld", "", { desc = "[l]eo [D]irectory" })
 
 vim.keymap.set("n", "gl", function()
 	vim.diagnostic.open_float()
