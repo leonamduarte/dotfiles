@@ -5,6 +5,7 @@ vim.keymap.set("n", "<leader>li", "<cmd>Lazy install<CR>", { desc = "Open Lazy" 
 vim.keymap.set("n", "<leader>h", "<cmd>noh<CR>", { desc = "Unselect search" })
 vim.keymap.set("n", "<leader>l", "", { desc = "[l]eo keymaps" })
 vim.keymap.set("n", "<leader>ld", "", { desc = "[l]eo [D]irectory" })
+vim.keymap.set("n", "<leader>te", "<cmd>Neotree toggle<cr>", { desc = "[T]oggle N[e]otree" })
 
 vim.keymap.set("n", "gl", function()
 	vim.diagnostic.open_float()
