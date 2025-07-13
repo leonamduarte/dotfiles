@@ -13,6 +13,7 @@
 # terminal
 !.config/alacritty/
 !.config/kitty/
+!.config/ghostty/
 # window managers
 !.config/polybar/
 !.config/qtile/

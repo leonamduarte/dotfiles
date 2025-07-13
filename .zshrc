@@ -10,7 +10,7 @@ fi
 # PATHS
 # ------------------------------
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$PATH"
-
+export PATH="$HOME/.cargo/bin:$PATH"
 # ------------------------------
 # OH-MY-ZSH
 # ------------------------------
@@ -106,8 +106,13 @@ alias dsrc='dnf search'
 alias fsrc='flatpak search'
 alias fins='flatpak install -y'
 alias upds='~/.config/autostart/xinputI3.sh'
+<<<<<<< HEAD
 alias update='/run/media/lm/dev/scripts/0-fedora/update.sh'
 alias limpao='/run/media/lm/dev/scripts/2-arch/update-clean-arch.sh'
+=======
+alias update='/run/media/lm/dev/gitlab/scripts/0-fedora/update.sh'
+alias limpao='/run/media/lm/dev/scripts/arch/update-clean-arch.sh'
+>>>>>>> 3afcc31 (preparando para usar stow para criar um symlink com meus dotfiles)
 alias cdg='cd .config'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -185,3 +190,7 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 # ------------------------------
 # FIM
 # ------------------------------
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
