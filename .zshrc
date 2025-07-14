@@ -69,6 +69,7 @@ alias gs='git status'
 alias gp='git push'
 alias gl='git pull'
 alias v='nvim'
+alias vim='nvim'
 
 # ------------------------------
 # P10K CONFIG (opcional)
@@ -135,6 +136,7 @@ alias naula='nvim /run/media/lm/dev/maisPraTi/'
 # ------------------------------
 alias nkitty='nvim ~/.config/kitty/kitty.conf'
 alias nalac='nvim ~/.config/alacritty/alacritty.toml'
+alias ngtty='nvim ~/.config/ghostty/config'
 alias nfish='nvim ~/.config/fish/config.fish'
 alias nqtile='nvim ~/.config/qtile/config.py'
 alias nzsh='nvim ~/.zshrc'
