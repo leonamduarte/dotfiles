@@ -5,8 +5,7 @@ return {
   ---@module 'blink.cmp'
   ---@type blink.cmp.Config
   opts = {
-    keymap = { preset = "default", ["<C-F>"] = { "accept", "fallback" } },
-
+    keymap = { preset = "default", ["<TAB>"] = { "accept", "fallback" } },
     appearance = {
       nerd_font_variant = "mono",
     },

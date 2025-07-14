@@ -5,7 +5,7 @@ return { -- Para usar Eldritch:
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "carbonfox",
+      colorscheme = "cyberdream",
     },
   },
 }
