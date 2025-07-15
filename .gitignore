@@ -1,38 +1,50 @@
 # Ignora TUDO no diretório .config
 /*
+
 # Exceto estas pastas (e seus conteúdos)
 !.config/
+
 # Permite arquivos específicos na raiz
 !.zshrc
 !.gitignore
+
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
-# shell
-!.config/fish/
-!.config/zsh/
-# terminal
+!.config/ags/
 !.config/alacritty/
-!.config/kitty/
+!.config/astronvim/
+!.config/autostart/
+!.config/btop/
+!.config/cava/
+!.config/dconf/
+!.config/doom/
+!.config/emacs/
+!.config/fastfetch/
+!.config/fish/
 !.config/ghostty/
-!.config/wezterm/
-# window managers
+!.config/gtk-3.0/
+!.config/hypr/
+!.config/kitty/
+!.config/kvantum/
+!.config/lazynvim/
+!.config/neovide/
+!.config/nvchad/
+!.config/nvim/
+!.config/picom/
 !.config/polybar/
+!.config/qt5ct/
+!.config/qt6ct/
 !.config/qtile/
 !.config/rofi/
-!.config/picom/
-# editors
-!.config/emacs/
-!.config/doom/
-!.config/nvim/
-!.config/neovide/
-!.config/astronvim/
-!.config/lazynvim/
-!.config/nvchad/
-# general
-!.config/autostart/
+!.config/swappy/
+!.config/swaync/
+!.config/wallust/
+!.config/waybar/
+!.config/wezterm/
+!.config/wlogout/
+!mimeapps.list
+
+# arquivos ou pastas fora do .config
 !.local/share/fonts/
 !.fonts/
 *Zone.Identifier*
-# windows stuff
-# !.doom.d/
-# !.emacs.d/

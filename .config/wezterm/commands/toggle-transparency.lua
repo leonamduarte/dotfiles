@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
-local constants = require("constatns")
+local constants = require("constants")
 
-local commands = {
+local toggle_transparency_command = {
 
 	brief = "Toggle terminal transparency",
 	icon = "md_circle_opacity",
@@ -15,8 +15,8 @@ local commands = {
 			overrides.window_background_image = constants.bg_image
 		end
 
-		window.get_config_overrides(overrides)
+		window:get_config_overrides(overrides)
 	end),
 }
 
-return commands
+return toggle_transparency_command

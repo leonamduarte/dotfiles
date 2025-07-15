@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
-local constants = require("constants")
--- local commands = require("commands")
 local config = wezterm.config_builder()
+local constants = require("constants")
+local toggle_transparency_command = require("commands.toggle-transparency")
 
 -- Font settings
 config.font_size = 12
@@ -31,8 +31,10 @@ config.prefer_egl = true
 
 -- Custom commands
 
--- wezterm.on("augment-command-palette", function()
--- 	return commands
--- end)
+wezterm.on("augment-command-palette", function()
+	return {
+		toggle_transparency = toggle_transparency_command,
+	}
+end)
 
 return config
