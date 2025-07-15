@@ -1,0 +1,7 @@
+[Default Applications]
+application/x-shellscript=org.gnome.gedit.desktop
+inode/directory=thunar.desktop
+application/x-wayland-gnome-saved-search=thunar.desktop
+
+[Added Associations]
+application/x-shellscript=org.gnome.gedit.desktop;
