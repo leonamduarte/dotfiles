@@ -107,10 +107,10 @@ alias dsrc='dnf search'
 alias fsrc='flatpak search'
 alias fins='flatpak install -y'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/run/media/lm/dev/scripts/0-fedora/update.sh'
-alias limpao='/run/media/lm/dev/scripts/2-arch/update-clean-arch.sh'
 alias update='/run/media/lm/dev/gitlab/scripts/0-fedora/update.sh'
-alias limpao='/run/media/lm/dev/scripts/arch/update-clean-arch.sh'
+alias limpao='/run/media/lm/dev/gitlab/scripts/2-arch/update-clean-arch.sh'
+alias update='/run/media/lm/dev/gitlab/scripts/0-fedora/update.sh'
+alias limpao='/run/media/lm/dev/gitlab/scripts/arch/update-clean-arch.sh'
 alias cdg='cd .config'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -124,13 +124,13 @@ alias doomsync='~/.config/emacs/bin/doom sync'
 alias doomupd='~/.config/emacs/bin/doom upgrade'
 alias doomdoc='~/.config/emacs/bin/doom doctor'
 alias doompurge='~/.config/emacs/bin/doom purge'
-alias dinstall='emacs -nw /run/media/lm/dev/scripts/2-arch/post-install.sh'
+alias dinstall='emacs -nw /run/media/lm/dev/gitlab/scripts/2-arch/post-install.sh'
 alias emacs='emacs -nw'
 # ------------------------------
 # change directory aliases 
 # ------------------------------
-alias cdaula='cd /run/media/lm/dev/maisPraTi/'
-alias naula='nvim /run/media/lm/dev/maisPraTi/'
+alias cdaula='cd /run/media/lm/dev/gitlab/maisPraTi/'
+alias naula='nvim /run/media/lm/dev/gitlab/maisPraTi/'
 # ------------------------------
 # nvim aliases
 # ------------------------------
@@ -140,7 +140,7 @@ alias ngtty='nvim ~/.config/ghostty/config'
 alias nfish='nvim ~/.config/fish/config.fish'
 alias nqtile='nvim ~/.config/qtile/config.py'
 alias nzsh='nvim ~/.zshrc'
-alias ninstall='nvim /run/media/lm/dev/scripts/2-arch/post-install.sh'
+alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/2-arch/post-install.sh'
 alias nvima="env NVIM_APPNAME=astronvim nvim"
 alias nvimc="env NVIM_APPNAME=nvchad nvim"
 alias nviml="env NVIM_APPNAME=lazynvim nvim"

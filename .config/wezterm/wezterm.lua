@@ -6,7 +6,8 @@ local toggle_transparency_command = require("commands.toggle-transparency")
 -- Font settings
 config.font_size = 12
 config.line_height = 1.2
-config.font = wezterm.font("0xProto Nerd Font Mono")
+-- config.font = wezterm.font("0xProto Nerd Font Mono")
+config.font = wezterm.font("DMMono Nerd Font")
 
 -- Colors
 config.colors = {
