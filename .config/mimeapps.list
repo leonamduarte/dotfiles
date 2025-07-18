@@ -5,3 +5,4 @@ application/x-wayland-gnome-saved-search=thunar.desktop
 
 [Added Associations]
 application/x-shellscript=org.gnome.gedit.desktop;
+inode/directory=kitty-open.desktop;Alacritty.desktop;org.wezfurlong.wezterm.desktop;
