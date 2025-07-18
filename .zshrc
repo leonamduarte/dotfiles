@@ -141,6 +141,7 @@ alias nfish='nvim ~/.config/fish/config.fish'
 alias nqtile='nvim ~/.config/qtile/config.py'
 alias nzsh='nvim ~/.zshrc'
 alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/2-arch/post-install.sh'
+alias nvimz="env NVIM_APPNAME=nvim-lazar nvim"
 alias nvima="env NVIM_APPNAME=astronvim nvim"
 alias nvimc="env NVIM_APPNAME=nvchad nvim"
 alias nviml="env NVIM_APPNAME=lazynvim nvim"
@@ -155,6 +156,7 @@ alias nviml="env NVIM_APPNAME=lazynvim nvim"
 # alias l.="eza -a | grep -e '^\.'" # show only dotfiles
 
 # Common use
+alias stowa='stow . --adopt'
 alias grubup="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"
 alias tarnow='tar -acf '
