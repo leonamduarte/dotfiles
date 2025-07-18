@@ -9,6 +9,12 @@ keymap.set("n", "<leader>h", "<cmd>noh<CR>", { desc = "Unselect search" })
 keymap.set("n", "<leader>l", "", { desc = "[L]eo keymaps" })
 keymap.set("n", "<leader>ld", "", { desc = "[L]eo [D]irectory" })
 keymap.set("n", "<leader>te", "<cmd>Neotree toggle<cr>", { desc = "[T]oggle N[E]otree" })
+keymap.set(
+    "n",
+    "<leader>tE",
+    "<cmd>Neotree source=filesystem position=right toggle<cr>",
+    { desc = "[T]oggle N[E]otree" }
+)
 
 vim.keymap.set("n", "gl", function()
     vim.diagnostic.open_float()
