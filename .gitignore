@@ -50,3 +50,5 @@
 !.local/share/fonts/
 !.fonts/
 *Zone.Identifier*
+
+/home/lm/dotfiles/.config/emacs/
