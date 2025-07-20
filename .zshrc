@@ -101,16 +101,16 @@ function toggle-theme() {
 # updates 
 # ------------------------------
 alias S='sudo pacman -S --noconfirm --needed'
+alias pS='paru -S --noconfirm --needed'
 alias Ss='sudo pacman -Ss'
+alias pSs='paru -Ss'
 alias dins='sudo dnf install -y'
 alias dsrc='dnf search'
 alias fsrc='flatpak search'
 alias fins='flatpak install -y'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/run/media/lm/dev/gitlab/scripts/0-fedora/update.sh'
-alias limpao='/run/media/lm/dev/gitlab/scripts/2-arch/update-clean-arch.sh'
-alias update='/run/media/lm/dev/gitlab/scripts/0-fedora/update.sh'
-alias limpao='/run/media/lm/dev/gitlab/scripts/arch/update-clean-arch.sh'
+alias update='/run/media/lm/dev/gitlab/scripts/1-arch/update.sh'
+alias limpao='/run/media/lm/dev/gitlab/scripts/1-arch/update-clean-arch.sh'
 alias cdg='cd .config'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -124,13 +124,13 @@ alias doomsync='~/.config/emacs/bin/doom sync'
 alias doomupd='~/.config/emacs/bin/doom upgrade'
 alias doomdoc='~/.config/emacs/bin/doom doctor'
 alias doompurge='~/.config/emacs/bin/doom purge'
-alias dinstall='emacs -nw /run/media/lm/dev/gitlab/scripts/2-arch/post-install.sh'
+alias dinstall='emacs -nw /run/media/lm/dev/gitlab/scripts/1-arch/post-install.sh'
 alias emacs='emacs -nw'
 # ------------------------------
 # change directory aliases 
 # ------------------------------
-alias cdaula='cd /run/media/lm/dev/gitlab/maisPraTi/'
-alias naula='nvim /run/media/lm/dev/gitlab/maisPraTi/'
+alias cdaula='cd /run/media/lm/dev/maisPraTi/'
+alias naula='nvim /run/media/lm/dev/maisPraTi/'
 # ------------------------------
 # nvim aliases
 # ------------------------------
@@ -140,7 +140,8 @@ alias ngtty='nvim ~/.config/ghostty/config'
 alias nfish='nvim ~/.config/fish/config.fish'
 alias nqtile='nvim ~/.config/qtile/config.py'
 alias nzsh='nvim ~/.zshrc'
-alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/2-arch/post-install.sh'
+alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/1-arch/post-install.sh'
+alias ngit='nvim /run/media/lm/dev/gitlab'
 alias nvimz="env NVIM_APPNAME=nvim-lazar nvim"
 alias nvima="env NVIM_APPNAME=astronvim nvim"
 alias nvimc="env NVIM_APPNAME=nvchad nvim"
@@ -195,3 +196,4 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+

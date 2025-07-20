@@ -16,6 +16,10 @@ keymap.set(
     { desc = "[T]oggle N[E]otree" }
 )
 
+vim.keymap.set("n", "<leader>fb", function()
+    require("telescope").extensions.file_browser.file_browser()
+end, { desc = "Abrir Navegador de Arquivos" })
+
 vim.keymap.set("n", "gl", function()
     vim.diagnostic.open_float()
 end, { desc = "Open Diagnostic in Float" })

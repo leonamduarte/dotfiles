@@ -23,7 +23,11 @@
 ;;
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-;;
+
+(setq doom-font (font-spec :family "DMMono Nerd Font" :size 15)
+      doom-variable-pitch-font (font-spec :family "DMMono Nerd Font" :size 16))
+
+
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
 ;; refresh your font settings. If Emacs still can't find your font, it likely
@@ -32,27 +36,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Configuracao de Fontes                                                    ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-(setq doom-font (font-spec :family "MesloLGS Nerd Font" :size 15)
-      doom-variable-pitch-font (font-spec :family "MesloLGS Nerd Font" :size 15))
-
 (setq doom-theme 'doom-one)
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Configuracao de display                                                   ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(setq display-line-numbers-type 'relative) ;; ou 'visual se preferir
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -90,35 +78,7 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-
-;; source: https://nayak.io/posts/golang-development-doom-emacs/
-;; golang formatting set up
-;; use gofumpt
 ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Configuracao de LSP                                                       ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-(after! lsp-mode
-  (setq  lsp-go-use-gofumpt t)
-  )
-;; enable all analyzers; not done by default
-(after! lsp-mode
-  (setq  lsp-go-analyses '((fieldalignment . t)
-                           (nilness . t)
-                           (shadow . t)
-                           (unusedparams . t)
-                           (unusedwrite . t)
-                           (useany . t)
-                           (unusedvariable . t)))
-  )
-(after! lsp-ui
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-show-with-cursor t
-        lsp-ui-doc-position 'at-point
-        lsp-ui-sideline-enable t
-        lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-show-hover t))
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuracao de Clipboard                                                 ;;
@@ -142,7 +102,7 @@
 ;; Configuracao de atalhos(which-key)                                        ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; Configurações adicionais (mantidas da sua configuração original)
+;; ConfiguraÃ§Ãµes adicionais (mantidas da sua configuraÃ§Ã£o original)
 (use-package which-key
   :init (which-key-mode 1)
   :diminish
@@ -159,6 +119,7 @@
         which-key-idle-delay 0.8
         which-key-max-description-length 25
         which-key-separator " \u2192 "))
+;;
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuracao de nerd icons (for modeline)                                 ;;
@@ -222,9 +183,9 @@
 ;; Dired bindings
 (map! :leader
       :prefix "d"
-      :desc "Open maisPraTi folder" "A" (lambda () (interactive) (neotree-dir "~/Documentos/git/maisPraTi/"))
+      :desc "Open maisPraTi folder" "A" (lambda () (interactive) (neotree-dir "/run/media/lm/dev/maisPraTi/"))
       :desc "Open dired" "d" #'dired
-      :desc "Open doom folder" "D" (lambda () (interactive) (neotree-dir "~/.config/.doom.d/"))
+      :desc "Open doom folder" "D" (lambda () (interactive) (neotree-dir "~/dotfiles/.config/doom/"))
       :desc "Dired jump" "j" #'dired-jump
       :desc "Open neotree" "n" #'neotree-dir
       :desc "Peep-dired" "p" #'peep-dired
@@ -246,22 +207,23 @@
 ;; File bindings
 (map! :leader
       :prefix "f"
-      :desc "Open alacritty config" "a" (lambda () (interactive) (find-file "~/.config/alacritty/alacritty.toml"))
-      :desc "Open emacs config" "c" (lambda () (interactive) (find-file "~/.doom.d/config.el"))
-      :desc "Open user-emacs-directory" "e" (lambda () (interactive) (dired "~/.doom.d/custom.el"))
+      :desc "Open alacritty config" "a" (lambda () (interactive) (find-file "~/dotfiles/.config/alacritty/alacritty.toml"))
+      :desc "Open emacs config" "c" (lambda () (interactive) (find-file "~/dotfiles/.config/doom/config.el"))
+      :desc "Open user-emacs-directory" "e" (lambda () (interactive) (dired "~/dotfiles/.config/doom/custom.el"))
       :desc "Find grep dired" "d" #'find-grep-dired
-      :desc "Open fish config" "f" (lambda () (interactive) (find-file "~/.config/fish/config.fish"))
+      :desc "Open fish config" "f" (lambda () (interactive) (find-file "~/dotfiles/.config/fish/config.fish"))
       :desc "Search current file" "g" #'counsel-grep-or-swiper
-      :desc "Open hyprland config" "h" (lambda () (interactive) (find-file "~/.config/hypr/hyprland.conf"))
-      :desc "Open init.el" "i" (lambda () (interactive) (find-file "~/.doom.d/init.el"))
+      :desc "Open hyprland config" "h" (lambda () (interactive) (find-file "~/dotfiles/.config/hypr/hyprland.conf"))
+      :desc "Open init.el" "i" (lambda () (interactive) (find-file "~/dotfiles/.doom.d/init.el"))
       :desc "Jump to file" "j" #'counsel-file-jump
-      :desc "Open kitty config" "k" (lambda () (interactive) (find-file "~/.config/kitty/kitty.conf"))
+      :desc "Open kitty config" "k" (lambda () (interactive) (find-file "~/dotfiles/.config/kitty/kitty.conf"))
       :desc "Locate file" "l" #'counsel-locate
-      :desc "Open qtile config" "q" (lambda () (interactive) (find-file "~/.config/qtile/config.py"))
+      :desc "Open qtile config" "q" (lambda () (interactive) (find-file "~/dotfiles/.config/qtile/config.py"))
       :desc "Find recent files" "r" #'counsel-recentf
       :desc "Sudo find file" "u" #'sudo-edit-find-file
       :desc "Sudo edit file" "U" #'sudo-edit
-      :desc "Open zshrc" "z" (lambda () (interactive) (find-file "~/.zshrc")))
+      :desc "Open zshrc" "z" (lambda () (interactive) (find-file "~/dotfiles/.zshrc")))
+:desc "Open emacs config windows" "w" (lambda () (interactive) (find-file "~/.doom.d/config.el"))
 
 ;; Git bindings
 (map! :leader
@@ -355,6 +317,7 @@
 ;; Toggle bindings
 (map! :leader
       :prefix "t"
+      :desc "Toggle neotree dir" "d" #'neotree-dir
       :desc "Toggle eshell" "e" #'eshell-toggle
       :desc "Toggle flycheck" "f" #'flycheck-mode
       :desc "Toggle line numbers" "l" #'display-line-numbers-mode

@@ -41,10 +41,10 @@ powerline = {
 }
 
 mod = "mod4"  # Sets mod key to SUPER/WINDOWS
-myTerm = "ghostty"  # My terminal of choice
-myBrowser = "firefox"  # My browser of choice
+myTerm = "wezterm"  # My terminal of choice
+myBrowser = "brave-nightly"  # My browser of choice
 myBrowser2 = "firefox"  # My browser of choice
-myFiles = "pcmanfm"  # My file manager of choice
+myFiles = "nautilus"  # My file manager of choice
 myCode = "code"  # vscode
 myMusic = "flatpak run com.spotify.Client"  # spotify
 # myEmacs = "emacsclient -c -a 'emacs' "  # The space at the end is IMPORTANT!
@@ -105,7 +105,7 @@ keys = [
         desc="Toggles the bar to show/hide",
     ),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "shift"], "x", lazy.spawn("dm-logout -r"), desc="Logout menu"),
     Key([mod], "x", lazy.spawn(logOut), desc="power menu"),

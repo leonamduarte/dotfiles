@@ -1,9 +1,27 @@
 [Default Applications]
+<<<<<<< HEAD
+application/x-shellscript=org.gnome.TextEditor.desktop
+x-scheme-handler/http=brave-browser-nightly.desktop
+text/html=brave-browser-nightly.desktop
+application/xhtml+xml=com.brave.Browser.nightly.desktop
+x-scheme-handler/https=brave-browser-nightly.desktop
+x-scheme-handler/mailto=emacs-mail.desktop
+x-scheme-handler/about=brave-browser-nightly.desktop
+x-scheme-handler/unknown=brave-browser-nightly.desktop
+=======
 application/x-shellscript=org.gnome.gedit.desktop
 inode/directory=nautilus.desktop
 application/x-wayland-gnome-saved-search=thunar.desktop
 application/x-gnome-saved-search=nautilus.desktop
+<<<<<<< HEAD
+>>>>>>> 2489dbb (fix which-key config)
+=======
+>>>>>>> 2489dbb (fix which-key config)
 
 [Added Associations]
-application/x-shellscript=org.gnome.gedit.desktop;
-inode/directory=kitty-open.desktop;Alacritty.desktop;org.wezfurlong.wezterm.desktop;
+application/x-shellscript=org.gnome.gedit.desktop;org.gnome.TextEditor.desktop;
+x-scheme-handler/http=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
+text/html=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
+application/xhtml+xml=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
+x-scheme-handler/https=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
+x-scheme-handler/mailto=firefox.desktop;emacs-mail.desktop;

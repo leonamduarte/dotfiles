@@ -1,3 +1,5 @@
+;;; ../../dotfiles/.config/doom/simpleclip.el -*- lexical-binding: t; -*-
+
 ;;; -*- lexical-binding: t; -*-
 ;;; simpleclip.el --- Simplified access to the system clipboard
 ;;
@@ -189,14 +191,14 @@
   :group 'simpleclip)
 
 (defcustom simpleclip-custom-content-provider nil
-   "Custom program to provide clipboard content.
+  "Custom program to provide clipboard content.
 
 If nil, use default logic to get clipboard content according to OS.
 
 If non-nil, use the output of executing the provider program
 as clipboard content."
-   :type 'string
-   :group 'simpleclip)
+  :type 'string
+  :group 'simpleclip)
 
 ;;;###autoload
 (defgroup simpleclip-keys nil
@@ -308,14 +310,14 @@ The format for key sequences is as defined by `kbd'."
 Optional KIND is as documented at `called-interactively-p'
 in GNU Emacs 24.1 or higher."
   (cond
-    ((not (fboundp 'called-interactively-p))
-     '(interactive-p))
-    ((condition-case nil
-         (progn (called-interactively-p 'any) t)
-       (error nil))
-     `(called-interactively-p ,kind))
-    (t
-     '(called-interactively-p))))
+   ((not (fboundp 'called-interactively-p))
+    '(interactive-p))
+   ((condition-case nil
+        (progn (called-interactively-p 'any) t)
+      (error nil))
+    `(called-interactively-p ,kind))
+   (t
+    '(called-interactively-p))))
 
 ;;; utility functions
 
@@ -325,27 +327,27 @@ in GNU Emacs 24.1 or higher."
   (condition-case nil
       (cond
        ((and (fboundp 'window-system) (window-system)
-        (or
-          (and (boundp 'simpleclip-custom-content-provider)
-               simpleclip-custom-content-provider
-            (shell-command-to-string simpleclip-custom-content-provider))
-          (and (fboundp 'ns-get-pasteboard)
-            (ns-get-pasteboard))
-          (and (fboundp 'w32-get-clipboard-data)
-            (or (w32-get-clipboard-data)
-              simpleclip-contents))
-          (and (and (featurep 'mac)
-                 (fboundp 'gui-get-selection))
-            (gui-get-selection 'CLIPBOARD 'NSStringPboardType))
-          (and (and (featurep 'mac)
-                 (fboundp 'x-get-selection))
-            (x-get-selection 'CLIPBOARD 'NSStringPboardType))
-          ;; todo, this should try more than one request type, as in gui--selection-value-internal
-          (and (fboundp 'gui-get-selection)
-            (gui-get-selection 'CLIPBOARD (car x-select-request-type)))
-          ;; todo, this should try more than one request type, as in gui--selection-value-internal
-          (and (fboundp 'x-get-selection)
-            (x-get-selection 'CLIPBOARD (car x-select-request-type))))))
+             (or
+              (and (boundp 'simpleclip-custom-content-provider)
+                   simpleclip-custom-content-provider
+                   (shell-command-to-string simpleclip-custom-content-provider))
+              (and (fboundp 'ns-get-pasteboard)
+                   (ns-get-pasteboard))
+              (and (fboundp 'w32-get-clipboard-data)
+                   (or (w32-get-clipboard-data)
+                       simpleclip-contents))
+              (and (and (featurep 'mac)
+                        (fboundp 'gui-get-selection))
+                   (gui-get-selection 'CLIPBOARD 'NSStringPboardType))
+              (and (and (featurep 'mac)
+                        (fboundp 'x-get-selection))
+                   (x-get-selection 'CLIPBOARD 'NSStringPboardType))
+              ;; todo, this should try more than one request type, as in gui--selection-value-internal
+              (and (fboundp 'gui-get-selection)
+                   (gui-get-selection 'CLIPBOARD (car x-select-request-type)))
+              ;; todo, this should try more than one request type, as in gui--selection-value-internal
+              (and (fboundp 'x-get-selection)
+                   (x-get-selection 'CLIPBOARD (car x-select-request-type))))))
        (t
         (error "Clipboard support not available")))
     (error
@@ -377,38 +379,38 @@ in GNU Emacs 24.1 or higher."
   (cl-assert (stringp str-val) nil "STR-VAL must be a string or nil")
   (condition-case nil
       (cond
-        ((and (fboundp 'window-system) (window-system)
-         (or
-           (and (fboundp 'ns-set-pasteboard)
-             (ns-set-pasteboard str-val))
-           (and (fboundp 'w32-set-clipboard-data)
-             (w32-set-clipboard-data str-val)
-             (setq simpleclip-contents str-val))
-           (and (fboundp 'gui-set-selection)
-             (gui-set-selection 'CLIPBOARD str-val))
-           (and (fboundp 'x-set-selection)
-             (x-set-selection 'CLIPBOARD str-val)))))
-        (t
-         (error "Clipboard support not available")))
+       ((and (fboundp 'window-system) (window-system)
+             (or
+              (and (fboundp 'ns-set-pasteboard)
+                   (ns-set-pasteboard str-val))
+              (and (fboundp 'w32-set-clipboard-data)
+                   (w32-set-clipboard-data str-val)
+                   (setq simpleclip-contents str-val))
+              (and (fboundp 'gui-set-selection)
+                   (gui-set-selection 'CLIPBOARD str-val))
+              (and (fboundp 'x-set-selection)
+                   (x-set-selection 'CLIPBOARD str-val)))))
+       (t
+        (error "Clipboard support not available")))
     (error
      (condition-case nil
          (cond
-           ((eq system-type 'darwin)
-            (with-temp-buffer
-              (insert str-val)
-              (call-process-region (point-min) (point-max) "/usr/bin/pbcopy")))
-           ((eq system-type 'cygwin)
-            (with-temp-buffer
-              (insert str-val)
-              (call-process-region (point-min) (point-max) "putclip")))
-           ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
-            (with-temp-buffer
-              (insert str-val)
-               (if (string= (getenv "XDG_SESSION_TYPE") "wayland")
-                  (call-process "wl-copy" nil t nil)
-                (call-process-region (point-min) (point-max) "xsel" nil nil nil "--clipboard" "--input"))))
-           (t
-            (error "Clipboard support not available")))
+          ((eq system-type 'darwin)
+           (with-temp-buffer
+             (insert str-val)
+             (call-process-region (point-min) (point-max) "/usr/bin/pbcopy")))
+          ((eq system-type 'cygwin)
+           (with-temp-buffer
+             (insert str-val)
+             (call-process-region (point-min) (point-max) "putclip")))
+          ((memq system-type '(gnu gnu/linux gnu/kfreebsd))
+           (with-temp-buffer
+             (insert str-val)
+             (if (string= (getenv "XDG_SESSION_TYPE") "wayland")
+                 (call-process "wl-copy" nil t nil)
+               (call-process-region (point-min) (point-max) "xsel" nil nil nil "--clipboard" "--input"))))
+          (t
+           (error "Clipboard support not available")))
        (error
         (error "Clipboard support not available"))))))
 
@@ -432,25 +434,25 @@ is \\='toggle."
     (setq simpleclip-saved-icf interprogram-cut-function)
     (setq simpleclip-saved-ipf interprogram-paste-function)
     (cond
-      ((boundp 'select-enable-clipboard)
-       (setq simpleclip-saved-xsec select-enable-clipboard))
-      ((boundp 'x-select-enable-clipboard)
-       (setq simpleclip-saved-xsec x-select-enable-clipboard)))
+     ((boundp 'select-enable-clipboard)
+      (setq simpleclip-saved-xsec select-enable-clipboard))
+     ((boundp 'x-select-enable-clipboard)
+      (setq simpleclip-saved-xsec x-select-enable-clipboard)))
     (setq interprogram-cut-function nil)
     (setq interprogram-paste-function nil)
     (cond
-      ((boundp 'select-enable-clipboard)
-       (setq select-enable-clipboard nil))
-      ((boundp 'x-select-enable-clipboard)
-       (setq x-select-enable-clipboard nil))))
+     ((boundp 'select-enable-clipboard)
+      (setq select-enable-clipboard nil))
+     ((boundp 'x-select-enable-clipboard)
+      (setq x-select-enable-clipboard nil))))
    (t
     (setq interprogram-cut-function simpleclip-saved-icf)
     (setq interprogram-paste-function simpleclip-saved-ipf)
     (cond
-      ((boundp 'select-enable-clipboard)
-       (setq select-enable-clipboard simpleclip-saved-xsec))
-      ((boundp 'x-select-enable-clipboard)
-       (setq x-select-enable-clipboard simpleclip-saved-xsec)))
+     ((boundp 'select-enable-clipboard)
+      (setq select-enable-clipboard simpleclip-saved-xsec))
+     ((boundp 'x-select-enable-clipboard)
+      (setq x-select-enable-clipboard simpleclip-saved-xsec)))
     (setq simpleclip-saved-icf nil)
     (setq simpleclip-saved-ipf nil)
     (setq simpleclip-saved-xsec nil))))
@@ -483,10 +485,10 @@ is \\='toggle."
    (substring-no-properties
     (filter-buffer-substring beg end)))
   (delete-region beg end)
-    (when (and (not (minibufferp))
-               (not simpleclip-less-feedback)
-               (simpleclip-called-interactively-p 'interactive))
-      (message "cut to clipboard")))
+  (when (and (not (minibufferp))
+             (not simpleclip-less-feedback)
+             (simpleclip-called-interactively-p 'interactive))
+    (message "cut to clipboard")))
 
 ;;;###autoload
 (defun simpleclip-paste ()
@@ -496,13 +498,13 @@ is \\='toggle."
     (unless str-val
       (error "No content to paste"))
     (cond
-      ((derived-mode-p 'term-mode)
-       (term-send-raw-string str-val))
-      (t
-       (when (use-region-p)
-         (delete-region (region-beginning) (region-end)))
-       (push-mark (point) t)
-       (insert-for-yank str-val)))
+     ((derived-mode-p 'term-mode)
+      (term-send-raw-string str-val))
+     (t
+      (when (use-region-p)
+        (delete-region (region-beginning) (region-end)))
+      (push-mark (point) t)
+      (insert-for-yank str-val)))
     (when (and (not (minibufferp))
                (not simpleclip-less-feedback)
                (simpleclip-called-interactively-p 'interactive))
