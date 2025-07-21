@@ -10,9 +10,10 @@ variety &
 xfce4-power-manager &
 numlockx on &
 killall rofi &
+killall picom &
 numlockx on &
 lxsession &
-picom --daemon &
+# picom --daemon &
 /usr/bin/emacs --daemon &
 nm-applet &
 "$HOME"/.screenlayout/layout.sh &
