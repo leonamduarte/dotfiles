@@ -267,7 +267,6 @@ return {
             "prettier",
             "prettierd",
             "pyright",
-            "quick_lint_js",
             "ruff",
             "stylua",
             "tailwindcss-language-server",
