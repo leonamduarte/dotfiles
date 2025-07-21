@@ -44,6 +44,7 @@
 !.config/waybar/
 !.config/wezterm/
 !.config/wlogout/
+!.config/yazi/
 !mimeapps.list
 
 # arquivos ou pastas fora do .config
