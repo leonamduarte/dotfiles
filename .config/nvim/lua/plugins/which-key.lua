@@ -5,6 +5,7 @@ return {
         -- your configuration comes here
         -- or leave it empty to use the default settings
         -- refer to the configuration section below
+        ---@class wk.Opts
         ---@type false | "classic" | "modern" | "helix"
         preset = "helix",
         -- Delay before showing the popup. Can be a number or a function that returns a number.

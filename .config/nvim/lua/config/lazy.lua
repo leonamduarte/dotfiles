@@ -26,13 +26,13 @@ require("config.options")
 -- Setup lazy.nvim
 require("lazy").setup({
     spec = {
-    "tpope/vim-sleuth",
+        "tpope/vim-sleuth",
         -- import your plugins
         { import = "plugins" },
     },
     -- Configure any other settings here. See the documentation for more details.
     -- colorscheme that will be used when installing plugins.
-    install = { colorscheme = { "kanagawa" } },
+    install = { colorscheme = { "cyberdream", "kanagawa" } },
     -- automatically check for plugin updates
     checker = { enabled = true },
 })

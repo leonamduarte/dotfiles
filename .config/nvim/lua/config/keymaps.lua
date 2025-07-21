@@ -16,10 +16,6 @@ keymap.set(
     { desc = "[T]oggle N[E]otree" }
 )
 
-vim.keymap.set("n", "<leader>fb", function()
-    require("telescope").extensions.file_browser.file_browser()
-end, { desc = "Abrir Navegador de Arquivos" })
-
 vim.keymap.set("n", "gl", function()
     vim.diagnostic.open_float()
 end, { desc = "Open Diagnostic in Float" })
@@ -50,6 +46,18 @@ keymap.set("n", "sv", ":split<Return>", opts)
 keymap.set("v", "<", "<gv")
 keymap.set("v", ">", ">gv")
 
+-- Mapeamentos de teclas para redimensionar janelas usando as ArrowKeys
+-- (Apenas no modo normal)
+
+-- Reduzir largura
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Reduzir largura da janela" })
+-- Aumentar largura
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Aumentar largura da janela" })
+-- Aumentar altura
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Aumentar altura da janela" })
+-- Reduzir altura
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Reduzir altura da janela" })
+
 -- Keep last yanked when pasting
 vim.keymap.set("v", "p", '"_dP', opts)
 -- delete single character without copying into register
@@ -63,3 +71,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.highlight.on_yank()
     end,
 })
+
+vim.keymap.set("n", "<space>fb", ":Telescope file_browser<CR>")
+
+-- open file_browser with the path of the current buffer
+vim.keymap.set("n", "<space>fB", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
