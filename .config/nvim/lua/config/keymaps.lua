@@ -115,3 +115,19 @@ keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Shrink window w
 keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
 keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Shrink window height" })
+
+-- Ao colar no modo visual, não copia a seleção para o registro padrão.
+-- Isso permite colar várias vezes o mesmo conteúdo.
+vim.keymap.set("v", "p", '"_dP', opts)
+
+-- Deleta um único caractere sem copiá-lo para o registro (não polui o buffer de cola).
+vim.keymap.set("n", "x", '"_x', opts)
+
+-- Autocomando para realçar o texto copiado (yanked) por um breve período.
+vim.api.nvim_create_autocmd("TextYankPost", {
+    desc = "Highlight when yanking (copying) text",
+    group = vim.api.nvim_create_augroup("kickstart-highlight-yank", { clear = true }),
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+})
