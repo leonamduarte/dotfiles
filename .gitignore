@@ -10,40 +10,23 @@
 
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
-!.config/ags/
 !.config/alacritty/
-!.config/astronvim/
 !.config/autostart/
-!.config/btop/
-!.config/cava/
-!.config/dconf/
 !.config/doom/
 !.config/emacs/
-!.config/fastfetch/
 !.config/fish/
 !.config/ghostty/
-!.config/gtk-3.0/
 !.config/hypr/
 !.config/kitty/
 !.config/kvantum/
-!.config/lazynvim/
 !.config/neovide/
-!.config/nvchad/
 !.config/nvim/
-!.config/nvim-lazar/
-!.config/nvim-jakob/
 !.config/picom/
 !.config/polybar/
-!.config/qt5ct/
-!.config/qt6ct/
 !.config/qtile/
 !.config/rofi/
-!.config/swappy/
-!.config/swaync/
-!.config/wallust/
-!.config/waybar/
+!.config/sway/
 !.config/wezterm/
-!.config/wlogout/
 !.config/yazi/
 !mimeapps.list
 
