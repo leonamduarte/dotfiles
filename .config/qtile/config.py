@@ -31,6 +31,7 @@ from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 import colors
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
+
 # from spotify import Spotify
 
 powerline = {
@@ -94,7 +95,9 @@ keys = [
     Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
     Key([mod, "shift"], "Return", lazy.spawn(myFiles), desc="Run thunar"),
     Key([mod, "shift"], "p", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod, "control"], "s", lazy.spawn("systemctl poweroff"), desc="System Shutdown"),
+    Key(
+        [mod, "control"], "s", lazy.spawn("systemctl poweroff"), desc="System Shutdown"
+    ),
     Key([mod, "control"], "r", lazy.spawn("systemctl reboot"), desc="System Reboot"),
     Key([mod, "control"], "p", lazy.spawn("systemctl suspend"), desc="System Suspend"),
     Key([mod], "w", lazy.spawn(myBrowser2), desc="Web browser 2"),
@@ -281,7 +284,7 @@ for group in groups:
 #     Key([mod, "shift"], "6", lazy.window.togroup("6")),
 # ])
 
-colors = colors.Cozytile
+colors = colors.DoomOne
 
 layout_theme = {
     "border_width": 2,
