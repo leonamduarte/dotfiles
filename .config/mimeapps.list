@@ -1,27 +1,25 @@
 [Default Applications]
-<<<<<<< HEAD
-application/x-shellscript=org.gnome.TextEditor.desktop
-x-scheme-handler/http=brave-browser-nightly.desktop
-text/html=brave-browser-nightly.desktop
-application/xhtml+xml=com.brave.Browser.nightly.desktop
-x-scheme-handler/https=brave-browser-nightly.desktop
-x-scheme-handler/mailto=emacs-mail.desktop
-x-scheme-handler/about=brave-browser-nightly.desktop
-x-scheme-handler/unknown=brave-browser-nightly.desktop
-=======
-application/x-shellscript=org.gnome.gedit.desktop
-inode/directory=nautilus.desktop
-application/x-wayland-gnome-saved-search=thunar.desktop
-application/x-gnome-saved-search=nautilus.desktop
-<<<<<<< HEAD
->>>>>>> 2489dbb (fix which-key config)
-=======
->>>>>>> 2489dbb (fix which-key config)
+x-scheme-handler/http=firefox-developer-edition.desktop
+x-scheme-handler/https=firefox-developer-edition.desktop
+x-scheme-handler/chrome=firefox-developer-edition.desktop
+text/html=firefox-developer-edition.desktop
+application/x-extension-htm=firefox-developer-edition.desktop
+application/x-extension-html=firefox-developer-edition.desktop
+application/x-extension-shtml=firefox-developer-edition.desktop
+application/xhtml+xml=firefox-developer-edition.desktop
+application/x-extension-xhtml=firefox-developer-edition.desktop
+application/x-extension-xht=firefox-developer-edition.desktop
+text/x-lua=org.gnome.TextEditor.desktop
 
 [Added Associations]
-application/x-shellscript=org.gnome.gedit.desktop;org.gnome.TextEditor.desktop;
-x-scheme-handler/http=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
-text/html=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
-application/xhtml+xml=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
-x-scheme-handler/https=librewolf.desktop;firefox.desktop;com.brave.Browser.nightly.desktop;
-x-scheme-handler/mailto=firefox.desktop;emacs-mail.desktop;
+x-scheme-handler/http=firefox-developer-edition.desktop;
+x-scheme-handler/https=firefox-developer-edition.desktop;
+x-scheme-handler/chrome=firefox-developer-edition.desktop;
+text/html=firefox-developer-edition.desktop;
+application/x-extension-htm=firefox-developer-edition.desktop;
+application/x-extension-html=firefox-developer-edition.desktop;
+application/x-extension-shtml=firefox-developer-edition.desktop;
+application/xhtml+xml=firefox-developer-edition.desktop;
+application/x-extension-xhtml=firefox-developer-edition.desktop;
+application/x-extension-xht=firefox-developer-edition.desktop;
+text/x-lua=org.gnome.TextEditor.desktop;
