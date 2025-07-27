@@ -1,8 +1,8 @@
 [Default Applications]
-x-scheme-handler/http=firefox-developer-edition.desktop
-x-scheme-handler/https=firefox-developer-edition.desktop
+x-scheme-handler/http=brave-browser.desktop
+x-scheme-handler/https=brave-browser.desktop
 x-scheme-handler/chrome=firefox-developer-edition.desktop
-text/html=firefox-developer-edition.desktop
+text/html=brave-browser.desktop
 application/x-extension-htm=firefox-developer-edition.desktop
 application/x-extension-html=firefox-developer-edition.desktop
 application/x-extension-shtml=firefox-developer-edition.desktop
@@ -10,6 +10,9 @@ application/xhtml+xml=firefox-developer-edition.desktop
 application/x-extension-xhtml=firefox-developer-edition.desktop
 application/x-extension-xht=firefox-developer-edition.desktop
 text/x-lua=org.gnome.TextEditor.desktop
+application/x-shellscript=org.gnome.TextEditor.desktop
+x-scheme-handler/about=brave-browser.desktop
+x-scheme-handler/unknown=brave-browser.desktop
 
 [Added Associations]
 x-scheme-handler/http=firefox-developer-edition.desktop;
@@ -23,3 +26,4 @@ application/xhtml+xml=firefox-developer-edition.desktop;
 application/x-extension-xhtml=firefox-developer-edition.desktop;
 application/x-extension-xht=firefox-developer-edition.desktop;
 text/x-lua=org.gnome.TextEditor.desktop;
+application/x-shellscript=org.gnome.TextEditor.desktop;

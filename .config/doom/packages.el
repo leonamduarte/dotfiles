@@ -68,9 +68,7 @@
 (package! json-mode)
 (package! js2-mode)
 (package! markdown-mode)
-<<<<<<< HEAD
 (package! kaolin-themes)
-=======
 (package! lsp-ui)
 (package! lsp-treemacs)
 
@@ -80,4 +78,3 @@
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
->>>>>>> 1bfd9f0 (doom changes)
