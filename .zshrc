@@ -68,8 +68,6 @@ alias la='ls -A'
 alias gs='git status'
 alias gp='git push'
 alias gl='git pull'
-alias v='nvim'
-alias vim='nvim'
 alias y='yazi'
 
 # ------------------------------
@@ -110,8 +108,8 @@ alias dsrc='dnf search'
 alias fsrc='flatpak search'
 alias fins='flatpak install -y'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/run/media/lm/dev/gitlab/scripts/1-arch/update.sh'
-alias limpao='/run/media/lm/dev/gitlab/scripts/1-arch/update-clean-arch.sh'
+alias update='/run/media/lm/dev/gitlab/scripts/1-fedora/update.sh'
+alias limpao='/run/media/lm/dev/gitlab/scripts/1-fedora/update-clean-arch.sh'
 alias cdg='cd .config'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -125,7 +123,7 @@ alias doomsync='~/.config/emacs/bin/doom sync'
 alias doomupd='~/.config/emacs/bin/doom upgrade'
 alias doomdoc='~/.config/emacs/bin/doom doctor'
 alias doompurge='~/.config/emacs/bin/doom purge'
-alias dinstall='emacs -nw /run/media/lm/dev/gitlab/scripts/1-arch/post-install.sh'
+alias dinstall='emacs -nw /run/media/lm/dev/gitlab/scripts/1-fedora/post-install.sh'
 alias emacs='emacs -nw'
 # ------------------------------
 # change directory aliases 
@@ -135,13 +133,17 @@ alias naula='nvim /run/media/lm/dev/maisPraTi/'
 # ------------------------------
 # nvim aliases
 # ------------------------------
+alias v='nvim'
+alias nl='nviml'
+alias vim='nvim'
 alias nkitty='nvim ~/.config/kitty/kitty.conf'
 alias nalac='nvim ~/.config/alacritty/alacritty.toml'
+alias nwez='nvim ~/.config/wezterm/wezterm.lua'
 alias ngtty='nvim ~/.config/ghostty/config'
 alias nfish='nvim ~/.config/fish/config.fish'
 alias nqtile='nvim ~/.config/qtile/config.py'
 alias nzsh='nvim ~/.zshrc'
-alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/1-arch/post-install.sh'
+alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/1-fedora/post-install.sh'
 alias ngit='nvim /run/media/lm/dev/gitlab'
 alias nvimz="env NVIM_APPNAME=nvim-lazar nvim"
 alias nvima="env NVIM_APPNAME=astronvim nvim"
