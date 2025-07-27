@@ -21,11 +21,8 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-<<<<<<< HEAD
-       (company +childframe +tng)           ; the ultimate code completion backend
-=======
-       ;; (company +childframe)           ; the ultimate code completion backend
->>>>>>> 1bfd9f0 (doom changes)
+       ;; (company +childframe +tng)           ; the ultimate code completion backend
+       (company +childframe)           ; the ultimate code completion backend
        (corfu +orderless)  ; complete with cap(f), cape and a flying feather!
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
