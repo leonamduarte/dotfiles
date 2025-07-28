@@ -65,3 +65,6 @@ opt.scrolloff = 10
 
 -- vim.g.neovide_scale_factor = 1.0
 -- vim.g.neovide_line_spacing = 1.5
+--
+
+vim.opt.linespace = 5
