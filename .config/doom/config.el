@@ -24,8 +24,9 @@
 ;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
-(setq doom-font (font-spec :family "DMMono Nerd Font" :size 15)
-      doom-variable-pitch-font (font-spec :family "DMMono Nerd Font" :size 16))
+;; (setq doom-font (font-spec :family "Iosevka NFM" :size 16)
+(setq doom-font (font-spec :family "Geist Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "Iosevka NFM" :size 16))
 
 (setq-default line-spacing 2)
 
