@@ -27,6 +27,7 @@
   "mini.hipatterns": { "branch": "main", "commit": "2b78f3d475d60ea1793a6d595ff65a0db9ac3a67" },
   "mini.icons": { "branch": "main", "commit": "b8f6fa6f5a3fd0c56936252edcd691184e5aac0c" },
   "mini.pairs": { "branch": "main", "commit": "1e1ca3f60f58d4050bf814902b472eec9963a5dd" },
+  "neo-tree.nvim": { "branch": "main", "commit": "e858a443813097cba43524a6321e3976b14ec75d" },
   "noice.nvim": { "branch": "main", "commit": "0427460c2d7f673ad60eb02b35f5e9926cf67c59" },
   "nui.nvim": { "branch": "main", "commit": "de740991c12411b663994b2860f1a4fd0937c130" },
   "nvim-lint": { "branch": "master", "commit": "9c6207559297b24f0b7c32829f8e45f7d65b991f" },
@@ -56,5 +57,6 @@
   "venv-selector.nvim": { "branch": "regexp", "commit": "c677caa1030808a9f90092e522de7cc20c1390dd" },
   "vim-helm": { "branch": "master", "commit": "cc5ac22444332381f38084a6c7f023c25eef6201" },
   "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" },
+  "yanky.nvim": { "branch": "main", "commit": "04775cc6e10ef038c397c407bc17f00a2f52b378" },
   "yazi.nvim": { "branch": "main", "commit": "1130fb52ef1c80d2044c52fe8da7048fd6b8ab0a" }
 }
