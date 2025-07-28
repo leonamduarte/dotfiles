@@ -25,8 +25,8 @@
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
 ;; (setq doom-font (font-spec :family "Iosevka NFM" :size 16)
-(setq doom-font (font-spec :family "DMMono Nerf Font" :size 16)
-      doom-variable-pitch-font (font-spec :family "DMMono Nerd Font" :size 16))
+(setq doom-font (font-spec :family "0xProto Nerd Font" :size 16)
+      doom-variable-pitch-font (font-spec :family "0xProto Nerd Font" :size 16))
 
 (setq-default line-spacing 2)
 
@@ -39,17 +39,6 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 
-(require 'kaolin-themes)
-(load-theme 'kaolin-dark t)
-;; Apply treemacs customization for Kaolin themes, requires the all-the-icons package.
-(kaolin-treemacs-theme)
-
-;; Or if you have use-package installed
-(use-package kaolin-themes
-  :config
-  (load-theme 'kaolin-dark t)
-  (kaolin-treemacs-theme))
-
 (setq doom-theme 'doom-one)
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -59,6 +48,7 @@
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
+(setq confirm-kill-emacs nil)
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -153,20 +143,6 @@
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)) ;;To ensure Emacs always starts with js2-mode for .js files
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode)) ;;To ensure Emacs always starts with js2-mode for .js files
 
-(use-package all-the-icons
-  :ensure t
-  :if (display-graphic-p))
-
-(use-package all-the-icons-dired
-  :hook (dired-mode . (lambda () (all-the-icons-dired-mode t))))
-
-;;; Set up before-save hooks to format buffer and add/delete imports.
-;; Make sure you don't have other gofmt/goimports hooks enabled.
-(defun lsp-go-install-save-hooks ()
-  (add-hook 'before-save-hook #'lsp-format-buffer t t)
-  (add-hook 'before-save-hook #'lsp-organize-imports t t))
-(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
-
 
 ;; ---
 ;; ## Configurações para integração de LSP, Corfu e Snippets (Yasnippet)
@@ -175,29 +151,20 @@
   ;; Habilita yasnippet para todos os modos que o lsp-mode ativa
   (add-hook 'lsp-mode-hook #'yas-minor-mode))
 
-;; (after! corfu
-;;   ;; Adiciona yasnippet como uma fonte de backend para corfu
-;;   ;; Isso garante que os snippets sejam sugeridos na janela de completude do Corfu
-;;   (add-to-list 'corfu-backend #'corfu-yasnippet)
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
 
-;;   ;; Opcional: Configurações para expandir snippets automaticamente ou mais facilmente
-;;   ;; Isso é mais complexo e pode variar. A forma mais simples é garantir
-;;   ;; que o `corfu-yasnippet` esteja na lista de backends.
-
-;;   ;; Se você quiser que o snippet seja expandido com 'TAB' mesmo quando
-;;   ;; não for a única sugestão (isso pode conflitar com outras expansões de TAB)
-;;   ;; Descomente e teste:
-;;   (setq tab-always-indent 'complete)
-;;   (define-key corfu-map (kbd "TAB") #'corfu-next-or-expand)
-;;   (define-key corfu-map (kbd "<tab>") #'corfu-next-or-expand)
-;; )
 
 (after! yasnippet
   ;; Carrega snippets para linguagens específicas quando o modo é ativado
   ;; O Doom já faz isso automaticamente para os módulos que você habilitou,
   ;; mas é bom para snippets personalizados.
   (yas-reload-all)
-)
+  )
 
 ;; Para JavaScript/TypeScript, certifique-se de que o Yasnippet
 ;; tem snippets para esses modos. O Doom já deve fornecer,
