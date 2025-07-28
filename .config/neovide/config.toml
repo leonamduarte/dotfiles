@@ -16,7 +16,7 @@ wsl = false
 
 [font]
 # normal =  "BlexMono Nerd Font Mono"
-normal =  "JetBrainsMono Nerd Font Mono"
+normal =  "DMMono Nerd Font"
 size = 11.0
 
 [box-drawing]

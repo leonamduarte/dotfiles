@@ -4,47 +4,47 @@
 
 local opt = vim.opt
 
-opt.expandtab = true -- Convert tabs to spaces
-opt.shiftwidth = 4 -- Amount to indent with << and >>
-opt.tabstop = 4 -- How many spaces are shown per Tab
-opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
-
-opt.smarttab = true
-opt.smartindent = true
-opt.autoindent = true -- Keep identation from previous line
+-- opt.expandtab = true -- Convert tabs to spaces
+-- opt.shiftwidth = 4 -- Amount to indent with << and >>
+-- opt.tabstop = 4 -- How many spaces are shown per Tab
+-- opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
+--
+-- opt.smarttab = true
+-- opt.smartindent = true
+-- opt.autoindent = true -- Keep identation from previous line
 
 -- Enable break indent
-opt.breakindent = true
+-- opt.breakindent = true
 
 -- Always show relative line numbers
-opt.number = true
-opt.relativenumber = true
+-- opt.number = true
+-- opt.relativenumber = true
 
-opt.wrap = true -- Disable wrap
-opt.linebreak = true -- Companion to wrap, don't split words
+-- opt.wrap = true -- Disable wrap
+-- opt.linebreak = true -- Companion to wrap, don't split words
 
 -- Show line under cursor
-opt.cursorline = true
+-- opt.cursorline = true
 
 -- Store undos between sessions
-opt.undofile = true
+-- opt.undofile = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-opt.mouse = "a"
+-- opt.mouse = "a"
 
 -- Don't show the mode, since it's already in the status line
-opt.showmode = false
+-- opt.showmode = false
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-opt.ignorecase = true
-opt.smartcase = true
+-- opt.ignorecase = true
+-- opt.smartcase = true
 
 -- Keep signcolumn on by default
-opt.signcolumn = "yes"
+-- opt.signcolumn = "yes"
 
 -- Configure how new splits should be opened
-opt.splitright = true
-opt.splitbelow = true
+-- opt.splitright = true
+-- opt.splitbelow = true
 
 -- Sets how neowill display certain whitespace characters in the editor.
 --  See `:help 'list'`
@@ -56,6 +56,9 @@ opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 opt.scrolloff = 10
 
 -- Clipboard (scheduled to avoid startup performance impact)
-vim.schedule(function()
-    vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
-end)
+-- vim.schedule(function()
+--   vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
+-- end)
+
+vim.g.neovide_opacity = 0.8
+vim.g.neovide_normal_opacity = 0.8
