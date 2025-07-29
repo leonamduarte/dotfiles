@@ -26,9 +26,9 @@
 
 ;; (setq doom-font (font-spec :family "Iosevka NFM" :size 16)
 (setq doom-font (font-spec :family "SpaceMono Nerd Font" :size 17)
-      doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 18))
+      doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 17))
 
-(setq-default line-spacing 2)
+;; (setq-default line-spacing 2)
 
 ;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
 ;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
@@ -173,8 +173,8 @@
 
 ;; Ativar o LSP para os modos relevantes (TypeScript, JavaScript, JSON)
 (add-hook 'typescript-mode-hook #'lsp)
-(add-hook 'js-mode-hook #'lsp)
-(add-hook 'json-mode-hook #'lsp) ;; Útil para arquivos JSON de configuração
+;; (add-hook 'js-mode-hook #'lsp)
+;; (add-hook 'json-mode-hook #'lsp) ;; Útil para arquivos JSON de configuração
 
 ;; (setq lsp-log-io t) ;; Descomente esta linha para depurar o LSP-mode, útil se algo não estiver funcionando
 
@@ -210,6 +210,11 @@
         lsp-ui-sideline-show-hover t ;; Mostrar informações de hover na barra lateral
         lsp-ui-sideline-delay 0.5))
 
+
+(setq lsp-inlay-hint-enable t)
+(add-hook 'lsp-mode-hook #'lsp-inlay-hints-mode)
+(setq lsp-javascript-display-inlay-hints t)
+(setq lsp-typescript-display-inlay-hints t)
 
 ;; Para JavaScript/TypeScript, certifique-se de que o Yasnippet
 ;; tem snippets para esses modos. O Doom já deve fornecer,
