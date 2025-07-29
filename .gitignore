@@ -25,6 +25,7 @@
 !.config/picom/
 !.config/polybar/
 !.config/qtile/
+!.config/rio/
 !.config/rofi/
 !.config/sway/
 !.config/waybar/
