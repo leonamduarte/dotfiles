@@ -60,8 +60,8 @@ opt.scrolloff = 10
 --   vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
 -- end)
 
-vim.g.neovide_opacity = 0.9
-vim.g.neovide_normal_opacity = 0.9
+-- vim.g.neovide_opacity = 0.9
+-- vim.g.neovide_normal_opacity = 0.9
 
 -- vim.g.neovide_scale_factor = 1.0
 -- vim.g.neovide_line_spacing = 1.5

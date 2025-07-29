@@ -71,6 +71,8 @@
 (package! kaolin-themes)
 (package! lsp-ui)
 (package! lsp-treemacs)
+(package! lsp-mode)
+(package! company-lsp)
 
 ;;; Set up before-save hooks to format buffer and add/delete imports.
 ;; Make sure you don't have other gofmt/goimports hooks enabled.

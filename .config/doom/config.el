@@ -25,8 +25,8 @@
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
 ;; (setq doom-font (font-spec :family "Iosevka NFM" :size 16)
-(setq doom-font (font-spec :family "SpaceMono Nerd Font" :size 16)
-      doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 16))
+(setq doom-font (font-spec :family "SpaceMono Nerd Font" :size 17)
+      doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 18))
 
 (setq-default line-spacing 2)
 
@@ -165,6 +165,51 @@
   ;; mas é bom para snippets personalizados.
   (yas-reload-all)
   )
+
+;; --- Configurações LSP-mode ---
+
+;; Certifique-se de que o lsp-mode está instalado via M-x package-install RET lsp-mode RET
+(require 'lsp-mode)
+
+;; Ativar o LSP para os modos relevantes (TypeScript, JavaScript, JSON)
+(add-hook 'typescript-mode-hook #'lsp)
+(add-hook 'js-mode-hook #'lsp)
+(add-hook 'json-mode-hook #'lsp) ;; Útil para arquivos JSON de configuração
+
+;; (setq lsp-log-io t) ;; Descomente esta linha para depurar o LSP-mode, útil se algo não estiver funcionando
+
+;; Opcional: Configurar autocompletar com company-mode
+;; Certifique-se de que o company-lsp está instalado via M-x package-install RET company-lsp RET
+(require 'company-lsp)
+(add-hook 'after-init-hook #'global-company-mode) ;; Ativa o company-mode globalmente
+(add-hook 'lsp-mode-hook #'company-lsp-init) ;; Integra company-mode com lsp-mode
+(setq company-idle-delay 0.1) ;; Delay para o autocompletar aparecer (em segundos)
+(setq company-minimum-prefix-length 1) ;; Número mínimo de caracteres para iniciar o autocompletar
+
+;; Opcional: Configuração de depuração com dap-mode (requer instalação via package-install)
+;; (require 'dap-mode)
+;; (dap-mode-setup)
+
+;; Habilita o modo LSP onde for relevante
+(with-eval-after-load 'lsp-mode
+  (lsp-enable-mode))
+
+;; Opcional: Configurações para lsp-ui, que fornece a interface de usuário visual (popups de documentação, etc.)
+;; Certifique-se de que o lsp-ui e all-the-icons estão instalados via package-install
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :bind (:map lsp-ui-mode-map
+          ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+          ([remap xref-find-references] . lsp-ui-peek-find-references))
+  :config
+;;   ;; Posição da documentação: 'at-point' (próximo ao cursor), 'pop-up' ou 'childframe'
+  (setq lsp-ui-doc-position 'at-point
+        lsp-ui-doc-delay 0.5 ;; Delay para o popup da documentação aparecer
+        lsp-ui-doc-show-with-mouse nil ;; Não mostrar ao passar o mouse, a menos que configurado
+        lsp-ui-sideline-show-code-actions t ;; Mostrar ações de código na barra lateral
+        lsp-ui-sideline-show-hover t ;; Mostrar informações de hover na barra lateral
+        lsp-ui-sideline-delay 0.5))
+
 
 ;; Para JavaScript/TypeScript, certifique-se de que o Yasnippet
 ;; tem snippets para esses modos. O Doom já deve fornecer,
