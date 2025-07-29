@@ -16,7 +16,8 @@ wsl = false
 
 [font]
 # normal = "BlexMono Nerd Font Mono"
-normal = "0xProto Nerd Font"
+# normal = "0xProto Nerd Font"
+normal = "DMMono Nerd Font"
 # normal = "Space Mono"
 size = 12.0
 linespace = 2
