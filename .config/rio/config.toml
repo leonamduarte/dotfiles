@@ -1,4 +1,5 @@
-shape = 'block'
+[cursor]
+shape = 'beam'
 blinking = false
 draw-bold-text-with-light-colors = false
 
@@ -9,6 +10,10 @@ use-drawable-chars = true
 symbol-map = []
 disable-warnings-not-found = false
 additional-dirs = []
+fonts.disable-warnings-not-found = false
+fonts.hinting = true
+line-height = 1.5
+hide-mouse-cursor-when-typing = false
 
 [fonts.regular]
 family = "SpaceMono Nerd Font"
@@ -33,11 +38,6 @@ family = "SpaceMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 800
-
-fonts.disable-warnings-not-found = false
-fonts.hinting = true
-line-height = 1.5
-hide-mouse-cursor-when-typing = false
 
 [navigation]
 use-split = true
