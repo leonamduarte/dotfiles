@@ -8,7 +8,7 @@ config.font_size = 13
 -- config.line_height = 1.3
 -- config.font = wezterm.font("0xProto Nerd Font Mono")
 -- config.font = wezterm.font("DMMono Nerd Font")
-config.font = wezterm.font("SpaceMono Nerd Font")
+config.font = wezterm.font("CaskaydiaCove Nerd Font Mono")
 
 -- Colors
 config.colors = {
@@ -31,7 +31,7 @@ config.window_background_image = constants.bg_image
 -- Miscellaneous settings
 config.max_fps = 120
 config.prefer_egl = true
-
+config.default_cursor_style = "SteadyBar"
 -- Custom commands
 
 wezterm.on("augment-command-palette", function()
@@ -39,5 +39,9 @@ wezterm.on("augment-command-palette", function()
 		toggle_transparency = toggle_transparency_command,
 	}
 end)
+
+config.default_prog = { "zsh" }
+
+config.window_close_confirmation = "NeverPrompt"
 
 return config

@@ -143,7 +143,6 @@
 (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)) ;;To ensure Emacs always starts with js2-mode for .js files
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode)) ;;To ensure Emacs always starts with js2-mode for .js files
 
-
 ;; ---
 ;; ## Configurações para integração de LSP, Corfu e Snippets (Yasnippet)
 ;; ---
@@ -190,19 +189,15 @@
 ;; (require 'dap-mode)
 ;; (dap-mode-setup)
 
-;; Habilita o modo LSP onde for relevante
-(with-eval-after-load 'lsp-mode
-  (lsp-enable-mode))
-
 ;; Opcional: Configurações para lsp-ui, que fornece a interface de usuário visual (popups de documentação, etc.)
 ;; Certifique-se de que o lsp-ui e all-the-icons estão instalados via package-install
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :bind (:map lsp-ui-mode-map
-          ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-          ([remap xref-find-references] . lsp-ui-peek-find-references))
+              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+              ([remap xref-find-references] . lsp-ui-peek-find-references))
   :config
-;;   ;; Posição da documentação: 'at-point' (próximo ao cursor), 'pop-up' ou 'childframe'
+  ;;   ;; Posição da documentação: 'at-point' (próximo ao cursor), 'pop-up' ou 'childframe'
   (setq lsp-ui-doc-position 'at-point
         lsp-ui-doc-delay 0.5 ;; Delay para o popup da documentação aparecer
         lsp-ui-doc-show-with-mouse nil ;; Não mostrar ao passar o mouse, a menos que configurado
@@ -220,7 +215,22 @@
 ;; tem snippets para esses modos. O Doom já deve fornecer,
 ;; mas você pode adicionar os seus próprios em ~/.doom.d/snippets/javascript-mode/
 ;; ou ~/.doom.d/snippets/js2-mode/.
-;;
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("<backtab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word))
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  (add-to-list 'copilot-indentation-alist '(text-mode 2))
+  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuracao de atalhos(keymaps)                                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
