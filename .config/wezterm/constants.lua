@@ -6,7 +6,7 @@ M.bg_blurred_darker_w11 = os.getenv("HOME") .. "/.config/wezterm/assets/bg-blurr
 M.bg_blurred_w11 = os.getenv("HOME") .. "/.config/wezterm/assets/bg-blurred-w11.png"
 -- M.bg_image = M.bg_blurred_darker
 -- M.bg_image = M.bg_blurred_darker_w11
-M.bg_image = M.bg_blurred_w11
+M.bg_image = M.bg_blurred_darker_w11
 -- M.bg_image = M.bg_blurred
 
 return M

@@ -43,7 +43,7 @@ weight = 800
 use-split = true
 # navigation.unfocused-split-opacity = 0.9
 
-# Set window background opacity. Default: 1.0.   
+# Set window background opacity. Default: 1.0.
 # # Set blur on the window background. Changing this config requires restarting Rio to take effect. Default false
 # Set window decorations.
 # Enabled (default for Windows/Linux/BSD/macOS) enable window decorations.
@@ -59,7 +59,7 @@ decorations = "Transparent"
 # If both properties width and height are occluded then background image will use the terminal width/height.
 # Default: None
 [window.background-image]
-path = "/Users/hugoamor/Desktop/musashi.png"
+path = "$HOME/.config/wezterm/assets/bg-blurred-darker-w11.png"
 opacity = 0.5
 x = 0.0
 y = -100.0

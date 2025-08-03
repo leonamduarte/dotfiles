@@ -6,8 +6,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
-;; (setq user-full-name "John Doe"
-;;       user-mail-address "john@doe.com")
+(setq user-full-name "Leonam"
+      user-mail-address "lpdmonteiro@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
@@ -25,8 +25,8 @@
 ;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
 
 ;; (setq doom-font (font-spec :family "Iosevka NFM" :size 16)
-(setq doom-font (font-spec :family "SpaceMono Nerd Font" :size 17)
-      doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 17))
+(setq doom-font (font-spec :family "0xProto Nerd Font Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "0xProto Nerd Font Mono" :size 16))
 
 ;; (setq-default line-spacing 2)
 
@@ -90,6 +90,9 @@
 (require 'simpleclip)
 (simpleclip-mode 1)
 (move-text-default-bindings)
+
+(use-package move-text :config (move-text-default-bindings))
+
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuracao de linguagem                                                 ;;
@@ -206,10 +209,16 @@
         lsp-ui-sideline-delay 0.5))
 
 
-(setq lsp-inlay-hint-enable t)
-(add-hook 'lsp-mode-hook #'lsp-inlay-hints-mode)
-(setq lsp-javascript-display-inlay-hints t)
-(setq lsp-typescript-display-inlay-hints t)
+;; LSP + inlay hints
+(after! lsp-mode
+  (setq lsp-inlay-hint-enable t)
+  (add-hook 'lsp-mode-hook #'lsp-inlay-hints-mode))
+
+(after! lsp-ui
+  (setq lsp-ui-doc-position 'at-point
+        lsp-ui-doc-delay 0.5
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t))
 
 ;; Para JavaScript/TypeScript, certifique-se de que o Yasnippet
 ;; tem snippets para esses modos. O Doom já deve fornecer,
@@ -234,6 +243,28 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Configuracao de atalhos(keymaps)                                          ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; Movimentação de linhas
+(defun move-line-up ()
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2))
+(defun move-line-down ()
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1))
+(map! "M-<up>" #'move-line-up
+      "M-<down>" #'move-line-down)
+
+;; Duplicar linha
+(defun duplicate-line ()
+  (interactive)
+  (let ((line (buffer-substring (line-beginning-position) (line-end-position))))
+    (forward-line)
+    (newline)
+    (insert line))
+  (map! "C-c D" #'duplicate-line))
 ;;
 ;; Keybindings com map!
 (map! :leader
