@@ -6,8 +6,8 @@ local toggle_transparency_command = require("commands.toggle-transparency")
 -- Font settings
 config.font_size = 12
 -- config.line_height = 1.3
-config.font = wezterm.font("0xProto Nerd Font Mono")
--- config.font = wezterm.font("DMMono Nerd Font")
+-- config.font = wezterm.font("0xProto Nerd Font Mono")
+config.font = wezterm.font("DMMono Nerd Font")
 -- config.font = wezterm.font("CaskaydiaCove Nerd Font Mono")
 
 -- Colors
@@ -40,7 +40,13 @@ wezterm.on("augment-command-palette", function()
 	}
 end)
 
-config.default_prog = { "zsh" }
+if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+	-- Configuração para Windows
+	config.default_prog = { "pwsh" }
+else
+	-- Configuração para Linux (e outros sistemas)
+	config.default_prog = { "zsh" }
+end
 
 config.window_close_confirmation = "NeverPrompt"
 
