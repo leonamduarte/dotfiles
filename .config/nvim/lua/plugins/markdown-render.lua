@@ -19,7 +19,7 @@ return {
         -- Turn on / off heading icon & background rendering.
         enabled = true,
         -- Additional modes to render headings.
-        render_modes = false,
+        render_modes = true,
         -- Turn on / off atx heading rendering.
         atx = true,
         -- Turn on / off setext heading rendering.
@@ -30,7 +30,8 @@ return {
         -- Output is evaluated depending on the type.
         -- | function | `value(context)`              |
         -- | string[] | `cycle(value, context.level)` |
-        icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        -- icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        icons = { "◉ ", "● ", "○ ", "◆ ", "● ", "○ ", "◆ " },
         -- Determines how icons fill the available space.
         -- | right   | '#'s are concealed and icon is appended to right side                      |
         -- | inline  | '#'s are concealed and icon is inlined on left side                        |
@@ -43,7 +44,7 @@ return {
         -- | block | width of the heading text |
         -- | full  | full width of the window  |
         -- Can also be a list of the above values evaluated by `clamp(value, context.level)`.
-        width = "full",
+        width = "block",
         -- Amount of margin to add to the left of headings.
         -- Margin available space is computed after accounting for padding.
         -- If a float < 1 is provided it is treated as a percentage of available window space.
@@ -60,11 +61,11 @@ return {
         min_width = 0,
         -- Determines if a border is added above and below headings.
         -- Can also be a list of booleans evaluated by `clamp(value, context.level)`.
-        border = false,
+        border = true,
         -- Always use virtual lines for heading borders instead of attempting to use empty lines.
-        border_virtual = false,
+        border_virtual = true,
         -- Highlight the start of the border using the foreground highlight.
-        border_prefix = false,
+        border_prefix = true,
         -- Used above heading for border.
         above = "▄",
         -- Used below heading for border.
@@ -114,7 +115,7 @@ return {
         left_margin = 0,
         -- Amount of padding to add to the first line of each paragraph.
         -- Output is evaluated using the same logic as 'left_margin'.
-        indent = 0,
+        indent = 4,
         -- Minimum width to use for paragraphs.
         min_width = 0,
       },
@@ -342,7 +343,7 @@ return {
         -- | double | use double line border characters |
         -- | round  | use round border corners          |
         -- | none   | does nothing                      |
-        preset = "none",
+        preset = "round",
         -- Determines how individual cells of a table are rendered.
         -- | overlay | writes completely over the table, removing conceal behavior and highlights |
         -- | raw     | replaces only the '|' characters in each row, leaving the cells unmodified |
