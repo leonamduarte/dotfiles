@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "tokyonight",
+        colorscheme = "catppuccin",
       },
     },
     { import = "lazyvim.plugins.extras.ai.copilot" },
@@ -61,7 +61,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "cyberdream", "habamax" } },
+  install = { colorscheme = { "catppuccin" } },
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
