@@ -4,10 +4,11 @@ local constants = require("constants")
 local toggle_transparency_command = require("commands.toggle-transparency")
 
 -- Font settings
-config.font_size = 12
+config.font_size = 13
 -- config.line_height = 1.3
+config.font = wezterm.font("SpaceMono Nerd Font Mono")
 -- config.font = wezterm.font("0xProto Nerd Font Mono")
-config.font = wezterm.font("DMMono Nerd Font")
+-- config.font = wezterm.font("DMMono Nerd Font")
 -- config.font = wezterm.font("CaskaydiaCove Nerd Font Mono")
 
 -- Colors

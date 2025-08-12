@@ -56,5 +56,7 @@ vim.opt.scrolloff = 5
 
 -- Clipboard (scheduled to avoid startup performance impact)
 vim.schedule(function()
-	vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
+    vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
 end)
+
+vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())

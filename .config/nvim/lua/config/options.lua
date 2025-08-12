@@ -53,15 +53,16 @@ opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Minimal number of screen lines to keep above and below the cursor.
-opt.scrolloff = 10
+opt.scrolloff = 5
 
 -- Clipboard (scheduled to avoid startup performance impact)
 -- vim.schedule(function()
 --   vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
 -- end)
 
--- vim.g.neovide_opacity = 0.9
--- vim.g.neovide_normal_opacity = 0.9
+-- vim.g.neovide_opacity = 1.0
+-- vim.g.neovide_normal_opacity = 0.8
+-- vim.g.neovide_background_image = "C:/Users/itinerario/.config/wezterm/assets/bg-blurred-w11.png"
 
 -- vim.g.neovide_scale_factor = 1.0
 -- vim.g.neovide_line_spacing = 1.5

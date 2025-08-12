@@ -15,11 +15,12 @@ vsync = true
 wsl = false
 
 [font]
-normal = "BlexMono Nerd Font Mono"
+# normal = "BlexMono Nerd Font Mono"
 # normal = "Inconsolata Nerd Font Mono"
 # normal = "0xProto Nerd Font"
 # normal = "CaskaydiaCove Nerd Font Mono"
-# normal = "DMMono Nerd Font"
+normal = "DMMono Nerd Font"
+# normal = "SpaceMono Nerd Font Mono"
 
 size = 13.0
 # linespace = 2

@@ -4,7 +4,7 @@ blinking = false
 draw-bold-text-with-light-colors = false
 
 [fonts]
-size = 18
+size = 17
 features = []
 use-drawable-chars = true
 symbol-map = []
@@ -16,25 +16,27 @@ line-height = 1.5
 hide-mouse-cursor-when-typing = false
 
 [fonts.regular]
-family = "SpaceMono Nerd Font"
+# family = "0xProto Nerd Font Mono"
+# family = "DMMono Nerd Font"
+family = "SpaceMono Nerd Font Mono"
 style = "Normal"
 width = "Normal"
 weight = 400
 
 [fonts.bold]
-family = "SpaceMono Nerd Font"
+family = "SpaceMono Nerd Font Mono"
 style = "Normal"
 width = "Normal"
 weight = 800
 
 [fonts.italic]
-family = "SpaceMono Nerd Font"
+family = "SpaceMono Nerd Font Mono"
 style = "Italic"
 width = "Normal"
 weight = 400
 
 [fonts.bold-italic]
-family = "SpaceMono Nerd Font"
+family = "SpaceMono Nerd Font Mono"
 style = "Italic"
 width = "Normal"
 weight = 800
@@ -52,17 +54,17 @@ use-split = true
 # Buttonless remove buttons from window decorations.
 
 [window]
-opacity = 0.9
+# opacity = 0.9
 blur = true
 decorations = "Transparent"
 
 # If both properties width and height are occluded then background image will use the terminal width/height.
 # Default: None
 [window.background-image]
-path = "$HOME/.config/wezterm/assets/bg-blurred-darker-w11.png"
+path = "C:/Users/itinerario/dotfiles/.config/wezterm/assets/bg-blurred-w11.png"
 opacity = 0.5
-x = 0.0
-y = -100.0
+# x = 0.0
+# y = -100.0
 
 confirm-before-quit = false
 

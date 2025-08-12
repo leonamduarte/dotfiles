@@ -5,8 +5,8 @@ return {
     ---@type snacks.Config
     opts = {
         bigfile = { enabled = true },
-        dashboard = { enabled = true },
-        explorer = { enabled = true },
+        dashboard = { enabled = false },
+        explorer = { enabled = false },
         indent = { enabled = true },
         input = { enabled = true },
         notifier = {
@@ -27,27 +27,27 @@ return {
     },
     keys = {
         -- Top Pickers & Explorer
-        {
-            "<leader><space>",
-            function()
-                Snacks.picker.smart()
-            end,
-            desc = "Smart Find Files",
-        },
-        {
-            "<leader>,",
-            function()
-                Snacks.picker.buffers()
-            end,
-            desc = "Buffers",
-        },
-        {
-            "<leader>/",
-            function()
-                Snacks.picker.grep()
-            end,
-            desc = "Grep",
-        },
+        -- {
+        --     "<leader><space>",
+        --     function()
+        --         Snacks.picker.smart()
+        --     end,
+        --     desc = "Smart Find Files",
+        -- },
+        -- {
+        --     "<leader>,",
+        --     function()
+        --         Snacks.picker.buffers()
+        --     end,
+        --     desc = "Buffers",
+        -- },
+        -- {
+        --     "<leader>/",
+        --     function()
+        --         Snacks.picker.grep()
+        --     end,
+        --     desc = "Grep",
+        -- },
         {
             "<leader>:",
             function()
@@ -62,42 +62,42 @@ return {
             end,
             desc = "Notification History",
         },
-        {
-            "<leader>e",
-            function()
-                Snacks.explorer()
-            end,
-            desc = "File Explorer",
-        },
+        -- {
+        --     "<leader>e",
+        --     function()
+        --         Snacks.explorer()
+        --     end,
+        --     desc = "File Explorer",
+        -- },
         -- find
-        {
-            "<leader>fb",
-            function()
-                Snacks.picker.buffers()
-            end,
-            desc = "Buffers",
-        },
-        {
-            "<leader>fc",
-            function()
-                Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
-            end,
-            desc = "Find Config File",
-        },
-        {
-            "<leader>ff",
-            function()
-                Snacks.picker.files()
-            end,
-            desc = "Find Files",
-        },
-        {
-            "<leader>fg",
-            function()
-                Snacks.picker.git_files()
-            end,
-            desc = "Find Git Files",
-        },
+        -- {
+        --     "<leader>fb",
+        --     function()
+        --         Snacks.picker.buffers()
+        --     end,
+        --     desc = "Buffers",
+        -- },
+        -- {
+        --     "<leader>fc",
+        --     function()
+        --         Snacks.picker.files({ cwd = vim.fn.stdpath("config") })
+        --     end,
+        --     desc = "Find Config File",
+        -- },
+        -- {
+        --     "<leader>ff",
+        --     function()
+        --         Snacks.picker.files()
+        --     end,
+        --     desc = "Find Files",
+        -- },
+        -- {
+        --     "<leader>fg",
+        --     function()
+        --         Snacks.picker.git_files()
+        --     end,
+        --     desc = "Find Git Files",
+        -- },
         {
             "<leader>fp",
             function()
@@ -105,13 +105,13 @@ return {
             end,
             desc = "Projects",
         },
-        {
-            "<leader>fr",
-            function()
-                Snacks.picker.recent()
-            end,
-            desc = "Recent",
-        },
+        -- {
+        --     "<leader>fr",
+        --     function()
+        --         Snacks.picker.recent()
+        --     end,
+        --     desc = "Recent",
+        -- },
         -- git
         {
             "<leader>gb",
@@ -284,27 +284,27 @@ return {
             end,
             desc = "Keymaps",
         },
-        {
-            "<leader>sl",
-            function()
-                Snacks.picker.loclist()
-            end,
-            desc = "Location List",
-        },
-        {
-            "<leader>sm",
-            function()
-                Snacks.picker.marks()
-            end,
-            desc = "Marks",
-        },
-        {
-            "<leader>sM",
-            function()
-                Snacks.picker.man()
-            end,
-            desc = "Man Pages",
-        },
+        -- {
+        --     "<leader>sl",
+        --     function()
+        --         Snacks.picker.loclist()
+        --     end,
+        --     desc = "Location List",
+        -- },
+        -- {
+        --     "<leader>sm",
+        --     function()
+        --         Snacks.picker.marks()
+        --     end,
+        --     desc = "Marks",
+        -- },
+        -- {
+        --     "<leader>sM",
+        --     function()
+        --         Snacks.picker.man()
+        --     end,
+        --     desc = "Man Pages",
+        -- },
         {
             "<leader>sp",
             function()
@@ -399,34 +399,34 @@ return {
             end,
             desc = "Toggle Zen Mode",
         },
-        {
-            "<leader>Z",
-            function()
-                Snacks.zen.zoom()
-            end,
-            desc = "Toggle Zoom",
-        },
-        {
-            "<leader>.",
-            function()
-                Snacks.scratch()
-            end,
-            desc = "Toggle Scratch Buffer",
-        },
-        {
-            "<leader>S",
-            function()
-                Snacks.scratch.select()
-            end,
-            desc = "Select Scratch Buffer",
-        },
-        {
-            "<leader>n",
-            function()
-                Snacks.notifier.show_history()
-            end,
-            desc = "Notification History",
-        },
+        -- {
+        --     "<leader>Z",
+        --     function()
+        --         Snacks.zen.zoom()
+        --     end,
+        --     desc = "Toggle Zoom",
+        -- },
+        -- {
+        --     "<leader>.",
+        --     function()
+        --         Snacks.scratch()
+        --     end,
+        --     desc = "Toggle Scratch Buffer",
+        -- },
+        -- {
+        --     "<leader>S",
+        --     function()
+        --         Snacks.scratch.select()
+        --     end,
+        --     desc = "Select Scratch Buffer",
+        -- },
+        -- {
+        --     "<leader>n",
+        --     function()
+        --         Snacks.notifier.show_history()
+        --     end,
+        --     desc = "Notification History",
+        -- },
         {
             "<leader>bd",
             function()
@@ -434,13 +434,13 @@ return {
             end,
             desc = "Delete Buffer",
         },
-        {
-            "<leader>cR",
-            function()
-                Snacks.rename.rename_file()
-            end,
-            desc = "Rename File",
-        },
+        -- {
+        --     "<leader>cR",
+        --     function()
+        --         Snacks.rename.rename_file()
+        --     end,
+        --     desc = "Rename File",
+        -- },
         {
             "<leader>gB",
             function()
@@ -470,13 +470,13 @@ return {
             end,
             desc = "Toggle Terminal",
         },
-        {
-            "<c-_>",
-            function()
-                Snacks.terminal()
-            end,
-            desc = "which_key_ignore",
-        },
+        -- {
+        --     "<c-_>",
+        --     function()
+        --         Snacks.terminal()
+        --     end,
+        --     desc = "which_key_ignore",
+        -- },
         {
             "]]",
             function()
@@ -493,24 +493,24 @@ return {
             desc = "Prev Reference",
             mode = { "n", "t" },
         },
-        {
-            "<leader>N",
-            desc = "Neovim News",
-            function()
-                Snacks.win({
-                    file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
-                    width = 0.6,
-                    height = 0.6,
-                    wo = {
-                        spell = false,
-                        wrap = false,
-                        signcolumn = "yes",
-                        statuscolumn = " ",
-                        conceallevel = 3,
-                    },
-                })
-            end,
-        },
+        -- {
+        --     "<leader>N",
+        --     desc = "Neovim News",
+        --     function()
+        --         Snacks.win({
+        --             file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
+        --             width = 0.6,
+        --             height = 0.6,
+        --             wo = {
+        --                 spell = false,
+        --                 wrap = false,
+        --                 signcolumn = "yes",
+        --                 statuscolumn = " ",
+        --                 conceallevel = 3,
+        --             },
+        --         })
+        --     end,
+        -- },
     },
     init = function()
         vim.api.nvim_create_autocmd("User", {
