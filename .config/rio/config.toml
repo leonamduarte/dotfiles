@@ -17,26 +17,26 @@ hide-mouse-cursor-when-typing = false
 
 [fonts.regular]
 # family = "0xProto Nerd Font Mono"
-# family = "DMMono Nerd Font"
-family = "SpaceMono Nerd Font Mono"
+family = "DMMono Nerd Font"
+# family = "SpaceMono Nerd Font Mono"
 style = "Normal"
 width = "Normal"
 weight = 400
 
 [fonts.bold]
-family = "SpaceMono Nerd Font Mono"
+family = "DMMono Nerd Font"
 style = "Normal"
 width = "Normal"
 weight = 800
 
 [fonts.italic]
-family = "SpaceMono Nerd Font Mono"
+family = "DMMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 400
 
 [fonts.bold-italic]
-family = "SpaceMono Nerd Font Mono"
+family = "DMMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 800

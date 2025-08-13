@@ -269,8 +269,8 @@ return {
             "pyright",
             "ruff",
             "stylua",
-            "tailwindcss-language-server",
-            "vtsls",
+            -- "tailwindcss-language-server",
+            -- "vtsls",
         })
         require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 

@@ -9,8 +9,8 @@
 
 # : Flavor {{{
 
-[flavor]
-dark  = "sunset"
-light = "sunset"
+# [flavor]
+# dark  = "moonfly"
+# light = "moonfly"
 
 # : }}}
