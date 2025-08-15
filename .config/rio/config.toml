@@ -4,7 +4,7 @@ blinking = false
 draw-bold-text-with-light-colors = false
 
 [fonts]
-size = 17
+size = 18
 features = []
 use-drawable-chars = true
 symbol-map = []
@@ -17,26 +17,26 @@ hide-mouse-cursor-when-typing = false
 
 [fonts.regular]
 # family = "0xProto Nerd Font Mono"
-family = "DMMono Nerd Font"
+family = "IosevkaTerm NF"
 # family = "SpaceMono Nerd Font Mono"
 style = "Normal"
 width = "Normal"
 weight = 400
 
 [fonts.bold]
-family = "DMMono Nerd Font"
+family = "IosevkaTerm NF"
 style = "Normal"
 width = "Normal"
 weight = 800
 
 [fonts.italic]
-family = "DMMono Nerd Font"
+family = "IosevkaTerm NF"
 style = "Italic"
 width = "Normal"
 weight = 400
 
 [fonts.bold-italic]
-family = "DMMono Nerd Font"
+family = "IosevkaTerm NF"
 style = "Italic"
 width = "Normal"
 weight = 800
