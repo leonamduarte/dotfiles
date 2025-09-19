@@ -1,0 +1,16 @@
+0
+/home/lm/Imagens/walls/catppuccin/mandelbrot_gap_green.png
+/home/lm/Imagens/walls/catppuccin/temple.jpg
+/home/lm/Imagens/walls/catppuccin/flower.jpg
+/home/lm/Imagens/walls/catppuccin/railroad-2.jpg
+/home/lm/Imagens/walls/catppuccin/compass.jpg
+/home/lm/Imagens/walls/catppuccin/desolate-city.jpg
+/home/lm/Imagens/walls/catppuccin/flowers-20.jpg
+/home/lm/Imagens/walls/catppuccin/sakura-gate.jpg
+/home/lm/Imagens/walls/catppuccin/minimalist-black-hole.png
+/home/lm/Imagens/walls/catppuccin/flower-field-3.png
+/home/lm/Imagens/walls/landscape/39.jpg
+/home/lm/Imagens/walls/catppuccin/flowers-12.jpg
+/home/lm/Imagens/walls/catppuccin/oversized-cat.jpg
+/home/lm/Imagens/walls/abstract/07.jpg
+/usr/share/backgrounds/gnome/adwaita-l.jpg

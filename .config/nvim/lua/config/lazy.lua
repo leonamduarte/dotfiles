@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "eldritch",
+        colorscheme = "tokyonight",
       },
     },
     -- ai

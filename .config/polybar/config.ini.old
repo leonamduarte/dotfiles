@@ -1,0 +1,379 @@
+[colors]
+background = #1a1b26
+background-alt = #24283b
+foreground = #a9b1d6
+primary = #5a3e8e
+secondary = #9d7cd8
+alert = #f7768e
+disabled = #545c7e
+
+[bar/main]
+monitor = HDMI-A-0
+; width = 100%
+; height = 2%
+radius = 4
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+line-size = 2
+; border-size = 6
+separator = |
+separator-foreground = ${colors.primary}
+; padding-right = 1
+; module-margin-left = 1
+; module-margin-right = 2
+font-0 = 0xProto Nerd Font Mono:size=10;3.5
+font-1 = 0xProto Nerd Font Mono:size=12;2.5
+modules-left = i3 
+modules-center = datetime
+modules-right = media pulseaudio powermenu
+wm-restack = i3
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/now-playing]
+type = custom/script
+tail = true
+format = <label>
+exec = /home/arya/polybar-now-playing/polybar-now-playing.py
+click-right = "kill -USR1 $(pgrep --oldest --parent %pid%)"
+
+[module/xworkspace]
+type = internal/xworkspaces
+in-workspaces = true
+enable-click = true
+enable-scroll = flase
+icon-1 = 
+icon-2 = 
+icon-3 = 
+icon-4 = 
+icon-default = 
+format = <label-state>
+label-monitor = %name%
+label-active = 
+label-active-foreground = ${colors.foreground}
+label-active-padding = 2
+label-occupied = %icon%
+label-occupied-foreground = ${colors.foreground}
+label-occupied-padding = 2
+label-urgent = %icon%
+label-urgent-foreground = ${colors.foreground}
+label-urgent-padding = 2
+label-empty = %icon%
+label-empty-foreground = ${colors.foreground}
+label-empty-padding = 2
+
+[module/weather]
+type = custom/script
+exec = /etc/polybar/weather-plugin.sh
+tail = false
+interval = 960
+
+[module/updates]
+type = custom/script
+exec = /etc/polybar/config/update.sh
+tail = true
+interval = 5
+format = <label>
+format-prefix = " "
+label = " %output% "
+label-padding = 0
+format-prefix-font = 2
+label-font = 4
+label-alignment = center
+label-foreground = ${color.foreground}
+label-underline  = ${color.background}
+label-overline  = ${color.background}
+format-prefix-foreground = ${color.base0A}
+format-prefix-underline  = ${color.background}
+format-prefix-overline  = ${color.background}
+click-left = exec kitty -e sudo pacman -Syyuu
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+[module/datetime]
+type = internal/date
+interval = 1.0
+date = %a,%b%e
+time = %I:%M%p
+date-alt = Its %A, %d %B %Y
+time-alt = at %k:%M:%S
+format = <label>
+label = "  %date% %time%"
+label-padding = 2
+label-font = 7
+label-alignment = center
+format-prefix-foreground = ${color.foreground}
+format-prefix-background = ${colors.primary}
+format-prefix-underline  = ${color.background}
+format-prefix-overline  = ${color.background}
+format-prefix-padding = 0
+label-background = ${colors.primary}
+label-foreground = ${color.foreground}
+label-underline  = ${color.background}
+label-overline  = ${color.background}
+
+[module/xkeyboard]
+type = internal/xkeyboard
+blacklist-0 = num lock
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-prefix-underline = ${colors.secondary}
+label-layout = %layout%
+label-layout-underline = ${colors.secondary}
+label-indicator-padding = 2
+label-indicator-margin = 1
+label-indicator-background = ${colors.secondary}
+label-indicator-underline = ${colors.secondary}
+
+[module/updates-arch]
+type = custom/script
+exec = "~/.config/polybar/scripts/arch/arch_updates.sh "
+tail = true
+format = <label>
+format-prefix = "ﮮ "
+click-right = "arch_updates -u&"
+click-left = "arch_updates -q&"
+click-middle = "arch_updates -c&"
+scroll-up = "arch_updates -n&"
+
+[module/polybar-windows]
+type = custom/script
+exec =/home/arya/polybar-i3-windows/module.py
+tail = true
+
+[module/poweroff]
+type = custom/script
+exec = echo " 󰐥"
+click-left = systemctl poweroff
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+mount-0 = /home
+format-prefix=""
+format-prefix-foreground=${colors.primary}
+label-mounted =SSD: %free%
+label-mounted-foreground=${#ffffff}
+label-unmounted = %mountpoint% not mounted
+label-unmounted-foreground = ${colors.foreground-alt}
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+label-focused = %index%
+label-focused-background = ${colors.primary}
+label-focused-padding = 1
+label-unfocused = %index%
+label-unfocused-padding = 1
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-padding = ${self.label-focused-padding}
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+[module/mpd]
+type = internal/mpd
+format-online = <label-song>  <icon-prev> <icon-stop> <toggle> <icon-next>
+icon-prev = 
+icon-stop = 
+icon-play = 
+icon-pause = 
+icon-next = 
+label-song-maxlen = 25
+label-song-ellipsis = true
+
+[module/xbacklight]
+type = internal/xbacklight
+format = <label> <bar>
+label = BL
+bar-width = 10
+bar-indicator = |
+bar-indicator-foreground = #fff
+bar-indicator-font = 2
+bar-fill = ─
+bar-fill-font = 2
+bar-fill-foreground = #9f78e1
+bar-empty = ─
+bar-empty-font = 2
+bar-empty-foreground = ${colors.foreground-alt}
+
+[module/backlight-acpi]
+inherit = module/xbacklight
+type = internal/backlight
+card = intel_backlight
+
+[module/battery]
+type = internal/battery
+full-at = 100
+low-at = 5
+
+battery = BAT0
+adapter = AC0
+
+poll-interval = 5
+time-format = %H:%M
+
+format-charging = <label-charging>
+format-discharging = <label-discharging>
+label-charging = BATT: %percentage%%
+label-discharging = BATT: %percentage%%
+label-full =BATT: %percentage%
+label-low =BATT: %percentage%
+bar-capacity-width = 10
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+label =CPU: %percentage:2%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+label =RAM: %gb_free%
+
+[module/network]
+type = internal/network
+interface = wlp4s0
+interface-type = wireless
+interval = 3.0
+accumulate-stats = true
+unknown-as-up = true
+format-connected = <ramp-signal> <label-connected>
+format-disconnected = <label-disconnected>
+label-connected = %essid%
+label-connected-foreground = ${colors.foreground}
+label-disconnected = DISCONNECTED
+label-disconnected-foreground = ${colors.foreground}
+ramp-signal-0 = 󰢿
+ramp-signal-1 = 󰢼
+ramp-signal-2 = 󰢽
+ramp-signal-3 = 󰢽
+ramp-signal-4 = 󰢾
+ramp-signal-5 = 󰢾
+animation-packetloss-0 = ⚠
+animation-packetloss-0-foreground = #ffa64c
+animation-packetloss-1 = 📶
+animation-packetloss-1-foreground = #000000
+animation-packetloss-framerate = 500
+speed-unit = ''
+
+[module/date]
+type = internal/date
+interval = 5
+date =
+date-alt ="%Y-%m-%d"
+time =%H:%M
+time-alt =%H:%M:%S
+format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
+label = %date% %time%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+format-volume = <label-volume> <bar-volume>
+label-volume = %percentage%%
+label-volume-foreground = ${colors.foreground}
+label-muted = Muted
+label-muted-foreground = #FFFFFF
+bar-volume-width = 10
+bar-volume-foreground-0 = ${colors.primary}
+bar-volume-foreground-1 = ${colors.primary}
+bar-volume-foreground-2 = ${colors.primary}
+bar-volume-foreground-3 = ${colors.primary}
+bar-volume-foreground-4 = ${colors.primary}
+bar-volume-foreground-5 = ${colors.primary}
+bar-volume-foreground-6 = ${colors.primary}
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-indicator-font = 2
+bar-volume-fill = ─
+bar-volume-fill-font = 2
+bar-volume-empty = ─
+bar-volume-empty-font = 2
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/media]
+type = internal/playerctl
+player = spotify
+format = {{ artist }} - {{ title }}
+format-underline = ${colors.primary}
+format-padding = 2
+format-ellipsis = true
+scroll = true
+
+[module/powermenu]
+type = custom/menu
+
+format-foreground = ${colors.foreground}
+format-background = ${colors.background}
+
+
+label-open = " ⏻ "
+label-open-font = 4
+label-close = "  "
+label-close-foreground = ${colors.foreground}
+label-separator = " "
+label-separator-foreground = ${colors.foreground}
+
+menu-0-1 = " "
+menu-0-1-exec = systemctl reboot
+menu-0-1-foreground = ${colors.foreground}
+
+menu-0-0 = " "
+menu-0-0-exec = systemctl poweroff
+menu-0-0-foreground = ${colors.foreground}
+
+[settings]
+screenchange-reload = true
+compositing-background = source
+compositing-overline = over
+compositing-underline = over
+compositing-foreground = over
+compositing-border = over
+; pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini
+
+[bar/duplicate]
+monitor = DisplayPort-0
+; width = 100%
+; height = 3%
+radius = 4
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+; line-size = 2
+; border-size = 6
+separator = |
+separator-foreground = ${colors.primary}
+padding-right = 1
+; module-margin-left = 1
+; module-margin-right = 2
+font-0 = 0xProto Nerd Font Mono:size=10;3.5
+font-1 = 0xProto Nerd Font Mono:size=12;2.5
+modules-left = i3
+modules-center = datetime
+modules-right = media pulseaudio powermenu
+wm-restack = i3
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+
+

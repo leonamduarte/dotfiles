@@ -18,6 +18,20 @@ map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
 -- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
 map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
 
+-- lua/config/keys-explorer-here.lua (ou dentro do seu snacks.lua)
+vim.keymap.set("n", "<leader>e", function()
+  local Snacks = require("snacks")
+  local name = vim.api.nvim_buf_get_name(0)
+  local dir = (name ~= "" and vim.fn.fnamemodify(name, ":p:h")) or vim.loop.cwd()
+
+  -- Abre na direita, com cwd = diretório do buffer atual, revelando o arquivo
+  Snacks.picker.explorer({
+    cwd = dir,
+    reveal = name ~= "" and name or nil,
+    layout = { layout = { position = "right" } },
+  })
+end, { desc = "Explorer (aqui, direita)" })
+
 -- ===== Diagnóstico =====
 map("n", "gl", function()
   vim.diagnostic.open_float()
