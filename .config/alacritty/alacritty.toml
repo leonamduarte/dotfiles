@@ -1,79 +1,79 @@
 [env]
 TERM = "xterm-256color"
-WINIT_X11_SCALE_FACTOR = "1"
+
+# [terminal.shell]
+# program = "C:\\Program Files\\Git\\bin\\bash.exe"
+# args = ["--login", "-i"]
 
 [window]
-dynamic_padding = true
-decorations = "full"
-title = "Alacritty@CachyOS"
-opacity = 0.8
+dynamic_padding = false
+decorations = "None"
+opacity = 1.0
+title = "Alacritty"
 decorations_theme_variant = "Dark"
 
 [window.dimensions]
-columns = 100
-lines = 30
+columns = 120 # WezTerm: initial_cols
+lines = 35    # WezTerm: initial_rows
 
-[window.class]
-instance = "Alacritty"
-general = "Alacritty"
+[window.padding]
+x = 0
+y = 0
 
 [scrolling]
 history = 10000
 multiplier = 3
 
-[colors]
-draw_bold_text_with_bright_colors = true
-
-[colors.primary]
-background = "0x2E3440"
-foreground = "0xD8DEE9"
-
-[colors.normal]
-black = "0x3B4252"
-red = "0xBF616A"
-green = "0xA3BE8C"
-yellow = "0xEBCB8B"
-blue = "0x81A1C1"
-magenta = "0xB48EAD"
-cyan = "0x88C0D0"
-white = "0xE5E9F0"
-
-[colors.bright]
-black = "0x4C566A"
-red = "0xBF616A"
-green = "0xA3BE8C"
-yellow = "0xEBCB8B"
-blue = "0x81A1C1"
-magenta = "0xB48EAD"
-cyan = "0x8FBCBB"
-white = "0xECEFF4"
-
 [font]
-size = 11
+size = 13
 
 [font.normal]
-family = "DMMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Regular"
 
 [font.bold]
-family = "DMMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Bold"
 
 [font.italic]
-family = "DMMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Italic"
 
 [font.bold_italic]
-family = "DMMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Bold Italic"
 
-[selection]
-semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
-save_to_clipboard = true
+[colors]
+draw_bold_text_with_bright_colors = true
+
+# Catppuccin Mocha (equivalente ao que tu usa no WezTerm)
+[colors.primary]
+background = "0x1e1e2e"
+foreground = "0xcdd6f4"
+
+[colors.normal]
+black = "0x45475a"
+red = "0xf38ba8"
+green = "0xa6e3a1"
+yellow = "0xf9e2af"
+blue = "0x89b4fa"
+magenta = "0xf5c2e7"
+cyan = "0x94e2d5"
+white = "0xbac2de"
+
+[colors.bright]
+black = "0x585b70"
+red = "0xf38ba8"
+green = "0xa6e3a1"
+yellow = "0xf9e2af"
+blue = "0x89b4fa"
+magenta = "0xf5c2e7"
+cyan = "0x94e2d5"
+white = "0xa6adc8"
 
 [cursor]
-style = "Underline"
-vi_mode_style = "None"
+# Barra fixa (equivalente ao SteadyBar do WezTerm)
+style = { shape = "Beam", blinking = "Off" }
 unfocused_hollow = true
 thickness = 0.15
 
@@ -86,78 +86,20 @@ action = "PasteSelection"
 
 [keyboard]
 [[keyboard.bindings]]
-key = "Paste"
-action = "Paste"
-
-[[keyboard.bindings]]
-key = "Copy"
-action = "Copy"
-
-[[keyboard.bindings]]
-key = "L"
-mods = "Control"
-action = "ClearLogNotice"
-
-[[keyboard.bindings]]
-key = "L"
-mods = "Control"
-mode = "~Vi"
-chars = "\f"
-
-[[keyboard.bindings]]
-key = "PageUp"
-mods = "Shift"
-mode = "~Alt"
-action = "ScrollPageUp"
-
-[[keyboard.bindings]]
-key = "PageDown"
-mods = "Shift"
-mode = "~Alt"
-action = "ScrollPageDown"
-
-[[keyboard.bindings]]
-key = "Home"
-mods = "Shift"
-mode = "~Alt"
-action = "ScrollToTop"
-
-[[keyboard.bindings]]
-key = "End"
-mods = "Shift"
-mode = "~Alt"
-action = "ScrollToBottom"
-
-[[keyboard.bindings]]
 key = "V"
-mods = "Control|Shift"
+mods = "Control"
 action = "Paste"
 
 [[keyboard.bindings]]
 key = "C"
-mods = "Control|Shift"
+mods = "Control"
 action = "Copy"
 
+# extra do wezterm: Ctrl+L limpa notificações -> aqui mapeado para limpar a tela
 [[keyboard.bindings]]
-key = "F"
-mods = "Control|Shift"
-action = "SearchForward"
-
-[[keyboard.bindings]]
-key = "B"
-mods = "Control|Shift"
-action = "SearchBackward"
-
-[[keyboard.bindings]]
-key = "C"
-mods = "Control|Shift"
-mode = "Vi"
-action = "ClearSelection"
-
-[[keyboard.bindings]]
-key = "Key0"
+key = "L"
 mods = "Control"
-action = "ResetFontSize"
+chars = "\f"
 
 [general]
 live_config_reload = true

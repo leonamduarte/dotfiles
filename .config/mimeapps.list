@@ -1,32 +1,10 @@
 [Default Applications]
-application/x-extension-htm=firefox-developer-edition.desktop
-application/x-extension-html=firefox-developer-edition.desktop
-application/x-extension-shtml=firefox-developer-edition.desktop
-application/x-extension-xht=firefox-developer-edition.desktop
-application/x-extension-xhtml=firefox-developer-edition.desktop
-application/x-shellscript=org.gnome.TextEditor.desktop
-application/x-terminal-emulator=org.wezfurlong.wezterm.desktop
-application/xhtml+xml=firefox-developer-edition.desktop
-text/html=brave-browser.desktop
-text/plain=nvim.desktop
-text/x-lua=org.gnome.TextEditor.desktop
-x-scheme-handler/about=brave-browser.desktop
-x-scheme-handler/chrome=firefox-developer-edition.desktop
-x-scheme-handler/http=com.brave.Browser.desktop
-x-scheme-handler/https=com.brave.Browser.desktop
-x-scheme-handler/terminal=org.wezfurlong.wezterm.desktop
-x-scheme-handler/unknown=brave-browser.desktop
+application/x-shellscript=nvim.desktop
+text/html=vivaldi-stable.desktop
+x-scheme-handler/http=vivaldi-stable.desktop
+x-scheme-handler/https=vivaldi-stable.desktop
+x-scheme-handler/about=vivaldi-stable.desktop
+x-scheme-handler/unknown=vivaldi-stable.desktop
 
 [Added Associations]
-application/x-extension-htm=firefox-developer-edition.desktop
-application/x-extension-html=firefox-developer-edition.desktop
-application/x-extension-shtml=firefox-developer-edition.desktop
-application/x-extension-xht=firefox-developer-edition.desktop
-application/x-extension-xhtml=firefox-developer-edition.desktop
-application/x-shellscript=org.gnome.TextEditor.desktop
-application/xhtml+xml=firefox-developer-edition.desktop
-text/html=firefox-developer-edition.desktop
-text/x-lua=org.gnome.TextEditor.desktop
-x-scheme-handler/chrome=firefox-developer-edition.desktop
-x-scheme-handler/http=com.brave.Browser.desktop;com.vivaldi.Vivaldi.desktop;firefox-developer-edition.desktop
-x-scheme-handler/https=com.brave.Browser.desktop;com.vivaldi.Vivaldi.desktop;firefox-developer-edition.desktop
+application/x-shellscript=org.gnome.TextEditor.desktop;nvim.desktop;

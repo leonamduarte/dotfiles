@@ -1,126 +1,81 @@
-[cursor]
-shape = 'beam'
-blinking = false
-draw-bold-text-with-light-colors = false
+[general]
+working-directory = "$HOME"
 
+# ===== Cursor =====
+[cursor]
+shape = "beam"
+blinking = false
+
+# Opcional (novas versões): esconder cursor enquanto digita
+hide-cursor-when-typing = false
+
+# ===== Fontes =====
 [fonts]
-size = 18
+size = 16
 features = []
 use-drawable-chars = true
 symbol-map = []
-disable-warnings-not-found = false
 additional-dirs = []
-fonts.disable-warnings-not-found = false
-fonts.hinting = true
-line-height = 1.5
-hide-mouse-cursor-when-typing = false
+hinting = true            # antes estava como fonts.hinting; mantém aqui
+# line-height = 1.5
+
+# Desativa avisos de fonte ausente (mantém limpo em setups multi-SO)
+disable-warnings-not-found = false
 
 [fonts.regular]
-# family = "0xProto Nerd Font Mono"
-family = "IosevkaTerm NF"
-# family = "SpaceMono Nerd Font Mono"
+# family = "Hack Nerd Font"
+family = "BlexMono Nerd Font"
+# family = "GeistMono Nerd Font"
+# family = "Terminess Nerd Font Mono"
+# family = "JetBrainsMono Nerd Font"
 style = "Normal"
 width = "Normal"
 weight = 400
 
 [fonts.bold]
-family = "IosevkaTerm NF"
+family = "BlexMono Nerd Font"
 style = "Normal"
 width = "Normal"
 weight = 800
 
 [fonts.italic]
-family = "IosevkaTerm NF"
+family = "BlexMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 400
 
 [fonts.bold-italic]
-family = "IosevkaTerm NF"
+family = "BlexMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 800
 
+# ===== Navegação / Splits =====
 [navigation]
 use-split = true
-# navigation.unfocused-split-opacity = 0.9
+# Se quiser variar tabs/breadcrumb:
+# mode = "CollapsedTab"  # "Breadcrumb" | "TopTab" | "BottomTab"
+# unfocused-split-opacity = 0.9
 
-# Set window background opacity. Default: 1.0.
-# # Set blur on the window background. Changing this config requires restarting Rio to take effect. Default false
-# Set window decorations.
-# Enabled (default for Windows/Linux/BSD/macOS) enable window decorations.
-# Disabled disable all window decorations.
-# Transparent window decorations with transparency.
-# Buttonless remove buttons from window decorations.
-
+# ===== Janela =====
 [window]
-# opacity = 0.9
-blur = true
-decorations = "Transparent"
+opacity = 1.0
+# blur = true
+decorations = "Disabled" # outras: "Enabled" | "Disabled" | "Buttonless"
 
-# If both properties width and height are occluded then background image will use the terminal width/height.
-# Default: None
-[window.background-image]
-path = "C:/Users/itinerario/dotfiles/.config/wezterm/assets/bg-blurred-w11.png"
-opacity = 0.5
+# Imagem de fundo (API suportada oficialmente)
+# [window.background-image]
+# path = "$HOME/.config/wezterm/bg-blurred.png"
+# opacity = 1.0
 # x = 0.0
 # y = -100.0
+# Recomendo definir width/height se quiser consistência entre monitores:
+# width = 1920.0
+# height = 1080.0
 
+# Evita “bold fica claro demais” — moveu daqui de [cursor]
+draw-bold-text-with-light-colors = false
+
+# ===== Geral =====
+# Pede confirmação pra fechar? (false = não pergunta)
 confirm-before-quit = false
-
-[colors]
-# Regular colors
-background = '#0F0D0E'
-black = '#4C4345'
-blue = '#006EE6'
-cyan = '#88DAF2'
-foreground = '#F9F4DA'
-green = '#0BA95B'
-magenta = '#7B5EA7'
-red = '#ED203D'
-white = '#F1F1F1'
-yellow = '#FCBA28'
-
-# Cursor
-cursor = '#F712FF'
-vi-cursor = '#12d0ff'
-
-# Navigation
-tabs = '#12B5E5'
-tabs-foreground = '#7d7d7d'
-tabs-active = '#303030'
-tabs-active-highlight = '#ffa133'
-tabs-active-foreground = '#FFFFFF'
-bar = '#1b1a1a'
-
-# Search
-search-match-background = '#44C9F0'
-search-match-foreground = '#FFFFFF'
-search-focused-match-background = '#E6A003'
-search-focused-match-foreground = '#FFFFFF'
-
-# Selection
-selection-foreground = '#0F0D0E'
-selection-background = '#44C9F0'
-
-# Dim colors
-dim-black = '#1C191A'
-dim-blue = '#0E91B7'
-dim-cyan = '#93D4E7'
-dim-foreground = '#ECDC8A'
-dim-green = '#098749'
-dim-magenta = '#624A87'
-dim-red = '#C7102A'
-dim-white = '#C1C1C1'
-dim-yellow = '#E6A003'
-
-# Light colors
-light-black = '#ADA8A0'
-light-blue = '#44C9F0'
-light-cyan = '#7BE1FF'
-light-foreground = '#F2EFE2'
-light-green = '#0ED372'
-light-magenta = '#9E88BE'
-light-red = '#F25E73'
-light-white = '#FFFFFF'
-light-yellow = '#FDF170'

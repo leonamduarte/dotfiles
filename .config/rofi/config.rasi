@@ -29,4 +29,16 @@
 //@theme "~/.config/rofi/themes/KooL_style-4.rasi"
 //@theme "~/.config/rofi/themes/KooL_LonerOrZ.rasi"
 //@theme "~/.config/rofi/themes/KooL_style-1.rasi"
-@theme "~/.config/rofi/themes/KooL_style-4.rasi"
+//@theme "~/.config/rofi/themes/KooL_style-4.rasi"
+
+//@theme "/usr/share/rofi/themes/Arc-Dark.rasi"
+
+//@theme "/home/lm/.config/rofi/themes/KooL_style-9.rasi"
+
+//@theme "/home/lm/.config/rofi/themes/KooL_LonerOrZ.rasi"
+
+//@theme "/home/lm/.config/rofi/themes/KooL_style-14.rasi"
+
+//@theme "/home/lm/.config/rofi/themes/KooL_style-5.rasi"
+
+@theme "/usr/share/rofi/themes/material.rasi"

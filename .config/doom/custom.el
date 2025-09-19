@@ -10,7 +10,7 @@
      "1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a"
      "83550d0386203f010fa42ad1af064a766cfec06fc2f42eb4f2d89ab646f3ac01" default))
  '(helm-minibuffer-history-key "M-p")
- '(package-selected-packages '(copilot)))
+ '(package-selected-packages '(copilot tss)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

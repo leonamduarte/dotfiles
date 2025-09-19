@@ -10,7 +10,7 @@ return {
       -- Enable transparent background
       transparent = true,
 
-      -- Reduce the overall saturation of colours for a more muted look
+      -- Reduce the overall saturation of colours for a more mutud look
       saturation = 1, -- accepts a value between 0 and 1. 0 will be fully desaturated (greyscale) and 1 will be the full color (default)
 
       -- Enable italics comments
