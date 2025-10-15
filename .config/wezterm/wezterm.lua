@@ -1,41 +1,46 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
-local constants = require("constants")
-local toggle_transparency_command = require("commands.toggle-transparency")
 
--- Font settings
+-- ===== Fonte e cores =====
 config.font_size = 12
-config.line_height = 1.2
--- config.font = wezterm.font("0xProto Nerd Font Mono")
-config.font = wezterm.font("DMMono Nerd Font")
+config.font = wezterm.font("FiraCode Nerd Font")
 
--- Colors
+config.color_scheme = "Dracula (Official)"
+
 config.colors = {
 	cursor_bg = "white",
 	cursor_border = "white",
 }
+config.force_reverse_video_cursor = true
 
--- Appearance
+-- ===== Janela / UI =====
 config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
-config.window_padding = {
-	left = 0,
-	right = 0,
-	top = 0,
-	bottom = 0,
-}
-config.window_background_image = constants.bg_image
+config.enable_tab_bar = false
+config.show_tab_index_in_tab_bar = false
+config.use_fancy_tab_bar = false
+config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 
--- Miscellaneous settings
+config.initial_rows = 35
+config.initial_cols = 120
+config.window_close_confirmation = "NeverPrompt"
+
+-- ===== Desempenho / Cursor =====
 config.max_fps = 120
+config.animation_fps = 60
+config.cursor_blink_rate = 250
+config.default_cursor_style = "SteadyBar"
+
+-- ===== Linux/Wayland =====
+config.enable_wayland = true
 config.prefer_egl = true
 
--- Custom commands
+-- ===== Shell padrão (sempre zsh) =====
+config.default_prog = { "zsh", "-l" }
 
-wezterm.on("augment-command-palette", function()
-	return {
-		toggle_transparency = toggle_transparency_command,
-	}
-end)
+-- ===== Atalhos =====
+config.keys = {
+	{ key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
+}
 
 return config

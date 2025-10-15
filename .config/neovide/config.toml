@@ -1,5 +1,5 @@
 
-backtraces_path = "/path/to/neovide_backtraces.log" # see below for the default platform specific location
+# backtraces_path = "/path/to/neovide_backtraces.log" # see below for the default platform specific location
 fork = false
 frame = "none"
 idle = true
@@ -15,13 +15,18 @@ vsync = true
 wsl = false
 
 [font]
-# normal =  "BlexMono Nerd Font Mono"
-normal =  "JetBrainsMono Nerd Font Mono"
-size = 11.0
+# normal = "BlexMono Nerd Font"
+# normal = "SauceCodePro Nerd Font"
+normal = "JetBrainsMono Nerd Font"
+# normal = "IosevkaTerm Nerd Font Mono"
+# normal = "GeistMono Nerd Font"
+
+size = 12.0
+# linespace = 2
 
 [box-drawing]
 # "font-glyph", "native" or "selected-native"
 mode = "font-glyph"
 
 [box-drawing.sizes]
-default = [2, 4]  # Thin and thick values respectively, for all sizes
+default = [2, 4] # Thin and thick vaues respectively, for all sizes

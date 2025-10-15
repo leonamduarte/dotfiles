@@ -1,13 +1,11 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-
 -- ============================================================================
 -- Arquivo de Configuração de Mapeamentos de Teclas (Keymaps) para Neovim
 -- ============================================================================
 
 -- Define uma variável local 'keymap' para simplificar o uso de vim.keymap.set.
 local keymap = vim.keymap
+local diagnostic = vim.diagnostic
+local api = vim.api
 
 -- Define opções padrão para os mapeamentos:
 --   'noremap = true': Garante que o mapeamento não seja recursivo,
@@ -23,10 +21,40 @@ local opts = { noremap = true, silent = true }
 -- Abre o diretório pai no modo flutuante do plugin Oil.
 keymap.set("n", "-", "<cmd>Oil --float<CR>", { desc = "Open Parent Directory in Oil Float Mode" })
 
+-- Alterna a exibição da barra lateral do Neotree.
+keymap.set("n", "<leader>te", "<cmd>Neotree toggle<cr>", { desc = "[T]oggle N[E]otree" })
+
+-- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
+keymap.set("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
+
+-- Abre a visualização do Neotree mostrando os buffers abertos.
+keymap.set("n", "<leader>tb", "<Cmd>Neotree buffers<CR>", { desc = "Open Neotree view of current open buffers" })
+
+-- Mapeamento para abrir o navegador de arquivos do Telescope.
+keymap.set("n", "<space>fb", ":Telescope file_browser<CR>", { desc = "Open Telescope File Browser" })
+
+-- Abre o navegador de arquivos do Telescope no diretório do buffer atual.
+keymap.set(
+    "n",
+    "<space>fB",
+    ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
+    { desc = "Open Telescope File Browser at current buffer's path" }
+)
+
+-- Lazy.nvim
+keymap.set("n", "<leader>ls", "<cmd>Lazy sync<CR>", { desc = "Open [L]azy [S]ync" })
+keymap.set("n", "<leader>lu", "<cmd>Lazy update<CR>", { desc = "Open [L]azy [U]pdate" })
+keymap.set("n", "<leader>li", "<cmd>Lazy install<CR>", { desc = "Open Lazy" })
+
 -- Abre a informação de diagnóstico (erros/warnings LSP) em uma janela flutuante.
-vim.keymap.set("n", "gl", function()
-    vim.diagnostic.open_float()
+keymap.set("n", "gl", function()
+    diagnostic.open_float()
 end, { desc = "Open Diagnostic in Float" })
+
+-- Formata o arquivo atual usando o plugin 'conform.nvim'.
+keymap.set("n", "<leader>cf", function()
+    require("conform").format({ lsp_format = "fallback" })
+end, { desc = "Format current file" })
 
 -- Abrir arquivos recentes via Telescope.
 -- vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Open recent files" })
@@ -36,6 +64,12 @@ keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight
 
 -- Mapeia <leader>fp para abrir projetos usando ProjectFzf.
 keymap.set("n", "<leader>fp", ":ProjectFzf<CR>", { noremap = true, silent = true, desc = "Open Projects with FZF" })
+
+-- Navegar entre janelas (splits) usando Ctrl + h/j/k/l.
+keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to window below" })
+keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to window above" })
 
 -- Divisão de janelas:
 -- 'sh' para split horizontal (vsplit).
@@ -49,9 +83,18 @@ keymap.set("v", "<", "<gv", { desc = "Decrease indent" })
 -- Aumenta a indentação da seleção no modo visual.
 keymap.set("v", ">", ">gv", { desc = "Increase indent" })
 
+-- Redimensionamento de Janelas com Ctrl + ArrowKeys:
+-- Reduz a largura da janela ativa em 2 colunas/linhas.
+keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Shrink window width" })
+keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
+keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
+keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Shrink window height" })
+
 -- Ao colar no modo visual, não copia a seleção para o registro padrão.
 -- Isso permite colar várias vezes o mesmo conteúdo.
-vim.keymap.set("v", "p", '"_dP', opts)
+keymap.set("v", "p", '"_dP', opts)
 
 -- Deleta um único caractere sem copiá-lo para o registro (não polui o buffer de cola).
-vim.keymap.set("n", "x", '"_x', opts)
+keymap.set("n", "x", '"_x', opts)
+
+api.nvim_set_keymap("n", "<C-s>", ":w<CR>", { noremap = true, silent = true })

@@ -1,0 +1,17 @@
+0
+/home/lm/imagens/walls/landscape/80.jpg
+/home/lm/imagens/walls/landscape/44.jpg
+/home/lm/imagens/walls/landscape/70.jpg
+/home/lm/imagens/walls/landscape/03.jpg
+/home/lm/imagens/walls/landscape/61.jpg
+/home/lm/imagens/walls/landscape/12.jpg
+/home/lm/imagens/walls/landscape/21.jpg
+/home/lm/imagens/walls/landscape/96.jpg
+/home/lm/imagens/walls/landscape/06.jpg
+/home/lm/imagens/walls/landscape/96.jpg
+/home/lm/imagens/walls/landscape/29.jpg
+/home/lm/imagens/walls/landscape/94.jpg
+/home/lm/imagens/walls/landscape/59.jpg
+/home/lm/imagens/walls/landscape/81.jpg
+/home/lm/imagens/walls/landscape/78.jpg
+/usr/share/backgrounds/gnome/adwaita-l.jxl

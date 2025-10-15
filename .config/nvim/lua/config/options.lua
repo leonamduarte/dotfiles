@@ -1,61 +1,63 @@
--- Options are automatically loaded before lazy.nvim startup
--- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Add any additional options here
-
-local opt = vim.opt
-
-opt.expandtab = true -- Convert tabs to spaces
-opt.shiftwidth = 4 -- Amount to indent with << and >>
-opt.tabstop = 4 -- How many spaces are shown per Tab
-opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
-
-opt.smarttab = true
-opt.smartindent = true
-opt.autoindent = true -- Keep identation from previous line
+vim.opt.expandtab = true -- Convert tabs to spaces
+vim.opt.shiftwidth = 4 -- Amount to indent with << and >>
+vim.opt.tabstop = 4 -- How many spaces are shown per Tab
+vim.opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
+vim.opt.smarttab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true -- Keep identation from previous line
 
 -- Enable break indent
-opt.breakindent = true
+vim.opt.breakindent = true
 
 -- Always show relative line numbers
-opt.number = true
-opt.relativenumber = true
-
-opt.wrap = true -- Disable wrap
-opt.linebreak = true -- Companion to wrap, don't split words
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.wrap = true -- Disable wrap
+vim.opt.linebreak = true -- Companion to wrap, don't split words
 
 -- Show line under cursor
-opt.cursorline = true
+vim.opt.cursorline = true
 
 -- Store undos between sessions
-opt.undofile = true
+vim.opt.undofile = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-opt.mouse = "a"
+vim.opt.mouse = "a"
 
 -- Don't show the mode, since it's already in the status line
-opt.showmode = false
+vim.opt.showmode = false
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-opt.ignorecase = true
-opt.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
-opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes"
 
 -- Configure how new splits should be opened
-opt.splitright = true
-opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
--- Sets how neowill display certain whitespace characters in the editor.
+-- Sets how neovim will display certain whitespace characters in the editor.
 --  See `:help 'list'`
 --  and `:help 'listchars'`
-opt.list = true
-opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Minimal number of screen lines to keep above and below the cursor.
-opt.scrolloff = 10
+vim.opt.scrolloff = 5
 
 -- Clipboard (scheduled to avoid startup performance impact)
 vim.schedule(function()
     vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
 end)
+
+vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    desc = "Highlight text after yanking",
+    callback = function()
+        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 100 })
+    end,
+})

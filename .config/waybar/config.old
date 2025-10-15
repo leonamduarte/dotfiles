@@ -17,15 +17,15 @@
 
     "modules-left": [
         //"custom/rofi",
-        "hyprland/workspaces",
-        //"hyprland/submap",
+        "sway/workspaces",
+        //"sway/mode",
         "temperature",
         //"idle_inhibitor",
         //"mpd"
         "custom/spotify"
     ],
     "modules-center": [
-        //"hyprland/window"
+        //"sway/window"
         "clock#date",
         "custom/weather"
         //"custom/gammastep"
@@ -297,7 +297,7 @@
         "exec": "$HOME/.config/waybar/get_kbdlayout.sh"
     },*/
 
-    "hyprland/workspaces": {
+    "sway/workspaces": {
         "all-outputs": true,
         "format": "{name}",
         "format-icons": {
@@ -312,13 +312,13 @@
             "9": "九",
             "10": "十",
         },
-        "on-scroll-up": "hyprctl dispatch workspace e+1 1>/dev/null",
-        "on-scroll-down": "hyprctl dispatch workspace e-1 1>/dev/null",
+        "on-scroll-up": "swaymsg workspace next",
+        "on-scroll-down": "swaymsg workspace prev",
         "sort-by-number": true,
         "active-only": false,
     },
 
-    "hyprland/window": {
+    "sway/window": {
         "max-length": 100,
         "separate-outputs": true
     },

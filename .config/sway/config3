@@ -1,0 +1,258 @@
+### =============================================================================
+###  Sway (Catppuccin Mocha) — por leonamsh
+### =============================================================================
+
+### Entrada
+input "*" {
+    xkb_layout us
+    xkb_variant altgr-intl 
+    pointer_accel -0.6
+}
+
+# Terminal e Launcher
+set $term kitty
+set $menu wofi --show drun --prompt "run:"
+set $browser brave-browser
+set $browser2 brave-browser-nightly 
+set $files   nautilus
+set $code    code
+set $music   flatpak run com.spotify.Client
+set $emacs   emacs
+set $nvim    neovide
+
+# Tecla Mod (Super/Logo)
+set $mod Mod4
+
+# Binds básicos
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+d exec $menu
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+e exec "swaymsg exit"
+bindsym $mod+Shift+s     exec grim -g "$(slurp)" - | swappy -f -
+bindsym $mod+Shift+Return exec $files
+bindsym $mod+Shift+p     exit
+bindsym $mod+Ctrl+s      exec systemctl poweroff
+bindsym $mod+Ctrl+r      exec systemctl reboot
+bindsym $mod+Ctrl+p      exec systemctl suspend
+bindsym $mod+Shift+w     exec $browser
+bindsym $mod+F1          exec $browser2
+bindsym $mod+F2          exec $code
+bindsym $mod+F3          exec $nvim
+bindsym $mod+F4          exec $music
+bindsym $mod+Tab         layout toggle split
+bindsym $mod+Shift+r     Reload
+
+### Foco entre janelas
+bindsym $mod+h focus left
+bindsym $mod+l focus right
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+space focus next
+
+### Mover janelas
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+l move right
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+
+### Redimensionar
+bindsym $mod+equal resize grow width 20 px or 2 ppt
+bindsym $mod+minus resize shrink width 20 px or 2 ppt
+# Direcionais (compatíveis)
+bindsym $mod+Ctrl+h resize shrink width 20 px
+bindsym $mod+Ctrl+l resize grow   width 20 px
+bindsym $mod+Ctrl+j resize grow   height 20 px
+bindsym $mod+Ctrl+k resize shrink height 20 px
+
+### Layouts e modos
+bindsym $mod+n layout default
+bindsym $mod+m fullscreen enable
+bindsym $mod+f fullscreen toggle
+bindsym $mod+t floating toggle
+
+bindsym $mod+period focus output right
+bindsym $mod+comma  focus output left
+
+# Workspaces (1..9)
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+
+### Mapear workspaces para saídas
+# Use nomes de saída que realmente existam no seu setup
+workspace $ws1 output HDMI-A-1
+workspace $ws2 output DP-1
+
+### Regras: mover apps para workspaces (Wayland-first)
+# Navegadores
+for_window [app_id="firefox"                      ] move to workspace $ws2
+for_window [app_id="firefoxdeveloperedition"      ] move to workspace $ws2
+for_window [app_id="vivaldi-stable"               ] move to workspace $ws2
+for_window [class="Vivaldi-stable"                ] move to workspace $ws2
+for_window [app_id="brave-browser"                ] move to workspace $ws2
+for_window [app_id="brave-browser-nightly"        ] move to workspace $ws2
+for_window [class="Brave-browser-nightly"         ] move to workspace $ws2
+# VS Code
+for_window [app_id="code"                         ] move to workspace $ws1
+for_window [class="Code"] move to workspace $ws1
+# Terminal
+for_window [app_id="org.wezfurlong.wezterm"       ] move to workspace $ws1
+for_window [class="wezterm"] move to workspace $ws1
+for_window [class="org.wezfurlong.wezterm"] move to workspace $ws1
+# Arquivos
+for_window [app_id="thunar"] move to workspace $ws4
+for_window [class="Thunar"] move to workspace $ws4
+# Spotify
+for_window [app_id="com.spotify.Client"] move to workspace $ws6
+for_window [class="Spotify"]             move to workspace $ws6
+# Discord
+for_window [app_id="com.discordapp.Discord"] move to workspace $ws5
+for_window [class="discord"]                move to workspace $ws5
+
+### Ir para workspaces
+# bindsym $mod+1 workspace $ws1
+# bindsym $mod+2 workspace $ws2
+# bindsym $mod+3 workspace $ws3
+# bindsym $mod+4 workspace $ws4
+# bindsym $mod+5 workspace $ws5
+# bindsym $mod+6 workspace $ws6
+
+### Enviar janela para workspace
+# bindsym $mod+Shift+1 move container to workspace $ws1
+# bindsym $mod+Shift+2 move container to workspace $ws2
+# bindsym $mod+Shift+3 move container to workspace $ws3
+# bindsym $mod+Shift+4 move container to workspace $ws4
+# bindsym $mod+Shift+5 move container to workspace $ws5
+# bindsym $mod+Shift+6 move container to workspace $ws6
+
+### Regras de janelas flutuantes comuns (X11/XWayland)
+for_window [class="confirmreset"] floating enable
+for_window [class="dialog"]       floating enable
+for_window [class="download"]     floating enable
+for_window [class="error"]        floating enable
+for_window [class="file_progress"] floating enable
+for_window [class="kdenlive"]     floating enable
+for_window [class="makebranch"]   floating enable
+for_window [class="maketag"]      floating enable
+for_window [class="notification"] floating enable
+for_window [class="pinentry-gtk-2"] floating enable
+for_window [class="ssh-askpass"]  floating enable
+for_window [class="toolbar"]      floating enable
+for_window [class="Yad"]          floating enable
+for_window [title="branchdialog"] floating enable
+for_window [title="Confirmation"] floating enable
+for_window [title="Qalculate!"]   floating enable
+for_window [title="pinentry"]     floating enable
+
+default_border pixel
+default_floating_border pixel
+
+### Gaps
+gaps inner 8
+gaps outer -5
+
+### Saídas (monitores)
+output HDMI-A-1 {
+    mode 1920x1080
+    pos 0 0
+}
+output DP-1 {
+    mode 1440x900
+    pos 1920 0
+}
+
+### Autostart (use apenas o necessário)
+# Barra
+exec_always sh -c "killall waybar; waybar"
+
+# Wallpaper (Wayland nativo)
+# troque a imagem pelo seu caminho
+# exec_always swaybg -i /run/media/lm/dev/walls/landscape/73.jpg -m fill
+exec variety
+
+# Notificações: dunst → mako (recomendado)
+# exec_always dunst
+exec mako
+
+# Idle/lock: xscreensaver/xset → swayidle + swaylock/gtklock
+# Remova TODAS as linhas xset/xscreensaver
+exec swayidle -w timeout 900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' exec_always swayidle -w timeout 1800 'systemctl suspend'   
+
+# Gerenciador de energia (opcional)
+exec xfce4-power-manager
+
+# Num Lock: pode não funcionar em Wayland puro. Se não funcionar, remova.
+# exec numlockx on
+
+# Gestos: não Wayland-puro; use só se precisar mesmo
+# exec libinput-gestures-setup start
+
+# Steam silencioso
+exec steam -silent
+
+### Modo de energia/sessão
+mode "(S)uspend, (L)ogout, (R)eboot, (P)oweroff" {
+    bindsym r exec systemctl reboot
+    bindsym s exec systemctl suspend; mode "default"
+    bindsym l exit
+    bindsym p exec systemctl poweroff
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# bindsym $mod+Shift+e mode "(S)uspend, (L)ogout, (R)eboot, (P)oweroff"
+
+### Não deixar notificações roubarem o foco
+for_window [window_role="popup"]  focus no
+for_window [window_role="bubble"] focus no
+for_window [title="Notification"] focus no
+for_window [class="Dunst"]        focus no
+for_window [urgent=latest]        focus no
+
+output * adaptive_sync on
+
+# Layout & estética
+floating_modifier $mod
+default_border pixel 2
+hide_edge_borders smart
+gaps inner 10
+gaps outer 6
+
+# Desabilita swaybar nativa (vamos usar Waybar)
+# bar { mode invisible }
+
+# Autostarts
+exec_always sh -c "killall waybar; waybar"
+exec_always --no-startup-id nm-applet --indicator
+
+# Backlight e volume (teclas especiais)
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Cursor e fonte (opcional)
+seat * xcursor_theme Bibata-Modern-Ice 24
+font pango:JetBrainsMono Nerd Font 11
+
+# Foco & comportamento
+focus_follows_mouse yes
+floating_modifier $mod
+
+

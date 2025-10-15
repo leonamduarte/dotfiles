@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ===== Autofs Arch v2 (ext4 dev + NTFS 1TB, com fallback ntfs-3g) =====
+# ===== Autofs Arch v3 (EXT4 + EXT4) =====
+# - Monta:  /mnt/dev  (LABEL=dev, ext4)
+#           /mnt/1TB  (LABEL=1TB, ext4)
 # - Idempotente, com backup/rollback do /etc/fstab
 # - Automount via systemd (x-systemd.automount,nofail,x-gvfs-hide)
-# - Testa ntfs3 RW; se falhar, usa ntfs-3g
-# ================================================================
+# ========================================
 
 die() {
   echo "❌ $*" >&2
@@ -22,87 +23,56 @@ REAL_UID="$(id -u "$REAL_USER")"
 REAL_GID="$(id -g "$REAL_USER")"
 HOME_DIR="$(getent passwd "$REAL_USER" | cut -d: -f6)"
 
-LABEL_EXT4="${LABEL_EXT4:-dev}"
-LABEL_NTFS="${LABEL_NTFS:-1TB}"
+# Labels e fallbacks
+LABEL_DEV="${LABEL_DEV:-dev}"
+LABEL_1TB="${LABEL_1TB:-1TB}"
+DEV_DEV_CAND="${DEV_DEV_CAND:-/dev/sda1}"
+DEV_1TB_CAND="${DEV_1TB_CAND:-/dev/sdb2}"
 
-DEV_EXT4_CAND="${DEV_EXT4_CAND:-/dev/sda1}"
-DEV_NTFS_CAND="${DEV_NTFS_CAND:-/dev/sdb2}"
-
-MP_EXT4="/mnt/dev"
-MP_NTFS="/mnt/1TB"
+MP_DEV="/mnt/dev"
+MP_1TB="/mnt/1TB"
 
 # Helpers
 dev_by_label() { blkid -t "LABEL=$1" -o device 2>/dev/null | head -n1 || true; }
 uuid_of() { blkid -s UUID -o value "$1" 2>/dev/null || true; }
 fstype_of() { lsblk -ndo FSTYPE "$1" 2>/dev/null || true; }
 
-# Encontrar ext4
-DEV_EXT4="$(dev_by_label "$LABEL_EXT4")"
-[[ -z "$DEV_EXT4" ]] && DEV_EXT4="$DEV_EXT4_CAND"
-[[ -b "$DEV_EXT4" ]] || die "Partição ext4 não encontrada (label ${LABEL_EXT4} ou $DEV_EXT4_CAND)."
-[[ "$(fstype_of "$DEV_EXT4")" == "ext4" ]] || die "Esperava ext4 em $DEV_EXT4."
-UUID_EXT4="$(uuid_of "$DEV_EXT4")"
-[[ -n "$UUID_EXT4" ]] || die "Sem UUID para $DEV_EXT4."
-ok "ext4: $DEV_EXT4 (UUID=$UUID_EXT4) → $MP_EXT4"
+# Encontrar DEV (ext4)
+DEV_DEV="$(dev_by_label "$LABEL_DEV")"
+[[ -z "$DEV_DEV" ]] && DEV_DEV="$DEV_DEV_CAND"
+[[ -b "$DEV_DEV" ]] || die "Partição 'dev' não encontrada (label ${LABEL_DEV} ou $DEV_DEV_CAND)."
+[[ "$(fstype_of "$DEV_DEV")" == "ext4" ]] || die "Esperava ext4 em $DEV_DEV (LABEL=${LABEL_DEV})."
+UUID_DEV="$(uuid_of "$DEV_DEV")"
+[[ -n "$UUID_DEV" ]] || die "Sem UUID para $DEV_DEV."
+ok "ext4: $DEV_DEV (UUID=$UUID_DEV) → $MP_DEV"
 
-# Encontrar NTFS
-DEV_NTFS="$(dev_by_label "$LABEL_NTFS")"
-[[ -z "$DEV_NTFS" ]] && DEV_NTFS="$DEV_NTFS_CAND"
-[[ -b "$DEV_NTFS" ]] || die "Partição NTFS não encontrada (label ${LABEL_NTFS} ou $DEV_NTFS_CAND)."
-FSTYPE_NTFS="$(fstype_of "$DEV_NTFS")"
-[[ "$FSTYPE_NTFS" == ntfs || "$FSTYPE_NTFS" == ntfs3 ]] || die "Esperava NTFS em $DEV_NTFS."
-UUID_NTFS="$(uuid_of "$DEV_NTFS")"
-[[ -n "$UUID_NTFS" ]] || die "Sem UUID para $DEV_NTFS."
-ok "ntfs: $DEV_NTFS (UUID=$UUID_NTFS) → $MP_NTFS"
+# Encontrar 1TB (ext4)
+DEV_1TB="$(dev_by_label "$LABEL_1TB")"
+[[ -z "$DEV_1TB" ]] && DEV_1TB="$DEV_1TB_CAND"
+[[ -b "$DEV_1TB" ]] || die "Partição '1TB' não encontrada (label ${LABEL_1TB} ou $DEV_1TB_CAND)."
+[[ "$(fstype_of "$DEV_1TB")" == "ext4" ]] || die "Esperava ext4 em $DEV_1TB (LABEL=${LABEL_1TB})."
+UUID_1TB="$(uuid_of "$DEV_1TB")"
+[[ -n "$UUID_1TB" ]] || die "Sem UUID para $DEV_1TB."
+ok "ext4: $DEV_1TB (UUID=$UUID_1TB) → $MP_1TB"
 
 # Preparar pontos
-mkdir -p "$MP_EXT4" "$MP_NTFS"
+mkdir -p "$MP_DEV" "$MP_1TB"
 
-# Encerrar montagens paralelas (GNOME/udisks)
-umount -l "/run/media/$REAL_USER/$LABEL_NTFS" 2>/dev/null || true
-umount -l "$MP_NTFS" 2>/dev/null || true
+# Encerrar automounts/monstagens anteriores (se houver)
+systemctl stop mnt-dev.automount mnt-dev.mount 2>/dev/null || true
 systemctl stop mnt-1TB.automount mnt-1TB.mount 2>/dev/null || true
+umount -l "/run/media/$REAL_USER/$LABEL_1TB" 2>/dev/null || true
+umount -l "/run/media/$REAL_USER/$LABEL_DEV" 2>/dev/null || true
+umount -l "$MP_DEV" 2>/dev/null || true
+umount -l "$MP_1TB" 2>/dev/null || true
 
-# Verificar se o volume estava sujo (após sua última rodada do ntfsfix deve estar limpo)
-if command -v ntfsfix >/dev/null 2>&1; then
-  # Só roda ntfsfix se estiver desmontado
-  if ! findmnt "$DEV_NTFS" >/dev/null 2>&1; then
-    ntfsfix "$DEV_NTFS" >/dev/null || warn "ntfsfix retornou aviso (ok seguir)."
-  fi
-fi
+# Opções fstab (iguais para os dois, ext4 nativo lida com permissões)
+EXT4_OPTS="defaults,noatime,x-systemd.automount,nofail,x-gvfs-hide"
 
-# Decidir driver NTFS: tentar ntfs3 (RO -> RW). Se RW falhar, usar ntfs-3g.
-NTFS_DRIVER="ntfs3"
-NTFS_OPTS_BASE="defaults,noatime,uid=${REAL_UID},gid=${REAL_GID},windows_names,x-systemd.automount,nofail,x-gvfs-hide"
+FSTAB_LINE_DEV="UUID=${UUID_DEV} ${MP_DEV} ext4 ${EXT4_OPTS} 0 2"
+FSTAB_LINE_1TB="UUID=${UUID_1TB} ${MP_1TB} ext4 ${EXT4_OPTS} 0 2"
 
-info "Testando ntfs3 em RO…"
-if mount -t ntfs3 -o ro "$DEV_NTFS" "$MP_NTFS" 2>/dev/null; then
-  umount "$MP_NTFS" || true
-  info "Testando ntfs3 em RW…"
-  if ! mount -t ntfs3 -o "uid=${REAL_UID},gid=${REAL_GID}" "$DEV_NTFS" "$MP_NTFS" 2>/dev/null; then
-    warn "ntfs3 RW falhou; caindo para ntfs-3g."
-    NTFS_DRIVER="ntfs-3g"
-  else
-    umount "$MP_NTFS" || true
-  fi
-else
-  warn "ntfs3 RO falhou; usando ntfs-3g."
-  NTFS_DRIVER="ntfs-3g"
-fi
-
-# Garantir pacote do ntfs-3g se escolhido
-if [[ "$NTFS_DRIVER" == "ntfs-3g" ]]; then
-  if ! command -v mount.ntfs-3g >/dev/null 2>&1; then
-    pacman -S --needed --noconfirm ntfs-3g || die "Falha ao instalar ntfs-3g."
-  fi
-fi
-
-# Construir linhas do fstab
-EXT4_OPTS="defaults,noatime,x-systemd.automount,nofail"
-FSTAB_LINE_EXT4="UUID=${UUID_EXT4} ${MP_EXT4} ext4 ${EXT4_OPTS} 0 2"
-FSTAB_LINE_NTFS="UUID=${UUID_NTFS} ${MP_NTFS} ${NTFS_DRIVER} ${NTFS_OPTS_BASE} 0 0"
-
-# Editar /etc/fstab com backup e limpeza de entradas antigas dessas montagens
+# Editar /etc/fstab com backup e limpeza de entradas antigas
 FSTAB="/etc/fstab"
 TS="$(date +%Y%m%d-%H%M%S)"
 BACKUP="/etc/fstab.bak-${TS}"
@@ -110,7 +80,7 @@ TMP="$(mktemp)"
 cp -a "$FSTAB" "$BACKUP"
 ok "Backup: $BACKUP"
 
-awk -v uuid1="$UUID_EXT4" -v uuid2="$UUID_NTFS" -v mp1="$MP_EXT4" -v mp2="$MP_NTFS" '
+awk -v uuid1="$UUID_DEV" -v uuid2="$UUID_1TB" -v mp1="$MP_DEV" -v mp2="$MP_1TB" '
 BEGIN{IGNORECASE=1}
 {
   if ($0 ~ uuid1 || $0 ~ uuid2 || $2 == mp1 || $2 == mp2) next;
@@ -120,9 +90,9 @@ END{}' "$FSTAB" >"$TMP"
 
 {
   echo ""
-  echo "# >>> auto-added by autofs-arch-v2 (${TS})"
-  echo "$FSTAB_LINE_EXT4"
-  echo "$FSTAB_LINE_NTFS"
+  echo "# >>> auto-added by autofs-arch-ext4 (${TS})"
+  echo "$FSTAB_LINE_DEV"
+  echo "$FSTAB_LINE_1TB"
   echo "# <<<"
 } >>"$TMP"
 
@@ -135,18 +105,18 @@ fi
 mv -f "$TMP" "$FSTAB"
 systemctl daemon-reload
 
-# Montar tudo e disparar automount tocando os diretórios
+# Montar e disparar automount
 mount -a || {
   cp -af "$BACKUP" "$FSTAB"
   systemctl daemon-reload
   die "mount -a falhou; rollback aplicado."
 }
-ls "$MP_EXT4" >/dev/null 2>&1 || true
-ls "$MP_NTFS" >/dev/null 2>&1 || true
+ls "$MP_DEV" >/dev/null 2>&1 || true
+ls "$MP_1TB" >/dev/null 2>&1 || true
 
 # Symlinks amigáveis
-ln -sfn "$MP_EXT4" "$HOME_DIR/dev"
-ln -sfn "$MP_NTFS" "$HOME_DIR/1TB"
+ln -sfn "$MP_DEV" "$HOME_DIR/dev"
+ln -sfn "$MP_1TB" "$HOME_DIR/1TB"
 chown -h "$REAL_UID:$REAL_GID" "$HOME_DIR/dev" "$HOME_DIR/1TB"
 
-ok "fstab atualizado com ${NTFS_DRIVER}. Automount pronto."
+ok "fstab atualizado (ext4/ext4). Automount pronto. Acesse ~/dev e ~/1TB."

@@ -26,13 +26,33 @@
 
 import os
 import subprocess
-from libqtile import bar, extension, hook, layout, qtile, widget
+from libqtile import bar, hook, layout, qtile, widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 import colors
+
+# from qtile_extras import widget
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
 
 # from spotify import Spotify
+
+
+@hook.subscribe.startup_once
+def autostart():
+    subprocess.Popen(["/usr/lib/xfce4/notifyd/xfce4-notifyd"])
+
+
+def dmlogout():
+    qtile.cmd_spawn("sh -c /home/lm/.config/qtile/scripts/dm-logout.sh")
+
+
+def search():
+    qtile.cmd_spawn("rofi -show drun")
+
+
+def power():
+    qtile.cmd_spawn("sh -c ~/.config/rofi/scripts/power")
+
 
 powerline = {
     "decorations": [
@@ -43,19 +63,14 @@ powerline = {
 
 mod = "mod4"  # Sets mod key to SUPER/WINDOWS
 myTerm = "wezterm"  # My terminal of choice
-myBrowser = "brave-nightly"  # My browser of choice
-myBrowser2 = "firefox"  # My browser of choice
-myFiles = "nautilus"  # My file manager of choice
+myBrowser = "firefox-developer-edition"  # My browser of choice
+myBrowser2 = "zen-browser"  # My browser of choice
+myFiles = "thunar"  # My file manager of choice
 myCode = "code"  # vscode
 myMusic = "flatpak run com.spotify.Client"  # spotify
-# myEmacs = "emacsclient -c -a 'emacs' "  # The space at the end is IMPORTANT!
 myEmacs = "emacs"  # The space at the end is IMPORTANT!
-myNeovim = "nvim"
-# logout menu option - about to change it to rofi power script
-# logOut = "sh -c ~/.config/rofi/scripts/power"
-logOut = "wlogout"
-# logOut = "sh -c ~/.config/rofi/scripts/power" #logout menu option - about to change it to rofi power script
-# logOut = "archlinux-logout" #logout menu option - about to change it to rofi power script
+myNeovim = "neovide"
+logOut = dmlogout
 
 # Allows you to input a name when adding treetab section.
 
@@ -95,16 +110,17 @@ keys = [
     Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
     Key([mod, "shift"], "Return", lazy.spawn(myFiles), desc="Run thunar"),
     Key([mod, "shift"], "p", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key(
-        [mod, "control"], "s", lazy.spawn("systemctl poweroff"), desc="System Shutdown"
-    ),
-    Key([mod, "control"], "r", lazy.spawn("systemctl reboot"), desc="System Reboot"),
-    Key([mod, "control"], "p", lazy.spawn("systemctl suspend"), desc="System Suspend"),
-    Key([mod], "w", lazy.spawn(myBrowser2), desc="Web browser 2"),
-    Key([mod], "F1", lazy.spawn(myBrowser), desc="Web browser"),
+    Key([mod, "shift"], "w", lazy.spawn(myBrowser), desc="Web browser 2"),
+    Key([mod], "F1", lazy.spawn(myBrowser2), desc="Web browser"),
     Key([mod], "F2", lazy.spawn(myCode), desc="code"),
     Key([mod], "F3", lazy.spawn(myNeovim), desc="nvim"),
     Key([mod], "F4", lazy.spawn(myMusic), desc="spotify"),
+    # Fechar notificação mais recente
+    Key(["mod4"], "n", lazy.spawn("dunstctl close")),
+    # Fechar todas as notificações
+    Key(["mod4", "shift"], "n", lazy.spawn("dunstctl close-all")),
+    # Reabrir última notificação fechada
+    Key(["mod4", "control"], "n", lazy.spawn("dunstctl history-pop")),
     Key(
         [mod],
         "b",
@@ -112,10 +128,14 @@ keys = [
         desc="Toggles the bar to show/hide",
     ),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
-    Key([mod, "shift"], "x", lazy.spawn("dm-logout -r"), desc="Logout menu"),
-    Key([mod], "x", lazy.spawn(logOut), desc="power menu"),
+    Key(
+        [mod, "shift"],
+        "x",
+        lazy.spawn("sh -c /home/lm/.config/qtile/scripts/dm-logout.sh"),
+        desc="logout menu",
+    ),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     # Switch between windows
     # Some layouts like 'monadtall' only need to use j/k to move
@@ -221,23 +241,24 @@ keys = [
     Key([mod], "e", lazy.spawn(myEmacs), desc="Emacs Dashboard"),
 ]
 
+power_commands = {
+    "s": ("systemctl poweroff", "System Shutdown"),
+    "r": ("systemctl reboot", "System Reboot"),
+    "p": ("systemctl suspend", "System Suspend"),
+}
+for key, (cmd, desc) in power_commands.items():
+    keys.append(Key([mod, "control"], key, lazy.spawn(cmd), desc=desc))
+
+
 groups = []
-group_names = ["1", "2", "3", "4", "5", "6"]
+group_names = ["1", "2", "3", "4", "5"]
 # group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-# group_labels = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 # group_labels = ["DEV", "WWW", "SYS", "MUS", "VBOX", "CHAT", "DOC", "VID", "GFX", "MISC"]
 # group_labels = ["", "", "", "", "", "", "𝦝", "", "", "⛨"]
-# group_labels = ["", "", "👁", "", "", "", "✀", "꩜", "", "⎙"]
-group_labels = ["I", "II", "III", "IV", "V", "VI"]
-# group_labels = ["", "", "", "", "", "꩜"]
-# group_labels = ["", "", "", "꩜", ""]
-
+# group_labels = ["I", "II", "III", "IV", "V", "VI"]
+# group_labels = ["", "", "", "", "", ""]
+group_labels = ["", "", "", "", ""]
 group_layouts = [
-    "monadtall",
-    "monadtall",
-    "monadtall",
-    "monadtall",
-    "monadtall",
     "monadtall",
     "monadtall",
     "monadtall",
@@ -245,9 +266,23 @@ group_layouts = [
     "monadtall",
 ]
 
+for name, label in zip(group_names, group_labels):
+    groups.append(
+        Group(
+            name=name,
+            layout="monadtall",
+            label=label,
+        )
+    )
+
 
 # Cria grupos 1-5
 for i in range(len(group_names)):
+    # Define a lista de 'matches' para cada grupo
+    matches = None
+    if group_names[i] == "2":
+        # Se o grupo for o '2', adiciona a regra para o Vivaldi
+        matches = [Match(wm_class="firefox-developer-edition")]
     groups.append(
         Group(
             name=group_names[i],
@@ -255,18 +290,6 @@ for i in range(len(group_names)):
             label=group_labels[i],
         )
     )
-
-# # Cria grupo "6" APENAS UMA VEZ (fora do loop)
-# groups.append(
-#     Group(
-#         name="6",
-#         label="\uaa5c",
-#         layout="monadtall",
-#         persist=True,
-#         exclusive=True,
-#         matches=[Match(wm_class=["discord", "spotify", "brave"])]
-#     )
-# )
 
 # Keybindings para grupos 1-5
 # for group in groups[:-1]:  # Exclui o �ltimo grupo ("6")
@@ -277,114 +300,105 @@ for group in groups:
             Key([mod, "shift"], group.name, lazy.window.togroup(group.name)),
         ]
     )
-
-# # Keybinding customizada para o grupo "6"
-# keys.extend([
-#     Key([mod], "6", lazy.group["6"].toscreen()),
-#     Key([mod, "shift"], "6", lazy.window.togroup("6")),
-# ])
-
-colors = colors.DoomOne
-
+# color = colors.Dracula
+color = colors.Cozytile
+# color = colors.Palenight
 layout_theme = {
     "border_width": 2,
     "margin": 12,
-    "border_focus": colors[8],
-    "border_normal": colors[0],
+    "border_focus": color[8],
+    "border_normal": color[0],
 }
 
 layouts = [
     layout.MonadTall(**layout_theme),
-    layout.Tile(**layout_theme),
-    layout.Max(**layout_theme),
+    # layout.Tile(**layout_theme),
+    # layout.Max(**layout_theme),
 ]
 
-widget_defaults = dict(font="Ubuntu", fontsize=12, padding=0, background=colors[0])
-
-
-def search():
-    qtile.cmd_spawn("rofi -show drun")
-
-
-# dm-logout its not working atm
-
-
-def dmlogout():
-    qtile.cmd_spawn("sh -c /home/lm/.config/qtile/scripts/dm-logout.sh")
-
-
-def power():
-    qtile.cmd_spawn("sh -c ~/.config/rofi/scripts/power")
+widget_defaults = dict(
+    font="0xProto Nerd Font Mono", fontsize=12, padding=0, background=color[0]
+)
 
 
 extension_defaults = widget_defaults.copy()
 
 
+def separator():
+    return widget.TextBox(
+        text="|",
+        font="0xProto Nerd Font Mono",
+        foreground=color[9],
+        padding=2,
+        fontsize=14,
+    )
+
+
 def init_widgets_list():
     widgets_list = [
-        widget.Spacer(length=8),
+        widget.Spacer(length=5),
         widget.Image(
             filename="~/.config/qtile/Assets/launch_Icon.png",
             scale="False",
-            mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("qtilekeys-yad")},
+            mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("rofi -show drun")},
         ),
-        widget.Prompt(font="Ubuntu Mono", fontsize=14, foreground=colors[1]),
+        widget.Prompt(font="0xProto Nerd Font Mono", fontsize=10, foreground=color[1]),
         widget.GroupBox(
-            fontsize=15,
-            margin_y=5,
-            margin_x=14,
+            fontsize=22,
+            margin_y=3,
+            margin_x=8,
             padding_y=0,
             padding_x=2,
             borderwidth=3,
-            active=colors[8],
-            inactive=colors[9],
-            rounded=False,
-            highlight_color=colors[0],
+            active=color[8],
+            inactive=color[9],
+            rounded=True,
+            highlight_color=color[0],
             highlight_method="line",
-            this_current_screen_border=colors[7],
-            this_screen_border=colors[4],
-            other_current_screen_border=colors[7],
-            other_screen_border=colors[4],
+            this_current_screen_border=color[7],
+            this_screen_border=color[4],
+            other_current_screen_border=color[7],
+            other_screen_border=color[4],
         ),
-        widget.TextBox(
-            text="|", font="Ubuntu Mono", foreground=colors[9], padding=2, fontsize=14
-        ),
+        separator(),
         widget.LaunchBar(
             progs=[
-                ("🦁", "brave", "Brave web browser"),
-                ("🚀", "kitty", "Alacritty terminal"),
+                ("🦁", "firefox-developer-edition", "Web Browser"),
+                ("🚀", "wezterm", "Terminal"),
                 ("📁", "thunar", "PCManFM file manager"),
                 ("🎸", "com.spotify.Client", "Spotify"),
             ],
             fontsize=12,
-            padding=12,
-            foreground=colors[3],
+            padding=5,
+            foreground=color[3],
         ),
+        separator(),
+        widget.CurrentLayout(foreground=color[8], padding=5),
         widget.TextBox(
-            text="|", font="Ubuntu Mono", foreground=colors[9], padding=2, fontsize=14
+            text="|",
+            font="0xProto Nerd Font Mono",
+            foreground=color[9],
+            padding=2,
+            fontsize=14,
         ),
-        widget.CurrentLayout(foreground=colors[8], padding=5),
-        widget.TextBox(
-            text="|", font="Ubuntu Mono", foreground=colors[9], padding=2, fontsize=14
-        ),
-        widget.WindowName(foreground=colors[6], padding=8, max_chars=40),
+        widget.WindowName(foreground=color[6], padding=8, max_chars=40),
         widget.GenPollText(
             update_interval=300,
             func=lambda: subprocess.check_output(
                 "printf $(uname -r)", shell=True, text=True
             ),
-            foreground=colors[3],
+            foreground=color[3],
             padding=8,
             fmt="❤  {}",
         ),
         widget.CPU(
-            foreground=colors[4],
+            foreground=color[4],
             padding=8,
             mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop")},
             format="  Cpu: {load_percent}%",
         ),
         widget.Memory(
-            foreground=colors[8],
+            foreground=color[8],
             padding=8,
             mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(myTerm + " -e htop")},
             format="{MemUsed: .0f}{mm}",
@@ -392,7 +406,7 @@ def init_widgets_list():
         ),
         widget.DF(
             update_interval=60,
-            foreground=colors[5],
+            foreground=color[5],
             padding=8,
             mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("notify-disk")},
             partition="/",
@@ -402,12 +416,12 @@ def init_widgets_list():
             visible_on_warn=False,
         ),
         widget.Volume(
-            foreground=colors[7],
+            foreground=color[7],
             padding=8,
             fmt="🕫  Vol: {}",
         ),
         widget.Clock(
-            foreground=colors[8],
+            foreground=color[8],
             padding=8,
             mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("notify-date")},
             # Uncomment for date and time
@@ -508,7 +522,7 @@ follow_mouse_focus = True
 bring_front_click = False
 cursor_warp = False
 floating_layout = layout.Floating(
-    border_focus=colors[8],
+    border_focus=color[8],
     border_width=2,
     float_rules=[
         # Run the utility of `xprop` to see the wm class and name of an X client.
@@ -565,12 +579,4 @@ def _move_group6_to_secondary():
     qtile.groups["6"].cmd_toscreen(1)
 
 
-# XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
-# string besides java UI toolkits; you can see several discussions on the
-# mailing lists, GitHub issues, and other WM documentation that suggest setting
-# this string if your java app doesn't work correctly. We may as well just lie
-# and say that we're a working one by default.
-#
-# We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
-# java that happens to be on java's whitelist.
 wmname = "LG3D"

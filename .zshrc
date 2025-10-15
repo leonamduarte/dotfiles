@@ -1,164 +1,106 @@
-#!/usr/bin/env zsh
-# ────────────────────────────────────────────────
-# Autor      : leonamsh
-# Data       : 2025-09-01
-# Descrição  : Configuração simplificada do Zsh com Oh My Zsh, plugins e aliases
-# Licença    : Uso pessoal
-# Contato    : github.com/leonamsh
-# ────────────────────────────────────────────────
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
-# 0) Powerlevel10k instant prompt (deve ficar no topo)
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# 1) PATHs básicos
-export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH"
-
-# 2) Oh My Zsh + Tema
+# Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-ZSH_THEME="powerlevel10k/powerlevel10k"   # usa p10k via oh-my-zsh
 
-# Plugins (ordem importa: syntax-highlighting por último)
-plugins=(
-  git
-  zsh-autosuggestions
-  history-substring-search
-  zsh-syntax-highlighting
-)
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time Oh My Zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+ZSH_THEME="robbyrussell"
 
-# Carrega Oh My Zsh e o tema
-source "$ZSH/oh-my-zsh.sh"
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
-# p10k (carrega configuração se existir)
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
 
-# 3) Autocomplete e histórico
-autoload -Uz compinit && compinit -C
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
 
-HISTFILE=~/.zsh_history
-HISTSIZE=10000
-SAVEHIST=10000
-setopt INC_APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
-# Case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
 
-# zsh-autosuggestions: cor discreta
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
 
-# 4) Ferramentas/integrações opcionais
-# zoxide (cd mais inteligente). Obs: redefine 'cd' para 'z' — comente se não quiser.
-eval "$(zoxide init zsh)"
-alias cd='z'
-alias dnf='dnf5'
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
 
-# nvm (Node.js)
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
 
-# 5) Atalhos comuns (agrupados)
-# 5.1 — Git
-alias gs='git status'
-alias ga='git add -A'
-alias gc='git commit -m'
-alias gp='git push'
-alias gl='git pull'
-alias gco='git checkout'
-alias gitr='git remote set-url origin'
-alias clone='git clone'
-alias lz='lazygit'
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
 
-# 5.2 — Navegação
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
-alias cdg='cd ~/.config'
-alias cddev='cd /home/lm/leonamsh/'
-alias cdprojeto='cd /home/lm/leonamsh/projeto-mercado-frontend/'
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
 
-# 5.3 — Neovim / Emacs
-export EDITOR=nvim
-alias v='nvim'
-alias vim='nvim'
-# atalhos de edição/configuração
-alias nkitty='nvim ~/.config/kitty/kitty.conf'
-alias nwez='nvim ~/.config/wezterm/wezterm.lua'
-alias nzsh='nvim ~/.zshrc'
-alias nfish='nvim ~/.config/fish/config.fish'
-alias nprojeto='nvim /home/lm/leonamsh/projeto-mercado/'
-alias nsway='nvim ~/.config/sway'
-alias nrascunho='nvim ~/Documents/rascunhos/'
-# ambientes Neovim
-alias nvima='env NVIM_APPNAME=astronvim nvim'
-alias nvimc='env NVIM_APPNAME=nvchad nvim'
-alias nviml='env NVIM_APPNAME=leovim nvim'
-# Doom Emacs
-alias doomsync='~/.config/emacs/bin/doom sync'
-alias doomupd='~/.config/emacs/bin/doom upgrade'
-alias doomdoc='~/.config/emacs/bin/doom doctor'
-alias doompurge='~/.config/emacs/bin/doom purge'
-alias emacs='emacs -nw'
-alias demacs='emacs --daemon'
-alias kemacs='killall emacs'
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-# 5.4 — ls com eza
-alias ls='eza -al --color=always --group-directories-first --icons=always'
-alias la='eza -a  --color=always --group-directories-first --icons=always'
-alias ll='eza -l  --color=always --group-directories-first --icons=always'
-alias lt='eza -aT --color=always --group-directories-first --icons=always'
-alias l_.="eza -a | grep -e '^\.'"
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
 
-# 5.5 — Sistema
-alias stowa='stow . --adopt'
-alias grubup="sudo grub-mkconfig -o /boot/grub/grub.cfg"
-alias fixpacman="sudo rm /var/lib/pacman/db.lck"
-alias tarnow='tar -acf '
-alias untar='tar -zxvf '
-alias wget='wget -c '
-alias psmem='ps auxf | sort -nr -k 4'
-alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-alias jctl="journalctl -p 3 -xb"
-alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
-# 5.6 — Pessoais 
-# alias S='sudo dnf5 -C install -y'
-# alias Ss='dnf5 search'
-alias S='sudo pacman -S --noconfirm'
-alias Ss='pacman -Ss'
-alias pS='paru -S --noconfirm'
-alias pSs='paru -Ss'
-alias upds='~/.config/autostart/xinputI3.sh'
-alias update='sudo /home/lm/scripts/update-fedora.sh'
-alias limpao='sudo /home/lm/scripts/clean-fedora.sh'
-alias srcfish='source ~/.config/fish/config.fish'
-alias srczsh='source ~/.zshrc'
-alias cdaula='cd /home/lm/leonamsh/maisPraTi/'
-alias naula='nvim /home/lm/leonamsh/maisPraTi/'
-alias ninstall='nvim /home/lm/leonamsh/gitlab/scripts/3-popos/post-install-popos-v2.sh'
-alias ngit='nvim /home/lm/leonamsh/gitlab'
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
 
-# 6) Funções úteis
+source $ZSH/oh-my-zsh.sh
 
-# 6.1 — Yazi: retorna para o diretório que você saiu do TUI
-function y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-  yazi "$@" --cwd-file="$tmp"
-  IFS= read -r -d '' cwd < "$tmp"
-  [[ -n "$cwd" && "$cwd" != "$PWD" ]] && builtin cd -- "$cwd"
-  rm -f -- "$tmp"
-}
+# User configuration
 
-# 7) Keybindings (setas ↑/↓ para buscar no histórico incrementalmente)
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# export MANPATH="/usr/local/man:$MANPATH"
 
-# Fim.
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
 
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='nvim'
+# fi
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# Compilation flags
+# export ARCHFLAGS="-arch $(uname -m)"
+
+# Set personal aliases, overriding those provided by Oh My Zsh libs,
+# plugins, and themes. Aliases can be placed here, though Oh My Zsh
+# users are encouraged to define aliases within a top-level file in
+# the $ZSH_CUSTOM folder, with .zsh extension. Examples:
+# - $ZSH_CUSTOM/aliases.zsh
+# - $ZSH_CUSTOM/macos.zsh
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

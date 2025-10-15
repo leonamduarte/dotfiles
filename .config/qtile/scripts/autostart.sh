@@ -20,7 +20,7 @@ xrandr --output HDMI-A-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --
 
 ~/.config/autostart/screenResolution.sh &
 #change your keyboard if you need it
-#setxkbmap -layout be
+setxkbmap -layout us -variant intl
 
 keybLayout=$(setxkbmap -v | awk -F "+" '/symbols/ {print $2}')
 
