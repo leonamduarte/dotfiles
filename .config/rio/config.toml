@@ -1,15 +1,17 @@
+
+# ===== Geral =====
+# Pede confirmação pra fechar? (false = não pergunta)
+confirm-before-quit = false
+
 [general]
 working-directory = "$HOME"
 
 # ===== Cursor =====
 [cursor]
-shape = "beam"
+shape = "block"
 blinking = false
-
-# Opcional (novas versões): esconder cursor enquanto digita
 hide-cursor-when-typing = false
 
-# ===== Fontes =====
 [fonts]
 size = 16
 features = []
@@ -17,65 +19,46 @@ use-drawable-chars = true
 symbol-map = []
 additional-dirs = []
 hinting = true            # antes estava como fonts.hinting; mantém aqui
-# line-height = 1.5
 
-# Desativa avisos de fonte ausente (mantém limpo em setups multi-SO)
 disable-warnings-not-found = false
 
 [fonts.regular]
 # family = "Hack Nerd Font"
-family = "BlexMono Nerd Font"
+# family = "BlexMono Nerd Font"
 # family = "GeistMono Nerd Font"
 # family = "Terminess Nerd Font Mono"
-# family = "JetBrainsMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Normal"
 width = "Normal"
 weight = 400
 
 [fonts.bold]
-family = "BlexMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Normal"
 width = "Normal"
 weight = 800
 
 [fonts.italic]
-family = "BlexMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 400
 
 [fonts.bold-italic]
-family = "BlexMono Nerd Font"
+family = "JetBrainsMono Nerd Font"
 style = "Italic"
 width = "Normal"
 weight = 800
 
-# ===== Navegação / Splits =====
 [navigation]
 use-split = true
-# Se quiser variar tabs/breadcrumb:
-# mode = "CollapsedTab"  # "Breadcrumb" | "TopTab" | "BottomTab"
-# unfocused-split-opacity = 0.9
 
-# ===== Janela =====
 [window]
-opacity = 1.0
-# blur = true
-decorations = "Disabled" # outras: "Enabled" | "Disabled" | "Buttonless"
 
-# Imagem de fundo (API suportada oficialmente)
+mode = "Maximized"
+opacity = 0.9
+blur = true
+decorations = "disabled" # outras: "Enabled" | "Disabled" | "Buttonless"
+# draw-bold-text-with-light-colors = false
 # [window.background-image]
-# path = "$HOME/.config/wezterm/bg-blurred.png"
-# opacity = 1.0
-# x = 0.0
-# y = -100.0
-# Recomendo definir width/height se quiser consistência entre monitores:
-# width = 1920.0
-# height = 1080.0
-
-# Evita “bold fica claro demais” — moveu daqui de [cursor]
-draw-bold-text-with-light-colors = false
-
-# ===== Geral =====
-# Pede confirmação pra fechar? (false = não pergunta)
-confirm-before-quit = false
+# path = "~/dotfiles/.config/wezterm/bg-blurred.png"

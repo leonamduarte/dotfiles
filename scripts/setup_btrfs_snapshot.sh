@@ -1,132 +1,67 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# --- Configuração Inicial ---
-# Verifica se o script está sendo executado como root
-if [ "$EUID" -ne 0 ]; then
-  echo "Erro: Este script deve ser executado como root." >&2
+# Este script prepara subvolumes Btrfs (Ubuntu-compatible). Requer execução como root.
+if [[ $EUID -ne 0 ]]; then
+  echo "Erro: execute como root (sudo)." >&2
   exit 1
 fi
 
-# Verifica se o argumento do disco foi fornecido
-if [ -z "$1" ]; then
-  echo "Uso: $0 <disco>" >&2
-  echo "Exemplo: $0 /dev/nvme0n1" >&2
+if [[ $# -lt 1 ]]; then
+  echo "Uso: $0 /dev/<DISCO>   (ex: /dev/nvme0n1)" >&2
   exit 1
 fi
 
-# Define a variável para o disco
-NVME_DISK="$1"
+DISK="$1"
 
-# Verifica se o disco existe
-if [ ! -b "$NVME_DISK" ]; then
-  echo "Erro: O disco $NVME_DISK não existe ou não é um dispositivo de bloco." >&2
+echo "⚙️  Preparando tabela de partições em: $DISK"
+partprobe "$DISK" || true
+
+# Exemplo: cria layout padrão (EFI + raiz Btrfs). Ajuste conforme seu caso.
+# ATENÇÃO: este é um exemplo e pode APAGAR dados existentes.
+read -rp "Isso pode apagar dados. Digite 'SIM' para continuar: " OK
+if [[ "$OK" != "SIM" ]]; then
+  echo "Abortado."
   exit 1
 fi
 
-# --- Aviso de Segurança e Confirmação ---
-echo "---"
-echo "AVISO: TODOS OS DADOS EM ${NVME_DISK} SERÃO APAGADOS!"
-echo "---"
-read -p "Deseja continuar? (s/N): " -n 1 -r
-echo
-if [[ ! $REPLY =~ ^[sS]$ ]]; then
-    echo "Operação cancelada."
-    exit 1
-fi
-echo "Iniciando a configuração do disco..."
+# Exemplo mínimo:
+#  - partição 1: EFI (512MiB)
+#  - partição 2: Btrfs (restante)
+sgdisk -Z "$DISK"
+sgdisk -n1:0:+512MiB -t1:ef00 -c1:"EFI System" "$DISK"
+sgdisk -n2:0:0       -t2:8300 -c2:"Linux btrfs" "$DISK"
+partprobe "$DISK"
 
-# --- 1. Particionamento (GPT) ---
-echo "1. Criando tabela de partições GPT e apagando dados anteriores..."
-# Apaga todas as partições existentes no disco
-if ! sgdisk --zap-all "$NVME_DISK"; then
-  echo "Erro ao apagar partições existentes." >&2
-  exit 1
-fi
+EFI="${DISK}p1"
+ROOT="${DISK}p2"
 
-# Cria a partição EFI (1 GiB)
-if ! sgdisk -n 1:0:+1G -t 1:ef00 "$NVME_DISK"; then
-  echo "Erro ao criar partição EFI." >&2
-  exit 1
-fi
+mkfs.vfat -F32 -n EFI "$EFI"
+mkfs.btrfs -f -L ROOT "$ROOT"
 
-# Cria a partição Btrfs (com o restante do disco)
-if ! sgdisk -n 2:0:0 -t 2:8300 "$NVME_DISK"; then
-  echo "Erro ao criar partição Btrfs." >&2
-  exit 1
-fi
+mkdir -p /mnt
+mount "$ROOT" /mnt
 
-# --- 2. Formatação das Partições ---
-echo "2. Formatando as partições..."
-# Partição EFI (FAT32)
-if ! mkfs.vfat -F32 "${NVME_DISK}p1"; then
-  echo "Erro ao formatar partição EFI." >&2
-  exit 1
-fi
+# Subvolumes
+btrfs subvolume create /mnt/@
+btrfs subvolume create /mnt/@home
+btrfs subvolume create /mnt/@log
+btrfs subvolume create /mnt/@cache
+btrfs subvolume create /mnt/@snapshots
 
-# Partição Btrfs (com compressão zstd)
-if ! mkfs.btrfs -f -O big_metadata "${NVME_DISK}p2"; then
-  echo "Erro ao formatar partição Btrfs." >&2
-  exit 1
-fi
+umount /mnt
 
-# --- 3. Criação de Subvolumes Btrfs ---
-echo "3. Criando subvolumes Btrfs..."
-# Monta a partição Btrfs temporariamente
-if ! mount "${NVME_DISK}p2" /mnt; then
-  echo "Erro ao montar partição Btrfs." >&2
-  exit 1
-fi
+# Montagens com subvolumes
+mount -o subvol=@,compress=zstd,noatime "$ROOT" /mnt
+mkdir -p /mnt/{home,boot/efi,var/log,var/cache,.snapshots}
+mount -o subvol=@home,compress=zstd,noatime "$ROOT" /mnt/home
+mount -o subvol=@log,compress=zstd,noatime  "$ROOT" /mnt/var/log
+mount -o subvol=@cache,compress=zstd,noatime "$ROOT" /mnt/var/cache
+mount -o subvol=@snapshots,compress=zstd,noatime "$ROOT" /mnt/.snapshots
 
-# Criação dos subvolumes
-for subvol in @root @home @log @spool @cache @tmp @gdm @libvirt @opt; do
-  if ! btrfs subvolume create "/mnt/$subvol"; then
-    echo "Erro ao criar subvolume $subvol." >&2
-    exit 1
-  fi
-done
-
-# Desmonta a partição para remontagem com as opções corretas
-if ! umount /mnt; then
-  echo "Erro ao desmontar partição Btrfs." >&2
-  exit 1
-fi
-
-# --- 4. Montagem dos Subvolumes ---
-echo "4. Montando os subvolumes..."
-# Monta o subvolume principal (@root)
-if ! mount -o subvol=@root,compress=zstd "${NVME_DISK}p2" /mnt; then
-  echo "Erro ao montar subvolume @root." >&2
-  exit 1
-fi
-
-# Cria os diretórios para os subvolumes e os monta
-declare -A subvol_mounts=(
-  ["@home"]="/mnt/home"
-  ["@opt"]="/mnt/opt"
-  ["@log"]="/mnt/var/log"
-  ["@spool"]="/mnt/var/spool"
-  ["@cache"]="/mnt/var/cache"
-  ["@tmp"]="/mnt/var/tmp"
-  ["@gdm"]="/mnt/var/lib/gdm"
-  ["@libvirt"]="/mnt/var/lib/libvirt"
-)
-
-for subvol in "${!subvol_mounts[@]}"; do
-  mkdir -p "${subvol_mounts[$subvol]}"
-  if ! mount -o subvol="$subvol",compress=zstd "${NVME_DISK}p2" "${subvol_mounts[$subvol]}"; then
-    echo "Erro ao montar subvolume $subvol." >&2
-    exit 1
-  fi
-done
-
-# Monta a partição EFI
 mkdir -p /mnt/boot/efi
-if ! mount "${NVME_DISK}p1" /mnt/boot/efi; then
-  echo "Erro ao montar partição EFI." >&2
-  exit 1
-fi
+mount "$EFI" /mnt/boot/efi
 
 echo "---"
-echo "Configuração de partições e subvolumes Btrfs concluída com sucesso."
-echo "Agora você pode prosseguir com a instalação do sistema no diretório /mnt."
-echo "---"
+echo "Subvolumes criados e montados."
+echo "Agora prossiga com a instalação do Ubuntu dentro de /mnt."

@@ -1,11 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
 
-# Limpa a tela e aguarda 2 segundos para melhor visualização
 clear
 sleep 2
 
+OS="$(lsb_release -ds 2>/dev/null || echo Ubuntu)"
+DESKTOP="$(gnome-shell --version 2>/dev/null | awk '{print $3}' || echo '-')"
+
 echo "====================================================="
-echo "Atualização do Fedora $(rpm -E %fedora) - GNOME $(gnome-shell --version | awk '{print $3}')"
+echo "Atualização do ${OS} - GNOME ${DESKTOP}"
 echo "Início: $(date)"
 echo "Usuário: $USER"
 echo "Hostname: $(hostname)"
@@ -15,51 +19,31 @@ echo ""
 echo "====================================================="
 echo "Iniciando atualização do sistema"
 echo "====================================================="
-echo ""
 
-# Atualiza os repositórios e o sistema
-echo "====================================================="
-echo "🔄 Atualizando pacotes oficiais..."
-echo "====================================================="
-if ! sudo pacman -Syyu --noconfirm; then
-  echo "====================================================="
-  echo "❌ Erro ao atualizar pacotes oficiais."
-  echo "====================================================="
-  exit 1
-fi
+sudo apt-get update -y || true
+sudo apt-get dist-upgrade -y || true
+sudo apt-get autoremove --purge -y || true
+sudo apt-get autoclean -y || true
+sudo apt-get clean -y || true
 
-# Atualiza pacotes do AUR usando Paru (se instalado)
-if command -v paru &>/dev/null; then
+# Flatpak
+if command -v flatpak >/dev/null 2>&1; then
   echo "====================================================="
-  echo "🔄 Atualizando pacotes do AUR..."
+  echo "Atualizando pacotes Flatpak"
   echo "====================================================="
-  if ! paru -Syu --noconfirm; then
-    echo "====================================================="
-    echo "❌ Erro ao atualizar pacotes do AUR."
-    echo "====================================================="
-    exit 1
-  fi
-else
-  echo "====================================================="
-  echo "⚠️ Paru não encontrado. Pulei a atualização do AUR."
-  echo "====================================================="
-fi
-
-# Atualiza os pacotes Flatpak
-if command -v flatpak &>/dev/null; then
-  echo "====================================================="
-  echo "🔄 Atualizando pacotes Flatpak..."
-  echo "====================================================="
-  if ! flatpak update -y; then
-    echo "====================================================="
-    echo "❌ Erro ao atualizar pacotes Flatpak."
-    echo "====================================================="
-    exit 1
-  fi
+  flatpak update -y || true
 else
   echo "====================================================="
   echo "⚠️ Flatpak não encontrado. Pulei a atualização de Flatpak."
   echo "====================================================="
+fi
+
+# Snap
+if command -v snap >/dev/null 2>&1; then
+  echo "====================================================="
+  echo "Atualizando pacotes Snap"
+  echo "====================================================="
+  sudo snap refresh || true
 fi
 
 echo "====================================================="
