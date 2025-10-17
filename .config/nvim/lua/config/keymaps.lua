@@ -1,100 +1,82 @@
--- ============================================================================
--- Arquivo de Configuração de Mapeamentos de Teclas (Keymaps) para Neovim
--- ============================================================================
+-- Keymaps são carregados no evento VeryLazy
+-- Defaults do LazyVim: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 
--- Define uma variável local 'keymap' para simplificar o uso de vim.keymap.set.
-local keymap = vim.keymap
-local diagnostic = vim.diagnostic
-local api = vim.api
-
--- Define opções padrão para os mapeamentos:
---   'noremap = true': Garante que o mapeamento não seja recursivo,
---                     evitando comportamentos inesperados.
---   'silent = true': Evita que o comando seja exibido na linha de comando
---                    ao ser executado.
+local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
----
---- Navegação de Arquivos e Gerenciadores de Arquivos (Oil & Neotree)
---- Estes mapeamentos facilitam a navegação pelo sistema de arquivos e o uso de gerenciadores de arquivos como Oil e Neotree.
----
--- Abre o diretório pai no modo flutuante do plugin Oil.
-keymap.set("n", "-", "<cmd>Oil --float<CR>", { desc = "Open Parent Directory in Oil Float Mode" })
+-- LuaLS: declare a global Snacks para evitar warning de undefined-global
+---@class Snacks
+---@field picker table
+---@field explorer fun()
+---@field layout table
+Snacks = Snacks
 
--- Alterna a exibição da barra lateral do Neotree.
-keymap.set("n", "<leader>te", "<cmd>Neotree toggle<cr>", { desc = "[T]oggle N[E]otree" })
+-- ===== Arquivos / Gerenciadores =====
+-- Oil (diretório pai em float)
+map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
 
 -- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
-keymap.set("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
+map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
 
--- Abre a visualização do Neotree mostrando os buffers abertos.
-keymap.set("n", "<leader>tb", "<Cmd>Neotree buffers<CR>", { desc = "Open Neotree view of current open buffers" })
+-- lua/config/keys-explorer-here.lua (ou dentro do seu snacks.lua)
+vim.keymap.set("n", "<leader>e", function()
+  local Snacks = require("snacks")
+  local name = vim.api.nvim_buf_get_name(0)
+  local dir = (name ~= "" and vim.fn.fnamemodify(name, ":p:h")) or vim.loop.cwd()
 
--- Mapeamento para abrir o navegador de arquivos do Telescope.
-keymap.set("n", "<space>fb", ":Telescope file_browser<CR>", { desc = "Open Telescope File Browser" })
+  -- Abre na direita, com cwd = diretório do buffer atual, revelando o arquivo
+  Snacks.picker.explorer({
+    cwd = dir,
+    reveal = name ~= "" and name or nil,
+    layout = { layout = { position = "right" } },
+  })
+end, { desc = "Explorer (aqui, direita)" })
 
--- Abre o navegador de arquivos do Telescope no diretório do buffer atual.
-keymap.set(
-    "n",
-    "<space>fB",
-    ":Telescope file_browser path=%:p:h select_buffer=true<CR>",
-    { desc = "Open Telescope File Browser at current buffer's path" }
-)
+-- ===== Diagnóstico =====
+map("n", "gl", function()
+  vim.diagnostic.open_float()
+end, { desc = "Diagnostics (float)" })
 
--- Lazy.nvim
-keymap.set("n", "<leader>ls", "<cmd>Lazy sync<CR>", { desc = "Open [L]azy [S]ync" })
-keymap.set("n", "<leader>lu", "<cmd>Lazy update<CR>", { desc = "Open [L]azy [U]pdate" })
-keymap.set("n", "<leader>li", "<cmd>Lazy install<CR>", { desc = "Open Lazy" })
+-- ===== Splits =====
+-- 'sh' → vertical split (vsplit) | 'sv' → horizontal split (split)
+map("n", "sh", ":vsplit<CR>", opts)
+map("n", "sv", ":split<CR>", opts)
 
--- Abre a informação de diagnóstico (erros/warnings LSP) em uma janela flutuante.
-keymap.set("n", "gl", function()
-    diagnostic.open_float()
-end, { desc = "Open Diagnostic in Float" })
+-- ===== Indentação visual =====
+map("v", "<", "<gv", { desc = "Indent -" })
+map("v", ">", ">gv", { desc = "Indent +" })
 
--- Formata o arquivo atual usando o plugin 'conform.nvim'.
-keymap.set("n", "<leader>cf", function()
-    require("conform").format({ lsp_format = "fallback" })
-end, { desc = "Format current file" })
+-- ===== Paste/Del “limpos” =====
+map("v", "p", '"_dP', opts) -- cola sem sobrescrever registro
+map("n", "p", '"_dP', opts) -- cola sem sobrescrever registro
+map("n", "x", '"_x', opts) -- deleta char sem ir p/ registro
 
--- Abrir arquivos recentes via Telescope.
--- vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Open recent files" })
+-- ===== Salvar / Sair =====
+map({ "n", "i" }, "<C-s>", function()
+  vim.cmd("write")
+end, { desc = "Salvar arquivo" })
+map("n", "<leader>qq", ":qa<CR>", { desc = "Sair do Neovim" })
 
--- Limpa os realces de busca ao pressionar <Esc> no modo normal.
-keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" })
+-- ===== Navegação de janelas =====
+map("n", "<C-h>", "<C-w>h", { desc = "Janela esquerda" })
+map("n", "<C-j>", "<C-w>j", { desc = "Janela baixo" })
+map("n", "<C-k>", "<C-w>k", { desc = "Janela cima" })
+map("n", "<C-l>", "<C-w>l", { desc = "Janela direita" })
 
--- Mapeia <leader>fp para abrir projetos usando ProjectFzf.
-keymap.set("n", "<leader>fp", ":ProjectFzf<CR>", { noremap = true, silent = true, desc = "Open Projects with FZF" })
+-- ===== Mover linhas =====
+map("n", "<A-j>", ":m .+1<CR>==", { desc = "Mover linha ↓" })
+map("n", "<A-k>", ":m .-2<CR>==", { desc = "Mover linha ↑" })
+map("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Mover seleção ↓" })
+map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Mover seleção ↑" })
 
--- Navegar entre janelas (splits) usando Ctrl + h/j/k/l.
-keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
-keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
-keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to window below" })
-keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to window above" })
+-- ===== Trouble (diagnósticos) =====
+-- LazyVim já integra bem; este toggle é útil:
+map("n", "<leader>xx", function()
+  require("trouble").toggle()
+end, { desc = "Trouble" })
 
--- Divisão de janelas:
--- 'sh' para split horizontal (vsplit).
-keymap.set("n", "sh", ":vsplit<Return>", opts)
--- 'sv' para split vertical (split).
-keymap.set("n", "sv", ":split<Return>", opts)
+-- Mapeamento para compilar o Java
+vim.api.nvim_set_keymap("n", "<leader>jc", ":!javac %<CR>", { noremap = true, silent = true })
 
--- Melhorias na indentação visual:
--- Reduz a indentação da seleção no modo visual.
-keymap.set("v", "<", "<gv", { desc = "Decrease indent" })
--- Aumenta a indentação da seleção no modo visual.
-keymap.set("v", ">", ">gv", { desc = "Increase indent" })
-
--- Redimensionamento de Janelas com Ctrl + ArrowKeys:
--- Reduz a largura da janela ativa em 2 colunas/linhas.
-keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Shrink window width" })
-keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
-keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
-keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Shrink window height" })
-
--- Ao colar no modo visual, não copia a seleção para o registro padrão.
--- Isso permite colar várias vezes o mesmo conteúdo.
-keymap.set("v", "p", '"_dP', opts)
-
--- Deleta um único caractere sem copiá-lo para o registro (não polui o buffer de cola).
-keymap.set("n", "x", '"_x', opts)
-
-api.nvim_set_keymap("n", "<C-s>", ":w<CR>", { noremap = true, silent = true })
+-- Mapeamento para rodar o Java
+vim.api.nvim_set_keymap("n", "<leader>jr", ":!java %:r<CR>", { noremap = true, silent = true })

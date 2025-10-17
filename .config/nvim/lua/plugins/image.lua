@@ -10,7 +10,9 @@ return {
     "3rd/image.nvim",
     enabled = not on_windows,
     ft = { "markdown", "rmarkdown", "quarto" },
-    opts = {},
+    opts = {
+      processor = "magick_cli",
+    },
   },
   -- Trouble para diagnósticos agradáveis
   { "folke/trouble.nvim", opts = {} },

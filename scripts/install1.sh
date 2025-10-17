@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf. 
+#        Verify any external repositories (PPAs) manually on Fedora.
+
 
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 # Atualiza índices antes de instalar
-sudo apt-get update -y || true
+sudo dnf -y makecache -y || true
 
 apt_install() {
   local pkg="$1"
@@ -13,7 +18,7 @@ apt_install() {
     echo "✅ Já instalado: $pkg"
     return 0
   fi
-  if ! sudo apt-get install -y "$pkg"; then
+  if ! sudo dnf -y install -y "$pkg"; then
     echo "⚠️  Falhou: $pkg (seguindo em frente)"
     return 1
   fi
@@ -22,15 +27,16 @@ apt_install() {
 
 clear
 echo -e "\n[+] Atualizando sistema...\n"
-sudo apt-get dist-upgrade -y || true
+sudo dnf -y upgrade --refresh -y || true
 
-# Plugins do oh-my-zsh (se você usa oh-my-zsh)
-mkdir -p ~/.oh-my-zsh/custom/plugins || true
+sudo dnf install -y zsh 2>/dev/null || true
 
 git clone https://github.com/unixorn/fzf-zsh-plugin ~/.oh-my-zsh/custom/plugins/fzf-zsh-plugin 2>/dev/null || true
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 2>/dev/null || true
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions 2>/dev/null || true
 git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting 2>/dev/null || true
+
+git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" 2>/dev/null || true
 
 # fzf (via git)
 if [[ ! -d ~/.fzf ]]; then
@@ -45,3 +51,5 @@ git config --global user.email "${git_email}"
 git config --global user.name "${git_name}"
 
 echo "✅ install1.sh finalizado."
+
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

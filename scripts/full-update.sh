@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf. 
+#        Verify any external repositories (PPAs) manually on Fedora.
+
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
@@ -7,20 +12,20 @@ clear; sleep 2
 echo "#-------------------- Atualizando Sistema (Ubuntu) -------------------->"
 echo ""
 
-echo "🔄 apt-get update"
-sudo apt-get update -y || true
+echo "🔄 dnf -y makecache"
+sudo dnf -y makecache -y || true
 
-echo "🔄 apt-get dist-upgrade"
-sudo apt-get dist-upgrade -y || true
+echo "🔄 dnf -y upgrade --refresh" || true
+sudo dnf -y upgrade --refresh -y || true
 
-echo "🔄 apt-get autoremove --purge"
-sudo apt-get autoremove --purge -y || true
+echo "🔄 dnf -y autoremove --purge" || true
+sudo dnf -y autoremove --purge -y || true
 
-echo "🔄 apt-get autoclean"
-sudo apt-get autoclean -y || true
+echo "🔄 dnf clean all"
+sudo dnf clean all -y || true
 
-echo "🔄 apt-get clean"
-sudo apt-get clean -y || true
+echo "🔄 dnf clean all"
+sudo dnf clean all -y || true
 
 # Atualiza Flatpak
 if command -v flatpak >/dev/null 2>&1; then

@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf. 
+#        Verify any external repositories (PPAs) manually on Fedora.
+
 set -euo pipefail
 
 # ===== Automount EXT4 + EXT4 (Ubuntu-compatible) =====

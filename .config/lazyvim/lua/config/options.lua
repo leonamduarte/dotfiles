@@ -1,107 +1,63 @@
--- Options são carregadas antes do LazyVim: veja os defaults aqui:
--- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Este arquivo apenas complementa/sobrepõe.
+vim.opt.expandtab = true -- Convert tabs to spaces
+vim.opt.shiftwidth = 4 -- Amount to indent with << and >>
+vim.opt.tabstop = 4 -- How many spaces are shown per Tab
+vim.opt.softtabstop = 4 -- How many spaces are applied when pressing Tab
+vim.opt.smarttab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true -- Keep identation from previous line
 
-local opt = vim.opt
-local g = vim.g
+-- Enable break indent
+vim.opt.breakindent = true
 
--- Líder
-g.mapleader = " "
+-- Always show relative line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.wrap = true -- Disable wrap
+vim.opt.linebreak = true -- Companion to wrap, don't split words
 
--- ========== UI / Edição ==========
-opt.number = true
-opt.relativenumber = true
-opt.cursorline = true
-opt.termguicolors = true
-opt.signcolumn = "yes"
-opt.wrap = false
-opt.scrolloff = 10 -- manter “folga” vertical
-opt.sidescrolloff = 8
+-- Show line under cursor
+vim.opt.cursorline = true
 
--- Mostrar caracteres invisíveis (útil p/ revisão)
-opt.list = true
-opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+-- Store undos between sessions
+vim.opt.undofile = true
 
--- ========== Indentação ==========
-opt.expandtab = true
-opt.shiftwidth = 2
-opt.tabstop = 2
-opt.smartindent = true
+-- Enable mouse mode, can be useful for resizing splits for example!
+vim.opt.mouse = "a"
 
--- ========== Busca ==========
-opt.ignorecase = true
-opt.smartcase = true
-opt.incsearch = true
-opt.hlsearch = false
+-- Don't show the mode, since it's already in the status line
+vim.opt.showmode = false
 
--- ========== Desempenho ==========
-opt.updatetime = 150
-opt.timeoutlen = 400
+-- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
--- ========== Outros ==========
-opt.splitbelow = true
-opt.splitright = true
+-- Keep signcolumn on by default
+vim.opt.signcolumn = "yes"
 
--- ===== LazyVim specifics =====
--- ESLint autoformat (se estiver usando extras linting.eslint)
-g.lazyvim_eslint_auto_format = true
--- Toggle global de autoformat no save (do LazyVim); deixe comentado se não quiser mexer.
--- g.autoformat = true
+-- Configure how new splits should be opened
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
--- Ajustes comentados do Neovide (ativar se usar GUI)
-vim.g.neovide_opacity = 0.9
--- vim.g.neovide_scale_factor = 1.0
--- vim.opt.linespace = 3
---
+-- Sets how neovim will display certain whitespace characters in the editor.
+--  See `:help 'list'`
+--  and `:help 'listchars'`
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
--- Clipboard Wayland robusto (sem travar ao alternar janelas)
-local has = function(cmd)
-  return vim.fn.executable(cmd) == 1
-end
+-- Minimal number of screen lines to keep above and below the cursor.
+vim.opt.scrolloff = 5
 
-local on_wayland = (vim.env.WAYLAND_DISPLAY and #vim.env.WAYLAND_DISPLAY > 0)
+-- Clipboard (scheduled to avoid startup performance impact)
+vim.schedule(function()
+    vim.opt.clipboard = "unnamedplus" -- Sync clipboard between OS and Neovim
+end)
 
--- Só ativa se estivermos no Wayland e wl-clipboard disponível
-if on_wayland and has("wl-copy") and has("wl-paste") then
-  -- Se estiver em tmux, habilita o clipboard do tmux para não brigar
-  -- (opcional; só faz efeito se você usa tmux)
-  if vim.env.TMUX then
-    vim.g.tmux_nvim_clipboard = true
-  end
+vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 
-  -- Timeout curto no paste evita bloqueios (0.3s)
-  local paste_cmd = "timeout 0.3 wl-paste --no-newline 2>/dev/null || true"
-  local copy_cmd = "wl-copy --foreground --type text/plain"
-
-  vim.g.clipboard = {
-    name = "wl-clipboard (robusto)",
-    copy = {
-      ["+"] = copy_cmd,
-      ["*"] = copy_cmd,
-    },
-    paste = {
-      ["+"] = paste_cmd,
-      ["*"] = paste_cmd,
-    },
-    cache_enabled = 1,
-  }
-else
-  -- Opcional: fallback para XWayland (xclip) se disponível
-  if has("xclip") then
-    vim.g.clipboard = {
-      name = "xclip fallback",
-      copy = {
-        ["+"] = "xclip -selection clipboard",
-        ["*"] = "xclip -selection primary",
-      },
-      paste = {
-        ["+"] = "xclip -o -selection clipboard",
-        ["*"] = "xclip -o -selection primary",
-      },
-      cache_enabled = 1,
-    }
-  end
-end
-
--- Mantém unnamedplus para usar o provider acima
-vim.opt.clipboard = "unnamedplus"
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    desc = "Highlight text after yanking",
+    callback = function()
+        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 100 })
+    end,
+})

@@ -1,4 +1,16 @@
 0
+/home/lm/imagens/walls/landscape/48.jpg
+/home/lm/imagens/walls/landscape/45.jpg
+/home/lm/imagens/walls/landscape/08.jpg
+/home/lm/imagens/walls/landscape/43.jpg
+/home/lm/imagens/walls/landscape/84.jpg
+/usr/share/backgrounds/gnome/blobs-l.svg
+/home/lm/imagens/walls/landscape/99.jpg
+/home/lm/imagens/walls/landscape/29.jpg
+/home/lm/imagens/walls/landscape/99.jpg
+/home/lm/imagens/walls/landscape/02.jpg
+/home/lm/imagens/walls/landscape/18.jpg
+/home/lm/imagens/walls/landscape/90.jpg
 /home/lm/imagens/walls/landscape/84.jpg
 /home/lm/imagens/walls/landscape/80.jpg
 /home/lm/imagens/walls/landscape/44.jpg
@@ -15,4 +27,3 @@
 /home/lm/imagens/walls/landscape/59.jpg
 /home/lm/imagens/walls/landscape/81.jpg
 /home/lm/imagens/walls/landscape/78.jpg
-/usr/share/backgrounds/gnome/adwaita-l.jxl

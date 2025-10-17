@@ -5,7 +5,7 @@ local config = wezterm.config_builder()
 config.font_size = 12
 config.font = wezterm.font("FiraCode Nerd Font")
 
-config.color_scheme = "Dracula (Official)"
+config.color_scheme = "One Dark (Gogh)"
 
 config.colors = {
 	cursor_bg = "white",

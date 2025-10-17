@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf.
+#        Verify any external repositories (PPAs) manually on Fedora.
+
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 clear
 sleep 2
 
-OS="$(lsb_release -ds 2>/dev/null || echo Ubuntu)"
+OS="$(hostname)"
 DESKTOP="$(gnome-shell --version 2>/dev/null | awk '{print $3}' || echo '-')"
 
 echo "====================================================="
@@ -20,11 +25,11 @@ echo "====================================================="
 echo "Iniciando atualização do sistema"
 echo "====================================================="
 
-sudo apt-get update -y || true
-sudo apt-get dist-upgrade -y || true
-sudo apt-get autoremove --purge -y || true
-sudo apt-get autoclean -y || true
-sudo apt-get clean -y || true
+sudo dnf -y makecache -y || true
+sudo dnf -y upgrade --refresh -y || true
+sudo dnf -y autoremove -y || true
+sudo dnf clean all -y || true
+sudo dnf clean all -y || true
 
 # Flatpak
 if command -v flatpak >/dev/null 2>&1; then

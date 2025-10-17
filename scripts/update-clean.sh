@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf. 
+#        Verify any external repositories (PPAs) manually on Fedora.
+
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
@@ -9,7 +14,7 @@ clean_residual_configs() {
   echo "Removing residual config packages (dpkg rc)..."
   mapfile -t RC < <(dpkg -l | awk '/^rc/ {print $2}')
   if [[ ${#RC[@]} -gt 0 ]]; then
-    sudo apt-get purge -y "${RC[@]}" || true
+    sudo dnf -y remove -y "${RC[@]}" || true
   else
     echo "No residual configs found."
   fi
@@ -17,9 +22,9 @@ clean_residual_configs() {
 
 clean_cache() {
   echo "Cleaning APT caches..."
-  sudo apt-get autoremove --purge -y || true
-  sudo apt-get autoclean -y || true
-  sudo apt-get clean -y || true
+  sudo dnf -y autoremove --purge -y || true
+  sudo dnf clean all -y || true
+  sudo dnf clean all -y || true
 }
 
 vacuum_journal() {

@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
+# Fedora Conversion - LeonamSH
+# Converted: 2025-10-17
+# Notes: automated conversion from apt/apt-get to dnf.
+#        Verify any external repositories (PPAs) manually on Fedora.
 
 set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 # Atualiza índices antes de instalar
-sudo apt-get update -y || true
+sudo dnf -y makecache -y || true
 
 apt_install() {
   local pkg="$1"
@@ -13,12 +17,11 @@ apt_install() {
     echo "✅ Já instalado: $pkg"
     return 0
   fi
-  if ! sudo apt-get install -y "$pkg"; then
+  if ! sudo dnf -y install -y "$pkg"; then
     echo "⚠️  Falhou: $pkg (seguindo em frente)"
     return 1
   fi
 }
-
 
 echo "🔧 Preparando ferramentas para desenvolvimento (Ubuntu)."
 
@@ -32,7 +35,7 @@ apt_install python3-pip
 apt_install rustc
 apt_install cargo
 apt_install golang
-apt_install deno || true  # Deno pode não existir no repositório padrão
+apt_install deno || true # Deno pode não existir no repositório padrão
 
 # PHP e Composer
 apt_install php
