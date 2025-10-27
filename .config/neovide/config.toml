@@ -15,17 +15,21 @@ vsync = true
 wsl = false
 
 [font]
-normal = "AdwaitaMono Nerd Font"
+# normal = "AdwaitaMono Nerd Font"
 # normal = "SauceCodePro Nerd Font"
-# normal = "JetBrainsMono Nerd Font"
+normal = "JetBrainsMono Nerd Font"
+# normal = "Iosevka Nerd Font"
+# normal = "Hack Nerd Font"
+# normal = "FiraCode Nerd Font"
+# normal = "Maple Mono NF"
 # normal = "GeistMono Nerd Font"
 
 size = 12.0
-# linespace = 2
+# linespace = 1
 
 [box-drawing]
 # "font-glyph", "native" or "selected-native"
 mode = "font-glyph"
 
-[box-drawing.sizes]
-default = [2, 4] # Thin and thick vaues respectively, for all sizes
+# [box-drawing.sizes]
+# default = [1, 1] # Thin and thick vaues respectively, for all sizes
