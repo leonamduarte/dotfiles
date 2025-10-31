@@ -2,426 +2,317 @@ source /usr/share/cachyos-fish-config/cachyos-config.fish
 
 # overwrite greeting
 # potentially disabling fastfetch
-#function fish_greeting
-#    # smth smth
-#end
-# ===== Helpers & "aliases como funções" (Fish) =====
-# Não usa 'alias', só 'function', como você pediu.
-
-# ----- Listar (usa eza se existir) -----
-function l --description "ls compacto (usa eza se disponível)"
-    if type -q eza
-        command eza --group-directories-first $argv
-    else
-        command ls -CF $argv
-    end
+function fish_greeting
+    # smth smth
 end
 
-function ll --description "ls detalhado (usa eza se disponível)"
-    if type -q eza
-        command eza -lah --group-directories-first --icons $argv
-    else
-        command ls -lah $argv
-    end
-end
+# ─────────────────────────────────────────────────────────────────────────────
+# Autor      : leonamsh
+# Data       : 2025-09-01 (convertido p/ fish: funções nativas)
+# Descrição  : Config do Fish com equivalentes do seu .zshrc (sem 'alias')
+# ─────────────────────────────────────────────────────────────────────────────
 
-function la --description "lista incluindo ocultos (usa eza se disponível)"
-    if type -q eza
-        command eza -a --icons $argv
-    else
-        command ls -A $argv
-    end
-end
+# 0) Prompt/tema (p10k é do Zsh)
+# Sugestões:
+#  - tide:     fisher install IlanCosman/tide@v6
+#  - starship: starship init fish | source
 
-# ----- cat/grep/ip com melhorias, mas sem quebrar se não houver bat -----
-function cat --description "cat com bat se disponível"
-    if type -q bat
-        command bat $argv
-    else
-        command cat $argv
-    end
-end
+# 1) PATHs
+fish_add_path ~/.local/bin
+fish_add_path ~/bin
+fish_add_path /usr/local/bin
+fish_add_path ~/.cargo/bin
+fish_add_path /opt/nvim-linux-x86_64/bin
 
-function grep --description "grep com cor se suportado"
-    command grep --color=auto $argv
-end
+# 2) Variáveis
+set -gx EDITOR nvim
+set -gx ZSH ~/.oh-my-zsh
+set -g fish_color_autosuggestion brblack # aproxima 'fg=8'
 
-function ip --description "ip com cor se suportado"
-    command ip -c $argv
-end
+# 3) Integrações
 
-# ----- Git rápido -----
-function gst --description "git status curto"
-    command git status -sb $argv
-end
-
-function gco --description "git checkout ..."
-    command git checkout $argv
-end
-
-function gcm --description "git checkout main"
-    command git checkout main
-end
-
-function gcd --description "git checkout develop"
-    command git checkout develop
-end
-
-function gl --description "git pull --rebase"
-    command git pull --rebase $argv
-end
-
-function gpl --description "git pull"
-    command git pull $argv
-end
-
-function gp --description "git push"
-    command git push $argv
-end
-
-function gps --description "git push (atalho)"
-    command git push $argv
-end
-
-function gcb --description "git checkout -b <branch>"
-    test (count $argv) -ge 1; or begin
-        echo "uso: gcb <nova-branch>"
-        return 1
-    end
-    command git checkout -b $argv
-end
-
-function gfa --description "git fetch --all --prune"
-    command git fetch --all --prune $argv
-end
-
-function gds --description "git diff --staged"
-    command git diff --staged $argv
-end
-
-function gdl --description "git describe curto"
-    command git describe --tags --always $argv
-end
-
-function gclean --description "apaga branches locais já mescladas (exceto main/develop)"
-    set branches (command git branch --merged | string trim)
-    for b in $branches
-        switch $b
-            case "*"
-                # pula a branch atual (marcada com *)
-                continue
-            case main develop
-                continue
-            case ""
-                continue
-            case "*"
-                command git branch -d $b
+# 3.1 zoxide (cd inteligente)
+if type -q zoxide
+    zoxide init fish | source
+    # replicar "alias cd='z'": reimplementa cd
+    function cd --description 'zoxide as default cd'
+        if type -q z
+            z $argv
+        else
+            builtin cd $argv
         end
     end
 end
 
-# ----- Docker/Podman (auto-detecta) -----
-function __ctr_bin
-    if type -q docker
-        echo docker
-    else if type -q podman
-        echo podman
-    else
-        echo "" # nenhum disponível
-    end
+# 3.2 Node (nvm no fish)
+# Recomendo: fnm (nativo) ou nvm.fish (via fisher).
+if type -q fnm
+    fnm env --use-on-cd | source
 end
 
-function d --description "docker/podman pass-through"
-    set bin (__ctr_bin)
-    test -n "$bin"; or begin
-        echo "Nenhum container engine encontrado (docker/podman)."
-        return 127
-    end
-    command $bin $argv
+# 4) Histórico/completion
+# Fish já faz case-insensitive e tem completion robusto por padrão.
+
+# 5) Funções equivalentes aos seus aliases
+
+# 5.1 — Git
+function gs
+    command git status $argv
+end
+function ga
+    command git add -A $argv
+end
+function gc
+    command git commit -m $argv
+end
+function gp
+    command git push $argv
+end
+function gl
+    command git pull $argv
+end
+function gco
+    command git checkout $argv
+end
+function gitr
+    command git remote set-url origin $argv
+end
+function clone
+    command git clone $argv
+end
+function lz
+    command lazygit $argv
 end
 
-function dps --description "containers em execução"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin ps $argv
-end
-
-function di --description "imagens locais"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin images $argv
-end
-
-function dcu --description "compose up -d"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin compose up -d $argv
-end
-
-function dcd --description "compose down"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin compose down $argv
-end
-
-function drm --description "remove container(s)"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin rm -f $argv
-end
-
-function drmi --description "remove image(s)"
-    set bin (__ctr_bin)
-    test -n "$bin"; or return 127
-    command $bin rmi $argv
-end
-
-# ----- Gerenciador de pacotes (DNF/Pacman/APT) -----
-function __pkg_kind
-    if type -q dnf
-        echo dnf
-    else if type -q pacman
-        echo pacman
-    else if type -q apt
-        echo apt
-    else
-        echo none
-    end
-end
-
-function up --description "atualiza sistema (e Flatpak, se houver)"
-    switch (__pkg_kind)
-        case dnf
-            sudo dnf upgrade --refresh -y; and flatpak update -y
-        case pacman
-            sudo pacman -Syu --noconfirm; and flatpak update -y
-        case apt
-            sudo apt update; and sudo apt full-upgrade -y; and flatpak update -y
-        case none
-            echo "Nenhum gerenciador de pacotes comum encontrado."
-            return 127
-    end
-end
-
-function in --description "instalar pacote(s)"
-    test (count $argv) -ge 1; or begin
-        echo "uso: in <pacote> ..."
-        return 1
-    end
-    switch (__pkg_kind)
-        case dnf
-            sudo dnf install -y $argv
-        case pacman
-            sudo pacman -S --noconfirm $argv
-        case apt
-            sudo apt install -y $argv
-        case none
-            echo "Nenhum gerenciador de pacotes comum encontrado."
-            return 127
-    end
-end
-
-function re --description "remover pacote(s)"
-    test (count $argv) -ge 1; or begin
-        echo "uso: re <pacote> ..."
-        return 1
-    end
-    switch (__pkg_kind)
-        case dnf
-            sudo dnf remove -y $argv
-        case pacman
-            sudo pacman -Rns --noconfirm $argv
-        case apt
-            sudo apt purge -y $argv
-        case none
-            echo "Nenhum gerenciador de pacotes comum encontrado."
-            return 127
-    end
-end
-
-function se --description "buscar pacote(s)"
-    test (count $argv) -ge 1; or begin
-        echo "uso: se <termo> ..."
-        return 1
-    end
-    switch (__pkg_kind)
-        case dnf
-            dnf search $argv
-        case pacman
-            pacman -Ss $argv
-        case apt
-            apt search $argv
-        case none
-            echo "Nenhum gerenciador de pacotes comum encontrado."
-            return 127
-    end
-end
-
-# ----- Qualidade de vida -----
-function mkcd --description "cria diretório e entra"
-    test (count $argv) -ge 1; or begin
-        echo "uso: mkcd <pasta>"
-        return 1
-    end
-    mkdir -p $argv[1]; and cd $argv[1]
-end
-
-function extract --description "extrai .zip/.tar.* /.7z/.rar"
-    test (count $argv) -ge 1; or begin
-        echo "uso: extract <arquivo>"
-        return 1
-    end
-    set f $argv[1]
-    switch $f
-        case '*.tar.bz2'
-            tar xjf $f
-        case '*.tar.gz'
-            tar xzf $f
-        case '*.tar.xz'
-            tar xJf $f
-        case '*.tbz2' '*.tgz' '*.txz'
-            tar xf $f
-        case '*.zip'
-            unzip -q $f
-        case '*.rar'
-            unrar x $f
-        case '*.7z'
-            7z x $f
-        case '*'
-            echo "Formato não suportado: $f"
-            return 2
-    end
-end
-
-# ----- Integrações opcionais por comando -----
-function z --description "zoxide (cd fuzzy) se instalado"
-    if type -q zoxide
-        command zoxide query -i $argv
-    else
-        echo "zoxide não instalado."
-        return 127
-    end
-end
-
-# ===== 5.2 — Navegação =====
+# 5.2 — Navegação
 function ..
-    cd ..
+    builtin cd ..
 end
-
 function ...
-    cd ../..
+    builtin cd ../..
 end
-
 function ....
-    cd ../../..
+    builtin cd ../../..
 end
-
 function .....
-    cd ../../../..
+    builtin cd ../../../..
 end
-
 function ......
-    cd ../../../../..
+    builtin cd ../../../../..
 end
-
 function cdg
-    cd ~/.config
+    builtin cd ~/.config
 end
-
 function cddev
-    cd /home/lm/leonamsh/
+    builtin cd /home/lm/leonamsh/
 end
-
 function cdprojeto
-    cd /home/lm/leonamsh/projeto-mercado-frontend/
+    builtin cd /home/lm/leonamsh/projeto-mercado
 end
 
-# ===== 5.3 — Neovim / Emacs =====
-set -Ux EDITOR nvim
-
+# 5.3 — Neovim / Emacs
 function v
-    nvim $argv
+    command nvim $argv
 end
-
 function vim
-    nvim $argv
+    command nvim $argv
 end
-
-# atalhos de edição/configuração
 function nkitty
-    nvim ~/.config/kitty/kitty.conf
+    command nvim ~/.config/kitty/kitty.conf
 end
-
 function nwez
-    nvim ~/.config/wezterm/wezterm.lua
+    command nvim ~/.config/wezterm/wezterm.lua
 end
-
+function nalac
+    command nvim ~/.config/alacritty/alacritty.toml
+end
 function nzsh
-    nvim ~/.zshrc
+    command nvim ~/.zshrc
 end
-
 function nfish
-    nvim ~/.config/fish/config.fish
+    command nvim ~/.config/fish/config.fish
 end
-
 function nprojeto
-    nvim /home/lm/leonamsh/projeto-mercado/
+    command nvim /home/lm/leonamsh/projeto-mercado/
 end
-
 function nsway
-    nvim ~/.config/sway
+    command nvim ~/.config/sway
 end
-
 function nrascunho
-    nvim ~/Documents/rascunhos/
+    command nvim ~/Documents/rascunhos/
 end
 
 # ambientes Neovim
 function nvima
     env NVIM_APPNAME=astronvim nvim $argv
 end
-
 function nvimc
     env NVIM_APPNAME=nvchad nvim $argv
 end
-
 function nviml
-    env NVIM_APPNAME=leovim nvim $argv
+    env NVIM_APPNAME=lazyvim nvim $argv
 end
 
 # Doom Emacs
 function doomsync
     ~/.config/emacs/bin/doom sync
 end
-
 function doomupd
     ~/.config/emacs/bin/doom upgrade
 end
-
 function doomdoc
     ~/.config/emacs/bin/doom doctor
 end
-
 function doompurge
     ~/.config/emacs/bin/doom purge
 end
-
 function emacs
     command emacs -nw $argv
 end
-
 function demacs
-    command emacs --daemon
+    command emacs --daemon $argv
 end
-
 function kemacs
-    killall emacs
+    command killall emacs
 end
 
+# 5.4 — eza/ls
+function ls
+    command eza -al --color=always --group-directories-first --icons=always $argv
+end
+function la
+    command eza -a --color=always --group-directories-first --icons=always $argv
+end
+function ll
+    command eza -l --color=always --group-directories-first --icons=always $argv
+end
+function lt
+    command eza -aT --color=always --group-directories-first --icons=always $argv
+end
+function l_.
+    command eza -a | grep -e '^\.'
+end
+
+# 5.5 — Sistema
 function stowa
-    stow . --adopt
+    command stow . --adopt $argv
+end
+function grubup
+    command sudo grub-mkconfig -o /boot/grub/grub.cfg
+end
+function fixpacman
+    command sudo rm /var/lib/pacman/db.lck
+end
+function tarnow
+    command tar -acf $argv
+end
+function untar
+    command tar -zxvf $argv
+end
+function wget
+    command wget -c $argv
+end
+function psmem
+    command ps auxf | sort -nr -k 4
+end
+function psmem10
+    command ps auxf | sort -nr -k 4 | head -10
+end
+function jctl
+    command journalctl -p 3 -xb
+end
+function rip
+    command expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl
 end
 
-function srcfish
-    source .config/fish/config.fish
+# 5.6 — Pessoais
+# dnf5 variações comentadas no original
+function S
+    command sudo pacman -S --noconfirm $argv
 end
+function Ss
+    command pacman -Ss $argv
+end
+function pS
+    command paru -S --noconfirm $argv
+end
+function pSs
+    command paru -Ss $argv
+end
+function upds
+    ~/.config/autostart/xinputI3.sh $argv
+end
+function update
+    command /home/lm/scripts/update.sh $argv
+end
+function limpao
+    command sudo /home/lm/scripts/update-clean.sh $argv
+end
+function srcfish
+    source ~/.config/fish/config.fish
+end
+function srczsh
+    source ~/.zshrc
+end
+function cdaula
+    builtin cd /home/lm/leonamsh/maisPraTi/
+end
+function naula
+    command nvim /home/lm/leonamsh/maisPraTi/
+end
+function ninstall
+    command nvim /home/lm/scripts/post-install.sh
+end
+function ngit
+    command nvim /home/lm/leonamsh/gitlab
+end
+function vpninova
+    command sudo openvpn --config /home/lm/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn $argv
+end
+
+# 6) Funções utilitárias do seu .zshrc
+
+# 6.1 — log: executa comando e salva saída em arquivo .log
+functions -e log 2>/dev/null
+function log --description 'Run a command and tee output to <base>-<ts>.log'
+    set cmd $argv
+    if test (count $cmd) -eq 0
+        echo "uso: log <comando ...>"
+        return 2
+    end
+    set base (basename -- $argv[1])
+    set ts (date +%Y%m%d-%H%M%S)
+    fish -ic "$cmd" 2>&1 | tee "$base-$ts.log"
+end
+
+# 6.2 — yazi: retorna ao diretório escolhido
+function y --description 'Open yazi and cd into its last cwd'
+    set tmp (mktemp -t yazi-cwd.XXXXXX)
+    yazi $argv --cwd-file="$tmp"
+    if test -f "$tmp"
+        set cwd (string collect < "$tmp")
+        if test -n "$cwd"; and test "$cwd" != (pwd)
+            cd "$cwd"
+        end
+        rm -f "$tmp"
+    end
+end
+
+# 6.3 — fopen: abrir arquivos via fd+fzf usando xdg-open
+function fopen --description 'Pick files with fd+fzf and open with xdg-open'
+    set root "."
+    if test (count $argv) -ge 1
+        set root $argv[1]
+    end
+    fd -t f -H -0 . "$root" \
+        | fzf --read0 --multi --select-1 --exit-0 \
+        --bind 'enter:execute-silent(xdg-open {+})+abort' \
+        --prompt='files> '
+end
+
+# 7) Keybindings (history search em ↑/↓ por prefixo)
+bind \e\[A history-search-backward
+bind \e\[B history-search-forward
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Fim

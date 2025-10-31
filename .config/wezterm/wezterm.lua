@@ -3,9 +3,12 @@ local config = wezterm.config_builder()
 
 -- ===== Fonte e cores =====
 config.font_size = 12
-config.font = wezterm.font("FiraCode Nerd Font")
+config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 
-config.color_scheme = "One Dark (Gogh)"
+-- config.color_scheme = "Operator Mono Dark"
+-- config.color_scheme = "Catppuccin Mocha"
+-- config.color_scheme = "Catppuccin Macchiato (Gogh)"
+config.color_scheme = "Catppuccin Macchiato"
 
 config.colors = {
 	cursor_bg = "white",
@@ -15,10 +18,11 @@ config.force_reverse_video_cursor = true
 
 -- ===== Janela / UI =====
 config.window_decorations = "NONE"
-config.hide_tab_bar_if_only_one_tab = true
-config.enable_tab_bar = false
+-- config.hide_tab_bar_if_only_one_tab = true
+-- config.enable_tab_bar = false
 config.show_tab_index_in_tab_bar = false
-config.use_fancy_tab_bar = false
+-- config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 
 config.initial_rows = 35
@@ -36,7 +40,7 @@ config.enable_wayland = true
 config.prefer_egl = true
 
 -- ===== Shell padrão (sempre zsh) =====
-config.default_prog = { "zsh", "-l" }
+-- config.default_prog = { "zsh", "-l" }
 
 -- ===== Atalhos =====
 config.keys = {

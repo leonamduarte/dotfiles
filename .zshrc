@@ -1,3 +1,5 @@
+source /usr/share/cachyos-zsh-config/cachyos-config.zsh
+
 #!/usr/bin/env zsh
 # ────────────────────────────────────────────────
 # Autor      : leonamsh
@@ -53,7 +55,18 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 # zoxide (cd mais inteligente). Obs: redefine 'cd' para 'z' — comente se não quiser.
 eval "$(zoxide init zsh)"
 alias cd='z'
-alias dnf='dnf5'
+# alias dnf='dnf5'
+#
+# Roda um comando de log antes de um alias ou comando. Assim podemos passar o retorno do comando para o arquivo .log
+unset -f log 2>/dev/null || true
+unalias log 2>/dev/null || true
+log() {
+  local cmd="$*"
+  local base="${1##*/}"
+  local ts="$(date +%Y%m%d-%H%M%S)"
+  # roda em subshell interativo pra expandir aliases/functions
+  zsh -ic "$cmd" 2>&1 | tee "${base}-${ts}.log"
+}
 
 # nvm (Node.js)
 export NVM_DIR="$HOME/.nvm"
@@ -80,7 +93,7 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdg='cd ~/.config'
 alias cddev='cd /home/lm/leonamsh/'
-alias cdprojeto='cd /home/lm/leonamsh/projeto-mercado-frontend/'
+alias cdprojeto='cd /home/lm/leonamsh/projeto-mercado'
 
 # 5.3 — Neovim / Emacs
 export EDITOR=nvim
@@ -89,6 +102,7 @@ alias vim='nvim'
 # atalhos de edição/configuração
 alias nkitty='nvim ~/.config/kitty/kitty.conf'
 alias nwez='nvim ~/.config/wezterm/wezterm.lua'
+alias nalac='nvim ~/.config/alacritty/alacritty.toml'
 alias nzsh='nvim ~/.zshrc'
 alias nfish='nvim ~/.config/fish/config.fish'
 alias nprojeto='nvim /home/lm/leonamsh/projeto-mercado/'
@@ -134,7 +148,7 @@ alias Ss='dnf -C search'
 alias pS='paru -S --noconfirm'
 alias pSs='paru -Ss'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='sudo /home/lm/scripts/update.sh'
+alias update='/home/lm/scripts/update.sh'
 alias limpao='sudo /home/lm/scripts/update-clean.sh'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -142,6 +156,7 @@ alias cdaula='cd /home/lm/leonamsh/maisPraTi/'
 alias naula='nvim /home/lm/leonamsh/maisPraTi/'
 alias ninstall='nvim /home/lm/scripts/post-install.sh'
 alias ngit='nvim /home/lm/leonamsh/gitlab'
+alias vpninova='sudo openvpn --config /home/lm/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn'
 
 # 6) Funções úteis
 
@@ -170,5 +185,10 @@ fopen() {
         --bind 'enter:execute-silent(xdg-open {+})+abort' \
         --prompt='files> '
 }
+
+
+
+
+
 
 

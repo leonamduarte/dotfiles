@@ -10,7 +10,7 @@ return {
       -- or leave it empty to use the default settings
       -- palette = "default", -- This option is deprecated. Use `vim.cmd[[colorscheme eldritch-dark]]` instead.
       -- Enable this to disable setting the background color
-      transparent = true,
+      transparent = false,
       terminal_colors = true, -- Configure the colors used when opening a `:terminal` in [Neovim](https://github.com/neovim/neovim)
       styles = {
         -- Style to be applied to different syntax groups
