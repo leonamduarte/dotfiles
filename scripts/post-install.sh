@@ -50,34 +50,34 @@ git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zs
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting || echo "zsh-syntax-highlighting já existe, pulando clone."
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" || echo "powerlevel10k já existe, pulando clone."
 
-echo -e "\n[+] Instalando suporte AUR (paru)...\n"
-if ! command -v paru &>/dev/null; then
-  echo "Parece que o 'paru' não está instalado. Tentando instalá-lo..."
-  # A instalação do paru exige a compilação.
+echo -e "\n[+] Instalando suporte AUR (yay)...\n"
+if ! command -v yay &>/dev/null; then
+  echo "Parece que o 'yay' não está instalado. Tentando instalá-lo..."
+  # A instalação do yay exige a compilação.
   # Primeiro, garanta que base-devel (já está na lista de pacotes essenciais) esteja instalado.
-  # git clone https://aur.archlinux.org/paru.git
-  # cd paru
+  # git clone https://aur.archlinux.org/yay.git
+  # cd yay
   # makepkg -si --noconfirm
   # cd ..
-  # rm -rf paru
+  # rm -rf yay
   # A linha abaixo é do seu script original, mas 'pamac' não é o gerenciador de pacotes padrão do Arch puro,
   # ele é do Manjaro. Se você está em Arch, a instalação via makepkg seria a ideal.
   # Por enquanto, vou manter a sua linha original e adicionar um aviso.
-  echo "[!] ATENÇÃO: A instalação de 'paru' via 'pamac' é comum em Manjaro. Se você está usando Arch Linux puro,"
-  echo "    pode ser necessário instalar 'paru' manualmente compilando-o do AUR."
-  echo "    (git clone https://aur.archlinux.org/paru.git && cd paru && makepkg -si)"
-  yay -S paru --noconfirm || echo "[!] Falha ao instalar paru via pamac. Tente manualmente ou use o método do AUR."
+  echo "[!] ATENÇÃO: A instalação de 'yay' via 'pamac' é comum em Manjaro. Se você está usando Arch Linux puro,"
+  echo "    pode ser necessário instalar 'yay' manualmente compilando-o do AUR."
+  echo "    (git clone https://aur.archlinux.org/yay.git && cd paru && makepkg -si)"
+  yay -S yay --noconfirm || echo "[!] Falha ao instalar paru via pamac. Tente manualmente ou use o método do AUR."
 else
-  echo "Paru já está instalado."
+  echo "yay já está instalado."
 fi
 
-echo -e "\n[+] Instalando pacotes do AUR (paru)...\n"
-# Se paru não foi instalado com sucesso acima, este passo pode falhar.
-if command -v paru &>/dev/null; then
-  paru -S --noconfirm --needed \
+echo -e "\n[+] Instalando pacotes do AUR (yay)...\n"
+# Se yay não foi instalado com sucesso acima, este passo pode falhar.
+if command -v yay &>/dev/null; then
+  yay -S --noconfirm --needed \
     visual-studio-code-bin # firefox-nightly-bin firefox-nightly-i18n-pt-br
 else
-  echo "AVISO: Paru não está instalado ou falhou na instalação. Pulando instalação de pacotes AUR."
+  echo "AVISO: yay não está instalado ou falhou na instalação. Pulando instalação de pacotes AUR."
   echo "Por favor, instale 'visual-studio-code-bin' e 'qtile-extras' manualmente se necessário."
 fi
 

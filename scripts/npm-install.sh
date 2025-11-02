@@ -9,7 +9,7 @@ echo "Atualizando o sistema e instalando ferramentas com pacman..."
 
 # Instalar Node.js e npm do repositório oficial do Arch
 # O pacote `npm` vem junto com o `nodejs`
-sudo pacman -Syu --noconfirm nodejs
+sudo pacman -Syu --noconfirm nodejs npm
 
 # Se você precisar de um helper do AUR, descomente a linha abaixo e instale-o
 # O `yay` é uma boa opção

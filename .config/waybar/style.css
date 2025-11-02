@@ -1,171 +1,83 @@
-/* -- Global rules -- */
+@import "../omarchy/current/theme/waybar.css";
+
 * {
+  background-color: @background;
+  color: @foreground;
+
   border: none;
-  font-family: "FiraMono Nerd Font";
-  font-size: 12px;
-  min-height: 10px;
+  border-radius: 0;
+  min-height: 0;
+  font-family: 'JetBrainsMono Nerd Font Mono';
+  font-size: 14px;
 }
 
-window#waybar {
-  background: rgba(34, 36, 54, 0.6);
+.modules-left {
+  margin-left: 8px;
 }
 
-window#waybar.hidden {
-  opacity: 0.2;
-}
-
-/* - Genera rules for visible modules -- */
-#custom-archicon,
-#clock,
-#cpu,
-#memory,
-#disk,
-#temperature,
-#idle_inhibitor,
-#pulseaudio,
-#pulseaudio_slider,
-#network,
-#tray,
-#language {
-  color: #161320;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-right: 5px;
-  border-radius: 5px;
-  transition: none;
-}
-
-/* -- Specific styles -- */
-
-/* Modules left */
-#custom-archicon {
-  font-size: 19px;
-  color: #89b4fa;
-  background: #161320;
-  /* padding-right: 17px; */
-  padding: 3px 6px 3px 3px;
-  margin-left: 5px;
-  /* padding: 5px 5px; */
-}
-
-#clock {
-  background: #abe9b3;
-}
-
-#cpu {
-  background: #96cdfb;
-}
-
-#memory {
-  background: #ddb6f2;
-}
-
-#tray {
-
-  background: #ddb6f2;
-}
-
-#disk {
-  background: #f5c2e7;
-}
-
-#temperature {
-  background: #f8bd96;
-}
-
-/* Modules center */
-#workspaces {
-  /* background: rgba(0, 0, 0, 0.5); */
-  border-radius: 10px;
-  margin: 5px 5px;
-  padding: 0px 6px;
+.modules-right {
+  margin-right: 8px;
 }
 
 #workspaces button {
-  color: #b5e8e0;
-  background: transparent;
-  padding: 0px 8px;
-  transition:
-    color 0.5s ease,
-    text-shadow 0.5s ease,
-    transform 0.5s ease;
+  all: initial;
+  padding: 0 6px;
+  margin: 0 1.5px;
+  min-width: 9px;
 }
 
-#workspaces button.occupied {
-  color: #a6e3a1;
+#workspaces button.empty {
+  opacity: 0.5;
 }
 
-#workspaces button:hover:not(.active):not(.focused):not(.visible) {
-  color: #f8bd96;
+#cpu,
+#battery,
+#pulseaudio,
+#custom-omarchy,
+#custom-screenrecording-indicator,
+#custom-update {
+  min-width: 12px;
+  margin: 0 7.5px;
 }
 
-#workspaces button.active,
-#workspaces button.focused {
-  color: #1e1e2e;
-  background: #89b4fa;
+#tray {
+  margin-right: 16px;
 }
 
-#workspaces button.active:hover,
-#workspaces button.visible:hover,
-#workspaces button.focused:hover {
-  color: #1e1e2e;
-  background: #b4befe;
-}
-
-/* Modules right */
-#taskbar {
-  background: transparent;
-  border-radius: 10px;
-  padding: 0px 5px;
-  margin: 5px 5px;
-}
-
-#taskbar button {
-  padding: 0px 5px;
-  margin: 0px 3px;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-}
-
-#taskbar button.active {
-  background: rgba(34, 36, 54, 0.5);
-}
-
-#taskbar button:hover {
-  background: rgba(34, 36, 54, 0.5);
-}
-
-#idle_inhibitor {
-  background: #b5e8e0;
-  padding-right: 15px;
-}
-
-#pulseaudio {
-  color: #1a1826;
-  background: #f5e0dc;
-}
-
-#pulseaudio_slider {
-  color: #1a1826;
-  background: #e8a2af;
+#bluetooth {
+  margin-right: 17px;
 }
 
 #network {
-  background: #cba6f7;
-  padding-right: 13px;
+  margin-right: 13px;
 }
 
-#language {
-  background: #a6e3a1;
-  padding-right: 15px;
+#custom-expand-icon {
+  margin-right: 20px;
 }
 
-/* === Optional animation === */
-@keyframes blink {
-  to {
-    background-color: #bf616a;
-    color: #b5e8e0;
-  }
+tooltip {
+  padding: 2px;
+}
+
+#custom-update {
+  font-size: 10px;
+}
+
+#clock {
+  margin-left: 8.75px;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+#custom-screenrecording-indicator {
+  min-width: 12px;
+  margin-left: 8.75px;
+  font-size: 10px;
+}
+
+#custom-screenrecording-indicator.active {
+  color: #a55555;
 }
