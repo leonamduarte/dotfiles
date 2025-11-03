@@ -8,6 +8,7 @@
 
 # Permite arquivos específicos na raiz
 !.zshrc
+!.bashrc/
 !.gitignore
 
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo

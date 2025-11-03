@@ -28,12 +28,12 @@ if ! sudo pacman -Syyu --noconfirm; then
   exit 1
 fi
 
-# Atualiza pacotes do AUR usando Paru (se instalado)
-if command -v paru &>/dev/null; then
+# Atualiza pacotes do AUR usando yay (se instalado)
+if command -v yay &>/dev/null; then
   echo "====================================================="
   echo "🔄 Atualizando pacotes do AUR..."
   echo "====================================================="
-  if ! paru -Syu --noconfirm; then
+  if ! yay -Syu --noconfirm; then
     echo "====================================================="
     echo "❌ Erro ao atualizar pacotes do AUR."
     echo "====================================================="
@@ -41,7 +41,7 @@ if command -v paru &>/dev/null; then
   fi
 else
   echo "====================================================="
-  echo "⚠️ Paru não encontrado. Pulei a atualização do AUR."
+  echo "⚠️ yay não encontrado. Pulei a atualização do AUR."
   echo "====================================================="
 fi
 
