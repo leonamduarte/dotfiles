@@ -32,7 +32,6 @@
   '(org-level-1 :inherit outline-1 :height 1.6)
   '(org-document-title  :height 1.8 :bold t :underline nil))
 
-
 ;; Markdown Mode
 (custom-set-faces
  '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
