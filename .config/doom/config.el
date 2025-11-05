@@ -1,121 +1,177 @@
-;;; config.el --- Doom -> LazyVim parity -*- lexical-binding: t; -*-
-;;; Commentary:
-;; Este arquivo contém minhas configurações pessoais do Doom Emacs,
-;; focadas em replicar a experiência do LazyVim para desenvolvimento fullstack.
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
-;;; Code:
+;; - `doom-font' -- the primary font to use
+;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
+;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;; - `doom-unicode-font' -- for unicode glyphs
+;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
+;;
+;; See 'C-h v doom-font' for documentation and more examples of what they
+;; accept. For example:
+;;
+;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
+;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
+;;
+;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
+;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
+;; refresh your font settings. If Emacs still can't find your font, it likely
+;; wasn't installed correctly. Font issues are rarely Doom issues!
 
-;; Tema & fonte
+(setq doom-font (font-spec :family "CaskaydiaCove NF" :size 16 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 15))
 (setq doom-theme 'doom-one)
-(setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 16))
-;; UI
-(setq display-line-numbers-type 'relative
-      doom-modeline-icon t
-      doom-modeline-major-mode-icon t)
+;; (setq doom-theme 'catppuccin)
+;; (setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
+;; (setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
+;; (load-theme 'catppuccin t)
+;; (require 'kaolin-themes)
+;; (load-theme 'kaolin-valley-dark t)
 
-;; Projetos
-(setq projectile-project-search-path '("~/code" "~/projetos" "/run/media/lm/dev")
-      projectile-indexing-method 'alien
-      projectile-auto-discover t)
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
 
-;; Leader (Space já é leader no Doom)
-(map! :leader
-      :desc "VTerm toggle"        "t t" #'+vterm/toggle
-      :desc "Dirvish (oil-like)"  "e"   #'dirvish
-      :desc "Find file"           "f f" #'find-file
-      :desc "Search project"      "s p" #'consult-ripgrep
-      :desc "Buffers"             "b b" #'ibuffer
-      :desc "Code actions"        "c a" #'lsp-execute-code-action
-      :desc "Format buffer"       "c f" #'apheleia-format-buffer
-      :desc "Rename symbol"       "c r" #'lsp-rename
-      :desc "Treemacs"            "o t" #'treemacs)
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets. It is optional.
 
-;; Dirvish (Dired turbinado)
-(use-package! dirvish
-  :init (dirvish-override-dired-mode)
-  :config
-  (setq dirvish-attributes '(all-the-icons file-time file-size git-msg)
-        dirvish-mode-line-format '(:left (sort file-time) :right (omit yank index))
-        dirvish-subtree-always-show-state t)
-  (map! :leader :desc "Dirvish here" "e" #'dirvish
-        :desc "Dirvish side" "E" #'dirvish-side)
-  (map! :map dirvish-mode-map
-        :n "RET" #'dired-find-file
-        :n "q"   #'dirvish-quit))
+(setq user-full-name "Leonamsh"
+      user-mail-address "lpdmonteiro@gmail.com")
 
-;; LSP geral (lsp-mode). Para Eglot, veja nota mais abaixo.
+;; Whenever you reconfigure a package, make sure to wrap your config in an
+;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
+;;
+;;   (after! PACKAGE
+;;     (setq x y))
+;;
+;; The exceptions to this rule:
+;;
+;;   - Setting file/directory variables (like `org-directory')
+;;   - Setting variables which explicitly tell you to set them before their
+;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
+;;   - Setting doom variables (which start with 'doom-' or '+').
+;;
+;; Here are some additional functions/macros that will help you configure Doom.
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
+;; etc).
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+
+;; source: https://nayak.io/posts/golang-development-doom-emacs/
+;; golang formatting set up
+;; use gofumpt
 (after! lsp-mode
-  (setq lsp-headerline-breadcrumb-enable t
-        lsp-semantic-tokens-enable t
-        lsp-enable-file-watchers t
-        lsp-idle-delay 0.2
-        lsp-log-io nil)
-  (add-hook 'typescript-ts-mode-hook #'lsp!)
-  (add-hook 'tsx-ts-mode-hook         #'lsp!)
-  (add-hook 'js-ts-mode-hook          #'lsp!)
-  (add-hook 'json-ts-mode-hook        #'lsp!))
+  (setq  lsp-go-use-gofumpt t)
+  )
 
-;; Tree-sitter (Emacs 29+)
-(add-hook 'typescript-ts-mode-hook #'tree-sitter-hl-mode)
-(add-hook 'tsx-ts-mode-hook         #'tree-sitter-hl-mode)
-(add-hook 'js-ts-mode-hook          #'tree-sitter-hl-mode)
+;; enable all analyzers; not done by default
+(after! lsp-mode
+  (setq  lsp-go-analyses '((nilness . t)
+                           (shadow . t)
+                           (unusedparams . t)
+                           (unusedwrite . t)
+                           (useany . t)
+                           (unusedvariable . t)))
+  )
 
-;; node_modules/.bin no PATH do buffer
-(use-package! add-node-modules-path
-  :hook ((js-ts-mode tsx-ts-mode typescript-ts-mode web-mode) . add-node-modules-path))
+(setq confirm-kill-emacs nil)        ;; Don't confirm on exit
+;; (setq initial-buffer-choice 'eshell) ;; Eshell is initial buffer
 
-;; Apheleia: formatação on save
-(use-package! apheleia
-  :config
-  ;; Preferir prettier local do projeto
+;; Org base
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+(setq org-modern-table-vertical 1)
+(setq org-modern-table t)
+(add-hook 'org-mode-hook #'hl-todo-mode)
+
+;; This sets the font size for each Org header level.  Having variable font sizes in an Org outline makes it visually appealing and more readable.
+(custom-theme-set-faces!
+  'doom-one
+  '(org-level-8 :inherit outline-3 :height 1.0)
+  '(org-level-7 :inherit outline-3 :height 1.0)
+  '(org-level-6 :inherit outline-3 :height 1.1)
+  '(org-level-5 :inherit outline-3 :height 1.2)
+  '(org-level-4 :inherit outline-3 :height 1.3)
+  '(org-level-3 :inherit outline-3 :height 1.4)
+  '(org-level-2 :inherit outline-2 :height 1.5)
+  '(org-level-1 :inherit outline-1 :height 1.6)
+  '(org-document-title  :height 1.8 :bold t :underline nil))
+
+;; Markdown Mode
+(custom-set-faces
+ '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
+ '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1)))))
+
+(defun dt/toggle-markdown-view-mode ()
+  ;; "Toggle between `markdown-mode' and `markdown-view-mode'."
+  (interactive)
+  (if (eq major-mode 'markdown-view-mode)
+      (markdown-mode)
+    (markdown-view-mode)))
+
+;; workaround the error
+;; condition-case: Error in a Doom startup hook: doom-first-file-hook, global-git-commit-mode, (void-function transient--set-layout)
+
+(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+  (if (file-exists-p lfile)
+      (load lfile)))
+
+;; Copilot.el
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+
+;; Remove js2-mode from auto-mode-alist for .js files and replace it with js2-mode
+
+(add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
+(after! js2-mode
+  (setq js2-basic-offset 2     
+        js2-bounce-indent-p nil))
+
+;; Prettier como formatador via Apheleia
+(after! apheleia
   (setf (alist-get 'prettier apheleia-formatters)
-        '("prettier" "--stdin-filepath" filepath))
-  (dolist (hook '(js-ts-mode-hook tsx-ts-mode-hook typescript-ts-mode-hook
-                                  json-ts-mode-hook css-mode-hook scss-mode-hook
-                                  web-mode-hook python-mode-hook go-mode-hook))
-    (add-hook hook #'apheleia-mode))
-  ;; Evitar conflitos com :editor (format +onsave)
-  (setq +format-on-save-enabled-modes '(not emacs-lisp-mode sql-mode tex-mode)))
+        '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
+  (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
+    (setf (alist-get m apheleia-mode-alist) '(prettier))))
 
-;; Web-mode/HTML/CSS
-(after! web-mode
-  (setq web-mode-enable-auto-quoting nil
-        web-mode-markup-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-css-indent-offset 2))
+(add-hook 'js2-mode-hook #'apheleia-mode)  ;; formatar ao salvar nesse modo
+;; ou globalmente:
+;; (apheleia-global-mode +1)
 
-;; Tailwind (opcional)
-(use-package! lsp-tailwindcss
-  :after lsp-mode
-  :init (add-hook 'web-mode-hook #'lsp)
-  :config (setq lsp-tailwindcss-add-on-mode t))
+;; Já que você usa js2-mode, silencie o aviso de ponto-e-vírgula se quiser:
+(after! js2-mode
+  (setq js2-strict-missing-semi-warning nil))
 
-;; Snippets
-(after! yasnippet
-  (yas-global-mode 1))
-
-;; Git
-(after! magit
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1))
-(after! vc-gutter
-  (setq diff-hl-draw-borders nil))
-
-;; Testes (Jest)
-(use-package! jest-test-mode
-  :hook ((js-ts-mode tsx-ts-mode typescript-ts-mode) . jest-test-mode)
-  :config
-  (map! :leader
-        :desc "Jest file"      "t f" #'jest-test-run
-        :desc "Jest at point"  "t t" #'jest-test-run-at-point
-        :desc "Jest watch"     "t w" #'jest-test-run-watch))
-
-;; Qualidade de vida
-(setq confirm-kill-emacs nil) ; sair sem confirmar
-(setq-default tab-width 2 indent-tabs-mode nil)
-
-;; --- Se optar por Eglot no lugar de lsp-mode ---
-;; (add-hook 'typescript-ts-mode-hook #'eglot-ensure)
-;; (add-hook 'tsx-ts-mode-hook         #'eglot-ensure)
-;; (add-hook 'js-ts-mode-hook          #'eglot-ensure)
-;; (add-hook 'json-ts-mode-hook        #'eglot-ensure)
-
+;; LSP continua com Eglot:
+(setq eglot-format-on-save nil) ; deixa a formatação pro Prettier
