@@ -10,6 +10,7 @@
 !.zshrc
 !.bashrc
 !.gitignore
+!bashln-scripts/
 
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
