@@ -1,15 +1,15 @@
-# Ignora tudo por padrão
+# Ignora TUDO no diretório .config
 /*
 
-# Exceto o .config e arquivos específicos na raiz
+# Exceto estas pastas (e seus conteúdos)
 !.config/
+
+# Permite arquivos específicos na raiz
 !.zshrc
 !.gitignore
 
-# Dentro do .config, ignora tudo...
+# ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
-
-# ...exceto as pastas importantes
 !.config/alacritty/
 !.config/autostart/
 !.config/doom/
@@ -33,16 +33,13 @@
 !.config/waybar/
 !.config/wezterm/
 !.config/yazi/
-!.config/tabby/
+!mimeapps.list
 !.config/fastfetch/
+!.config/fish/
 
-# Arquivos diretos dentro de .config
-!.config/mimeapps.list
-
-# Fontes
+# arquivos ou pastas fora do .config
 !.local/share/fonts/
 !.fonts/
-
-# Ignora arquivos de metadados do Windows
 *Zone.Identifier*
 
+/home/lm/dotfiles/.config/emacs/
