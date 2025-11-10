@@ -4,32 +4,35 @@ local config = wezterm.config_builder and wezterm.config_builder() or {}
 
 -- ===== Aparência básica =====
 config.font = wezterm.font_with_fallback({
+	"CaskaydiaCove Nerd Font",
 	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font",
-	"Maple Mono NF",
-	"DMMono Nerd Font",
+	"Space Grotesk",
 })
-config.font_size = 12
--- config.color_scheme = "Catppuccin Macchiato"
-config.colors = require("cyberdream")
-config.colors = {
-	cursor_bg = "white",
-	cursor_border = "white",
-}
-config.force_reverse_video_cursor = true
+config.font_size = 13
+config.color_scheme = "Catppuccin Macchiato"
+-- config.colors = require("cyberdream")
+-- config.color_scheme = "Oxocarbon Dark (Gogh)"
+-- config.color_scheme = "Rosé Pine Moon (Gogh)"
+-- config.colors = {
+-- 	cursor_bg = "white",
+-- 	cursor_border = "white",
+-- }
+-- config.force_reverse_video_cursor = true
 
 config.window_decorations = "RESIZE"
-config.hide_tab_bar_if_only_one_tab = true
-config.enable_tab_bar = false
-config.show_tab_index_in_tab_bar = false
+-- config.hide_tab_bar_if_only_one_tab = true
+-- config.enable_tab_bar = false
+-- config.show_tab_index_in_tab_bar = false
 config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
 config.default_cursor_style = "SteadyBar"
 
-config.initial_rows = 35
-config.initial_cols = 120
+-- config.initial_rows = 35
+-- config.initial_cols = 120
 config.max_fps = 144
 config.animation_fps = 60
-config.cursor_blink_rate = 250
+-- config.cursor_blink_rate = 250
 
 -- Segurar a janela enquanto você depura RCs do bash.
 -- Troque para "CloseOnCleanExit" quando estiver tudo OK.
@@ -47,7 +50,9 @@ local function file_exists(p)
 end
 
 -- Background opcional (somente se existir no mesmo diretório do config)
-do
+-- altere bg_flag para = true para ativar
+local bg_flag = false
+if bg_flag then
 	local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 	if cfg then
 		local bg = cfg:gsub("wezterm.lua", "bg-blurred.png")
@@ -98,6 +103,6 @@ config.keys = {
 }
 
 -- ===== Coisas específicas do Windows =====
-config.win32_system_backdrop = "Acrylic"
+-- config.win32_system_backdrop = "Acrylic"
 
 return config
