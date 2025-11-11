@@ -57,6 +57,8 @@
 
 ;; Theme
 (package! catppuccin-theme)
+(package! kaolin-themes)
+
 
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
@@ -65,5 +67,9 @@
 
 (package! org-bullets)
 (package! toc-org)
+(package! org-auto-tangle)
+
+(package! treesit-auto)
+
 
 

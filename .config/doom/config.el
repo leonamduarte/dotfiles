@@ -23,7 +23,6 @@
 ;; refresh your font settings. If Emacs still can't find your font, it likely
 ;; wasn't installed correctly. Font issues are rarely Doom issues!
 
-
 ;; system-type is a variable defined in `C source code'.
 ;; Its value is darwin
 
@@ -38,24 +37,21 @@
 ;;   `cygwin'      compiled using the Cygwin library.
 ;; Anything else indicates some sort of Unix system.
 
-(if (eq system-type 'windows-nt) ;; verifica se o sistema é Windows.
-    ;; Se sim, usa a configuração específica para Windows.
+(if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 16 :weight 'semi-light)
-            doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 15)))
-  ;; Se não for Windows, aplica as configurações padrão para Linux.
+      (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 17 :weight 'semi-light)
+            doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 16 :weight 'semi-light)
-          doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 15))))
+    (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 17 :weight 'semi-light)
+          doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 18))))
 
-
-;; (setq doom-theme 'doom-one)
-(setq doom-theme 'catppuccin)
-(setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
-(setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
-(load-theme 'catppuccin t)
+(setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-moonlight)
+;; (setq doom-theme 'catppuccin)
+;; (setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
+;; (load-theme 'catppuccin t)
 ;; (require 'kaolin-themes)
 ;; (load-theme 'kaolin-valley-dark t)
 
@@ -66,7 +62,7 @@
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets. It is optional.
 
-(setq user-full-name "Leonamsh"
+(setq user-full-name "bashln"
       user-mail-address "lpdmonteiro@gmail.com")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -124,25 +120,65 @@
 ;; Org base
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-(setq org-modern-table-vertical 1)
-(setq org-modern-table t)
 (add-hook 'org-mode-hook #'hl-todo-mode)
 
-;; Org Mode Enhancements
+(map! :leader
+      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+(after! org
+  (setq org-directory "~/org/"
+        org-modern-table t
+        org-modern-table-vertical 1
+        org-default-notes-file (expand-file-name "notes.org" org-directory)
+        org-ellipsis " ▼ "
+        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
+        org-superstar-itembullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
+        org-log-done 'time
+        org-hide-emphasis-markers t
+        ;; ex. of org-link-abbrev-alist in action
+        ;; [[arch-wiki:Name_of_Page][Description]]
+        ;; org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+        ;; '(("google" . "http://www.google.com/search?q=")
+        ;;   ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
+        ;;   ("ddg" . "https://duckduckgo.com/?q=")
+        ;;   ("wiki" . "https://en.wikipedia.org/wiki/"))
+        org-table-convert-region-max-lines 20000
+        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
+        '((sequence
+           "TODO(t)"           ; A task that is ready to be tackled
+           "BLOG(b)"           ; Blog writing assignments
+           "GYM(g)"            ; Things to accomplish at the gym
+           "PROJ(p)"           ; A project that contains other tasks
+           "VIDEO(v)"          ; Video assignments
+           "WAIT(w)"           ; Something is holding up this task
+           "|"                 ; The pipe necessary to separate "active" states and "inactive" states
+           "DONE(d)"           ; Task has been completed
+           "CANCELLED(c)" )))) ; Task has been cancelled
+
+;; Org-auto-tangle
+;; org-auto-tangle allows you to add the option #+auto_tangle: t in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function ‘bashln/insert-auto-tangle-tag’ and setting it to a keybinding ‘SPC i a’.
+(use-package! org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode)
+  :config
+  (setq org-auto-tangle-default t))
+
+(defun bashln/insert-auto-tangle-tag ()
+  "Insert '#+auto_tangle: t' at point or top of buffer in a literate config."
+  (interactive)
+  (if (derived-mode-p 'org-mode)
+      (progn
+        (evil-org-open-below 1)
+        (insert "#+auto_tangle: t\n")
+        (evil-force-normal-state))
+    (message "Not in an Org buffer!")))
+
+(map! :leader
+      :desc "Insert auto_tangle tag"
+      "i a" #'bashln/insert-auto-tangle-tag)
+
+
 ;; This sets the font size for each Org header level.  Having variable font sizes in an Org outline makes it visually appealing and more readable.
-
-(add-hook 'org-mode-hook 'org-indent-mode)
-(use-package org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-;; Table of Contents for Org Mode
-(use-package toc-org
-    :commands toc-org-enable
-    :init (add-hook 'org-mode-hook 'toc-org-enable))
-
 (custom-theme-set-faces!
-  ;; 'doom-one
+  'doom-one
   '(org-level-8 :inherit outline-3 :height 1.0)
   '(org-level-7 :inherit outline-3 :height 1.0)
   '(org-level-6 :inherit outline-3 :height 1.1)
@@ -163,7 +199,7 @@
  '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2))))
  '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1)))))
 
-(defun dt/toggle-markdown-view-mode ()
+(defun bashln/toggle-markdown-view-mode ()
   ;; "Toggle between `markdown-mode' and `markdown-view-mode'."
   (interactive)
   (if (eq major-mode 'markdown-view-mode)
@@ -186,7 +222,21 @@
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
               ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+              ("C-<tab>" . 'copilot-accept-completion-by-word)
+              ("C-n" . 'copilot-next-completion)
+              ("C-p" . 'copilot-previous-completion))
+
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  (add-to-list 'copilot-indentation-alist '(text-mode 2))
+  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+  :init
+  (setq copilot-indent-offset-warning-disable t)
+  )
+
+(setq-default tab-width 2)
 
 ;; Remove js2-mode from auto-mode-alist for .js files and replace it with js2-mode
 
@@ -202,13 +252,37 @@
   (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
     (setf (alist-get m apheleia-mode-alist) '(prettier))))
 
+
+;; Tree Sitter
+;; (setq +tree-sitter-hl-enabled-modes t)
+;; (after! tree-sitter
+;;         (global-tree-sitter-mode)
+;;         (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package! treesit-auto
+  :custom
+  ;; Pergunta antes de instalar grammar
+  (treesit-auto-install 'prompt)
+  :config
+  ;; Por enquanto, só quero tree-sitter nessas linguagens
+  (setq treesit-auto-langs '(tsx typescript))
+
+  ;; Usa essa lista pra configurar auto-mode-alist
+  (treesit-auto-add-to-auto-mode-alist)
+
+  ;; Liga o modo global de decisão entre *-mode e *-ts-mode
+  (global-treesit-auto-mode))
+
+
 (add-hook 'js2-mode-hook #'apheleia-mode)  ;; formatar ao salvar nesse modo
 ;; ou globalmente:
-;; (apheleia-global-mode +1)
+(apheleia-global-mode +1)
 
 ;; Já que você usa js2-mode, silencie o aviso de ponto-e-vírgula se quiser:
 (after! js2-mode
   (setq js2-strict-missing-semi-warning nil))
 
 ;; LSP continua com Eglot:
-(setq eglot-format-on-save nil) ; deixa a formatação pro Prettier
+;; (setq eglot-format-on-save nil) ; deixa a formatação pro Prettier
+
+

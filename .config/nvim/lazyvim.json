@@ -1,13 +1,10 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.coding.yanky",
-    "lazyvim.plugins.extras.editor.neo-tree",
-    "lazyvim.plugins.extras.lang.tailwind",
-    "lazyvim.plugins.extras.lang.toml"
+    "lazyvim.plugins.extras.editor.neo-tree"
   ],
   "install_version": 8,
   "news": {
-    "NEWS.md": "11866"
+    "NEWS.md": "10960"
   },
   "version": 8
 }
