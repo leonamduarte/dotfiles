@@ -67,6 +67,7 @@
 (package! org-bullets)
 (package! toc-org)
 (package! org-auto-tangle)
+(package! org-super-agenda)
 
 (package! treesit-auto)
 

@@ -40,8 +40,8 @@
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "Terminess Nerd Font" :size 17 :weight 'medium)
-            doom-variable-pitch-font (font-spec :family "Terminess Nerd Font" :size 17)))
+      (setq doom-font (font-spec :family "Iosevka NF" :size 18 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "Iosevka NF" :size 18)))
   ;; (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 17 :weight 'semi-light)
   ;;        doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
   (progn
@@ -201,6 +201,100 @@
   '(org-level-2 :inherit outline-2 :height 1.5)
   '(org-level-1 :inherit outline-1 :height 1.6)
   '(org-document-title  :height 1.8 :bold t :underline nil))
+
+;; Org-Agenda
+
+;;; --- Base Org ---
+(setq org-directory "~/org"
+      org-default-notes-file (expand-file-name "inbox.org" org-directory)
+      org-agenda-files (list (expand-file-name "tasks.org" org-directory)
+                             (expand-file-name "work.org"  org-directory)
+                             (expand-file-name "study.org" org-directory))
+      org-ellipsis " ⤵"
+      org-log-done 'time        ; registra timestamp quando vira DONE
+      org-log-into-drawer t)
+
+;;; --- Habits (hábitos) ---
+(with-eval-after-load 'org
+  (add-to-list 'org-modules 'org-habit))
+(setq org-habit-graph-column 60
+      org-habit-preceding-days 14
+      org-habit-following-days 7)
+
+;;; --- Clock (bater ponto nas tarefas) ---
+(setq org-clock-persist 'history
+      org-clock-report-include-clocking-task t
+      org-duration-format 'h:mm)
+(org-clock-persistence-insinuate)
+
+;;; --- Visual/Agenda ---
+(setq org-agenda-start-on-weekday nil         ; começa no “hoje”
+      org-agenda-span 1                        ; visão diária por padrão
+      org-agenda-time-grid '((daily today require-timed)
+                             (800 900 1000 1100 1200 1400 1600 1800 2000))
+      org-agenda-use-time-grid t
+      org-agenda-show-future-repeats 'next    ; mostra próxima ocorrência de recorrentes
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-scheduled-if-done t)
+
+;; Mostra esforço estimado na lista
+(setq org-agenda-prefix-format
+      '((agenda . " %i %-12:c%?-12t% s")
+        (todo   . " %i %-12:c [%-3e] ")
+        (tags   . " %i %-12:c")
+        (search . " %i %-12:c")))
+
+;;; --- Estados e atalhos comuns ---
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAIT(w)" "|" "DONE(d)" "CANCELLED(c)")))
+
+;;; --- Captura rápida (SPC n c) ---
+(setq org-capture-templates
+      `(
+        ;; Tarefa rápida na inbox
+        ("t" "Tarefa" entry
+         (file+headline ,org-default-notes-file "Tarefas")
+         "* TODO %?\nSCHEDULED: %^t\n:PROPERTIES:\n:Effort: %^{Esforço|15min|30min|1h|2h}\n:END:\n")
+
+        ;; Reunião com bloco de horário
+        ("m" "Meeting" entry
+         (file+headline ,(expand-file-name "work.org" org-directory) "Meetings")
+         "* TODO %^{Assunto}\nSCHEDULED: %^T-%^{Fim|+30min} \n:PROPERTIES:\n:Effort: %^{Esforço|30min|1h}\n:END:\n- Participantes: %?\n")
+
+        ;; Rotina semanal: quarta 14:00–14:30
+        ("r" "Revisão semanal (quarta 14:00)" entry
+         (file+headline ,(expand-file-name "tasks.org" org-directory) "Rotinas")
+         "* TODO Revisão semanal\nSCHEDULED: <%(format-time-string \"%Y-%m-%d\") Wed 14:00-14:30 ++1w>\n:PROPERTIES:\n:Effort: 30min\n:END:\n- Rever pendências e planejar próximo ciclo\n")
+
+        ;; Diária dias úteis 08:00–08:30 (pula fim de semana)
+        ("d" "Revisar e-mails (dias úteis 08:00)" entry
+         (file+headline ,(expand-file-name "tasks.org" org-directory) "Rotinas")
+         "* TODO Revisar e-mails\nSCHEDULED: <%(format-time-string \"%Y-%m-%d\") 08:00-08:30 +1d/5>\n:PROPERTIES:\n:Effort: 30min\n:END:\n- Inbox zero / triagem\n")
+        ))
+
+;;; --- Comandos de agenda custom (SPC n a, depois "v" e "c" para escolher) ---
+(setq org-agenda-custom-commands
+      '(("w" "Workday (hoje)"
+         ((agenda "" ((org-agenda-span 1)))
+          (todo "IN-PROGRESS")
+          (todo "TODO"))
+         ((org-agenda-overriding-header "⚡ Dia de trabalho")))
+
+        ("W" "Semana com blocos"
+         ((agenda "" ((org-agenda-span 7))))
+         ((org-agenda-overriding-header "📅 Semana")))))
+
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode)
+  (setq org-super-agenda-groups
+        '((:name "🔥 Urgente"  :deadline today :priority "A")
+          (:name "🗓 Hoje"     :scheduled today)
+          (:name "⏳ Em breve" :deadline future)
+          (:name "📦 Projetos" :tag "project")
+          (:name "✅ Concluídas" :todo "DONE" :order 99))))
+
 
 ;; Markdown Mode
 (custom-set-faces
