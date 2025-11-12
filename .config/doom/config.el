@@ -40,17 +40,21 @@
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 16 :weight 'semi-light)
-            doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 15)))
+      (setq doom-font (font-spec :family "Terminess Nerd Font" :size 19 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "Terminess Nerd Font" :size 19)))
+  ;; (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 17 :weight 'semi-light)
+  ;;        doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 16 :weight 'semi-light)
-          doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 15))))
+    (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 18 :weight 'medium)
+          doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 20))))
+;; (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 17 :weight 'semi-light)
+;;       doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 18))))
 
 ;; (setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-moonlight)
 (setq doom-theme 'catppuccin)
-(setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
-(setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
+(setq catppuccin-flavor 'macchiato) ; or 'frappe 'latte, 'macchiato, or 'mocha
 (load-theme 'catppuccin t)
 ;; (require 'kaolin-themes)
 ;; (load-theme 'kaolin-valley-dark t)
@@ -63,7 +67,7 @@
 ;; clients, file templates and snippets. It is optional.
 
 (setq user-full-name "bashln"
-      user-mail-address "lpdmonteiro@gmail.com")
+      user-mail-address "lpdmonteiro+doom@gmail.com")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
@@ -136,11 +140,11 @@
         org-hide-emphasis-markers t
         ;; ex. of org-link-abbrev-alist in action
         ;; [[arch-wiki:Name_of_Page][Description]]
-        org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        '(("google" . "http://www.google.com/search?q=")
-          ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-          ("ddg" . "https://duckduckgo.com/?q=")
-          ("wiki" . "https://en.wikipedia.org/wiki/"))
+        ;; org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
+        ;; '(("google" . "http://www.google.com/search?q=")
+        ;;   ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
+        ;;   ("ddg" . "https://duckduckgo.com/?q=")
+        ;;   ("wiki" . "https://en.wikipedia.org/wiki/"))
         org-table-convert-region-max-lines 20000
         org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
         '((sequence
@@ -153,24 +157,27 @@
            "|"                 ; The pipe necessary to separate "active" states and "inactive" states
            "DONE(d)"           ; Task has been completed
            "CANCELLED(c)" )))) ; Task has been cancelled
-                                        ; 
+
 ;; Org-auto-tangle
 ;; org-auto-tangle allows you to add the option #+auto_tangle: t in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function ‘bashln/insert-auto-tangle-tag’ and setting it to a keybinding ‘SPC i a’.
 (use-package! org-auto-tangle
-  :defer t
   :hook (org-mode . org-auto-tangle-mode)
   :config
   (setq org-auto-tangle-default t))
 
 (defun bashln/insert-auto-tangle-tag ()
-  "Insert auto-tangle tag in a literate config."
+  "Insert '#+auto_tangle: t' at point or top of buffer in a literate config."
   (interactive)
-  (evil-org-open-below 1)
-  (insert "#+auto_tangle: t ")
-  (evil-force-normal-state))
+  (if (derived-mode-p 'org-mode)
+      (progn
+        (evil-org-open-below 1)
+        (insert "#+auto_tangle: t\n")
+        (evil-force-normal-state))
+    (message "Not in an Org buffer!")))
 
 (map! :leader
-      :desc "Insert auto_tangle tag" "i a" #'bashln/insert-auto-tangle-tag)
+      :desc "Insert auto_tangle tag"
+      "i a" #'bashln/insert-auto-tangle-tag)
 
 
 ;; This sets the font size for each Org header level.  Having variable font sizes in an Org outline makes it visually appealing and more readable.
@@ -227,13 +234,13 @@
   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
   (add-to-list 'copilot-indentation-alist '(org-mode 2))
   (add-to-list 'copilot-indentation-alist '(text-mode 2))
-  (add-to-list 'copilot-indentation-alist '(closure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
   :init
   (setq copilot-indent-offset-warning-disable t)
   )
 
-(setq-default tab-wibashlnh 2)
+(setq-default tab-width 2)
 
 ;; Remove js2-mode from auto-mode-alist for .js files and replace it with js2-mode
 
@@ -249,6 +256,28 @@
   (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
     (setf (alist-get m apheleia-mode-alist) '(prettier))))
 
+
+;; Tree Sitter
+;; (setq +tree-sitter-hl-enabled-modes t)
+;; (after! tree-sitter
+;;         (global-tree-sitter-mode)
+;;         (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package! treesit-auto
+  :custom
+  ;; Pergunta antes de instalar grammar
+  (treesit-auto-install 'prompt)
+  :config
+  ;; Por enquanto, só quero tree-sitter nessas linguagens
+  (setq treesit-auto-langs '(tsx typescript))
+
+  ;; Usa essa lista pra configurar auto-mode-alist
+  (treesit-auto-add-to-auto-mode-alist)
+
+  ;; Liga o modo global de decisão entre *-mode e *-ts-mode
+  (global-treesit-auto-mode))
+
+
 (add-hook 'js2-mode-hook #'apheleia-mode)  ;; formatar ao salvar nesse modo
 ;; ou globalmente:
 (apheleia-global-mode +1)
@@ -259,3 +288,5 @@
 
 ;; LSP continua com Eglot:
 ;; (setq eglot-format-on-save nil) ; deixa a formatação pro Prettier
+
+

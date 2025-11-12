@@ -1,13 +1,11 @@
-
-
 # ~/.bashrc — Oh My Bash + Starship (Leo)
 # Autor: leonamsh | Data: 2025-09-01 (convertido p/ bash)
 # Descrição: Config simplificada em Bash com OMB + Starship + seus aliases/funções
 
 # 0) Só continue se for sessão interativa
 case $- in
-  *i*) ;;
-  *) return ;;
+*i*) ;;
+*) return ;;
 esac
 
 # 1) PATHs básicos
@@ -15,12 +13,12 @@ export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-
 # 2) Oh My Bash (OMB) + Plugins
 export OSH="$HOME/.oh-my-bash"
 # O tema do OMB não importa muito porque o Starship vai assumir o prompt,
 # mas deixo random pra manter seu estilo divertido.
-OSH_THEME="random"
+# OSH_THEME="random"
+# OSH_THEME="zork"
 # Se quiser restringir, defina candidatos (opcional):
 # OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
 
@@ -55,7 +53,7 @@ fi
 export HISTFILE=~/.bash_history
 export HISTSIZE=10000
 export HISTFILESIZE=10000
-shopt -s histappend                 # acrescenta em vez de sobrescrever
+shopt -s histappend # acrescenta em vez de sobrescrever
 # Salva cmd recém executado no histórico e atualiza entre sessões
 PROMPT_COMMAND='history -a; history -c; history -r; '"$PROMPT_COMMAND"
 
@@ -153,7 +151,7 @@ alias Ss='pacman -Ss'
 alias pS='yay -S --noconfirm'
 alias pSs='yay -Ss'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/home/lm/dotfiles/bashln/update.sh'
+alias update='/home/lm/bashln-scripts/scripts/update.sh'
 alias limpao='sudo /home/lm/dotfiles/scripts/update-clean.sh'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
@@ -162,7 +160,7 @@ alias cdaula='cd /home/lm/leonamsh/maisPraTi/'
 alias naula='nvim /home/lm/leonamsh/maisPraTi/'
 alias ninstall='nvim /home/lm/scripts/post-install.sh'
 alias ngit='nvim /home/lm/leonamsh/gitlab'
-alias vpninova='sudo openvpn --config /home/lm/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn'
+alias vpninova='sudo openvpn --config /home/lm/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
 
 # 16) Funções
 
@@ -182,7 +180,7 @@ y() {
   tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
   yazi "$@" --cwd-file="$tmp"
   # yazi grava NUL; removemos NUL pra obter caminho limpo
-  cwd="$(tr -d '\0' < "$tmp")"
+  cwd="$(tr -d '\0' <"$tmp")"
   if [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
     cd -- "$cwd"
   fi
@@ -192,10 +190,10 @@ y() {
 # 16.3 — fopen: escolher arquivos com fzf e abrir com xdg-open
 fopen() {
   local root="${1:-.}"
-  fd -t f -H -0 . "$root" \
-  | fzf --read0 --multi --select-1 --exit-0 \
-        --bind 'enter:execute-silent(xdg-open {+})+abort' \
-        --prompt='files> '
+  fd -t f -H -0 . "$root" |
+    fzf --read0 --multi --select-1 --exit-0 \
+      --bind 'enter:execute-silent(xdg-open {+})+abort' \
+      --prompt='files> '
 }
 
 # 17) Qualquer coisa que era específica do Zsh e não faça sentido no Bash foi removida:
@@ -206,5 +204,3 @@ fopen() {
 #   https://github.com/marlonrichert/bash-autocomplete (autocomplete) ou
 #   https://github.com/arzzen/calc.plugin.bash (exemplo de plugin OMB)
 #   fzf já cobre boa parte do fluxo.
-
-
