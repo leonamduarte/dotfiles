@@ -40,14 +40,14 @@
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "Terminess Nerd Font" :size 19 :weight 'medium)
-            doom-variable-pitch-font (font-spec :family "Terminess Nerd Font" :size 19)))
+      (setq doom-font (font-spec :family "Terminess Nerd Font" :size 17 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "Terminess Nerd Font" :size 17)))
   ;; (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 17 :weight 'semi-light)
   ;;        doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 18 :weight 'medium)
-          doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 20))))
+    (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 17 :weight 'medium)
+          doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 17))))
 ;; (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 17 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 18))))
 
@@ -125,6 +125,12 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (add-hook 'org-mode-hook #'hl-todo-mode)
+(add-hook 'org-mode-hook #'org-superstar-mode)
+
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "■" "□" "▲"))
+  (add-hook 'org-mode-hook #'org-superstar-mode))
+
 
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
@@ -134,7 +140,7 @@
         org-modern-table-vertical 1
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
-        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
+        ;; org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
         org-superstar-itembullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
         org-log-done 'time
         org-hide-emphasis-markers t
@@ -161,9 +167,9 @@
 ;; Org-auto-tangle
 ;; org-auto-tangle allows you to add the option #+auto_tangle: t in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function ‘bashln/insert-auto-tangle-tag’ and setting it to a keybinding ‘SPC i a’.
 (use-package! org-auto-tangle
-  :hook (org-mode . org-auto-tangle-mode)
   :config
-  (setq org-auto-tangle-default t))
+  (setq org-auto-tangle-default t)
+  (add-hook 'org-mode-hook #'org-auto-tangle-mode))
 
 (defun bashln/insert-auto-tangle-tag ()
   "Insert '#+auto_tangle: t' at point or top of buffer in a literate config."
