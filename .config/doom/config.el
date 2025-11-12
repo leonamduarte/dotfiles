@@ -46,16 +46,16 @@
   ;;        doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 17 :weight 'medium)
-          doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 17))))
+    (setq doom-font (font-spec :family "Iosevka Nerd Font" :size 18 :weight 'medium)
+          doom-variable-pitch-font (font-spec :family "Iosevka Nerd Font" :size 18))))
 ;; (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 17 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 18))))
 
-;; (setq doom-theme 'doom-one)
+(setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-moonlight)
-(setq doom-theme 'catppuccin)
-(setq catppuccin-flavor 'macchiato) ; or 'frappe 'latte, 'macchiato, or 'mocha
-(load-theme 'catppuccin t)
+;; (setq doom-theme 'catppuccin)
+;; (setq catppuccin-flavor 'macchiato) ; or 'frappe 'latte, 'macchiato, or 'mocha
+;; (load-theme 'catppuccin t)
 ;; (require 'kaolin-themes)
 ;; (load-theme 'kaolin-valley-dark t)
 
