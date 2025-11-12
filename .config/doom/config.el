@@ -127,10 +127,13 @@
 (add-hook 'org-mode-hook #'hl-todo-mode)
 (add-hook 'org-mode-hook #'org-superstar-mode)
 
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "■" "□" "▲"))
-  (add-hook 'org-mode-hook #'org-superstar-mode))
-
+;; (after! org-superstar
+;;   (setq org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "■" "□" "▲"))
+;;   (add-hook 'org-mode-hook #'org-superstar-mode))
+(after! org-modern
+  (setq org-modern-star '("◉" "●" "○" "◆" "●" "○" "◆")
+        ;; se quiser esconder os asteriscos originais
+        org-modern-hide-stars t))
 
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
