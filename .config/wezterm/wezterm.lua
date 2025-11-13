@@ -25,7 +25,7 @@ config.force_reverse_video_cursor = true
 config.window_decorations = "NONE"
 -- config.hide_tab_bar_if_only_one_tab = true
 -- config.enable_tab_bar = false
-config.show_tab_index_in_tab_bar = false
+-- config.show_tab_index_in_tab_bar = false
 config.tab_bar_at_bottom = true
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 

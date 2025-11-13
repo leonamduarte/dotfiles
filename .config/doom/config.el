@@ -372,7 +372,7 @@
   (treesit-auto-install 'prompt)
   :config
   ;; Por enquanto, só quero tree-sitter nessas linguagens
-  (setq treesit-auto-langs '(tsx typescript))
+  ;; (setq treesit-auto-langs '(tsx typescript))
 
   ;; Usa essa lista pra configurar auto-mode-alist
   (treesit-auto-add-to-auto-mode-alist)
