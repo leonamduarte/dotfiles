@@ -47,3 +47,11 @@ opt.splitright = true
 g.lazyvim_eslint_auto_format = true
 -- Toggle global de autoformat no save (do LazyVim); deixe comentado se não quiser mexer.
 -- g.autoformat = true
+
+---@class LazyVimConfig
+vim.g.lazyvim = {
+  autocmds = {
+    -- desliga wrap+spell padrão
+    wrap_spell = false,
+  },
+}
