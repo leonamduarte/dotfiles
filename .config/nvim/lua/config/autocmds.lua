@@ -10,8 +10,6 @@
 -- Autocmds custom (VeryLazy). Defaults do LazyVim:
 -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 
-vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
-
 local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
@@ -69,7 +67,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 
 -- wrap and check for spell in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  group = aug("wrap_spell", { clear = true }),
+  group = augroup("wrap_spell", { clear = true }),
   pattern = { "text", "plaintex", "typst", "gitcommit" },
   callback = function()
     vim.opt_local.wrap = true
