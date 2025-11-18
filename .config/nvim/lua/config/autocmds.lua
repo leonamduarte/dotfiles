@@ -56,7 +56,7 @@ vim.api.nvim_create_autocmd("VimResized", {
 
 -- wrap and check for spell in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("wrap_spell"),
+  group = aug("wrap_spell", { clear = true }),
   pattern = { "text", "plaintex", "typst", "gitcommit" },
   callback = function()
     vim.opt_local.wrap = true
