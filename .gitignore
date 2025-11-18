@@ -40,6 +40,7 @@
 !.config/fastfetch/
 !.config/fish/
 !.config/xsettingsd/
+!.config/zed/
 
 # arquivos ou pastas fora do .config
 !.local/share/fonts/

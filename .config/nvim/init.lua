@@ -2,4 +2,4 @@
 require("config.lazy")
 
 vim.opt.spell = true
-vim.opt.spelllang = "pt_br"
+vim.opt.spelllang = { "pt_br", "en_us" }

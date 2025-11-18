@@ -190,6 +190,6 @@
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       (literate +tangle)
        (default +bindings +smartparens))
 

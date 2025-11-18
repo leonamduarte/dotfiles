@@ -134,7 +134,7 @@ alias lt='eza -aT --color=always --group-directories-first --icons=always'
 alias l_.="eza -a | grep -e '^\.'"
 
 # 14) Aliases — Sistema
-alias stowa='stow . --adopt'
+alias stowa='stow -t ~ --adopt dotfiles'
 alias grubup="sudo grub-mkconfig -o /boot/grub/grub.cfg"
 alias fixpacman="sudo rm /var/lib/pacman/db.lck"
 alias tarnow='tar -acf '
