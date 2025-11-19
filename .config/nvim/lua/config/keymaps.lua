@@ -74,9 +74,3 @@ map("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Mover seleção ↑" })
 map("n", "<leader>xx", function()
   require("trouble").toggle()
 end, { desc = "Trouble" })
-
--- Mapeamento para compilar o Java
-vim.api.nvim_set_keymap("n", "<leader>jc", ":!javac %<CR>", { noremap = true, silent = true })
-
--- Mapeamento para rodar o Java
-vim.api.nvim_set_keymap("n", "<leader>jr", ":!java %:r<CR>", { noremap = true, silent = true })
