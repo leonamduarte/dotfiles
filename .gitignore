@@ -1,5 +1,6 @@
 # Ignora TUDO no diretório .config
 /*
+.config/nvim/lua/plugins/themes.lua
 
 # Exceto estas pastas (e seus conteúdos)
 !.config/
