@@ -13,7 +13,8 @@ Snacks = Snacks
 
 -- ===== Arquivos / Gerenciadores =====
 -- Oil (diretório pai em float)
-map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
+-- map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
+map("n", "-", "<cmd>Yazi<cr>", { desc = "Open yazi at the current wile" })
 
 -- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
 map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
