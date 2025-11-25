@@ -61,6 +61,7 @@ require("lazy").setup({
     -- import/override with your plugins
     { import = "plugins" },
     -- import/override with your plugins
+    { import = "plugins" },
     { import = "plugins/colorscheme" },
   },
   defaults = {

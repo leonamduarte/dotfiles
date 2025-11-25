@@ -6,12 +6,12 @@
   "height": 26,
   "modules-left": [
     "custom/omarchy",
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
     "clock",
     "custom/update",
     "custom/screenrecording-indicator"
-  ],
-  "modules-center": [
-    "hyprland/workspaces"
   ],
   "modules-right": [
     "group/tray-expander",
