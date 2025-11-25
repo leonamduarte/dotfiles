@@ -5,10 +5,8 @@ local config = wezterm.config_builder()
 config.font_size = 13
 config.font = wezterm.font_with_fallback({
 	"Maple Mono",
-	"VictorMono NFM SemiBold",
 	"CaskaydiaCove Nerd Font",
 	"DM Mono",
-	"GeistMono Nerd Font",
 	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font",
 })

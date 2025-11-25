@@ -29,7 +29,7 @@ vim.keymap.set("n", "<leader>e", function()
   Snacks.picker.explorer({
     cwd = dir,
     reveal = name ~= "" and name or nil,
-    layout = { layout = { position = "right" } },
+    layout = { layout = { position = "left" } },
   })
 end, { desc = "Explorer (aqui, direita)" })
 
