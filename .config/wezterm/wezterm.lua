@@ -29,6 +29,7 @@ config.window_decorations = "NONE"
 -- config.enable_tab_bar = false
 -- config.show_tab_index_in_tab_bar = false
 config.tab_bar_at_bottom = true
+config.use_fancy_tab_bar = false
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 
 config.initial_rows = 35
