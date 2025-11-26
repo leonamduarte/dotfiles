@@ -1,14 +1,13 @@
-;; [[file:config.org::*Sistema e Fontes][Sistema e Fontes:1]]
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "Iosevka NF" :size 17 :weight 'semi-light)
-            doom-variable-pitch-font (font-spec :family "Iosevka NF" :size 18)))
+      (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 16)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "Maple Mono NF" :size 17 :weight 'medium)
-          doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 17))))
+    (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
+          doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 16))))
 ;; Sistema e Fontes:1 ends here
 
 ;; [[file:config.org::*Tema, UI e Aparência][Tema, UI e Aparência:1]]
@@ -46,16 +45,16 @@
 
 (after! doom-themes
   (custom-theme-set-faces!
-   'doom-one
-   '(org-level-8 :inherit outline-3 :height 1.0)
-   '(org-level-7 :inherit outline-3 :height 1.0)
-   '(org-level-6 :inherit outline-3 :height 1.1)
-   '(org-level-5 :inherit outline-3 :height 1.2)
-   '(org-level-4 :inherit outline-3 :height 1.3)
-   '(org-level-3 :inherit outline-3 :height 1.4)
-   '(org-level-2 :inherit outline-2 :height 1.5)
-   '(org-level-1 :inherit outline-1 :height 1.6)
-   '(org-document-title  :height 1.8 :bold t :underline nil)))
+    'doom-one
+    '(org-level-8 :inherit outline-3 :height 1.0)
+    '(org-level-7 :inherit outline-3 :height 1.0)
+    '(org-level-6 :inherit outline-3 :height 1.1)
+    '(org-level-5 :inherit outline-3 :height 1.2)
+    '(org-level-4 :inherit outline-3 :height 1.3)
+    '(org-level-3 :inherit outline-3 :height 1.4)
+    '(org-level-2 :inherit outline-2 :height 1.5)
+    '(org-level-1 :inherit outline-1 :height 1.6)
+    '(org-document-title  :height 1.8 :bold t :underline nil)))
 ;; Org Mode — Configuração Geral:1 ends here
 
 ;; [[file:config.org::*Org Mode — Org Superstar / Org Modern][Org Mode — Org Superstar / Org Modern:1]]
@@ -156,11 +155,11 @@
 
 (after! lsp-mode
   (setq lsp-go-analyses '((nilness . t)
-                         (shadow . t)
-                         (unusedparams . t)
-                         (unusedwrite . t)
-                         (useany . t)
-                         (unusedvariable . t))))
+                          (shadow . t)
+                          (unusedparams . t)
+                          (unusedwrite . t)
+                          (useany . t)
+                          (unusedvariable . t))))
 
 (after! eglot
   (map! :map eglot-mode-map
@@ -170,23 +169,31 @@
 ;; LSP / Eglot / LSP Mode:1 ends here
 
 ;; [[file:config.org::*Copilot][Copilot:1]]
+;; (use-package! copilot
+;;   :hook ((prog-mode . copilot-mode))
+;;   :bind (:map copilot-completion-map
+;;               ("<tab>" . 'copilot-accept-completion)
+;;               ("TAB" . 'copilot-accept-completion)
+;;               ("C-TAB" . 'copilot-accept-completion-by-word)
+;;               ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;               ("C-n" . 'copilot-next-completion)
+;;               ("C-p" . 'copilot-previous-completion))
+;;   :config
+;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+;;   (add-to-list 'copilot-indentation-alist '(org-mode 2))
+;;   (add-to-list 'copilot-indentation-alist '(text-mode 2))
+;;   (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
+;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+;;   :init
+;;   (setq copilot-indent-offset-warning-disable t))
+;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
               ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)
-              ("C-n" . 'copilot-next-completion)
-              ("C-p" . 'copilot-previous-completion))
-  :config
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-  (add-to-list 'copilot-indentation-alist '(org-mode 2))
-  (add-to-list 'copilot-indentation-alist '(text-mode 2))
-  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
-  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  :init
-  (setq copilot-indent-offset-warning-disable t))
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
 ;; Copilot:1 ends here
 
 ;; [[file:config.org::*JavaScript / TypeScript / TSX][JavaScript / TypeScript / TSX:1]]
@@ -203,7 +210,7 @@
   (treesit-auto-add-to-auto-mode-alist)
   (global-treesit-auto-mode))
 
-(add-hook 'js2-mode-hook #'apheleia-mode)
+;; (add-hook 'js2-mode-hook #'apheleia-mode)
 (apheleia-global-mode +1)
 
 (after! js2-mode
@@ -234,10 +241,10 @@
 ;; Markdown:1 ends here
 
 ;; [[file:config.org::*Miscelânea][Miscelânea:1]]
-(setq confirm-kill-emacs nil)        ;; Não confirma ao sair
-(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-  (if (file-exists-p lfile)
-      (load lfile)))
+ (setq confirm-kill-emacs nil)        ;; Não confirma ao sair
+ (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+   (if (file-exists-p lfile)
+       (load lfile)))
 
 (setq-default tab-width 2)
 
