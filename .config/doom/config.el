@@ -13,7 +13,7 @@
 ;; [[file:config.org::*Tema, UI e Aparência][Tema, UI e Aparência:1]]
 (setq doom-theme 'doom-one)
 (setq display-line-numbers-type t)
-(setq user-full-name "Leonam Monteiro"
+(setq user-full-name "bashln"
       user-mail-address "lpdmonteiro+doom@gmail.com")
 ;; Tema, UI e Aparência:1 ends here
 
@@ -169,31 +169,23 @@
 ;; LSP / Eglot / LSP Mode:1 ends here
 
 ;; [[file:config.org::*Copilot][Copilot:1]]
-;; (use-package! copilot
-;;   :hook ((prog-mode . copilot-mode))
-;;   :bind (:map copilot-completion-map
-;;               ("<tab>" . 'copilot-accept-completion)
-;;               ("TAB" . 'copilot-accept-completion)
-;;               ("C-TAB" . 'copilot-accept-completion-by-word)
-;;               ("C-<tab>" . 'copilot-accept-completion-by-word)
-;;               ("C-n" . 'copilot-next-completion)
-;;               ("C-p" . 'copilot-previous-completion))
-;;   :config
-;;   (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-;;   (add-to-list 'copilot-indentation-alist '(org-mode 2))
-;;   (add-to-list 'copilot-indentation-alist '(text-mode 2))
-;;   (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
-;;   (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-;;   :init
-;;   (setq copilot-indent-offset-warning-disable t))
-;; accept completion from copilot and fallback to company
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)
               ("TAB" . 'copilot-accept-completion)
               ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+              ("C-<tab>" . 'copilot-accept-completion-by-word)
+              ("C-n" . 'copilot-next-completion)
+              ("C-p" . 'copilot-previous-completion))
+  :config
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (add-to-list 'copilot-indentation-alist '(org-mode 2))
+  (add-to-list 'copilot-indentation-alist '(text-mode 2))
+  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
+  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
+  :init
+  (setq copilot-indent-offset-warning-disable t))
 ;; Copilot:1 ends here
 
 ;; [[file:config.org::*JavaScript / TypeScript / TSX][JavaScript / TypeScript / TSX:1]]
@@ -205,12 +197,8 @@
 
 (use-package! treesit-auto
   :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist)
-  (global-treesit-auto-mode))
+  (treesit-auto-install 'prompt))
 
-;; (add-hook 'js2-mode-hook #'apheleia-mode)
 (apheleia-global-mode +1)
 
 (after! js2-mode
@@ -241,10 +229,10 @@
 ;; Markdown:1 ends here
 
 ;; [[file:config.org::*Miscelânea][Miscelânea:1]]
- (setq confirm-kill-emacs nil)        ;; Não confirma ao sair
- (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-   (if (file-exists-p lfile)
-       (load lfile)))
+(setq confirm-kill-emacs nil)        
+(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+  (if (file-exists-p lfile)
+      (load lfile)))
 
 (setq-default tab-width 2)
 
