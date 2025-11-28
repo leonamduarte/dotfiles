@@ -123,12 +123,19 @@
 ;; jk como ESC (opcional Doom)
 ;; ----------------------------------------------------------------------------
 
-;; (use-package evil-escape
-;;   :after evil
-;;   :config
-;;   (evil-escape-mode)
-;;   (setq evil-escape-key-sequence "jk"
-;;         evil-escape-delay 0.15))
+(use-package evil-escape
+  :after evil
+  :config
+  (evil-escape-mode)
+  (setq evil-escape-key-sequence "jk"
+        evil-escape-delay 0.15))
+
+(with-eval-after-load 'evil
+  (setq evil-normal-state-cursor '("white" box)
+        evil-insert-state-cursor '("deep sky blue" bar)
+        evil-visual-state-cursor '("orange" box)
+        evil-replace-state-cursor '("red" hbar)))
+
 
 (provide 'editor-evil)
 ;;; editor-evil.el ends here

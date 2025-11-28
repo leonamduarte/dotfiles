@@ -16,6 +16,7 @@
 
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
+.config/emacs/*
 !.config/alacritty/
 !.config/autostart/
 !.config/doom/

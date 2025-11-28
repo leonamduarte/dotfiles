@@ -17,7 +17,7 @@
 ;; Fontes
 ;; ---------------------------------------------------------------------------
 
-(set-face-attribute 'default nil :family "Maple Mono" :height 120)
+(set-face-attribute 'default nil :family "Maple Mono" :height 130)
 (set-face-attribute 'fixed-pitch nil :family "Maple Mono" :height 120)
 
 ;; Se quiser títulos mais bonitos, trocamos depois:
@@ -112,6 +112,8 @@
 ;; ---------------------------------------------------------------------------
 ;; Interface minimalista
 ;; ---------------------------------------------------------------------------
+
+(set-cursor-color "#00afff")
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)
