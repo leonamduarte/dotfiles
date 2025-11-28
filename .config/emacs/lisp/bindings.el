@@ -50,8 +50,14 @@
 (define-key leo/leader-file-map (kbd "d") #'dired)
 
 ;; Open Emacs config directory
+;; (define-key leo/leader-file-map (kbd "p")
+;;   (lambda () (interactive) (find-file user-emacs-directory)))
 (define-key leo/leader-file-map (kbd "p")
-  (lambda () (interactive) (find-file user-emacs-directory)))
+  (lambda ()
+    (interactive)
+    (let ((default-directory user-emacs-directory))
+      (call-interactively #'find-file))))
+
 
 ;; Open init.el
 (define-key leo/leader-file-map (kbd "e")

@@ -27,7 +27,10 @@
   :after (marginalia all-the-icons)
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init
-  (all-the-icons-completion-mode))
+  (all-the-icons-completion-mode)
+ :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; Orderless
 (use-package orderless
@@ -41,10 +44,11 @@
 
 ;; Consult
 (use-package consult
-  :bind (("C-s" . consult-line)
-         ("C-p" . consult-buffer)
-         ("C-M-l" . consult-imenu)
-         ("M-g g" . consult-goto-line)))
+  :bind
+  (("C-s" . consult-line)
+   ;; ("C-c h" . consult-history)
+   ("C-x b" . consult-buffer)
+   ("C-c k" . consult-ripgrep)))
 
 ;; Embark
 (use-package embark

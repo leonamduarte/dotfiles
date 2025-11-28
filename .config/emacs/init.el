@@ -60,6 +60,7 @@
 (require 'bindings)
 (require 'ui-dashboard)
 (require 'extras)
+(require 'files)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 5) Finalização
