@@ -189,11 +189,11 @@
 ;; Copilot:1 ends here
 
 ;; [[file:config.org::*JavaScript / TypeScript / TSX][JavaScript / TypeScript / TSX:1]]
-(add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
+;; (add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
 
-(after! js2-mode
-  (setq js2-basic-offset 2
-        js2-bounce-indent-p nil))
+;; (after! js2-mode
+;;   (setq js2-basic-offset 2
+;;         js2-bounce-indent-p nil))
 
 (use-package! treesit-auto
   :custom
@@ -201,14 +201,14 @@
 
 (apheleia-global-mode +1)
 
-(after! js2-mode
-  (setq js2-strict-missing-semi-warning nil))
+;; (after! js2-mode
+;;   (setq js2-strict-missing-semi-warning nil))
 
-(after! apheleia
-  (setf (alist-get 'prettier apheleia-formatters)
-        '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
-  (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
-    (setf (alist-get m apheleia-mode-alist) '(prettier))))
+;; (after! apheleia
+;;   (setf (alist-get 'prettier apheleia-formatters)
+;;         '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
+;;   (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
+;;     (setf (alist-get m apheleia-mode-alist) '(prettier))))
 ;; JavaScript / TypeScript / TSX:1 ends here
 
 ;; [[file:config.org::*Markdown][Markdown:1]]
@@ -240,3 +240,53 @@
   (setq projectile-project-root-files-bottom-up
         (remove ".git" projectile-project-root-files-bottom-up)))
 ;; Miscelânea:1 ends here
+
+;; -----------------------------
+;; Vertico stack moderna para Doom
+;; -----------------------------
+
+;; Marginalia — anotação de candidatos
+(use-package! marginalia
+  :after vertico
+  :init (marginalia-mode))
+
+;; Orderless — fuzzy matching poderoso
+(use-package! orderless
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; Consult — comandos inteligentes
+(use-package! consult
+  :after vertico
+  :bind (("C-s" . consult-line)
+         ("C-c C-r" . consult-recent-file)
+         ("C-c b" . consult-buffer)
+         ("M-y" . consult-yank-pop)))
+
+;; Embark — menu de ações contextuais
+(use-package! embark
+  :bind
+  (("C-." . embark-act)         ;; o "menu secreto"
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
+(use-package! embark-consult
+  :after (embark consult))
+
+;; Corfu — autocompletar suave tipo nvim-cmp
+(use-package! corfu
+  :config
+  (global-corfu-mode)
+  (setq corfu-auto t
+        corfu-auto-delay 0.1
+        corfu-auto-prefix 1
+        corfu-cycle t))
+
+;; Para terminais
+(use-package! corfu-terminal
+  :when (not (display-graphic-p))
+  :config (corfu-terminal-mode))

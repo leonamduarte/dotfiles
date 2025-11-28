@@ -71,3 +71,12 @@
 (package! treesit-auto)
 
 (package! org-superstar)
+
+(package! orderless)
+(package! consult)
+(package! embark)
+(package! embark-consult)
+(package! marginalia)
+(package! corfu)
+(package! corfu-terminal) ;; se usar em TTY
+
