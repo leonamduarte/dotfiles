@@ -27,7 +27,7 @@
         org-modern-table-vertical 1
         org-default-notes-file (expand-file-name "notes.org" org-directory)
         org-ellipsis " ▼ "
-        org-superstar-itembullet-alist '((?+ . ?➤) (?- . ?✦))
+        ;; org-superstar-itembullet-alist '((?+ . ?➤) (?- . ?✦))
         org-log-done 'time
         org-hide-emphasis-markers t
         org-table-convert-region-max-lines 20000
@@ -59,7 +59,7 @@
 
 ;; [[file:config.org::*Org Mode — Org Superstar / Org Modern][Org Mode — Org Superstar / Org Modern:1]]
 (add-hook 'org-mode-hook #'hl-todo-mode)
-(add-hook 'org-mode-hook #'org-superstar-mode)
+;; (add-hook 'org-mode-hook #'org-superstar-mode)
 
 (after! org-modern
   (setq org-modern-star '("◉" "●" "○" "◆" "●" "○" "◆")
