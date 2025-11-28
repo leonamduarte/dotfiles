@@ -40,6 +40,10 @@
 (define-prefix-command 'leo/leader-search-map)   (leo/leader "s" leo/leader-search-map)
 (define-prefix-command 'leo/leader-help-map)     (leo/leader "h" leo/leader-help-map)
 
+;; Subprefix para Org-roam
+(define-prefix-command 'leo/leader-org-roam-map)
+(define-key leo/leader-org-map (kbd "r") leo/leader-org-roam-map)
+
 ;; -----------------------------------------------------------------------------
 ;;  Files (SPC f)
 ;; -----------------------------------------------------------------------------
@@ -49,22 +53,16 @@
 (define-key leo/leader-file-map (kbd "s") #'save-buffer)
 (define-key leo/leader-file-map (kbd "d") #'dired)
 
-;; Open Emacs config directory
-;; (define-key leo/leader-file-map (kbd "p")
-;;   (lambda () (interactive) (find-file user-emacs-directory)))
 (define-key leo/leader-file-map (kbd "p")
   (lambda ()
     (interactive)
     (let ((default-directory user-emacs-directory))
       (call-interactively #'find-file))))
 
-
-;; Open init.el
 (define-key leo/leader-file-map (kbd "e")
   (lambda () (interactive)
     (find-file (expand-file-name "init.el" user-emacs-directory))))
 
-;; Doom-like SP/. → find-file
 (leo/leader "." #'find-file)
 
 ;; -----------------------------------------------------------------------------
@@ -117,7 +115,6 @@
 (define-key leo/leader-window-map (kbd "d") #'delete-window)
 (define-key leo/leader-window-map (kbd "o") #'delete-other-windows)
 
-;; Doom window movement
 (define-key leo/leader-window-map (kbd "h") #'windmove-left)
 (define-key leo/leader-window-map (kbd "j") #'windmove-down)
 (define-key leo/leader-window-map (kbd "k") #'windmove-up)
@@ -127,26 +124,30 @@
 ;; Search (SPC s)
 ;; -----------------------------------------------------------------------------
 
-;; Doom-like search directory
 (define-key leo/leader-search-map (kbd "d") #'consult-ripgrep)
-
-;; Doom search project
 (define-key leo/leader-search-map (kbd "p") #'consult-ripgrep)
-
-;; Search in current buffer
 (define-key leo/leader-search-map (kbd "b") #'consult-line)
-
-;; Fallback grep
 (define-key leo/leader-search-map (kbd "g") #'consult-grep)
 
 ;; -----------------------------------------------------------------------------
 ;; Org (SPC o)
 ;; -----------------------------------------------------------------------------
 
+;; Agenda / Capture / Journal
 (define-key leo/leader-org-map (kbd "a") #'org-agenda)
 (define-key leo/leader-org-map (kbd "c") #'org-capture)
 (define-key leo/leader-org-map (kbd "j") #'leo/org-journal-today)
-(define-key leo/leader-org-map (kbd "r") #'org-roam-node-find)
+
+;; Org-babel tangle (antes era SPC m B)
+(define-key leo/leader-org-map (kbd "B") #'org-babel-tangle)
+
+;; Auto-tangle insert
+(define-key leo/leader-org-map (kbd "i a") #'leo/org-insert-auto-tangle)
+
+;; ---- Org-roam (SPC o r …) ----
+(define-key leo/leader-org-roam-map (kbd "f") #'org-roam-node-find)
+(define-key leo/leader-org-roam-map (kbd "i") #'org-roam-node-insert)
+(define-key leo/leader-org-roam-map (kbd "r") #'org-roam-buffer-toggle)
 
 ;; -----------------------------------------------------------------------------
 ;; Help (SPC h)
@@ -159,11 +160,9 @@
 ;; Misc (SPC x, SPC q)
 ;; -----------------------------------------------------------------------------
 
-;; Scratch buffer
 (leo/leader "x"
             (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
-;; Quit / restart / reload config
 (leo/leader "q q" #'save-buffers-kill-terminal)
 (leo/leader "q r" #'restart-emacs)
 
@@ -173,6 +172,9 @@
   (message "✔ Configuração recarregada!"))
 
 (leo/leader "q R" #'leo/reload-config)
+
+;; Atalho global preservado do módulo Org
+(global-set-key (kbd "C-c o j") #'leo/org-journal-today)
 
 (provide 'bindings)
 
