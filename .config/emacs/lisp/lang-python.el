@@ -24,28 +24,6 @@
                '(python-ts-mode . ("pyright-langserver" "--stdio"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Formatação com black + isort via Apheleia
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package apheleia
-  :ensure nil
-  :config
-  ;; Define formatadores
-  (setf (alist-get 'black apheleia-formatters)
-        '("black" "-"))
-  (setf (alist-get 'isort apheleia-formatters)
-        '("isort" "--stdout" "-"))
-
-  ;; Combine black + isort
-  (setf (alist-get 'python-format apheleia-formatters)
-        '(("isort" "--stdout" filepath)
-          ("black" "-")))
-
-  ;; Usa no python-ts-mode
-  (add-to-list 'apheleia-mode-alist
-               '(python-ts-mode . python-format)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Helpers para execução de scripts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

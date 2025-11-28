@@ -18,12 +18,9 @@
   :init
   (vertico-mode 1))
 
-;; All the icons
-(use-package all-the-icons
-  :ensure nil)
-
 ;; Ícones no minibuffer
 (use-package all-the-icons-completion
+:if (display-graphic-p)
   :after (marginalia all-the-icons)
   :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init
@@ -64,6 +61,8 @@
 
 ;; Corfu
 
+;;; Integração com Corfu (C-n/C-p no insert-mode)
+
 (use-package corfu
   :init
   (global-corfu-mode)
@@ -74,7 +73,12 @@
   :custom
   (corfu-popupinfo-delay 0.5)
   (corfu-popupinfo-max-width 70)
-  (corfu-popupinfo-max-height 20))
+  (corfu-popupinfo-max-height 20)
+  :after evil
+  :config
+  (define-key corfu-map (kbd "C-n") #'corfu-next)
+  (define-key corfu-map (kbd "C-p") #'corfu-previous)
+  (setq corfu-popupinfo-delay 0.3))
 
 
 ;; Ajustes gerais de completion

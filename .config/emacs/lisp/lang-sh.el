@@ -29,18 +29,6 @@
                  ("bash-language-server" "start"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Formatação com shfmt via Apheleia
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package apheleia
-  :ensure nil
-  :config
-  (setf (alist-get 'shfmt apheleia-formatters)
-        '("shfmt" "-i" "4" "-"))      ;; indentação de 4
-  (add-to-list 'apheleia-mode-alist '(sh-mode . shfmt))
-  (add-to-list 'apheleia-mode-alist '(bash-ts-mode . shfmt)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Helpers: executar scripts shell rapidamente
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

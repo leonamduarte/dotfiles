@@ -26,6 +26,8 @@
 (use-package web-mode
   :mode ("\\.html?\\'"
          "\\.css\\'"
+         "\\.jsx\\'"
+         "\\.tsx\\'"
          "\\.php\\'"
          "\\.jsp\\'"
          "\\.vue\\'"
@@ -43,6 +45,8 @@
 (use-package emmet-mode
   :hook ((html-ts-mode . emmet-mode)
          (css-ts-mode . emmet-mode)
+         (web-mode . emmet-mode)
+         (tsx-ts-mode . emmet-mode)
          (web-mode . emmet-mode))
   :config
   (setq emmet-expand-jsx-className? t))
@@ -61,15 +65,6 @@
   (add-to-list 'eglot-server-programs
                '((css-ts-mode web-mode) .
                  ("vscode-css-language-server" "--stdio"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Prettier via Apheleia
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package apheleia
-  :config
-  (dolist (mode '(html-ts-mode css-ts-mode web-mode))
-    (add-to-list 'apheleia-mode-alist `(,mode . prettier))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Atalhos úteis

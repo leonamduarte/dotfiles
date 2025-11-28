@@ -2,6 +2,7 @@
 ;;; Commentary:
 ;; Desativa o package.el antes de carregar qualquer coisa
 ;;; Code:
+(setq package-enable-at-startup nil)
 (setq package-quickstart nil)
 
 ;; Opcional: evita que o Emacs carregue interface antes do UI.el

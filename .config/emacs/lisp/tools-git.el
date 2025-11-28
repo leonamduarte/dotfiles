@@ -1,38 +1,39 @@
 ;;; tools-git.el --- Integração com Git, Magit e Forge -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Este módulo recria o equivalente ao módulo Doom:
-;;   :tools (magit +forge)
-;;   :ui (vc-gutter +pretty)
-;;
-;; Inclui:
-;; - Magit completo com integrações
-;; - Forge para GitHub/GitLab/etc
-;; - Diffs na fringe (gutter bonito)
-;; - Evil-Collection para tornar tudo mais natural
-
+;; Módulo Git estilo Doom para Elpaca + use-package
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Magit: o melhor cliente Git da galáxia
+;; Magit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(elpaca magit
+  (:host github :repo "magit/magit")
 
 (use-package magit
-  :bind (("C-x g" . magit-status))
+  :commands (magit-status magit-blame magit-diff magit-log-all)
+  :init
+  ;; Garante que magit-status é reconhecido como comando
+  (autoload 'magit-status "magit")
   :config
   (setq magit-display-buffer-function
-        #'magit-display-buffer-fullframe-status-v1))
+        #'magit-display-buffer-fullframe-status-v1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Forge: issues e pull requests direto no Magit
+;; Forge (GitHub/GitLab integration)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package forge
-  :after magit)
+(elpaca forge
+  (:host github :repo "magit/forge")
+  (use-package forge
+  :after magit))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; VC Gutter: diffs na fringe (equivalente ao módulo vc-gutter +pretty)
+;; diff-hl (gutter bonito + integração com Magit)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(elpaca diff-hl
 
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
@@ -40,12 +41,11 @@
          (magit-pre-refresh . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
-  ;; Atualiza gutter em tempo real
   (diff-hl-flydiff-mode 1)
-  (diff-hl-margin-mode 1))
+  (diff-hl-margin-mode 1)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Evil integration (como no Doom)
+;; Evil-Collection: Magit natural com Evil
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package evil-collection-magit

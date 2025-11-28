@@ -26,21 +26,6 @@
                '(java-ts-mode . ("jdtls"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Formatação com google-java-format via Apheleia
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package apheleia
-  :ensure nil
-  :config
-  ;; Configura o formatador
-  (setf (alist-get 'google-java apheleia-formatters)
-        '("google-java-format" "-"))
-
-  ;; Usa formatador no modo Java
-  (add-to-list 'apheleia-mode-alist
-               '(java-ts-mode . google-java)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Helpers para Java puro (compilar e rodar)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

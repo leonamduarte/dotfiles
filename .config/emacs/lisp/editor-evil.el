@@ -27,12 +27,6 @@
 (use-package treemacs-evil
   :after (treemacs evil))
 
-;;; Integração com Corfu (C-n/C-p no insert-mode)
-(use-package corfu
-  :after evil
-  :config
-  (define-key corfu-map (kbd "C-n") #'corfu-next)
-  (define-key corfu-map (kbd "C-p") #'corfu-previous))
 
 ;;; ESC fecha prompts (como no Doom)
 (defun leo/escape-minibuffer ()

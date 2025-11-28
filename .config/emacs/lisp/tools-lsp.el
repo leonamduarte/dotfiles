@@ -7,7 +7,6 @@
 ;; Fornece:
 ;; - Eglot como cliente LSP leve e integrado
 ;; - Tree-sitter para sintaxe moderna
-;; - Integração com corfu
 ;; - Configs para linguagens fullstack
 
 ;;; Code:
@@ -43,16 +42,6 @@
   ;; Em integração com Apheleia
   (add-to-list 'eglot-server-programs
                '((web-mode html-mode) . ("vscode-html-language-server" "--stdio"))))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Integração Eglot ↔ Corfu
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package corfu
-  :ensure nil
-  :after eglot
-  :config
-  (setq corfu-popupinfo-delay 0.3))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Atalhos úteis estilo Doom para LSP
