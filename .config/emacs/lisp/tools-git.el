@@ -3,14 +3,18 @@
 ;; Módulo Git estilo Doom para Elpaca + use-package
 ;;; Code:
 
+;; (elpaca transient
+;;   (elpaca--git "https://github.com/magit/transient.git"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package transient)
 (elpaca magit
-  (:host github :repo "magit/magit")
 
-(use-package magit
+  (use-package magit
+  :after transient
   :commands (magit-status magit-blame magit-diff magit-log-all)
   :init
   ;; Garante que magit-status é reconhecido como comando
@@ -24,7 +28,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (elpaca forge
-  (:host github :repo "magit/forge")
   (use-package forge
   :after magit))
 

@@ -15,10 +15,20 @@
 ;; Tree-sitter — sintaxe moderna
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package treesit-auto
-  :config
-  (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
+;; Core do Tree-sitter
+(elpaca (tree-sitter
+         :host github
+         :repo "emacs-tree-sitter/emacs-tree-sitter")
+  (use-package tree-sitter
+  :after tree-sitter-langs
+  :hook ((prog-mode . tree-sitter-mode)
+         (tree-sitter-mode . tree-sitter-hl-mode))))
+
+;; Grammars pré-compiladas (Windows-friendly)
+(elpaca (tree-sitter-langs
+         :after tree-sitter
+         :host github
+         :repo "emacs-tree-sitter/tree-sitter-langs"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eglot — LSP moderno e integrado
