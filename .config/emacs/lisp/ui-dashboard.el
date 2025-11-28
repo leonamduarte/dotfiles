@@ -1,32 +1,51 @@
-;;; ui-dashboard.el --- Dashboard oficial estilo Doom -*- lexical-binding: t; -*-
 
+;;; ui-dashboard.el --- Dashboard estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Usa o dashboard oficial do GitHub (emacs-dashboard).
-;; Inclui ícones, recentes, projetos, agenda e banner.
-;; Carrega automaticamente no startup.
+;; Dashboard completo com ícones, projetos, agenda, banner custom e integração
+;; à experiência Doom.
 
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dependência essencial (separa seções visualmente)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package page-break-lines
+  :init (global-page-break-lines-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dashboard principal
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package dashboard
+  :after page-break-lines
   :init
-  ;; Configurações antes do load
   (setq dashboard-startup-banner 'logo
         dashboard-center-content t
         dashboard-set-heading-icons t
         dashboard-set-file-icons t
-        dashboard-items '((recents . 8)
+        dashboard-set-init-info t  ;; texto estilo Doom no fim
+        dashboard-projects-backend 'project-el
+        dashboard-items '((recents  . 8)
                           (projects . 5)
-                          (agenda . 5)))
+                          (agenda   . 5)))
+
+  ;; Banner custom — opcional
+  ;; (setq dashboard-startup-banner "/path/to/banner.png")
+
   :config
-  ;; Inicializa o dashboard corretamente
+  ;; Hook oficial do dashboard
   (dashboard-setup-startup-hook)
 
-  ;; Garante que ele seja o buffer inicial REAL
-  (setq initial-buffer-choice #'dashboard-refresh-buffer))
+  ;; Evita flash do buffer *scratch* no início
+  (setq initial-buffer-choice
+        (lambda () (get-buffer "*dashboard*"))))
 
-;; Evita tela padrão do Emacs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Ajustes gerais
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq inhibit-startup-screen t)
 
 (provide 'ui-dashboard)
-
 ;;; ui-dashboard.el ends here

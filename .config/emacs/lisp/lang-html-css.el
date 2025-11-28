@@ -1,85 +1,79 @@
-;;; lang-html-css.el --- Suporte para HTML, CSS e Web -*- lexical-binding: t; -*-
+
+;;; lang-html-css.el --- Suporte Web ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Este módulo fornece suporte completo para desenvolvimento web:
-;; - HTML e CSS com treesitter
-;; - web-mode para arquivos mistos (templates, JSX-like)
-;; - Emmet para expansão rápida
-;; - Prettier automático via Apheleia
-;; - LSP via vscode-html-language-server e vscode-css-language-server
-;; - Integração com React/JS/TS
-;;
-;; Equivalente ao Doom :lang web +lsp +tree-sitter
+;; Suporte completo para desenvolvimento web moderno:
+;; - HTML/CSS com tree-sitter
+;; - web-mode para templates avançados (Vue, Svelte, PHP, Blade, etc)
+;; - Emmet completo
+;; - Integração com Eglot (HTML/CSS LS)
+;; - Preview rápido
+;; - Indentação consistente
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; HTML e CSS com Treesitter
+;; HTML/CSS com Tree-sitter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . html-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.css\\'"   . css-ts-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; web-mode para arquivos mistos (Vue, Svelte, templates, etc)
+;; web-mode — apenas para arquivos realmente híbridos
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package web-mode
-  :mode ("\\.html?\\'"
-         "\\.css\\'"
-         "\\.jsx\\'"
-         "\\.tsx\\'"
-         "\\.php\\'"
-         "\\.jsp\\'"
-         "\\.vue\\'"
-         "\\.svelte\\'")
+:mode ("\\.php\\'"
+       "\\.jsp\\'"
+       "\\.vue\\'"
+       "\\.svelte\\'")
   :config
   (setq web-mode-markup-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset   2
+        web-mode-css-indent-offset    2
         web-mode-enable-auto-quoting nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Emmet — HTML turbo
+;; Emmet (HTML turbo)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package emmet-mode
   :hook ((html-ts-mode . emmet-mode)
-         (css-ts-mode . emmet-mode)
-         (web-mode . emmet-mode)
-         (tsx-ts-mode . emmet-mode)
-         (web-mode . emmet-mode))
+         (css-ts-mode  . emmet-mode)
+         (web-mode     . emmet-mode))
   :config
   (setq emmet-expand-jsx-className? t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; LSP: HTML e CSS (via Eglot)
+;; Eglot — LSP HTML/CSS
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (with-eval-after-load 'eglot
-  ;; HTML LSP
+  ;; HTML
   (add-to-list 'eglot-server-programs
-               '((html-ts-mode web-mode) .
-                 ("vscode-html-language-server" "--stdio")))
+               '((html-mode html-ts-mode web-mode)
+                 "vscode-html-language-server" "--stdio"))
 
-  ;; CSS LSP
+  ;; CSS
   (add-to-list 'eglot-server-programs
-               '((css-ts-mode web-mode) .
-                 ("vscode-css-language-server" "--stdio"))))
+               '((css-mode css-ts-mode web-mode)
+                 "vscode-css-language-server" "--stdio")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Atalhos úteis
+;; HTML Preview
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/html-preview ()
   "Abre o arquivo HTML atual no navegador padrão."
   (interactive)
-  (when buffer-file-name
-    (browse-url-of-file buffer-file-name)))
+  (unless buffer-file-name
+    (user-error "Este buffer não possui arquivo associado."))
+  (browse-url-of-file buffer-file-name))
 
 (global-set-key (kbd "C-c h p") #'leo/html-preview)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Indentação e comportamento
+;; Indentação
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq css-indent-offset 2)

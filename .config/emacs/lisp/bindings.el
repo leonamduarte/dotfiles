@@ -1,51 +1,56 @@
+
 ;;; bindings.el --- Leader key e keybindings globais estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Sistema de leader key inspirado no Doom Emacs, com ligações defensivas para
-;; evitar erros quando pacotes ainda não foram carregados/instalados.
-;;
-;; - SPC como líder
-;; - Prefixos organizados: f, b, p, g, l, w, o, s, q, h, x
-;; - As ligações verificam se o comando existe antes de chamar
+;; Este módulo implementa um sistema de leader key altamente inspirado no Doom Emacs:
+;; - Usa SPC como líder (em Evil)
+;; - Prefixos bem definidos: f, b, p, g, l, w, o, s, h, q, x
+;; - Safe-wrappers para evitar erros quando comandos não estão disponíveis
+;; - Suporte total a sub-prefixos (ex.: SPC o i a)
 ;;
 ;;; Code:
 
 (require 'cl-lib)
 
-;; ---------------------------------------------------------------------------
-;;  Leader Key System
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+;; Leader Key Setup
+;; ----------------------------------------------------------------------------
 
 (defvar leo/leader-key "SPC"
   "Tecla líder no Evil.")
 
 (defvar leo/leader-map (make-sparse-keymap)
-  "Mapa principal do leader.")
+  "Mapa principal utilizado pelo leader key.")
 
-;; Só define a ligação do leader quando o Evil estiver carregado.
+;; Bloqueia SPC globalmente (estilo Doom)
+(global-set-key (kbd "SPC") nil)
+
+;; Conecta SPC ao leader somente quando Evil estiver carregado
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd leo/leader-key) leo/leader-map)
   (define-key evil-visual-state-map (kbd leo/leader-key) leo/leader-map)
   (define-key evil-motion-state-map (kbd leo/leader-key) leo/leader-map))
 
 (defun leo/leader (key func-or-map)
-  "Bind KEY in `leo/leader-map' to FUNC-OR-MAP.
-FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
+  "Define KEY no mapa líder chamando FUNC-OR-MAP."
   (define-key leo/leader-map (kbd key) func-or-map))
 
-;; Helper: cria um wrapper interativo que chama SYM se estiver definido,
-;; senão mostra uma mensagem de erro amigável.
+;; Safe wrapper para comandos que talvez não existam
 (defun leo/leader-make-cmd (sym)
-  "Return an interactive lambda that calls SYM if available, else errors."
-  (let ((s sym))
-    (lambda ()
-      (interactive)
-      (if (fboundp s)
-          (call-interactively s)
-        (user-error "Comando não disponível: %s" s)))))
+  "Cria (ou retorna) um comando interativo que chama SYM, sem depender de closure."
+  (let* ((name (intern (format "leo/leader-cmd-%s" (symbol-name sym)))))
+    (unless (fboundp name)
+      (defalias name
+        `(lambda ()
+           (interactive)
+           (if (fboundp ',sym)
+               (call-interactively ',sym)
+             (user-error "Comando não disponível: %s" ',sym)))
+        (format "Wrapper to call %s if available." sym)))
+    name))
 
-;; ---------------------------------------------------------------------------
-;; Prefixes Doom-like
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+;; Prefixes
+;; ----------------------------------------------------------------------------
 
 (define-prefix-command 'leo/leader-file-map)     (leo/leader "f" leo/leader-file-map)
 (define-prefix-command 'leo/leader-buffer-map)   (leo/leader "b" leo/leader-buffer-map)
@@ -56,14 +61,20 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
 (define-prefix-command 'leo/leader-org-map)      (leo/leader "o" leo/leader-org-map)
 (define-prefix-command 'leo/leader-search-map)   (leo/leader "s" leo/leader-search-map)
 (define-prefix-command 'leo/leader-help-map)     (leo/leader "h" leo/leader-help-map)
+(define-prefix-command 'leo/leader-misc-map)     (leo/leader "x" leo/leader-misc-map)
+(define-prefix-command 'leo/leader-quit-map)     (leo/leader "q" leo/leader-quit-map)
 
 ;; Subprefix para Org-roam
 (define-prefix-command 'leo/leader-org-roam-map)
 (define-key leo/leader-org-map (kbd "r") leo/leader-org-roam-map)
 
-;; ---------------------------------------------------------------------------
-;;  Files (SPC f)
-;; ---------------------------------------------------------------------------
+;; Prefixo de insert no Org (para SPC o i a)
+(define-prefix-command 'leo/leader-org-insert-map)
+(define-key leo/leader-org-map (kbd "i") leo/leader-org-insert-map)
+
+;; ----------------------------------------------------------------------------
+;; Files (SPC f)
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-file-map (kbd "f") #'find-file)
 (define-key leo/leader-file-map (kbd "r") (leo/leader-make-cmd 'consult-recent-file))
@@ -82,9 +93,9 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
 
 (leo/leader "." #'find-file)
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Buffers (SPC b)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-buffer-map (kbd "b") (leo/leader-make-cmd 'consult-buffer))
 (define-key leo/leader-buffer-map (kbd "k") #'kill-current-buffer)
@@ -92,43 +103,42 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
 (define-key leo/leader-buffer-map (kbd "p") #'previous-buffer)
 (define-key leo/leader-buffer-map (kbd "s") #'save-buffer)
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Projects (SPC p)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-project-map (kbd "p") (leo/leader-make-cmd 'project-switch-project))
 (define-key leo/leader-project-map (kbd "f") (leo/leader-make-cmd 'project-find-file))
 (define-key leo/leader-project-map (kbd "s") (leo/leader-make-cmd 'consult-ripgrep))
 (define-key leo/leader-project-map (kbd "e")
-  (lambda () (interactive)
+  (lambda ()
+    (interactive)
     (if (fboundp 'project-eshell)
         (project-eshell)
       (user-error "project-eshell não disponível"))))
 (define-key leo/leader-project-map (kbd "c")
   (lambda () (interactive) (compile "make")))
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Git (SPC g)
-;; ---------------------------------------------------------------------------
-;; Bindings defensivas: se Magit existir, ligamos diretamente; se não, mantemos
-;; um wrapper que informa que o comando não está disponível.
+;; ----------------------------------------------------------------------------
 
-;; Wrappers iniciais seguros:
+;; Wrappers seguros
 (define-key leo/leader-git-map (kbd "g") (leo/leader-make-cmd 'magit-status))
 (define-key leo/leader-git-map (kbd "b") (leo/leader-make-cmd 'magit-blame))
 (define-key leo/leader-git-map (kbd "d") (leo/leader-make-cmd 'magit-diff))
 (define-key leo/leader-git-map (kbd "l") (leo/leader-make-cmd 'magit-log-all))
 
-;; Depois que magit for carregado, substituímos por ligações diretas (mais limpas).
+;; Substituições pós-load (estilo Doom)
 (with-eval-after-load 'magit
   (define-key leo/leader-git-map (kbd "g") #'magit-status)
   (define-key leo/leader-git-map (kbd "b") #'magit-blame)
   (define-key leo/leader-git-map (kbd "d") #'magit-diff)
   (define-key leo/leader-git-map (kbd "l") #'magit-log-all))
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; LSP / Eglot (SPC l)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-lsp-map (kbd "r") (leo/leader-make-cmd 'eglot-rename))
 (define-key leo/leader-lsp-map (kbd "a") (leo/leader-make-cmd 'eglot-code-actions))
@@ -136,9 +146,9 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
 (define-key leo/leader-lsp-map (kbd "d") (leo/leader-make-cmd 'eldoc-doc-buffer))
 (define-key leo/leader-lsp-map (kbd "e") (leo/leader-make-cmd 'flymake-show-project-diagnostics))
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Windows (SPC w)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-window-map (kbd "v") #'split-window-right)
 (define-key leo/leader-window-map (kbd "s") #'split-window-below)
@@ -150,50 +160,60 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
 (define-key leo/leader-window-map (kbd "k") #'windmove-up)
 (define-key leo/leader-window-map (kbd "l") #'windmove-right)
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Search (SPC s)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-search-map (kbd "d") (leo/leader-make-cmd 'consult-ripgrep))
 (define-key leo/leader-search-map (kbd "p") (leo/leader-make-cmd 'consult-ripgrep))
 (define-key leo/leader-search-map (kbd "b") (leo/leader-make-cmd 'consult-line))
 (define-key leo/leader-search-map (kbd "g") (leo/leader-make-cmd 'consult-grep))
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Org (SPC o)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-org-map (kbd "a") (leo/leader-make-cmd 'org-agenda))
 (define-key leo/leader-org-map (kbd "c") (leo/leader-make-cmd 'org-capture))
 (define-key leo/leader-org-map (kbd "j") (leo/leader-make-cmd 'leo/org-journal-today))
 
 (define-key leo/leader-org-map (kbd "B") (leo/leader-make-cmd 'org-babel-tangle))
-(define-key leo/leader-org-map (kbd "i a") (leo/leader-make-cmd 'leo/org-insert-auto-tangle))
 
-;; ---- Org-roam (SPC o r …) ----
+;; Subprefix insert (SPC o i …)
+(define-key leo/leader-org-insert-map (kbd "a")
+  (leo/leader-make-cmd 'leo/org-insert-auto-tangle))
+
+;; Org-roam
 (define-key leo/leader-org-roam-map (kbd "f") (leo/leader-make-cmd 'org-roam-node-find))
 (define-key leo/leader-org-roam-map (kbd "i") (leo/leader-make-cmd 'org-roam-node-insert))
 (define-key leo/leader-org-roam-map (kbd "r") (leo/leader-make-cmd 'org-roam-buffer-toggle))
 
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 ;; Help (SPC h)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
 
 (define-key leo/leader-help-map (kbd "n") (leo/leader-make-cmd 'view-emacs-news))
 (define-key leo/leader-help-map (kbd "m") (leo/leader-make-cmd 'info-emacs-manual))
 
-;; ---------------------------------------------------------------------------
-;; Misc (SPC x, SPC q)
-;; ---------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+;; Misc (SPC x)
+;; ----------------------------------------------------------------------------
 
-(leo/leader "x"
-            (lambda () (interactive) (switch-to-buffer "*scratch*")))
+(define-key leo/leader-misc-map (kbd "s")
+  (lambda () (interactive) (switch-to-buffer "*scratch*")))
 
-(leo/leader "q q" (lambda () (interactive) (save-buffers-kill-terminal)))
-(leo/leader "q r" (leo/leader-make-cmd 'restart-emacs))
+;; ----------------------------------------------------------------------------
+;; Quit / Session (SPC q)
+;; ----------------------------------------------------------------------------
+
+(define-key leo/leader-quit-map (kbd "q")
+  (lambda () (interactive) (save-buffers-kill-terminal)))
+
+(define-key leo/leader-quit-map (kbd "r")
+  (leo/leader-make-cmd 'restart-emacs))
 
 (defun leo/reload-config ()
-  "Recarrega init.el do `user-emacs-directory'."
+  "Recarrega init.el do user-emacs-directory."
   (interactive)
   (let ((path (expand-file-name "init.el" user-emacs-directory)))
     (if (file-exists-p path)
@@ -202,11 +222,15 @@ FUNC-OR-MAP can be a command symbol, a keymap or a lambda."
           (message "✔ Configuração recarregada!"))
       (user-error "init.el não encontrado em %s" user-emacs-directory))))
 
-(leo/leader "q R" #'leo/reload-config)
+(define-key leo/leader-quit-map (kbd "R") #'leo/reload-config)
 
-;; Atalho global preservado do módulo Org (somente se disponível)
+;; ----------------------------------------------------------------------------
+;; Atalho global opcional
+;; ----------------------------------------------------------------------------
+
 (when (fboundp 'leo/org-journal-today)
   (global-set-key (kbd "C-c o j") #'leo/org-journal-today))
 
 (provide 'bindings)
 ;;; bindings.el ends here
+

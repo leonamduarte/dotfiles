@@ -1,67 +1,47 @@
-;;; tools-lsp.el --- LSP, Eglot e Tree-sitter -*- lexical-binding: t; -*-
+
+;;; tools-lsp.el --- LSP unificado (Eglot) + Tree-sitter moderno -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Este módulo equivale ao Doom:
-;;   :tools (lsp +eglot)
-;;   :tools tree-sitter
-;;
-;; Fornece:
-;; - Eglot como cliente LSP leve e integrado
-;; - Tree-sitter para sintaxe moderna
-;; - Configs para linguagens fullstack
+;; - Usa só treesit-auto (Emacs 29+)
+;; - Eglot leve e universal
+;; - Hooks corretos para modos tree-sitter
+;; - Integração Doom-like com leader keys
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tree-sitter — sintaxe moderna
+;; Tree-sitter com treesit-auto (já declarado em packages.el)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Core do Tree-sitter
-(elpaca (tree-sitter
-         :host github
-         :repo "emacs-tree-sitter/emacs-tree-sitter")
-  (use-package tree-sitter
-  :after tree-sitter-langs
-  :hook ((prog-mode . tree-sitter-mode)
-         (tree-sitter-mode . tree-sitter-hl-mode))))
-
-;; Grammars pré-compiladas (Windows-friendly)
-(elpaca (tree-sitter-langs
-         :after tree-sitter
-         :host github
-         :repo "emacs-tree-sitter/tree-sitter-langs"))
+;; Nada aqui: toda configuração de tree-sitter é centralizada em packages.el
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Eglot — LSP moderno e integrado
+;; Eglot — cliente LSP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package eglot
-  :ensure nil
-  :hook ((python-mode . eglot-ensure)
-         (js-mode . eglot-ensure)
-         (typescript-mode . eglot-ensure)
-         (tsx-ts-mode . eglot-ensure)
-         (html-mode . eglot-ensure)
-         (css-mode . eglot-ensure)
-         (json-ts-mode . eglot-ensure)
-         (yaml-ts-mode . eglot-ensure)
-         (java-ts-mode . eglot-ensure))
+  ;; Ativa em todos os modos modernos
+  :hook ((python-ts-mode     . eglot-ensure)
+         (js-ts-mode         . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
+         (tsx-ts-mode        . eglot-ensure)
+         (html-ts-mode       . eglot-ensure)
+         (css-ts-mode        . eglot-ensure)
+         (json-ts-mode       . eglot-ensure)
+         (yaml-ts-mode       . eglot-ensure)
+         (java-ts-mode       . eglot-ensure))
   :config
-  ;; Melhor documentação
-  (setq eglot-events-buffer-size 0)
-
-  ;; Em integração com Apheleia
-  (add-to-list 'eglot-server-programs
-               '((web-mode html-mode) . ("vscode-html-language-server" "--stdio"))))
+  ;; melhora logs/silencia interno
+  (setq eglot-events-buffer-size 0))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Atalhos úteis estilo Doom para LSP
+;; Doom-style LSP leader keys
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(with-eval-after-load 'eglot
-  (define-key eglot-mode-map (kbd "C-c r") #'eglot-rename)
-  (define-key eglot-mode-map (kbd "C-c f") #'eglot-format)
-  (define-key eglot-mode-map (kbd "C-c a") #'eglot-code-actions)
-  (define-key eglot-mode-map (kbd "C-c d") #'eldoc-doc-buffer))
+(with-eval-after-load 'bindings
+  (define-key leo/leader-lsp-map (kbd "r") #'eglot-rename)
+  (define-key leo/leader-lsp-map (kbd "a") #'eglot-code-actions)
+  (define-key leo/leader-lsp-map (kbd "f") #'eglot-format)
+  (define-key leo/leader-lsp-map (kbd "d") #'eldoc-doc-buffer))
 
 (provide 'tools-lsp)
 ;;; tools-lsp.el ends here

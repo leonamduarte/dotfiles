@@ -1,11 +1,13 @@
-;;; lang-python.el --- Suporte avançado para Python -*- lexical-binding: t; -*-
+
+;;; lang-python.el --- Python ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Suporte completo para Python com:
-;; - python-ts-mode (treesitter)
-;; - LSP via pyright (Eglot)
-;; - Formatação com black + isort
-;; - Execução de scripts e virtualenv helpers
-;; - Comportamento equivalente ao módulo Doom Python
+;; - python-ts-mode
+;; - Pyright com fallback local
+;; - REPL integrado
+;; - Runner confiável
+;; - Venv seguro (pyvenv)
+;; - Helpers para pytest e requirements
+;; - Atalhos SPC m p …
 
 ;;; Code:
 
@@ -16,57 +18,109 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Eglot: LSP com Pyright
+;; Eglot + Pyright (com detecção de binário local)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (with-eval-after-load 'eglot
+  (defun leo/pyright-server ()
+    "Retorna pyright local ou global."
+    (let* ((proj (project-current))
+           (root (and proj (project-root proj)))
+           (local (and root (expand-file-name
+                             "node_modules/.bin/pyright-langserver"
+                             root))))
+      (if (and local (file-executable-p local))
+          (list local "--stdio")
+        '("pyright-langserver" "--stdio"))))
+
   (add-to-list 'eglot-server-programs
-               '(python-ts-mode . ("pyright-langserver" "--stdio"))))
+               '(python-ts-mode . leo/pyright-server)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helpers para execução de scripts
+;; Execução de scripts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/python-run ()
-  "Roda o arquivo Python atual."
+  "Roda o arquivo Python atual no terminal."
   (interactive)
-  (when buffer-file-name
-    (compile (format "python3 %s"
+  (unless buffer-file-name
+    (user-error "Buffer não está associado a um arquivo."))
+
+  (let* ((cmd (cond ((executable-find "python3") "python3")
+                    ((executable-find "python") "python")
+                    (t (error "Nenhum Python encontrado no PATH")))))
+    (compile (format "%s %s"
+                     cmd
                      (shell-quote-argument buffer-file-name)))))
 
-(global-set-key (kbd "C-c p r") #'leo/python-run)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; REPL simples
+;; REPL
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/python-repl ()
-  "Abre um REPL interativo Python."
+  "Abre um REPL Python no ambiente ativo."
   (interactive)
-  (run-python))
-
-(global-set-key (kbd "C-c p i") #'leo/python-repl)
+  (let ((python-shell-interpreter
+         (or (and leo/python-venv
+                  (expand-file-name "bin/python" leo/python-venv))
+             (or (executable-find "python3")
+                 (executable-find "python")))))
+    (run-python)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Virtualenv minimalista
+;; Virtualenv com pyvenv (como Doom)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar leo/python-venv nil
-  "Caminho da virtualenv ativa.")
+(use-package pyvenv
+  :commands (pyvenv-activate pyvenv-deactivate)
+  :config
+  (setq pyvenv-workon "default"))
 
 (defun leo/python-activate-venv ()
-  "Ativa uma virtualenv manualmente."
+  "Ativa uma virtualenv via pyvenv."
   (interactive)
-  (let ((path (read-directory-name "Virtualenv: ")))
+  (let ((path (read-directory-name "Venv: ")))
+    (pyvenv-activate path)
     (setq leo/python-venv path)
-    (setenv "VIRTUAL_ENV" path)
-    (setenv "PATH" (concat path "/bin:" (getenv "PATH")))
-    (message "Venv ativa: %s" path)))
-
-(global-set-key (kbd "C-c p v") #'leo/python-activate-venv)
+    (message "Venv ativada: %s" path)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Indentação e estilo
+;; Helpers adicionais úteis (Doom-like)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun leo/python-install-requirements ()
+  "Instala requirements.txt no projeto atual."
+  (interactive)
+  (let* ((root (or (and (project-current) (project-root (project-current)))
+                   default-directory))
+         (req (expand-file-name "requirements.txt" root)))
+    (unless (file-exists-p req)
+      (user-error "Nenhum requirements.txt encontrado"))
+    (compile (format "pip install -r %s" (shell-quote-argument req)))))
+
+(defun leo/python-pytest ()
+  "Roda pytest no projeto."
+  (interactive)
+  (let ((root (or (and (project-current) (project-root (project-current)))
+                  default-directory)))
+    (compile (format "pytest %s" root))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Doom-style leader bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'bindings
+  (define-prefix-command 'leo/leader-python-map)
+  (define-key leo/leader-map (kbd "m p") 'leo/leader-python-map)
+
+  (define-key leo/leader-python-map (kbd "r") #'leo/python-run)
+  (define-key leo/leader-python-map (kbd "i") #'leo/python-repl)
+  (define-key leo/leader-python-map (kbd "v") #'leo/python-activate-venv)
+  (define-key leo/leader-python-map (kbd "t") #'leo/python-pytest)
+  (define-key leo/leader-python-map (kbd "R") #'leo/python-install-requirements))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Indentação
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq python-indent-offset 4)

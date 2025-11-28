@@ -19,7 +19,9 @@
 !.config/alacritty/
 !.config/autostart/
 !.config/doom/
-!.config/emacs/
+!.config/emacs/lisp/
+!.config/emacs/init.el
+!.config/emacs/early-init.el
 !.config/fish/
 !.config/ghostty/
 !.config/hypr/
@@ -51,10 +53,6 @@
 
 #arquivos ou pastas dentro do .config
 .config/nvim/lazy-lock.json
-.config/emacs/auto-save-list
-.config/emacs/elpa
-.config/emacs/elpaca
-.config/emacs/org-clock-save.el
-.config/emacs/recentf
+
 
 

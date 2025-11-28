@@ -1,57 +1,67 @@
-;;; completion.el --- Completions e navegação moderna -*- lexical-binding: t; -*-
-;;; Commentary:
-;; Este módulo ativa:
-;; - Vertico: minibuffer vertical moderno
-;; - Orderless: matching inteligente
-;; - Marginalia: descrições nas listas
-;; - Consult: comandos avançados de navegação
-;; - Embark: ações contextuais (opcional, mas recomendado)
-;; - Corfu: completions in-buffer (opcional, estilo VSCode)
-;; - Ícones no minibuffer (all-the-icons-completion)
-;;
-;; É o equivalente ao módulo Doom :completion vertico +icons.
 
+;;; completion.el --- Vertico/Consult/Corfu ao estilo Doom -*- lexical-binding: t; -*-
+;;; Commentary:
+;; Sistema de completions moderno inspirado no Doom:
+;; - Vertico + Orderless
+;; - Marginalia
+;; - Consult + Embark
+;; - Corfu (in-buffer)
+;; - Ícones no minibuffer
+;;
 ;;; Code:
 
+(require 'cl-lib)
+
+;; ----------------------------------------------------------------------------
 ;; Vertico
+;; ----------------------------------------------------------------------------
+
 (use-package vertico
   :init
-  (vertico-mode 1))
+  (vertico-mode 1)
+  :custom
+  (vertico-cycle t))
 
-;; Ícones no minibuffer
-(use-package all-the-icons-completion
-:if (display-graphic-p)
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode)
- :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-
-;; Orderless
-(use-package orderless
-  :init
-  (setq completion-styles '(orderless basic)
-        completion-category-defaults nil))
-
+;; ----------------------------------------------------------------------------
 ;; Marginalia
-(use-package marginalia
-  :init (marginalia-mode))
+;; ----------------------------------------------------------------------------
 
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+;; ----------------------------------------------------------------------------
+;; Orderless (matching moderno)
+;; ----------------------------------------------------------------------------
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)
+  (completion-category-overrides
+   '((file (styles orderless partial-completion)))))
+
+;; ----------------------------------------------------------------------------
 ;; Consult
+;; ----------------------------------------------------------------------------
+
 (use-package consult
   :bind
-  (("C-s" . consult-line)
-   ;; ("C-c h" . consult-history)
-   ("C-x b" . consult-buffer)
-   ("C-c k" . consult-ripgrep)))
+  (("C-s"     . consult-line)
+   ("C-x b"   . consult-buffer)
+   ("C-c k"   . consult-ripgrep)
+   ("C-x C-r" . consult-recent-file)
+   ("M-y"     . consult-yank-pop)))
 
-;; Embark
+;; ----------------------------------------------------------------------------
+;; Embark (ações contextuais)
+;; ----------------------------------------------------------------------------
+
 (use-package embark
-  :bind (("C-." . embark-act)
-         ("C-;" . embark-dwim)
-         ("C-h B" . embark-bindings))
+  :bind
+  (("C-." . embark-act)
+   ("C-;" . embark-dwim)
+   ("C-h B" . embark-bindings))
   :init
   (setq prefix-help-command #'embark-prefix-help-command))
 
@@ -59,30 +69,48 @@
   :after (embark consult)
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
-;; Corfu
+;; ----------------------------------------------------------------------------
+;; Ícones no minibuffer (consult + marginalia)
+;; ----------------------------------------------------------------------------
 
-;;; Integração com Corfu (C-n/C-p no insert-mode)
+(use-package all-the-icons-completion
+  :if (display-graphic-p)
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+
+;; ----------------------------------------------------------------------------
+;; Corfu — completion in-buffer (VSCode vibe)
+;; ----------------------------------------------------------------------------
 
 (use-package corfu
   :init
   (global-corfu-mode)
-
-  ;; Ativa o popupinfo integrado
   (corfu-popupinfo-mode 1)
-
   :custom
-  (corfu-popupinfo-delay 0.5)
-  (corfu-popupinfo-max-width 70)
-  (corfu-popupinfo-max-height 20)
-  :after evil
+  (corfu-cycle t)
+  (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-auto-prefix 2)
+  (corfu-popupinfo-delay 0.2)
   :config
+  ;; Navegação estilo Vim/VSCode
   (define-key corfu-map (kbd "C-n") #'corfu-next)
   (define-key corfu-map (kbd "C-p") #'corfu-previous)
-  (setq corfu-popupinfo-delay 0.3))
 
+  ;; Melhor integração no minibuffer
+  (defun leo/corfu-enable-in-minibuffer ()
+    (setq-local corfu-auto nil)
+    (corfu-mode 1))
+  (add-hook 'minibuffer-setup-hook #'leo/corfu-enable-in-minibuffer))
 
+;; ----------------------------------------------------------------------------
 ;; Ajustes gerais de completion
+;; ----------------------------------------------------------------------------
+
 (setq completion-cycle-threshold 3)
 
 (provide 'completion)
 ;;; completion.el ends here
+

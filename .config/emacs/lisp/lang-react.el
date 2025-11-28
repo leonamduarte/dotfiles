@@ -1,63 +1,66 @@
-;;; lang-react.el --- Suporte para React, JSX, TSX -*- lexical-binding: t; -*-
+
+;;; lang-react.el --- React / JSX / TSX ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Fornece suporte moderno para React:
-;; - TSX/JSX com tsx-ts-mode (treesitter)
-;; - Integração com Eglot (typescript-language-server)
-;; - Prettier automático via Apheleia
-;; - eslint --fix
-;; - Emmet para escrita rápida
-;; - Configurações equivalentes ao módulo :lang (javascript +tree-sitter) + React do Doom
+;; - TSX/JSX com treesitter
+;; - LSP unificado (via lang-javascript)
+;; - eslint --fix com detecção local
+;; - Emmet para JSX
+;; - templates úteis
+;; - integrações SPC m r …
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; TSX e JSX — Treesitter
+;; TSX / JSX
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . tsx-ts-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Eglot para React (TSX/JSX)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(with-eval-after-load 'eglot
-  ;; tsserver já suporta React, sem ajuste adicional
-  (add-to-list 'eglot-server-programs
-               '((tsx-ts-mode) .
-                 ("typescript-language-server" "--stdio"))))
+;; Indentação correta para JSX
+(setq js-jsx-indent-level 2)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Emmet — escrever HTML em JSX/TSX mais rápido
+;; Emmet (HTML → JSX turbo)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (use-package emmet-mode
-;;   :hook ((tsx-ts-mode . emmet-mode)
-;;          (web-mode . emmet-mode))
-;;   :config
-;;   (setq emmet-expand-jsx-className? t))
+(use-package emmet-mode
+  :hook ((tsx-ts-mode . emmet-mode)
+         (js-ts-mode  . emmet-mode)
+         (web-mode    . emmet-mode))
+  :config
+  (setq emmet-expand-jsx-className? t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; eslint --fix para React
+;; eslint --fix (React-friendly)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun leo/eslint-react-binary ()
+  "Retorna eslint local ou global."
+  (let* ((proj (project-current))
+         (root (and proj (project-root proj)))
+         (local (and root (expand-file-name "node_modules/.bin/eslint" root))))
+    (cond
+     ((and local (file-executable-p local)) local)
+     ((executable-find "eslint"))
+     (t nil)))
 
 (defun leo/eslint-react-fix ()
-  "Roda eslint --fix no arquivo atual (React)."
+  "Roda eslint --fix no arquivo atual."
   (interactive)
-  (when buffer-file-name
-    (compile (format "eslint --fix %s"
+  (unless buffer-file-name
+    (user-error "Este buffer não tem arquivo salvo."))
+
+  (let ((eslint (leo/eslint-react-binary)))
+    (unless eslint
+      (user-error "eslint não encontrado no projeto nem no sistema."))
+
+    (compile (format "%s --fix %s"
+                     eslint
                      (shell-quote-argument buffer-file-name)))))
 
-(global-set-key (kbd "C-c r f") #'leo/eslint-react-fix)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Comentários e indentação mais naturais
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(setq tsx-indent-offset 2)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Pequenas melhorias de produtividade
+;; Snippets: componente React básico
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/react-component ()
@@ -65,7 +68,16 @@
   (interactive)
   (insert "export default function Component() {\n  return (\n    <div>\n    </div>\n  );\n}"))
 
-(global-set-key (kbd "C-c r c") #'leo/react-component)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Doom-style leader bindings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'bindings
+  (define-prefix-command 'leo/leader-react-map)
+  (define-key leo/leader-map (kbd "m r") 'leo/leader-react-map)
+
+  (define-key leo/leader-react-map (kbd "f") #'leo/eslint-react-fix)
+  (define-key leo/leader-react-map (kbd "c") #'leo/react-component))
 
 (provide 'lang-react)
 ;;; lang-react.el ends here

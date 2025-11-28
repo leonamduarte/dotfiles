@@ -1,42 +1,36 @@
-;;; tools-git.el --- Integração com Git, Magit e Forge -*- lexical-binding: t; -*-
-;;; Commentary:
-;; Módulo Git estilo Doom para Elpaca + use-package
-;;; Code:
 
-;; (elpaca transient
-;;   (elpaca--git "https://github.com/magit/transient.git"))
+;;; tools-git.el --- Git / Magit / Forge ao estilo Doom -*- lexical-binding: t; -*-
+;;; Commentary:
+;; Integração completa com Git, Magit, Forge e Diff-HL
+;; Sem duplicações e com carregamento inteligente.
+
+;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Magit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package transient)
-(elpaca magit
-
-  (use-package magit
-  :after transient
+(use-package magit
   :commands (magit-status magit-blame magit-diff magit-log-all)
   :init
-  ;; Garante que magit-status é reconhecido como comando
   (autoload 'magit-status "magit")
   :config
+  ;; janela fullframe para status (estilo Doom)
   (setq magit-display-buffer-function
-        #'magit-display-buffer-fullframe-status-v1)))
+        #'magit-display-buffer-fullframe-status-v1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Forge (GitHub/GitLab integration)
+;; Forge — GitHub/GitLab integration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(elpaca forge
-  (use-package forge
-  :after magit))
-
+(use-package forge
+  :after magit
+  ;; carregamento tardio, como no Doom
+  :commands (forge-open-pullreq forge-dispatch))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; diff-hl (gutter bonito + integração com Magit)
+;; diff-hl — gutters estilo Doom
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(elpaca diff-hl
 
 (use-package diff-hl
   :hook ((prog-mode . diff-hl-mode)
@@ -44,18 +38,17 @@
          (magit-pre-refresh . diff-hl-magit-pre-refresh)
          (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
-  (diff-hl-flydiff-mode 1)
-  (diff-hl-margin-mode 1)))
+  ;; Somente no GUI (evita glitch em terminal)
+  (when (display-graphic-p)
+    (diff-hl-margin-mode 1))
+  (diff-hl-flydiff-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Evil-Collection: Magit natural com Evil
+;; Evil integration para Magit (estilo Doom)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package evil-collection-magit
-  :ensure nil
-  :after (evil magit)
-  :config
-  (evil-collection-magit-setup))
+(with-eval-after-load 'magit
+  (evil-collection-init 'magit))
 
 (provide 'tools-git)
 ;;; tools-git.el ends here

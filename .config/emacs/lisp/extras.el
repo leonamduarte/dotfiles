@@ -1,65 +1,101 @@
-;;; extras.el --- Utilidades extras e melhorias gerais -*- lexical-binding: t; -*-
+
+;;; extras.el --- Utilidades extras e QoL ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Funções avulsas, helpers, QoL, ajustes de comportamento e extensões
-;; que não pertencem a um módulo específico.
+;; Funções avulsas de qualidade de vida:
+;; - sudo-edit
+;; - terminal
+;; - pomodoro
+;; - navegação
+;; - limpeza de buffers
+;; - QoL geral
 
 ;;; Code:
 
-;; Arquivos grandes: evitar travamentos
+;; ---------------------------------------------------------------------------
+;; Arquivos grandes
+;; ---------------------------------------------------------------------------
+
 (setq large-file-warning-threshold (* 50 1024 1024))
 
-;; sudo-edit seguro
+;; ---------------------------------------------------------------------------
+;; Sudo-edit seguro
+;; ---------------------------------------------------------------------------
+
 (defun leo/sudo-edit (&optional arg)
   "Editar arquivo atual ou outro arquivo como root."
   (interactive "P")
   (let ((fname (if arg
-                   (read-file-name "Arquivo root: ")
+                   (read-file-name "Arquivo como root: ")
                  buffer-file-name)))
     (find-file (format "/sudo:root@localhost:%s" fname))))
 (global-set-key (kbd "C-c x s") #'leo/sudo-edit)
 
-;; NÃO use whitespace-cleanup sempre — ws-butler já faz isso
-;; (removido o hook)
+;; ---------------------------------------------------------------------------
+;; Restart do Emacs (via restart-emacs, igual Doom)
+;; ---------------------------------------------------------------------------
 
-;; Restart do Emacs
-(defun restart-emacs ()
-  "Reinicia o Emacs rapidamente."
-  (interactive)
-  (save-some-buffers t)
-  (call-process "emacs" nil 0 nil)
-  (kill-emacs))
+(use-package restart-emacs
+  :commands restart-emacs)
 
-;; Navegação de janelas
-(use-package windmove
-  :ensure nil
-  :config
-  (windmove-default-keybindings))
+;; ---------------------------------------------------------------------------
+;; Terminal integrado com fallback
+;; ---------------------------------------------------------------------------
 
-;; Terminal integrado
 (defun leo/terminal-here ()
-  "Abre vterm no diretório atual."
+  "Abre vterm ou shell nativo no diretório atual."
   (interactive)
-  (require 'vterm)
-  (vterm (generate-new-buffer-name "*vterm*")))
+  (let ((default-directory (or default-directory "~")))
+    (cond
+     ((fboundp 'vterm)
+      (require 'vterm)
+      (vterm (generate-new-buffer-name "*vterm*")))
+     (t
+      (shell (generate-new-buffer-name "*shell*"))))))
 (global-set-key (kbd "C-c x t") #'leo/terminal-here)
 
-;; Pomodoro simples
+;; ---------------------------------------------------------------------------
+;; Pomodoro simples com cancelamento
+;; ---------------------------------------------------------------------------
+
+(defvar leo/pomodoro-timer nil
+  "Timer atual do Pomodoro.")
+
 (defun leo/pomodoro-start ()
   (interactive)
-  (run-at-time
-   "25 min" nil
-   (lambda () (message "🍅 Pomodoro terminado, Leo!"))))
+  (when leo/pomodoro-timer
+    (cancel-timer leo/pomodoro-timer))
+  (setq leo/pomodoro-timer
+        (run-at-time
+         "25 min" nil
+         (lambda ()
+           (setq leo/pomodoro-timer nil)
+           (message "🍅 Pomodoro terminado, Leo!")))))
 (global-set-key (kbd "C-c x p") #'leo/pomodoro-start)
 
-(setq select-enable-clipboard t)
+(defun leo/pomodoro-cancel ()
+  (interactive)
+  (when leo/pomodoro-timer
+    (cancel-timer leo/pomodoro-timer)
+    (setq leo/pomodoro-timer nil)
+    (message "⏹ Pomodoro cancelado.")))
+(global-set-key (kbd "C-c x P") #'leo/pomodoro-cancel)
+
+;; ---------------------------------------------------------------------------
+;; Abrir pasta da config
+;; ---------------------------------------------------------------------------
 
 (defun leo/open-config ()
   (interactive)
-  (dired "~/.emacs.d/lisp"))
+  (dired (expand-file-name "lisp" user-emacs-directory)))
 (global-set-key (kbd "C-c x c") #'leo/open-config)
+
+;; ---------------------------------------------------------------------------
+;; Navegação e edição geral
+;; ---------------------------------------------------------------------------
 
 (global-subword-mode 1)
 
+;; Matando buffers de compilação
 (defun leo/clear-compilation ()
   (interactive)
   (dolist (buf (buffer-list))
@@ -68,8 +104,13 @@
   (message "🧹 Buffers de compilação limpos."))
 (global-set-key (kbd "C-c x k") #'leo/clear-compilation)
 
+;; ---------------------------------------------------------------------------
+;; Silêncio e confirmações
+;; ---------------------------------------------------------------------------
+
 (setq ring-bell-function #'ignore)
 (setq confirm-kill-processes nil)
+(setq select-enable-clipboard t)
 
 (provide 'extras)
 ;;; extras.el ends here

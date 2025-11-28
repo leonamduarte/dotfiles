@@ -1,87 +1,104 @@
-;;; lang-java.el --- Suporte moderno para Java -*- lexical-binding: t; -*-
+
+;;; lang-java.el --- Suporte moderno para Java ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Suporte completo para Java com:
-;; - java-ts-mode (treesitter)
-;; - LSP via jdtls (Eglot)
-;; - Helpers para Maven e Gradle
-;; - Formatação com google-java-format
-;; - Execução de arquivos .java
-;;
-;; Recria e expande o equivalente ao módulo Doom :lang java +lsp +tree-sitter
+;; Suporte completo para Java:
+;; - java-ts-mode (tree-sitter)
+;; - LSP com jdtls + workspace por projeto
+;; - Maven/Gradle helpers
+;; - Runner de arquivos
+;; - Integração com Apheleia
+;; - Atalhos integrados ao leader SPC
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Java com Treesitter
+;; Treesitter
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'auto-mode-alist '("\\.java\\'" . java-ts-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Eglot + JDTLS (Language Server oficial do Java)
+;; Eglot + JDTLS com workspace por projeto (como Doom)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (with-eval-after-load 'eglot
+  (defun leo/jdtls-start ()
+    "Inicia jdtls com workspace por projeto."
+    (let* ((project (project-current))
+           (root (or (and project (project-root project))
+                     (file-name-directory buffer-file-name)))
+           (workspace (expand-file-name ".jdtls-workspace" root)))
+      (list "jdtls" "-data" workspace)))
+
   (add-to-list 'eglot-server-programs
-               '(java-ts-mode . ("jdtls"))))
+               `(java-ts-mode . leo/jdtls-start)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helpers para Java puro (compilar e rodar)
+;; Runner Java (arquivo simples)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/java-run ()
-  "Compila e roda o arquivo Java atual."
+  "Compila e executa o arquivo Java atual. Para projetos Maven/Gradle, use os comandos dedicados."
   (interactive)
-  (when buffer-file-name
-    (let* ((file buffer-file-name)
-           (dir (file-name-directory file))
-           (base (file-name-sans-extension
-                  (file-name-nondirectory file))))
-      (compile (format "javac %s && java -cp %s %s"
-                       file dir base)))))
+  (unless buffer-file-name
+    (user-error "Este buffer não possui arquivo associado."))
 
-(global-set-key (kbd "C-c j r") #'leo/java-run)
+  (let* ((file buffer-file-name)
+         (dir (file-name-directory file))
+         (base (file-name-sans-extension
+                (file-name-nondirectory file))))
+    (compile (format "javac %s && java -cp %s %s" file dir base))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Maven helpers
+;; Maven
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun leo/project-root-or-error ()
+  "Retorna project-root ou lança erro amigável."
+  (or (and (project-current) (project-root (project-current)))
+      (user-error "Não foi possível detectar um projeto (Maven/Gradle).")))
 
 (defun leo/maven-clean-install ()
-  "Roda mvn clean install."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (leo/project-root-or-error)))
     (compile "mvn clean install -DskipTests")))
 
 (defun leo/maven-run ()
-  "Roda mvn spring-boot:run (frequente em APIs)."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (leo/project-root-or-error)))
     (compile "mvn spring-boot:run")))
 
-(global-set-key (kbd "C-c j m") #'leo/maven-clean-install)
-(global-set-key (kbd "C-c j s") #'leo/maven-run)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Gradle helpers
+;; Gradle
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/gradle-build ()
-  "Roda gradle build."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (leo/project-root-or-error)))
     (compile "./gradlew build")))
 
 (defun leo/gradle-run ()
-  "Roda gradle bootRun (APIs em Spring + Kotlin)."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (leo/project-root-or-error)))
     (compile "./gradlew bootRun")))
 
-(global-set-key (kbd "C-c j g") #'leo/gradle-build)
-(global-set-key (kbd "C-c j b") #'leo/gradle-run)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Atalhos Doom-like (SPC m j …)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'bindings
+  ;; Prefixo: SPC m j
+  (define-prefix-command 'leo/leader-java-map)
+  (define-key leo/leader-map (kbd "m j") 'leo/leader-java-map)
+
+  (define-key leo/leader-java-map (kbd "r") #'leo/java-run)
+  (define-key leo/leader-java-map (kbd "m") #'leo/maven-clean-install)
+  (define-key leo/leader-java-map (kbd "s") #'leo/maven-run)
+  (define-key leo/leader-java-map (kbd "g") #'leo/gradle-build)
+  (define-key leo/leader-java-map (kbd "b") #'leo/gradle-run))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Indentação e estilo
+;; Indentação
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq java-ts-mode-indent-offset 4)

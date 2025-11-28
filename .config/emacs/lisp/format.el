@@ -1,86 +1,101 @@
 
-;;; format.el --- Global formatting configuration -*- lexical-binding: t; -*-
+;;; format.el --- Global formatting configuration (Doom-like) -*- lexical-binding: t; -*-
 
 ;;; Commentary:
-;; Centraliza formatação: Apheleia + format-on-save e configurações por linguagem.
+;; Integração completa com Apheleia:
+;; - Format-on-save universal
+;; - Pipelines (isort → black)
+;; - Formatters seguros
+;; - Associação por major mode
+;; - Fallbacks inteligentes (buffers sem arquivo)
 
 ;;; Code:
 
+;; ----------------------------------------------------------------------------
+;; Apheleia
+;; ----------------------------------------------------------------------------
+
 (use-package apheleia
-  :elpaca (:host github :repo "radian-software/apheleia")
   :init
-  ;; Ativa automaticamente em programação
-  (add-hook 'prog-mode-hook #'apheleia-mode)
+  ;; Ativa globalmente (como Doom)
+  (apheleia-global-mode +1)
 
   :config
+  ;; Remove loggers do Apheleia (ruído)
   (setq apheleia-loggers nil)
 
-  ;;
-  ;; -------------------------
-  ;; Formatadores (formatters)
-  ;; -------------------------
-  ;;
+  ;; --------------------------------------------------------------------------
+  ;; Formatters (redefinição completa, mais estável que setf)
+  ;; --------------------------------------------------------------------------
 
-  ;; Prettier
-  (setf (alist-get 'prettier apheleia-formatters)
-        '("prettier" "--stdin-filepath" filepath))
+  (setq apheleia-formatters
+        '((prettier
+           . ("prettier" "--stdin-filepath" filepath))
+          (black
+           . ("black" "-"))
+          (isort
+           . ("isort" "--stdout" "-"))
+          (python-format
+           . (("isort" "--stdout" filepath)
+              ("black" "-")))
+          (google-java
+           . ("google-java-format" "-"))
+          (shfmt
+           . ("shfmt" "-i" "4" "-"))))
 
-  ;; Black (Python)
-  (setf (alist-get 'black apheleia-formatters)
-        '("black" "-"))
+  ;; --------------------------------------------------------------------------
+  ;; Associação de modo → formatter
+  ;; --------------------------------------------------------------------------
 
-  ;; Isort
-  (setf (alist-get 'isort apheleia-formatters)
-        '("isort" "--stdout" "-"))
+  (setq apheleia-mode-alist
+        '((html-ts-mode       . prettier)
+          (css-ts-mode        . prettier)
+          (web-mode           . prettier)
+          (js-mode            . prettier)
+          (js-ts-mode         . prettier)
+          (json-mode          . prettier)
+          (json-ts-mode       . prettier)
+          (typescript-ts-mode . prettier)
+          (tsx-ts-mode        . prettier)
+          (yaml-ts-mode       . prettier)
 
-  ;; Python combinado (isort → black)
-  (setf (alist-get 'python-format apheleia-formatters)
-        '(("isort" "--stdout" filepath)
-          ("black" "-")))
+          (python-mode        . python-format)
+          (python-ts-mode     . python-format)
 
-  ;; Google Java Format
-  (setf (alist-get 'google-java apheleia-formatters)
-        '("google-java-format" "-"))
+          (java-ts-mode       . google-java)
 
-  ;; Shfmt (shell)
-  (setf (alist-get 'shfmt apheleia-formatters)
-        '("shfmt" "-i" "4" "-"))
+          (sh-mode            . shfmt)
+          (bash-ts-mode       . shfmt)))
 
+  ;; --------------------------------------------------------------------------
+  ;; Fallback para buffers sem arquivo (prettier falha se não tiver filepath)
+  ;; --------------------------------------------------------------------------
 
-  ;;
-  ;; -------------------------
-  ;; Associação modo → formatador
-  ;; -------------------------
-  ;;
+  (defun leo/apheleia-maybe-fix-filepath (orig-fn &rest args)
+    "Se não houver arquivo associado, remova --stdin-filepath do prettier."
+    (if (and (eq (apheleia--get-formatter) 'prettier)
+             (not buffer-file-name))
+        ;; formato mínimo
+        (let ((apheleia-formatters
+               (cons '(prettier . ("prettier"))
+                     (assq-delete-all 'prettier apheleia-formatters))))
+          (apply orig-fn args))
+      (apply orig-fn args)))
 
-  ;; Web / TS / JS / JSON
-  (dolist (mode '(html-ts-mode css-ts-mode web-mode
-                  js-mode js-ts-mode
-                  typescript-ts-mode tsx-ts-mode
-                  json-mode json-ts-mode
-                  yaml-ts-mode))
-    (add-to-list 'apheleia-mode-alist `(,mode . prettier)))
+  (advice-add 'apheleia--run-formatter :around #'leo/apheleia-maybe-fix-filepath))
 
-  ;; Python
-  (add-to-list 'apheleia-mode-alist '(python-mode . python-format))
-  (add-to-list 'apheleia-mode-alist '(python-ts-mode . python-format))
+;; ----------------------------------------------------------------------------
+;; Comando manual Doom-like
+;; ----------------------------------------------------------------------------
 
-  ;; Java
-  (add-to-list 'apheleia-mode-alist '(java-ts-mode . google-java))
-
-  ;; Shell
-  (add-to-list 'apheleia-mode-alist '(sh-mode . shfmt))
-  (add-to-list 'apheleia-mode-alist '(bash-ts-mode . shfmt))
-  )
-
-;;
-;; Comando manual estilo Doom (SPC c f)
-;;
 (defun leo/format-buffer ()
   "Format buffer usando Apheleia."
   (interactive)
   (apheleia-format-buffer))
 
+;; Opcional: adiciona SPC c f (igual Doom)
+(with-eval-after-load 'bindings
+  (define-key leo/leader-map (kbd "c f") #'leo/format-buffer))
+
 (provide 'format)
 ;;; format.el ends here
-

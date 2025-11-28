@@ -1,84 +1,96 @@
-;;; project.el --- Gerenciamento de projetos ao estilo Doom -*- lexical-binding: t; -*-
+
+;;; tools-project.el --- Gerenciamento de projetos ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Este módulo fornece:
-;; - project.el nativo (rápido e leve)
+;; - project.el nativo
 ;; - integração com Consult
-;; - atalhos úteis ao estilo Doom
-;; - integração com Treemacs
-;; - helpers de navegação entre arquivos, diretórios e roots
+;; - Treemacs helpers
+;; - Eshell no root
+;; - Build inteligente
+;; - Leader keys SPC p …
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; project.el nativo
+;; project.el — núcleo
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package project
-  :ensure nil ;; já vem com o Emacs
   :config
-  ;; Comando principal ao estilo Doom: "SPC p p"
-  (define-key project-prefix-map (kbd "p") #'project-switch-project)
-  (define-key project-prefix-map (kbd "f") #'project-find-file)
-  (define-key project-prefix-map (kbd "d") #'project-find-dir)
-  (define-key project-prefix-map (kbd "b") #'project-switch-to-buffer)
-  (define-key project-prefix-map (kbd "k") #'project-kill-buffers))
+  ;; Deixa o project.el fazer o básico, sem remapear teclas globais
+  (setq project-switch-commands
+        '((project-find-file "Find file")
+          (consult-ripgrep  "Search")
+          (project-find-dir "Find dir")
+          (project-switch-to-buffer "Buffers"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Consult + project.el (substitui projectile + helm/ivy)
+;; Helpers seguros para root do projeto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package consult
-  :ensure nil
-  :bind (("C-c p p" . project-switch-project)
-         ("C-c p f" . project-find-file)
-         ("C-c p s" . consult-ripgrep)
-         ("C-c p b" . project-switch-to-buffer)
-         ("C-c p d" . project-find-dir)))
+(defun leo/project-root ()
+  "Retorna project root ou default-directory como fallback."
+  (or (and (project-current)
+           (project-root (project-current)))
+      default-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helper: abrir root do projeto no Treemacs
+;; Treemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/project-treemacs ()
-  "Abre treemacs focado no projeto atual."
+  "Abre Treemacs focado no projeto."
   (interactive)
-  (let ((root (project-root (project-current))))
+  (let ((default-directory (leo/project-root)))
     (treemacs)
-    (treemacs-find-file)
-    (message "Treemacs → %s" root)))
-
-(global-set-key (kbd "C-c p t") #'leo/project-treemacs)
+    (treemacs-find-file)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helper: abrir terminal dentro do projeto
+;; Eshell no projeto
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/project-eshell ()
-  "Abre um eshell na raiz do projeto."
+  "Abre um Eshell no root do projeto."
   (interactive)
-  (let ((default-directory (project-root (project-current))))
+  (let ((default-directory (leo/project-root)))
     (eshell t)))
 
-(global-set-key (kbd "C-c p e") #'leo/project-eshell)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helper: run build do projeto (detecção simples)
+;; Build inteligente
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun leo/project-build ()
-  "Executa 'npm install', 'mvn install', 'gradle build' dependendo do projeto."
+  "Executa build baseado nos arquivos do projeto."
   (interactive)
-  (let* ((root (project-root (project-current)))
-         (npm (expand-file-name "package.json" root))
-         (mvn (expand-file-name "pom.xml" root))
-         (gradle (expand-file-name "build.gradle" root)))
+  (let* ((root (leo/project-root))
+         (npm     (expand-file-name "package.json" root))
+         (maven   (expand-file-name "pom.xml" root))
+         (gradlew (expand-file-name "gradlew" root)))
     (cond
      ((file-exists-p npm)     (compile "npm install"))
-     ((file-exists-p mvn)     (compile "mvn clean install -DskipTests"))
-     ((file-exists-p gradle)  (compile "./gradlew build"))
-     (t (message "Não encontrei build system no projeto.")))))
+     ((file-exists-p maven)   (compile "mvn clean install -DskipTests"))
+     ((file-exists-p gradlew) (compile "./gradlew build"))
+     (t (message "Nenhum sistema de build encontrado.")))))
 
-(global-set-key (kbd "C-c p C") #'leo/project-build)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Consult + project (apenas binds úteis)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package consult
+  :commands consult-ripgrep)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Doom-style leader bindings (SPC p …)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'bindings
+  (define-key leo/leader-project-map (kbd "p") #'project-switch-project)
+  (define-key leo/leader-project-map (kbd "f") #'project-find-file)
+  (define-key leo/leader-project-map (kbd "d") #'project-find-dir)
+  (define-key leo/leader-project-map (kbd "b") #'project-switch-to-buffer)
+  (define-key leo/leader-project-map (kbd "s") #'consult-ripgrep)
+  (define-key leo/leader-project-map (kbd "e") #'leo/project-eshell)
+  (define-key leo/leader-project-map (kbd "t") #'leo/project-treemacs)
+  (define-key leo/leader-project-map (kbd "c") #'leo/project-build))
 
 (provide 'tools-project)
 ;;; tools-project.el ends here

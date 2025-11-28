@@ -1,128 +1,81 @@
 
 ;;; init.el --- Inicialização completa -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Inicialização simples, sólida e modular usando package.el + use-package.
+;; Inicialização simples, sólida e modular usando straight.el + use-package.
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 1) package.el — sistema padrão do Emacs
+;; 1) Bootstrap do straight.el
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (require 'package)
+(setq straight-use-package-by-default t)
 
-;; (setq package-archives
-;;       '(("melpa" . "https://melpa.org/packages/")
-;;         ("gnu"   . "https://elpa.gnu.org/packages/")
-;;         ("nongnu" . "https://elpa.nongnu.org/nongnu/")))
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el"
+                         user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; (package-initialize)
-
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
-
-(defvar elpaca-installer-version 0.11)
-(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                              :ref nil :depth 1 :inherit ignore
-                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-       (build (expand-file-name "elpaca/" elpaca-builds-directory))
-       (order (cdr elpaca-order))
-       (default-directory repo))
-  (add-to-list 'load-path (if (file-exists-p build) build repo))
-  (unless (file-exists-p repo)
-    (make-directory repo t)
-    (when (<= emacs-major-version 28) (require 'subr-x))
-    (condition-case-unless-debug err
-        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                  ,@(when-let* ((depth (plist-get order :depth)))
-                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                  ,(plist-get order :repo) ,repo))))
-                  ((zerop (call-process "git" nil buffer t "checkout"
-                                        (or (plist-get order :ref) "--"))))
-                  (emacs (concat invocation-directory invocation-name))
-                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                  ((require 'elpaca))
-                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-          (error "%s" (with-current-buffer buffer (buffer-string))))
-      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-  (unless (require 'elpaca-autoloads nil t)
-    (require 'elpaca)
-    (elpaca-generate-autoloads "elpaca" repo)
-    (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
-(add-hook 'after-init-hook #'elpaca-process-queues)
-(elpaca `(,@elpaca-order))
+;; use-package via straight
+(straight-use-package 'use-package)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 2) use-package sempre disponível
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-
-
-;; Install use-package support
-(elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
-(setq use-package-always-ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 3) Adicionar pasta de módulos ao load-path
+;; 2) Carregar pasta lisp/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 4) Carregar módulos
+;; 3) Carregar módulos (após straight)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defun leo/load (feature)
+  "Carrega um módulo e registra erro sem travar o Emacs."
+  (condition-case err
+      (require feature)
+    (error
+     (message "⚠️ Falha ao carregar %s: %s" feature (error-message-string err)))))
 
-(require 'core)
-(require 'ui)
-(require 'editor)
-(require 'completion)
-(require 'editor-evil)
-(require 'tools-lsp)
-(require 'tools-project)
-(require 'lang-javascript)
-(require 'lang-react)
-(require 'lang-python)
-(require 'lang-java)
-(require 'lang-html-css)
-(require 'lang-json)
-(require 'lang-yaml)
-(require 'lang-sh)
-(require 'lang-org)
-(require 'bindings)
-(require 'ui-dashboard)
-(require 'extras)
-(require 'files)
-(require 'format)
-(require 'use-package)
-(require 'tools-git)
+(mapc #'leo/load
+      '(packages core ui editor completion editor-evil
+        tools-lsp tools-project
+        lang-javascript lang-react lang-python lang-java
+        lang-html-css lang-json lang-yaml lang-sh lang-org
+        bindings ui-dashboard extras files format tools-git))
+
+; (require 'packages)
+; (require 'core)
+; (require 'ui)
+; (require 'editor)
+; (require 'completion)
+; (require 'editor-evil)
+; (require 'tools-lsp)
+; (require 'tools-project)
+; (require 'lang-javascript)
+; (require 'lang-react)
+; (require 'lang-python)
+; (require 'lang-java)
+; (require 'lang-html-css)
+; (require 'lang-json)
+; (require 'lang-yaml)
+; (require 'lang-sh)
+; (require 'lang-org)
+; (require 'bindings)
+; (require 'ui-dashboard)
+; (require 'extras)
+; (require 'files)
+; (require 'format)
+; (require 'tools-git)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 5) Finalização
+;; 4) Finalização
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (provide 'init)
 ;;; init.el ends here
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )

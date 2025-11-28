@@ -1,35 +1,47 @@
-;;; editor.el --- Comportamento geral do editor -*- lexical-binding: t; -*-
+
+;;; editor.el --- Comportamento geral do editor ao estilo Doom -*- lexical-binding: t; -*-
 ;;; Commentary:
-;; Este módulo configura funções essenciais de edição:
-;; - parênteses automáticos (smartparens)
-;; - folding
-;; - snippets (yasnippet)
-;; - undo avançado
-;; - auto-format on save
-;; - comportamento inteligente de indentação
-;; - limpeza de whitespace
-;; - suporte a operações comuns de edição
+;; Este módulo fornece:
+;; - Smartparens completo
+;; - Yasnippet
+;; - Undo avançado
+;; - Folding universal
+;; - Auto-format on save (Apheleia)
+;; - Indentação sensata
+;; - Limpeza de whitespace
+;; - Navegação, comentários e edição modal
+;; - Which-key ao estilo Doom
 
 ;;; Code:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Smartparens (equivalente ao :editor smartparens do Doom)
+;; Smartparens (Doom: :editor smartparens)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package smartparens
-  :hook (prog-mode . smartparens-mode)
+  :hook ((prog-mode . smartparens-mode)
+         (text-mode . smartparens-mode))
   :config
-  (with-eval-after-load 'org
-    (require 'smartparens-config))
-  (sp-use-smartparens-bindings) ; ativa alguns atalhos úteis
-  (setq sp-highlight-pair-overlay t))
+  (require 'smartparens-config)
+
+  ;; Highlights iguais ao Doom
+  (setq sp-highlight-pair-overlay t)
+
+  ;; Ajustes adicionais (JSX, HTML, etc.)
+  (sp-local-pair 'jsx-mode "<" ">")
+  (sp-local-pair 'web-mode "<" ">")
+  (sp-local-pair 'typescript-ts-mode "<" ">")
+
+  ;; Navegação inteligente (C-M-f, C-M-b)
+  (sp-use-smartparens-bindings))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Snippets (equivalente a :editor snippets)
+;; Snippets (Doom: :editor snippets)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package yasnippet
-  :hook (prog-mode . yas-minor-mode)
+  :hook ((prog-mode . yas-minor-mode)
+         (text-mode . yas-minor-mode))
   :config
   (yas-reload-all))
 
@@ -37,84 +49,96 @@
   :after yasnippet)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Undo avançado (equivalente a :emacs undo)
+;; Undo avançado (Doom: :emacs undo)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package undo-fu)
-
 (use-package undo-fu-session
-   :hook (after-init . undo-fu-session-global-mode)
-   :config
-   (setq undo-fu-session-directory
-         (expand-file-name "undo-fu-session/" user-emacs-directory)))
+  :hook (after-init . undo-fu-session-global-mode)
+  :config
+  (setq undo-fu-session-directory
+        (expand-file-name "undo-fu-session/" user-emacs-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Folding universal (equivalente a :editor fold)
+;; Fold universal (Doom: :editor fold)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package hideshow
-:ensure nil
-  :hook (prog-mode . hs-minor-mode))
+  :hook (prog-mode . hs-minor-mode)
+  :config
+  ;; Atalhos Doom/Vim-like
+  (define-key hs-minor-mode-map (kbd "C-c h") #'hs-toggle-hiding)
+  (define-key hs-minor-mode-map (kbd "C-c H") #'hs-hide-all)
+  (define-key hs-minor-mode-map (kbd "C-c S") #'hs-show-all))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Formatação automática (equivalente ao :editor format +onsave)
+;; Formatação automática — Doom: :editor format +onsave
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package apheleia
   :hook (prog-mode . apheleia-mode)
   :config
-  (apheleia-global-mode +1))
+  (apheleia-global-mode +1)
+
+  ;; Formatos ignorados ou perigosos
+  (setq apheleia-formatter-excluded-modes
+        '(org-mode text-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Limpeza de espaços e indentação mais inteligente
+;; Indentação e whitespace
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Limpeza de espaços
 (use-package ws-butler
   :hook ((text-mode prog-mode) . ws-butler-mode))
 
-(setq-default indent-tabs-mode nil) ; sem tabs
-(setq-default tab-width 4)
+;; Identação sensata
+(setq-default indent-tabs-mode nil
+              tab-width 4
+              fill-column 100)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Comentários inteligentes (similar ao do Doom)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(global-set-key (kbd "M-/") #'comment-line)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Melhor navegação entre linhas “reais”
+;; Melhor navegação entre linhas
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq line-move-visual nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Highlight paren (Doom ativa automaticamente)
+;; Highlight parent
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq show-paren-delay 0)
 (show-paren-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Recent files (como o Doom ativa por padrão)
+;; Comentários
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Você usa evil-commentary, então M-/ vira redundante,
+;; mas deixo como fallback universal.
+(global-set-key (kbd "M-/") #'comment-line)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Recent files (igual Doom)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package recentf
-  :ensure nil
-  :init
-  (recentf-mode 1)
+  :init (recentf-mode 1)
   :config
   (setq recentf-max-saved-items 200
         recentf-auto-cleanup 'never))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Which-key (Doom ativa no core)
+;; Which-key (Doom ativa como parte do core)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package which-key
   :hook (after-init . which-key-mode)
   :config
-  (setq which-key-idle-delay 0.4))
+  (setq which-key-idle-delay 0.4
+        which-key-sort-order 'which-key-prefix-then-key-order
+        which-key-side-window-location 'bottom
+        which-key-side-window-max-height 0.33))
 
 (provide 'editor)
 ;;; editor.el ends here
-
