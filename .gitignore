@@ -19,6 +19,7 @@
 !.config/alacritty/
 !.config/autostart/
 !.config/doom/
+!.config/emacs/
 !.config/fish/
 !.config/ghostty/
 !.config/hypr/

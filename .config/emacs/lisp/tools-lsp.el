@@ -1,0 +1,68 @@
+;;; tools-lsp.el --- LSP, Eglot e Tree-sitter -*- lexical-binding: t; -*-
+;;; Commentary:
+;; Este módulo equivale ao Doom:
+;;   :tools (lsp +eglot)
+;;   :tools tree-sitter
+;;
+;; Fornece:
+;; - Eglot como cliente LSP leve e integrado
+;; - Tree-sitter para sintaxe moderna
+;; - Integração com corfu
+;; - Configs para linguagens fullstack
+
+;;; Code:
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tree-sitter — sintaxe moderna
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package treesit-auto
+  :config
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Eglot — LSP moderno e integrado
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package eglot
+  :ensure nil
+  :hook ((python-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (tsx-ts-mode . eglot-ensure)
+         (html-mode . eglot-ensure)
+         (css-mode . eglot-ensure)
+         (json-ts-mode . eglot-ensure)
+         (yaml-ts-mode . eglot-ensure)
+         (java-ts-mode . eglot-ensure))
+  :config
+  ;; Melhor documentação
+  (setq eglot-events-buffer-size 0)
+
+  ;; Em integração com Apheleia
+  (add-to-list 'eglot-server-programs
+               '((web-mode html-mode) . ("vscode-html-language-server" "--stdio"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Integração Eglot ↔ Corfu
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package corfu
+  :ensure nil
+  :after eglot
+  :config
+  (setq corfu-popupinfo-delay 0.3))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Atalhos úteis estilo Doom para LSP
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'eglot
+  (define-key eglot-mode-map (kbd "C-c r") #'eglot-rename)
+  (define-key eglot-mode-map (kbd "C-c f") #'eglot-format)
+  (define-key eglot-mode-map (kbd "C-c a") #'eglot-code-actions)
+  (define-key eglot-mode-map (kbd "C-c d") #'eldoc-doc-buffer))
+
+(provide 'tools-lsp)
+;;; tools-lsp.el ends here

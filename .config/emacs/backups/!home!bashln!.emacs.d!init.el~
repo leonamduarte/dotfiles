@@ -1,0 +1,50 @@
+;;; init.el --- Inicialização da configuração modular -*- lexical-binding: t; -*-
+;;; Commentary:
+;; Este arquivo carrega o módulo core e, depois, os demais módulos .el
+;; que compõem sua configuração modular do Emacs.
+
+;;; Code:
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(require 'core)
+(require 'ui)
+(require 'editor)
+(require 'completion)
+(require 'dashboard)
+(require 'editor-evil.el)
+(require 'tools-git)
+(require 'tools-lsp)
+(require 'tools-project)
+(require 'lang-javascript)
+(require 'lang-react)
+(require 'lang-python)
+(require 'lang-java)
+(require 'lang-html-css)
+(require 'lang-json)
+(require 'lang-yaml)
+(require 'lang-sh)
+(require 'lang-org)
+(require 'bindings)
+(require 'extras)
+
+;; Aqui você vai adicionando os módulos futuramente:
+;; (require 'ui)
+;; (require 'editor)
+;; (require 'completion)
+;; ...
+
+(provide 'init)
+;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

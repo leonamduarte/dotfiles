@@ -1,0 +1,141 @@
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch main
+# Your branch is up to date with 'origin/main'.
+#
+# Changes to be committed:
+#	modified:   .config/doom/config.el
+#	modified:   .config/doom/init.el
+#	modified:   .config/doom/packages.el
+#
+# ------------------------ >8 ------------------------
+# Do not modify or remove the line above.
+# Everything below it will be ignored.
+diff --git c/.config/doom/config.el i/.config/doom/config.el
+index 6e2c706..176a8d2 100644
+--- c/.config/doom/config.el
++++ i/.config/doom/config.el
+@@ -189,11 +189,11 @@
+ ;; Copilot:1 ends here
+ 
+ ;; [[file:config.org::*JavaScript / TypeScript / TSX][JavaScript / TypeScript / TSX:1]]
+-(add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
++;; (add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
+ 
+-(after! js2-mode
+-  (setq js2-basic-offset 2
+-        js2-bounce-indent-p nil))
++;; (after! js2-mode
++;;   (setq js2-basic-offset 2
++;;         js2-bounce-indent-p nil))
+ 
+ (use-package! treesit-auto
+   :custom
+@@ -201,14 +201,14 @@
+ 
+ (apheleia-global-mode +1)
+ 
+-(after! js2-mode
+-  (setq js2-strict-missing-semi-warning nil))
++;; (after! js2-mode
++;;   (setq js2-strict-missing-semi-warning nil))
+ 
+-(after! apheleia
+-  (setf (alist-get 'prettier apheleia-formatters)
+-        '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
+-  (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
+-    (setf (alist-get m apheleia-mode-alist) '(prettier))))
++;; (after! apheleia
++;;   (setf (alist-get 'prettier apheleia-formatters)
++;;         '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
++;;   (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
++;;     (setf (alist-get m apheleia-mode-alist) '(prettier))))
+ ;; JavaScript / TypeScript / TSX:1 ends here
+ 
+ ;; [[file:config.org::*Markdown][Markdown:1]]
+@@ -240,3 +240,53 @@
+   (setq projectile-project-root-files-bottom-up
+         (remove ".git" projectile-project-root-files-bottom-up)))
+ ;; Miscelânea:1 ends here
++
++;; -----------------------------
++;; Vertico stack moderna para Doom
++;; -----------------------------
++
++;; Marginalia — anotação de candidatos
++(use-package! marginalia
++  :after vertico
++  :init (marginalia-mode))
++
++;; Orderless — fuzzy matching poderoso
++(use-package! orderless
++  :init
++  (setq completion-styles '(orderless basic)
++        completion-category-defaults nil
++        completion-category-overrides '((file (styles basic partial-completion)))))
++
++;; Consult — comandos inteligentes
++(use-package! consult
++  :after vertico
++  :bind (("C-s" . consult-line)
++         ("C-c C-r" . consult-recent-file)
++         ("C-c b" . consult-buffer)
++         ("M-y" . consult-yank-pop)))
++
++;; Embark — menu de ações contextuais
++(use-package! embark
++  :bind
++  (("C-." . embark-act)         ;; o "menu secreto"
++   ("C-;" . embark-dwim)
++   ("C-h B" . embark-bindings))
++  :init
++  (setq prefix-help-command #'embark-prefix-help-command))
++
++(use-package! embark-consult
++  :after (embark consult))
++
++;; Corfu — autocompletar suave tipo nvim-cmp
++(use-package! corfu
++  :config
++  (global-corfu-mode)
++  (setq corfu-auto t
++        corfu-auto-delay 0.1
++        corfu-auto-prefix 1
++        corfu-cycle t))
++
++;; Para terminais
++(use-package! corfu-terminal
++  :when (not (display-graphic-p))
++  :config (corfu-terminal-mode))
+diff --git c/.config/doom/init.el i/.config/doom/init.el
+index e46d8f3..aa9b22a 100644
+--- c/.config/doom/init.el
++++ i/.config/doom/init.el
+@@ -21,7 +21,7 @@
+        ;;layout            ; auie,ctsrnm is the superior home row
+ 
+        :completion
+-       (company +chidlframe)         ; the ultimate code completion backend
++       ;; (company +chidlframe)         ; the ultimate code completion backend
+        ;;helm              ; the *other* search engine for love and life
+        ;;ido               ; the other *other* search engine...
+        ;;ivy               ; a search engine for love and life
+diff --git c/.config/doom/packages.el i/.config/doom/packages.el
+index cc19595..03d6af8 100644
+--- c/.config/doom/packages.el
++++ i/.config/doom/packages.el
+@@ -71,3 +71,12 @@
+ (package! treesit-auto)
+ 
+ (package! org-superstar)
++
++(package! orderless)
++(package! consult)
++(package! embark)
++(package! embark-consult)
++(package! marginalia)
++(package! corfu)
++(package! corfu-terminal) ;; se usar em TTY
++
