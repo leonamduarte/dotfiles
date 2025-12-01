@@ -54,8 +54,6 @@ config.keys = {
 }
 
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-	-- We are running on Windows; maybe we emit different
-	-- key assignments here?
 	config.window_decorations = "RESIZE"
 	config.use_fancy_tab_bar = false
 

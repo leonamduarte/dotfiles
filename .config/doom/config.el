@@ -2,8 +2,8 @@
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
-            doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 16)))
+      (setq doom-font (font-spec :family "SauceCodePro NF" :size 16 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "SauceCodePro NF" :size 16)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
     (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
@@ -189,11 +189,11 @@
 ;; Copilot:1 ends here
 
 ;; [[file:config.org::*JavaScript / TypeScript / TSX][JavaScript / TypeScript / TSX:1]]
-;; (add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
+(add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
 
-;; (after! js2-mode
-;;   (setq js2-basic-offset 2
-;;         js2-bounce-indent-p nil))
+(after! js2-mode
+  (setq js2-basic-offset 2
+        js2-bounce-indent-p nil))
 
 (use-package! treesit-auto
   :custom
@@ -201,8 +201,8 @@
 
 (apheleia-global-mode +1)
 
-;; (after! js2-mode
-;;   (setq js2-strict-missing-semi-warning nil))
+(after! js2-mode
+  (setq js2-strict-missing-semi-warning nil))
 
 ;; (after! apheleia
 ;;   (setf (alist-get 'prettier apheleia-formatters)
