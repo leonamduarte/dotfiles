@@ -2,8 +2,8 @@
 (if (eq system-type 'windows-nt)
     (progn
       ;; Configurações para Windows
-      (setq doom-font (font-spec :family "SauceCodePro NF" :size 16 :weight 'medium)
-            doom-variable-pitch-font (font-spec :family "SauceCodePro NF" :size 16)))
+      (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
+            doom-variable-pitch-font (font-spec :family "Maple Mono NF" :size 16)))
   (progn
     ;; Configurações para outros sistemas (Linux, macOS, etc.)
     (setq doom-font (font-spec :family "Maple Mono NF" :size 16 :weight 'medium)
