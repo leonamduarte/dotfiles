@@ -59,6 +59,6 @@ return {
         whichkey = true,
       },
     })
-    vim.cmd("colorscheme cyberdream")
+    -- vim.cmd("colorscheme cyberdream")
   end,
 }

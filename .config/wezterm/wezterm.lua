@@ -16,8 +16,8 @@ config.font = wezterm.font_with_fallback({
 -- config.color_scheme = "Operator Mono Dark"
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "Catppuccin Macchiato (Gogh)"
--- config.color_scheme = "Catppuccin Macchiato"
-config.color_scheme = "Eldritch"
+config.color_scheme = "Catppuccin Macchiato"
+-- config.color_scheme = "Eldritch"
 
 config.colors = {
 	cursor_bg = "white",
@@ -71,7 +71,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Background opcional (somente se existir no mesmo diretório do config)
 	-- altere bg_flag para = true para ativar
-	local bg_flag = true
+	local bg_flag = false
 	if bg_flag then
 		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 		if cfg then
