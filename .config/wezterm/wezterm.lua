@@ -4,8 +4,9 @@ local config = wezterm.config_builder()
 -- ===== Fonte e cores =====
 config.font_size = 13
 config.font = wezterm.font_with_fallback({
+	"SFMono Nerd Font",
 	"SF Mono",
-  "DM Mono",
+	"DM Mono",
 	"AdwaitaMono Nerd Font",
 	"JetBrainsMono Nerd Font",
 	"Maple Mono",
@@ -55,22 +56,21 @@ config.keys = {
 	{ key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
 }
 
--- ===== Windoes Specific =====-
+-- ====== Windows-specific ======
 
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.window_decorations = "RESIZE"
 	config.use_fancy_tab_bar = false
 
-config.font = wezterm.font_with_fallback({
-	"Liga SFMono Nerd Font",
-	"AdwaitaMono Nerd Font",
-	"JetBrainsMono Nerd Font",
-	"Maple Mono",
-	"DM Mono",
-	"CaskaydiaCove Nerd Font",
-	"FiraCode Nerd Font",
-})
-
+	config.font = wezterm.font_with_fallback({
+		"Liga SFMono Nerd Font",
+		"AdwaitaMono Nerd Font",
+		"JetBrainsMono Nerd Font",
+		"Maple Mono",
+		"DM Mono",
+		"CaskaydiaCove Nerd Font",
+		"FiraCode Nerd Font",
+	})
 	-- ===== Util =====
 	local function file_exists(p)
 		local f = io.open(p, "r")

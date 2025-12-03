@@ -17,8 +17,8 @@
     (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 16 :weight 'light)
           doom-variable-pitch-font (font-spec :family "Liga SFMono Nerd Font" :size 16))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "Maple Mono" :size 16)
-        doom-variable-pitch-font (font-spec :family "Maple Mono" :size 16)))
+  (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
+        doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
 
 ;; UI Básica
 (setq doom-theme 'doom-one) 
