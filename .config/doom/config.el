@@ -14,8 +14,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 16 :weight 'light)
-          doom-variable-pitch-font (font-spec :family "Liga SFMono Nerd Font" :size 16))
+    (setq doom-font (font-spec :family "VictorMono NF" :size 16)
+          doom-variable-pitch-font (font-spec :family "VictorMono NF" :size 16))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
@@ -161,3 +161,17 @@
   '(org-level-1 :inherit outline-1 :height 1.6)
   '(org-document-title  :height 1.8 :bold t :underline nil)
   '(org-checkbox :height 1.3))
+
+;; -------------------------------
+;; 6. Keymaps Personalizados
+;; -------------------------------
+
+;; Neotree Toggle
+;; Usa o neotree como gerenciador de arquivos lateral
+(map! :leader
+      :desc "Toggle Neotree" "o n" #'neotree-toggle)
+
+(map! :leader
+      :desc "Neotree Directory" "o N" #'neotree-dir)
+
+;; Fim do config.el
