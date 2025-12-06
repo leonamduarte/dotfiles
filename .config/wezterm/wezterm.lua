@@ -4,12 +4,12 @@ local config = wezterm.config_builder()
 -- ===== Fonte e cores =====
 config.font_size = 13
 config.font = wezterm.font_with_fallback({
+	"Maple Mono",
 	"SFMono Nerd Font",
 	"SF Mono",
-	"DM Mono",
+	"DMMono",
 	"AdwaitaMono Nerd Font",
 	"JetBrainsMono Nerd Font",
-	"Maple Mono",
 	"CaskaydiaCove Nerd Font",
 	"FiraCode Nerd Font",
 })
