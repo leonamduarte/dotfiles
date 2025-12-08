@@ -23,7 +23,7 @@
 ;; UI Básica
 ;; (setq doom-theme 'doom-one) 
 (setq doom-theme 'catppuccin)
-(setq theme-variant 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
+(setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
 (setq display-line-numbers-type t)
 (setq confirm-kill-emacs nil)
 (setq-default tab-width 2)
