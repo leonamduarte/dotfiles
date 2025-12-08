@@ -14,14 +14,16 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "Hack Nerd Font" :size 16)
-          doom-variable-pitch-font (font-spec :family "Hack Nerd Font" :size 16))
+    (setq doom-font (font-spec :family "SpaceMono Nerd Font" :size 17 :weight 'regular)
+          doom-variable-pitch-font (font-spec :family "SpaceMono Nerd Font" :size 17 :weight 'regular))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
 
 ;; UI Básica
-(setq doom-theme 'doom-one) 
+;; (setq doom-theme 'doom-one) 
+(setq doom-theme 'catppuccin)
+(setq theme-variant 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
 (setq display-line-numbers-type t)
 (setq confirm-kill-emacs nil)
 (setq-default tab-width 2)

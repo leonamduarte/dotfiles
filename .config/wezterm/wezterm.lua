@@ -4,8 +4,9 @@ local config = wezterm.config_builder()
 -- ===== Fonte e cores =====
 config.font_size = 13
 config.font = wezterm.font_with_fallback({
-	"Maple Mono",
+	"SpaceMono Nerd Font",
 	"SFMono Nerd Font",
+	"Maple Mono",
 	"SF Mono",
 	"DMMono",
 	"AdwaitaMono Nerd Font",
@@ -17,8 +18,8 @@ config.font = wezterm.font_with_fallback({
 -- config.color_scheme = "Operator Mono Dark"
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "Catppuccin Macchiato (Gogh)"
-config.color_scheme = "Catppuccin Macchiato"
--- config.color_scheme = "Eldritch"
+-- config.color_scheme = "Catppuccin Macchiato"
+config.color_scheme = "Eldritch"
 
 config.colors = {
 	cursor_bg = "white",
@@ -31,7 +32,7 @@ config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
 -- config.enable_tab_bar = false
 -- config.show_tab_index_in_tab_bar = false
-config.tab_bar_at_bottom = true
+-- config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 
@@ -63,11 +64,12 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.use_fancy_tab_bar = false
 
 	config.font = wezterm.font_with_fallback({
+		"SpaceMono Nerd Font",
 		"Liga SFMono Nerd Font",
 		"AdwaitaMono Nerd Font",
+		"DM Mono",
 		"JetBrainsMono Nerd Font",
 		"Maple Mono",
-		"DM Mono",
 		"CaskaydiaCove Nerd Font",
 		"FiraCode Nerd Font",
 	})
@@ -83,7 +85,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Background opcional (somente se existir no mesmo diretório do config)
 	-- altere bg_flag para = true para ativar
-	local bg_flag = false
+	local bg_flag = true
 	if bg_flag then
 		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 		if cfg then
