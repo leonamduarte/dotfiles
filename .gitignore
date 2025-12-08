@@ -1,6 +1,5 @@
 # Ignora TUDO no diretório .config
 /*
-.config/nvim/lua/plugins/theme.lua
 
 # Exceto estas pastas (e seus conteúdos)
 !.config/
@@ -54,6 +53,3 @@
 
 #arquivos ou pastas dentro do .config
 .config/nvim/lazy-lock.json
-
-
-
