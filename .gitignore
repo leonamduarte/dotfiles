@@ -22,6 +22,7 @@
 !.config/emacs/lisp/
 !.config/emacs/init.el
 !.config/emacs/early-init.el
+!.config/cosmic/
 !.config/fish/
 !.config/ghostty/
 !.config/hypr/

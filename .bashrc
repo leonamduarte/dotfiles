@@ -1,5 +1,5 @@
 # ~/.bashrc — Oh My Bash + Starship (Leo)
-# Autor: leonamsh | Data: 2025-09-01 (convertido p/ bash)
+# Autor: bashln | Data: 2025-09-01 (convertido p/ bash)
 # Descrição: Config simplificada em Bash com OMB + Starship + seus aliases/funções
 
 # 0) Só continue se for sessão interativa
@@ -22,7 +22,7 @@ export OSH="$HOME/.oh-my-bash"
 # Se quiser restringir, defina candidatos (opcional):
 # OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
 
-# Plugins do OMB (use só os que realmente quer/tem)
+# Plugins do OMB (use só os que reabashlnente quer/tem)
 # Obs: "zsh-autosuggestions" e "zsh-syntax-highlighting" não existem em bash.
 # Sugestão: usar fzf + bash-completion + zoxide.
 plugins=(
@@ -97,8 +97,8 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 alias cdg='cd ~/.config'
-alias cddev='cd /home/lm/leonamsh/'
-alias cdprojeto='cd /home/lm/leonamsh/projeto-mercado'
+alias cddev='cd /home/bashln/bashln/'
+alias cdprojeto='cd /home/bashln/bashln/projeto-mercado'
 
 # 12) Aliases — Neovim / Emacs
 alias v='nvim'
@@ -111,7 +111,7 @@ alias nghost='nvim ~/.config/ghostty/config'
 alias nzsh='nvim ~/.zshrc'
 alias nbash='nvim ~/.bashrc'
 alias nfish='nvim ~/.config/fish/config.fish'
-alias nprojeto='nvim /home/lm/leonamsh/projeto-mercado/'
+alias nprojeto='nvim /home/bashln/gitlab/projeto-mercado/'
 alias nsway='nvim ~/.config/sway'
 alias nrascunho='nvim ~/Documents/rascunhos/'
 # ambientes Neovim
@@ -152,16 +152,17 @@ alias Ss='pacman -Ss'
 alias pS='yay -S --noconfirm'
 alias pSs='yay -Ss'
 alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/home/lm/bashln/bashln-scripts/scripts/update.sh'
-alias limpao='sudo /home/lm/dotfiles/scripts/update-clean.sh'
+alias update='/home/bashln/bashln/bashln-scripts/scripts/update.sh'
+alias limpao='sudo /home/bashln/bashln/gitlab/scripts/arch/update-clean.sh'
 alias srcfish='source ~/.config/fish/config.fish'
 alias srczsh='source ~/.zshrc'
 alias srcbash='source ~/.bashrc'
-alias cdaula='cd /home/lm/leonamsh/maisPraTi/'
-alias naula='nvim /home/lm/leonamsh/maisPraTi/'
-alias ninstall='nvim /home/lm/scripts/post-install.sh'
-alias ngit='nvim /home/lm/leonamsh/gitlab'
-alias vpninova='sudo openvpn --config /home/lm/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
+alias cdaula='cd /home/bashln/gitlab/maisPraTi/'
+alias naula='nvim /home/bashln/gitlab/maisPraTi/'
+alias ninstall='nvim /home/bashln/gitlab/scripts/post-install.sh'
+alias ngit='nvim /home/bashln/gitlab'
+alias vpninova='sudo openvpn --config /home/bashln/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
+alias exithypr='hyprctl dispatch exit'
 
 # 16) Funções
 
