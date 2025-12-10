@@ -16,7 +16,7 @@ image/png=imv.desktop
 image/tiff=imv.desktop
 image/webp=imv.desktop
 text/english=nvim.desktop
-text/html=vivaldi-stable.desktop
+text/html=brave-browser-nightly.desktop
 text/plain=nvim.desktop
 text/x-c=nvim.desktop
 text/x-c++=nvim.desktop
@@ -45,13 +45,13 @@ video/x-ms-wmv=mpv.desktop
 video/x-msvideo=mpv.desktop
 video/x-ogm+ogg=mpv.desktop
 video/x-theora+ogg=mpv.desktop
-x-scheme-handler/about=vivaldi-stable.desktop
+x-scheme-handler/about=brave-browser-nightly.desktop
 x-scheme-handler/chrome=firefox-developer-edition.desktop
-x-scheme-handler/http=vivaldi-stable.desktop
-x-scheme-handler/https=vivaldi-stable.desktop
+x-scheme-handler/http=brave-browser-nightly.desktop
+x-scheme-handler/https=brave-browser-nightly.desktop
 x-scheme-handler/jetbrains=jetbrains-toolbox.desktop
 x-scheme-handler/mailto=HEY.desktop
-x-scheme-handler/unknown=vivaldi-stable.desktop
+x-scheme-handler/unknown=brave-browser-nightly.desktop
 
 [Added Associations]
 text/html=firefox-developer-edition.desktop
