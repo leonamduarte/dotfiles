@@ -2,8 +2,9 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- ===== Fonte e cores =====
-config.font_size = 12
+config.font_size = 14
 config.font = wezterm.font_with_fallback({
+	"Iosevka NFM",
 	"JetBrainsMono Nerd Font",
 	"SpaceMono Nerd Font",
 	"SFMono Nerd Font",
@@ -65,14 +66,8 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.use_fancy_tab_bar = false
 
 	config.font = wezterm.font_with_fallback({
-		"SpaceMono Nerd Font",
-		"Liga SFMono Nerd Font",
-		"AdwaitaMono Nerd Font",
-		"DM Mono",
+		"Iosevka NFM",
 		"JetBrainsMono Nerd Font",
-		"Maple Mono",
-		"CaskaydiaCove Nerd Font",
-		"FiraCode Nerd Font",
 	})
 	-- ===== Util =====
 	local function file_exists(p)
