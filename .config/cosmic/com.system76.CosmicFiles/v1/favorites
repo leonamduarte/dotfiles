@@ -1,0 +1,13 @@
+[
+    Home,
+    Documents,
+    Downloads,
+    Music,
+    Pictures,
+    Videos,
+    Path("/home/bashln/1TB"),
+    Path("/home/bashln/dev"),
+    Path("/home/bashln/bashln"),
+    Path("/home/bashln/dotfiles"),
+    Path("/home/bashln/.config"),
+]
