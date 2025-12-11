@@ -63,11 +63,10 @@ powerline = {
 
 mod = "mod4"  # Sets mod key to SUPER/WINDOWS
 myTerm = "wezterm"  # My terminal of choice
-myBrowser = "firefox-developer-edition"  # My browser of choice
-myBrowser2 = "zen-browser"  # My browser of choice
-myFiles = "thunar"  # My file manager of choice
+myBrowser = "brave-nightly"  # My browser of choice
+myFiles = "nautilus"  # My file manager of choice
 myCode = "code"  # vscode
-myMusic = "flatpak run com.spotify.Client"  # spotify
+myMusic = "spotify"  # spotify
 myEmacs = "emacs"  # The space at the end is IMPORTANT!
 myNeovim = "neovide"
 logOut = dmlogout
@@ -107,14 +106,13 @@ keys = [
     # The essentials
     Key([mod], "Return", lazy.spawn(myTerm), desc="Terminal"),
     Key([mod, "shift"], "d", lazy.spawn("rofi -show drun"), desc="Run Launcher"),
-    Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
+    # Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
     Key([mod, "shift"], "Return", lazy.spawn(myFiles), desc="Run thunar"),
     Key([mod, "shift"], "p", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod, "shift"], "w", lazy.spawn(myBrowser), desc="Web browser 2"),
-    Key([mod], "F1", lazy.spawn(myBrowser2), desc="Web browser"),
     Key([mod], "F2", lazy.spawn(myCode), desc="code"),
-    Key([mod], "F3", lazy.spawn(myNeovim), desc="nvim"),
-    Key([mod], "F4", lazy.spawn(myMusic), desc="spotify"),
+    Key([mod, "shift"], "n", lazy.spawn(myNeovim), desc="nvim"),
+    Key([mod, "shift"], "s", lazy.spawn(myMusic), desc="spotify"),
     # Fechar notificação mais recente
     Key(["mod4"], "n", lazy.spawn("dunstctl close")),
     # Fechar todas as notificações
@@ -128,7 +126,7 @@ keys = [
         desc="Toggles the bar to show/hide",
     ),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key(
         [mod, "shift"],
