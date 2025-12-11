@@ -17,8 +17,8 @@
     (setq doom-font (font-spec :family "VictorMono NF SemiBold" :size 17)
           doom-variable-pitch-font (font-spec :family "VictorMono NF SemiBold" :size 17))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
-        doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
+  (setq doom-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)
+        doom-variable-pitch-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)))
 
 ;; UI Básica
 (setq doom-theme 'doom-one) 
