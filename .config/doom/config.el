@@ -14,11 +14,11 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "Iosevka NFM" :size 19)
-          doom-variable-pitch-font (font-spec :family "Iosevka NFM" :size 19))
+    (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
+          doom-variable-pitch-font (font-spec :family "SauceCodePro NF" :size 17))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "JetBrains Mono" :size 16)
-        doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 16)))
+  (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
+        doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
 
 ;; UI Básica
 (setq doom-theme 'doom-one) 
@@ -150,22 +150,33 @@
 (map! "C-." #'embark-act)          ;; Ações contextuais rápidas
 
 ;; -------------------------------
-;; 5. CUSTOM FACES (Aparência Fina)
+;; 5. Formatação de Texto
+;; -------------------------------
+
+(after! apheleia
+  (setf (alist-get 'prettier apheleia-formatters)
+        '("prettier" "--stdin-filepath" filepath))
+  ;; usar prettier para css
+  (setf (alist-get 'css-mode apheleia-mode-alist) 'prettier)
+  (apheleia-global-mode +1))
+
+;; -------------------------------
+;; 6. CUSTOM FACES (Aparência Fina)
 ;; -------------------------------
 (custom-set-faces!
   '(org-level-8 :inherit outline-3 :height 1.0)
   '(org-level-7 :inherit outline-3 :height 1.0)
-  '(org-level-6 :inherit outline-3 :height 1.1)
-  '(org-level-5 :inherit outline-3 :height 1.2)
-  '(org-level-4 :inherit outline-3 :height 1.3)
-  '(org-level-3 :inherit outline-3 :height 1.4)
-  '(org-level-2 :inherit outline-2 :height 1.5)
-  '(org-level-1 :inherit outline-1 :height 1.6)
-  '(org-document-title  :height 1.8 :bold t :underline nil)
+  '(org-level-6 :inherit outline-3 :height 1.0)
+  '(org-level-5 :inherit outline-3 :height 1.1)
+  '(org-level-4 :inherit outline-3 :height 1.1)
+  '(org-level-3 :inherit outline-3 :height 1.1)
+  '(org-level-2 :inherit outline-2 :height 1.2)
+  '(org-level-1 :inherit outline-1 :height 1.3)
+  '(org-document-title  :height 1.5 :bold t :underline nil)
   '(org-checkbox :height 1.3))
 
 ;; -------------------------------
-;; 6. Keymaps Personalizados
+;; 7. Keymaps Personalizados
 ;; -------------------------------
 
 ;; Neotree Toggle

@@ -2,12 +2,12 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- ===== Fonte e cores =====
-config.font_size = 14
+config.font_size = 13
 config.font = wezterm.font_with_fallback({
+	"SFMono Nerd Font",
 	"Iosevka NFM",
 	"JetBrainsMono Nerd Font",
 	"SpaceMono Nerd Font",
-	"SFMono Nerd Font",
 	"Maple Mono",
 	"SF Mono",
 	"Maple Mono",
@@ -18,10 +18,11 @@ config.font = wezterm.font_with_fallback({
 })
 
 -- config.color_scheme = "Operator Mono Dark"
+config.color_scheme = "Astrodark (Gogh)"
 -- config.color_scheme = "Catppuccin Mocha"
 -- config.color_scheme = "Catppuccin Macchiato (Gogh)"
 -- config.color_scheme = "Catppuccin Macchiato"
-config.color_scheme = "Eldritch"
+-- config.color_scheme = "Eldritch"
 
 config.colors = {
 	cursor_bg = "white",
@@ -66,8 +67,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.use_fancy_tab_bar = false
 
 	config.font = wezterm.font_with_fallback({
-		"Iosevka NFM",
-		"JetBrainsMono Nerd Font",
+		"Liga SFMono Nerd Font",
 	})
 	-- ===== Util =====
 	local function file_exists(p)
@@ -81,7 +81,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Background opcional (somente se existir no mesmo diretório do config)
 	-- altere bg_flag para = true para ativar
-	local bg_flag = true
+	local bg_flag = false
 	if bg_flag then
 		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 		if cfg then

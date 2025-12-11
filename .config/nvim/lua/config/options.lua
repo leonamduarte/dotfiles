@@ -41,6 +41,7 @@ opt.timeoutlen = 400
 -- ========== Outros ==========
 opt.splitbelow = true
 opt.splitright = true
+opt.conceallevel = 2
 
 -- ===== LazyVim specifics =====
 -- ESLint autoformat (se estiver usando extras linting.eslint)

@@ -11,7 +11,7 @@ return {
       },
 
       style = {
-        transparent = true, -- Bool value, toggles transparency.
+        transparent = false, -- Bool value, toggles transparency.
         inactive = true, -- Bool value, toggles inactive window color.
         float = true, -- Bool value, toggles floating windows background colors.
         neotree = true, -- Bool value, toggles neo-trees background color.
@@ -50,6 +50,6 @@ return {
         },
       },
     })
-    -- vim.cmd.colorscheme("astrotheme")
+    vim.cmd.colorscheme("astrotheme")
   end,
 }
