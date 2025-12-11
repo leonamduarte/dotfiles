@@ -14,8 +14,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "SauceCodePro NF" :size 17)
-          doom-variable-pitch-font (font-spec :family "SauceCodePro NF" :size 17))
+    (setq doom-font (font-spec :family "VictorMono NF SemiBold" :size 17)
+          doom-variable-pitch-font (font-spec :family "VictorMono NF SemiBold" :size 17))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "SFMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "SFMono Nerd Font" :size 16)))
