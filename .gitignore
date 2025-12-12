@@ -18,6 +18,7 @@
 .config/emacs/*
 !.config/alacritty/
 !.config/autostart/
+!.config/bashmacs/
 !.config/doom/
 !.config/emacs/lisp/
 !.config/emacs/init.el
