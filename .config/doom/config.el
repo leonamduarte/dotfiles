@@ -14,8 +14,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "VictorMono NF Medium" :size 17)
-          doom-variable-pitch-font (font-spec :family "VictorMono NF Medium" :size 17))
+    (setq doom-font (font-spec :family "BlexMono Nerd Font Medium" :size 17)
+          doom-variable-pitch-font (font-spec :family "BlexMono Nerd Font Medium" :size 17))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)
         doom-variable-pitch-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)))
