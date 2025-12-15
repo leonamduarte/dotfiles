@@ -69,3 +69,24 @@
 
 (provide 'init)
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-checkbox ((t (:height 1.2))))
+ '(org-document-title ((t (:height 1.5 :weight bold))))
+ '(outline-1 ((t (:foreground "#51afef" :weight bold :height 1.3))))
+ '(outline-2 ((t (:foreground "#c678dd" :weight bold :height 1.2))))
+ '(outline-3 ((t (:foreground "#98be65" :weight bold :height 1.15))))
+ '(outline-4 ((t (:foreground "#da8548" :weight bold :height 1.1))))
+ '(outline-5 ((t (:foreground "#5699af"))))
+ '(outline-6 ((t (:foreground "#46d9ff"))))
+ '(outline-7 ((t (:foreground "#a9a1e1"))))
+ '(outline-8 ((t (:foreground "#ecbe7b")))))

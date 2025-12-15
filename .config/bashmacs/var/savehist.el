@@ -4,3 +4,5 @@
 (setq savehist-minibuffer-history-variables '(evil-ex-history file-name-history))
 (setq evil-ex-history '("w" "%s/:ensure t/ " "w"))
 (setq file-name-history '("~/leo/development/dotfiles/.config/bashmacs/early-init.el" "~/leo/development/dotfiles/.config/bashmacs/init.el"))
+(setq projectile-project-command-history '#s(hash-table test equal))
+(setq evil-jumps-history 'nil)
