@@ -1,4 +1,4 @@
-;;; config.el --- M  dulos e Plugins do Leonam -*- lexical-binding: t -*-
+;;; config.el --- M  dulos e Plugins do Leonam -*- lexical-binding: t; coding: utf-8 -*-
 
 ;;; Commentary:
 ;;; Configura    es principais do Emacs.
@@ -19,6 +19,7 @@
 
 ;; y/n em vez de yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
+
 
 ;; ---------------------------------------------------------
 ;; Estado e histórico
@@ -42,7 +43,7 @@
 ;; ---------------------------------------------------------
 
 (use-package no-littering
-   
+  
   :demand t
   :config
   (setq auto-save-file-name-transforms
@@ -119,7 +120,7 @@
 ;; ---------------------------------------------------------
 
 (use-package evil
-   
+  
   :demand t
   :init
   ;; essas variáveis PRECISAM estar antes do load
@@ -144,7 +145,7 @@
 ;; ---------------------------------------------------------
 
 (use-package which-key
-   
+  
   :init
   (which-key-mode 1)
   :config
@@ -204,7 +205,7 @@
 ;; ---------------------------------------------------------
 
 (use-package doom-themes
-   
+  
   :config
   ;; Doom-like de verdade
   (setq doom-themes-enable-bold t
@@ -217,14 +218,14 @@
 ;; ---------------------------------------------------------
 
 (use-package nerd-icons
-   )
+  )
 
 ;; ---------------------------------------------------------
 ;; Modeline
 ;; ---------------------------------------------------------
 
 (use-package doom-modeline
-   
+  
   :init
   (doom-modeline-mode 1)
   :custom
@@ -243,7 +244,7 @@
 ;; ---------------------------------------------------------
 
 (use-package vertico
-   
+  
   :init
   (vertico-mode 1)
   :custom
@@ -263,7 +264,7 @@
 ;; ---------------------------------------------------------
 
 (use-package marginalia
-   
+  
   :after vertico
   :init
   (marginalia-mode 1))
@@ -273,7 +274,7 @@
 ;; ---------------------------------------------------------
 
 (use-package orderless
-   
+  
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides
@@ -284,7 +285,7 @@
 ;; ---------------------------------------------------------
 
 (use-package consult
-   
+  
   :bind
   (("C-x b"     . consult-buffer)
    ("C-x C-r"   . consult-recent-file)
@@ -299,7 +300,7 @@
 ;; ---------------------------------------------------------
 
 (use-package embark
-   
+  
   :bind
   (("C-."   . embark-act)
    ("C-;"   . embark-dwim)
@@ -317,7 +318,7 @@
 ;; ---------------------------------------------------------
 
 (use-package embark-consult
-   
+  
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
@@ -341,7 +342,7 @@
 ;; ---------------------------------------------------------
 
 (use-package hl-todo
-   
+  
   :hook ((prog-mode org-mode) . hl-todo-mode))
 
 ;; ---------------------------------------------------------
@@ -349,7 +350,7 @@
 ;; ---------------------------------------------------------
 
 (use-package projectile
-   
+  
   :init
   (projectile-mode 1)
   :custom
@@ -365,7 +366,7 @@
 ;; ---------------------------------------------------------
 
 (use-package consult-projectile
-   
+  
   :after (consult projectile))
 
 ;; =========================================================
@@ -377,7 +378,7 @@
 ;; ---------------------------------------------------------
 
 (use-package org
-   
+  
   :hook ((org-mode . org-indent-mode)
          (org-mode . visual-line-mode))
   :config
@@ -418,7 +419,7 @@
 (setq org-superstar-headline-bullets-list nil)
 
 (use-package org-modern
-   
+  
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-table t
@@ -448,7 +449,7 @@
 ;; ---------------------------------------------------------
 
 (use-package org-auto-tangle
-   
+  
   :hook (org-mode . org-auto-tangle-mode)
   :config
   (setq org-auto-tangle-default t))
@@ -470,7 +471,7 @@
 ;; ---------------------------------------------------------
 
 (use-package corfu
-   
+  
   :init
   (global-corfu-mode 1)
   :custom
@@ -501,7 +502,7 @@
 ;; ---------------------------------------------------------
 
 (use-package nerd-icons-corfu
-   
+  
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters
@@ -512,7 +513,7 @@
 ;; =========================================================
 
 (use-package apheleia
-   
+  
   :config
   ;; habilita globalmente
   (apheleia-global-mode +1)
@@ -552,7 +553,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-mode
-   
+  
   :commands (lsp lsp-deferred)
   :hook
   ((prog-mode . lsp-deferred)
@@ -579,7 +580,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-ui
-   
+  
   :after lsp-mode
   :commands lsp-ui-mode
   :custom
@@ -596,7 +597,7 @@
 ;; ---------------------------------------------------------
 
 (use-package js2-mode
-   
+  
   :hook
   (js-mode . js2-minor-mode)
   :config
@@ -611,7 +612,7 @@
 ;; ---------------------------------------------------------
 
 (use-package typescript-mode
-   
+  
   :mode (("\\.ts\\'"  . typescript-mode)
          ("\\.tsx\\'" . typescript-mode)))
 
@@ -620,7 +621,7 @@
 ;; ---------------------------------------------------------
 
 (use-package web-mode
-   
+  
   :mode (("\\.html?\\'" . web-mode)
          ("\\.css\\'"   . web-mode)
          ("\\.php\\'"   . web-mode))
@@ -633,7 +634,7 @@
 ;; ---------------------------------------------------------
 
 (use-package json-mode
-   
+  
   :mode "\\.json\\'")
 
 ;; ---------------------------------------------------------
@@ -649,7 +650,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-java
-   
+  
   :after lsp-mode
   :hook (java-mode . lsp-deferred))
 
@@ -658,7 +659,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lua-mode
-   
+  
   :mode "\\.lua\\'")
 
 ;; ---------------------------------------------------------
@@ -672,7 +673,7 @@
 ;; =========================================================
 
 (use-package copilot
-   
+  
   :hook
   (prog-mode . copilot-mode)
   :bind
@@ -692,12 +693,14 @@
 ;; ---------------------------------------------------------
 
 (use-package treesit-auto
-   
+  :ensure t
+  :demand t
   :custom
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
 ;; ---------------------------------------------------------
 ;; Remapeamento de modos para Tree-sitter
 ;; ---------------------------------------------------------
@@ -722,7 +725,7 @@
 ;; ---------------------------------------------------------
 
 (use-package treemacs
-   
+  
   :commands (treemacs treemacs-select-window)
   :config
   ;; comportamento previsível
@@ -737,7 +740,7 @@
 ;; ---------------------------------------------------------
 
 (use-package treemacs-evil
-   
+  
   :after (treemacs evil))
 
 ;; =========================================================
@@ -745,7 +748,7 @@
 ;; =========================================================
 
 (use-package dashboard
-   
+  
   :init
   ;; configuração visual e conteúdo
   (setq dashboard-startup-banner 'logo

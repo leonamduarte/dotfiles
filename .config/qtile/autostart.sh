@@ -19,17 +19,19 @@ export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:/usr/bin:$PATH"
 
 # --- Helper: start if available & not already running ---
 run() {
-  # usage: run "command with args" [process_name]
   local cmd="$1"
-  local name="${2:-$(basename "$1" | awk '{print $1}')}"
-  if ! command -v ${cmd%% *} >/dev/null 2>&1; then
-    echo "skip: ${cmd%% *} (not found)"
+  local name="${2:-${cmd%% *}}"
+
+  if ! command -v "$name" >/dev/null 2>&1; then
+    echo "skip: $name (not found)"
     return 0
   fi
+
   if pgrep -u "$USER" -x "$name" >/dev/null 2>&1; then
     echo "ok: $name already running"
     return 0
   fi
+
   echo "start: $cmd"
   nohup bash -lc "$cmd" >/dev/null 2>&1 &
 }
@@ -68,22 +70,19 @@ run "nm-applet" # NetworkManager tray
 run "pasystray" # PipeWire/PulseAudio tray (or use volumeicon)
 # run "volumeicon"                     # Alternative to pasystray
 
-run "xfce4-power-manager" "xfce4-power-man" # Power/battery + notifications
+run "xfce4-power-manager" "xfce4-power-manager" # Power/battery + notifications
 run "blueman-applet"                        # Bluetooth tray
 run "xfce4-clipman" "xfce4-clipman"         # Clipboard manager (X11)
 
 # --- Scripts pessoais ---
-~/.config/autostart/xinputI3.sh &         #configura velocidade do mouse
-~/.config/autostart/screenResolution.sh & #configura resolução dos 2 monitores corretamente
+run "$HOME/.config/autostart/xinputI3.sh" "xinputI3"        #configura velocidade do mouse
+run "$HOME/.config/autostart/screenResolution.sh" "screenResolution" #configura resolução dos 2 monitores corretamente
 
 # --- Programas extras ---
-run "steam -silent" "steam"
-variety &
-# numlockx on &
-setxkbmap -layout us -variant intl
-clipmenud &
-xsettingsd &
-feh --randomize --bg-fill /run/media/lm/dev/walls/catppuccin/*
+run "setxkbmap -layout us -variant intl" "setxkbmap"
+run "clipmenud" "clipmenud"
+run "xsettingsd" "xsettingsd"
+run "feh --randomize --bg-fill $HOME/imagens/catppuccin" "feh"
 
 # --- Optional compositor (X11). Uncomment if you want shadows/transparency. ---
 # run "picom --experimental-backends" "picom"

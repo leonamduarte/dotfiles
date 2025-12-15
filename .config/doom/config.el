@@ -17,8 +17,8 @@
     (setq doom-font (font-spec :family "JetBrains Mono" :size 17)
           doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 17))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)
-        doom-variable-pitch-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)))
+  (setq doom-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)
+        doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)))
 
 ;; UI Básica
 ;; (setq doom-theme 'doom-one) 
