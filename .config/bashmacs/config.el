@@ -42,7 +42,7 @@
 ;; ---------------------------------------------------------
 
 (use-package no-littering
-  :ensure t
+   
   :demand t
   :config
   (setq auto-save-file-name-transforms
@@ -119,7 +119,7 @@
 ;; ---------------------------------------------------------
 
 (use-package evil
-  :ensure t
+   
   :demand t
   :init
   ;; essas variáveis PRECISAM estar antes do load
@@ -144,7 +144,7 @@
 ;; ---------------------------------------------------------
 
 (use-package which-key
-  :ensure t
+   
   :init
   (which-key-mode 1)
   :config
@@ -204,7 +204,7 @@
 ;; ---------------------------------------------------------
 
 (use-package doom-themes
-  :ensure t
+   
   :config
   ;; Doom-like de verdade
   (setq doom-themes-enable-bold t
@@ -217,14 +217,14 @@
 ;; ---------------------------------------------------------
 
 (use-package nerd-icons
-  :ensure t)
+   )
 
 ;; ---------------------------------------------------------
 ;; Modeline
 ;; ---------------------------------------------------------
 
 (use-package doom-modeline
-  :ensure t
+   
   :init
   (doom-modeline-mode 1)
   :custom
@@ -243,7 +243,7 @@
 ;; ---------------------------------------------------------
 
 (use-package vertico
-  :ensure t
+   
   :init
   (vertico-mode 1)
   :custom
@@ -263,7 +263,7 @@
 ;; ---------------------------------------------------------
 
 (use-package marginalia
-  :ensure t
+   
   :after vertico
   :init
   (marginalia-mode 1))
@@ -273,7 +273,7 @@
 ;; ---------------------------------------------------------
 
 (use-package orderless
-  :ensure t
+   
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides
@@ -284,7 +284,7 @@
 ;; ---------------------------------------------------------
 
 (use-package consult
-  :ensure t
+   
   :bind
   (("C-x b"     . consult-buffer)
    ("C-x C-r"   . consult-recent-file)
@@ -299,7 +299,7 @@
 ;; ---------------------------------------------------------
 
 (use-package embark
-  :ensure t
+   
   :bind
   (("C-."   . embark-act)
    ("C-;"   . embark-dwim)
@@ -317,7 +317,7 @@
 ;; ---------------------------------------------------------
 
 (use-package embark-consult
-  :ensure t
+   
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
@@ -331,10 +331,7 @@
 ;; ---------------------------------------------------------
 
 (use-package magit
-  :ensure t
-  :defer t
-  :init
-  (autoload 'magit-status "magit" nil t)
+  :commands (magit-status)
   :custom
   (magit-display-buffer-function
    #'magit-display-buffer-same-window-except-diff-v1))
@@ -344,7 +341,7 @@
 ;; ---------------------------------------------------------
 
 (use-package hl-todo
-  :ensure t
+   
   :hook ((prog-mode org-mode) . hl-todo-mode))
 
 ;; ---------------------------------------------------------
@@ -352,7 +349,7 @@
 ;; ---------------------------------------------------------
 
 (use-package projectile
-  :ensure t
+   
   :init
   (projectile-mode 1)
   :custom
@@ -368,7 +365,7 @@
 ;; ---------------------------------------------------------
 
 (use-package consult-projectile
-  :ensure t
+   
   :after (consult projectile))
 
 ;; =========================================================
@@ -380,7 +377,7 @@
 ;; ---------------------------------------------------------
 
 (use-package org
-  :ensure t
+   
   :hook ((org-mode . org-indent-mode)
          (org-mode . visual-line-mode))
   :config
@@ -421,7 +418,7 @@
 (setq org-superstar-headline-bullets-list nil)
 
 (use-package org-modern
-  :ensure t
+   
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-table t
@@ -451,7 +448,7 @@
 ;; ---------------------------------------------------------
 
 (use-package org-auto-tangle
-  :ensure t
+   
   :hook (org-mode . org-auto-tangle-mode)
   :config
   (setq org-auto-tangle-default t))
@@ -473,7 +470,7 @@
 ;; ---------------------------------------------------------
 
 (use-package corfu
-  :ensure t
+   
   :init
   (global-corfu-mode 1)
   :custom
@@ -504,7 +501,7 @@
 ;; ---------------------------------------------------------
 
 (use-package nerd-icons-corfu
-  :ensure t
+   
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters
@@ -515,7 +512,7 @@
 ;; =========================================================
 
 (use-package apheleia
-  :ensure t
+   
   :config
   ;; habilita globalmente
   (apheleia-global-mode +1)
@@ -555,7 +552,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-mode
-  :ensure t
+   
   :commands (lsp lsp-deferred)
   :hook
   ((prog-mode . lsp-deferred)
@@ -582,7 +579,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-ui
-  :ensure t
+   
   :after lsp-mode
   :commands lsp-ui-mode
   :custom
@@ -599,7 +596,7 @@
 ;; ---------------------------------------------------------
 
 (use-package js2-mode
-  :ensure t
+   
   :hook
   (js-mode . js2-minor-mode)
   :config
@@ -614,7 +611,7 @@
 ;; ---------------------------------------------------------
 
 (use-package typescript-mode
-  :ensure t
+   
   :mode (("\\.ts\\'"  . typescript-mode)
          ("\\.tsx\\'" . typescript-mode)))
 
@@ -623,7 +620,7 @@
 ;; ---------------------------------------------------------
 
 (use-package web-mode
-  :ensure t
+   
   :mode (("\\.html?\\'" . web-mode)
          ("\\.css\\'"   . web-mode)
          ("\\.php\\'"   . web-mode))
@@ -636,7 +633,7 @@
 ;; ---------------------------------------------------------
 
 (use-package json-mode
-  :ensure t
+   
   :mode "\\.json\\'")
 
 ;; ---------------------------------------------------------
@@ -652,7 +649,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lsp-java
-  :ensure t
+   
   :after lsp-mode
   :hook (java-mode . lsp-deferred))
 
@@ -661,7 +658,7 @@
 ;; ---------------------------------------------------------
 
 (use-package lua-mode
-  :ensure t
+   
   :mode "\\.lua\\'")
 
 ;; ---------------------------------------------------------
@@ -675,21 +672,15 @@
 ;; =========================================================
 
 (use-package copilot
-  :vc (:url "https://github.com/copilot-emacs/copilot.el"
-       :branch "main")
+   
   :hook
-  ;; apenas em código
   (prog-mode . copilot-mode)
   :bind
   (:map copilot-completion-map
-        ;; aceita sugestão inteira
         ("<tab>" . copilot-accept-completion)
         ("TAB"   . copilot-accept-completion)
-
-        ;; aceita por palavra
         ("C-TAB" . copilot-accept-completion-by-word))
   :config
-  ;; evita warnings chatos
   (setq copilot-indent-offset-warning-disable t))
 
 ;; =========================================================
@@ -701,7 +692,7 @@
 ;; ---------------------------------------------------------
 
 (use-package treesit-auto
-  :ensure t
+   
   :custom
   (treesit-auto-install 'prompt)
   :config
@@ -731,7 +722,7 @@
 ;; ---------------------------------------------------------
 
 (use-package treemacs
-  :ensure t
+   
   :commands (treemacs treemacs-select-window)
   :config
   ;; comportamento previsível
@@ -746,7 +737,7 @@
 ;; ---------------------------------------------------------
 
 (use-package treemacs-evil
-  :ensure t
+   
   :after (treemacs evil))
 
 ;; =========================================================
@@ -754,7 +745,7 @@
 ;; =========================================================
 
 (use-package dashboard
-  :ensure t
+   
   :init
   ;; configuração visual e conteúdo
   (setq dashboard-startup-banner 'logo
