@@ -21,8 +21,9 @@
         doom-variable-pitch-font (font-spec :family "VictorMono Nerd Font" :size 17 :weight 'medium)))
 
 ;; UI Básica
-(setq doom-theme 'doom-one) 
-(setq doom-theme 'doom-rose-pine-moon) 
+;; (setq doom-theme 'doom-one) 
+(setq doom-theme 'doom-moonlight) 
+;; (setq doom-theme 'doom-rose-pine-moon) 
 ;; (setq doom-theme 'catppuccin)
 ;; (setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
 (setq display-line-numbers-type t)

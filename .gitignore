@@ -18,7 +18,11 @@
 .config/emacs/*
 !.config/alacritty/
 !.config/autostart/
-!.config/bashmacs/
+!.config/bashmacs/config.el
+!.config/bashmacs/init.el
+!.config/bashmacs/custom.el
+!.config/bashmacs/early-init.el
+!.config/bashmacs/keybindings.el
 !.config/doom/
 !.config/emacs/lisp/
 !.config/emacs/init.el
