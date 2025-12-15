@@ -24,6 +24,12 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; --- CORREÇÃO DE DIRETÓRIO (WINDOWS) ---
+;; Força o Emacs a usar a pasta de usuário como diretório padrão
+;; ao invés da pasta de instalação (System32 ou Program Files).
+(setq default-directory "~/")
+(cd "~/")
+
 ;; ---------------------------------------------------------
 ;; 2. GERENCIADOR DE PACOTES (MELPA)
 ;; ---------------------------------------------------------
@@ -59,7 +65,7 @@
   (evil-collection-init))
 
 ;; ---------------------------------------------------------
-;; 4. INTERFACE E MENU (LEADER KEY - CORRIGIDO)
+;; 4. INTERFACE E MENU (LEADER KEY)
 ;; ---------------------------------------------------------
 (use-package which-key
   :init
@@ -75,63 +81,30 @@
   :demand t
   :config
   (general-evil-setup t)
-
-  ;; --- CORREÇÃO CRÍTICA DO SPC ---
-  ;; Remove a função de scroll do SPC no modo motion (dashboard, dired, etc)
+  
+  ;; Correção Definitiva do SPC (Override + Unbind)
   (general-override-mode 1)
   (with-eval-after-load 'evil
     (define-key evil-motion-state-map (kbd "SPC") nil))
+  
+  ;; Carrega o arquivo externo de atalhos
+  ;; Certifique-se que o keybindings.el está na mesma pasta do init.el
+  (load (expand-file-name "keybindings.el" user-emacs-directory)))
 
-  ;; Cria o definer do Leader
-  (general-create-definer leonam/leader-keys
-    :states '(normal visual insert emacs motion) ;; 'motion' é essencial aqui
-    :keymaps 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+(use-package consult
+  :ensure t
+  :bind (("C-x b" . consult-buffer) ;; Opcional: substitui o switch-buffer normal
+         ;; Outros bindings do consult...
+         ))
 
-  ;; Mapeamento Centralizado
-  (leonam/leader-keys
-   "."     '(find-file :which-key "Find file")
-   "SPC"   '(execute-extended-command :which-key "M-x")
-   
-   ;; Buffer
-   "b"     '(:ignore t :which-key "buffer")
-   "bb"    '(switch-to-buffer :which-key "Switch buffer")
-   "bk"    '(kill-current-buffer :which-key "Kill buffer")
-   "bn"    '(next-buffer :which-key "Next buffer")
-   "bp"    '(previous-buffer :which-key "Previous buffer")
+(defun leonam/abrir-arquivo-recente ()
+  "Usa o completing-read (e o Vertico) para escolher um arquivo recente."
+  (interactive)
+  ;; Garante que o modo recentf está ativo para a lista não estar vazia
+  (recentf-mode 1)
+  (let ((arquivo (completing-read "Recentes: " recentf-list)))
+    (find-file arquivo)))
 
-   ;; File
-   "f"     '(:ignore t :which-key "file")
-   "ff"    '(find-file :which-key "Find file")
-   "fs"    '(save-buffer :which-key "Save file")
-   
-   ;; Help
-   "h"     '(:ignore t :which-key "help")
-   "hr"    '((lambda () (interactive) (load-file user-init-file)) :which-key "Reload init.el")
-
-   ;; Git
-   "g"     '(:ignore t :which-key "git")
-   "gg"    '(magit-status :which-key "Magit status")
-   "gB"    '(magit-blame-addition :which-key "Magit blame")
-   "gc"    '(magit-clone :which-key "Clone repo")
-   "gi"    '(magit-init :which-key "Init repo")
-
-   ;; Org
-   "o"     '(:ignore t :which-key "org")
-   "oa"    '(org-agenda :which-key "Agenda")
-   "oc"    '(org-capture :which-key "Capture task")
-   "oe"    '(org-export-dispatch :which-key "Export file")
-   "ol"    '(org-store-link :which-key "Store link")
-   "ot"    '(org-todo :which-key "Change TODO state")
-
-   ;; Code
-   "c"     '(:ignore t :which-key "code")
-   "ca"    '(lsp-execute-code-action :which-key "Code action")
-   "cd"    '(lsp-find-definition :which-key "Jump to definition")
-   "cr"    '(lsp-rename :which-key "Rename variable")
-   "cf"    '(apheleia-format-buffer :which-key "Format buffer")
-   "cx"    '(lsp-java-organize-imports :which-key "Organize imports")))
 
 ;; ---------------------------------------------------------
 ;; 5. COMPLETION (BUSCA E HISTÓRICO)
@@ -162,7 +135,7 @@
 (use-package nerd-icons)
 
 (ignore-errors
-  (set-face-attribute 'default nil :family "BlexMono Nerd Font Medium" :height 140))
+  (set-face-attribute 'default nil :family "AdwaitaMono Nerd Font" :height 130))
 
 (use-package doom-themes
   :config
@@ -231,31 +204,57 @@
 ;; ---------------------------------------------------------
 ;; 9. IDE & CÓDIGO (LSP, TREESITTER, CORFU)
 ;; ---------------------------------------------------------
+
+;; --- 1. TREESITTER (Syntax Highlighting Inteligente) ---
 (use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (setq treesit-auto-install 'prompt)
+  ;; Isso aqui já faz o trabalho de instalar gramáticas e
+  ;; fazer o "remap" de js-mode para js-ts-mode automaticamente
   (global-treesit-auto-mode))
 
+;; --- 2. AUTO-COMPLETE (Corfu) ---
 (use-package corfu
   :init
   (global-corfu-mode)
-  :config
-  (setq corfu-auto t
-        corfu-auto-delay 0.1
-        corfu-auto-prefix 2
-        corfu-cycle t))
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.1)
+  (corfu-auto-prefix 2)
+  (corfu-cycle t))
 
 (use-package nerd-icons-corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+;; --- 3. LSP MODE (O Cérebro) ---
+
+(use-package js2-mode
+  :ensure t
+  :mode (("\\.js\\'" . js2-mode)
+         ("\\.jsx\\'" . js-jsx-mode)) ;; Suporte a React/JSX
+  :config
+  ;; Desliga os avisos nativos do js2 (deixa o LSP cuidar disso)
+  ;; para não ficar com "sujeira" duplicada na tela.
+  (setq js2-mode-show-parse-errors nil)
+  (setq js2-mode-show-strict-warnings nil))
 
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l"
         lsp-idle-delay 0.500
         lsp-log-io nil)
-  :hook ((js-ts-mode . lsp)
+  ;; Otimizações de performance para LSP
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  
+  :hook (
+         ;; Ativa o LSP automaticamente para os modos baseados em Treesitter
+         (js2-mode . lsp)
+         (js2-jsx-mode . lsp)
          (typescript-ts-mode . lsp)
+         (json-mode . lsp)
+         ;; Outras linguagens
          (java-mode . lsp)
          (go-mode . lsp)
          (python-mode . lsp)
@@ -264,18 +263,30 @@
 
 (use-package lsp-ui
   :commands lsp-ui-mode
-  :config
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-position 'at-point
-        lsp-ui-sideline-show-diagnostics t
-        lsp-ui-sideline-show-code-actions t))
+  :custom
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-sideline-show-diagnostics t)
+  (lsp-ui-sideline-show-code-actions t))
 
+;; Necessário para seu Java funcionar bem
 (use-package lsp-java
   :after lsp)
 
+;; --- 4. FORMATTER (Apheleia) ---
+;; O Apheleia formata o código ao salvar sem travar o editor
 (use-package apheleia
   :config
   (apheleia-global-mode +1))
+
+;; Garantia extra: Forçar o uso do js-ts-mode caso o treesit-auto falhe em algo
+;; (O treesit-auto geralmente faz isso sozinho, mas não faz mal deixar aqui)
+;; (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode))
+;; (add-to-list 'major-mode-remap-alist '(javascript-mode . js-ts-mode))
+;; (add-to-list 'major-mode-remap-alist '(js-json-mode . json-ts-mode))
+
+;; NOTA: Removi as linhas do Eglot e o hook de formatação do Eglot.
+;; O 'lsp-mode' já formata e o 'apheleia' cuida disso também.
 
 ;; ---------------------------------------------------------
 ;; 10. AI (COPILOT)
@@ -359,6 +370,20 @@
     (kbd "r") 'dashboard-refresh-buffer
     (kbd "RET") 'dashboard-return
     (kbd "SPC") nil)) ;; Garante que o SPC não faça scroll aqui também
+
+;; ---------------------------------------------------------
+;; 13. SISTEMA (RESTART)
+;; ---------------------------------------------------------
+(use-package restart-emacs
+  :commands (restart-emacs) ;; Carregamento preguiçoso (só carrega quando chamar o comando)
+  :config
+  ;; 1. Tenta reabrir o Emacs com as mesmas janelas e posições de antes
+  ;; (Muito útil no Windows para não perder o layout)
+  (setq restart-emacs-restore-frames t)
+
+  ;; 2. Garante que ele use o binário correto no Windows
+  (when (eq system-type 'windows-nt)
+    (setq restart-emacs-binary-path (expand-file-name "bin/runemacs.exe" invocation-directory))))
 
 (provide 'init)
 ;;; init.el ends here
