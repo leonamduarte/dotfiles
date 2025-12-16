@@ -196,9 +196,14 @@
 ;; ---------------------------------------------------------
 
 (ignore-errors
-  (set-face-attribute 'default nil
-                      :family "JetBrains Mono"
-                      :height 130))
+ (set-face-attribute 'default nil
+                    :family "Iosevka NF"
+                    :height 140
+                    :weight 'regular)
+
+(setq-default line-spacing 0.1)
+(setq doom-themes-enable-italic nil)
+)
 
 ;; ---------------------------------------------------------
 ;; Tema
@@ -475,7 +480,7 @@
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-table t
-        org-modern-hide-stars t
+        org-modern-hide-stars nil
         org-modern-star '("◉" "●" "○" "◆")
         org-modern-list '((?- . "•") (?+ . "◦") (?* . "‣"))
         org-modern-variable-pitch nil))
