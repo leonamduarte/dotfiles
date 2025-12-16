@@ -1,59 +1,88 @@
-# Ignora TUDO no diretório .config
-/*
+# 🚀 Estratégia Principal: Ignorar Tudo (exceto a raiz)
+# O asterisco duplo (**) garante que o git ignore arquivos em todos os subdiretórios.
+*
 
-# Exceto estas pastas (e seus conteúdos)
-!.config/
-!imagens/
-!scripts/
+# 🎯 Exceções de Alto Nível (Permitir estes arquivos/pastas na raiz)
+# !/ : Garante que a exceção só se aplique à raiz do repositório.
 
-# Permite arquivos específicos na raiz
-!.zshrc
-!.bashrc
-!.gitignore
-!stow.sh
-!.stow-local-ignore
+# Permite pastas essenciais (e seus conteúdos)
+!/.config/
+!/imagens/
+!/scripts/
 
-# ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
+# Permite arquivos de configuração na raiz (dotfiles)
+!/.zshrc
+!/.bashrc
+!/.gitignore
+!/stow.sh
+!/.stow-local-ignore
+
+# 🛑 Ignorar Conteúdos dentro de Diretórios Permitidos
+
+# 1. Ignora TUDO dentro de .config (o que foi permitido acima),
+# mas as subpastas em si e o .config não serão ignorados.
+# Isso 'limpa' o diretório para que possamos re-incluir seletivamente.
 .config/*
-!.config/autostart/*
-!.config/alacritty/
-!.config/autostart/screenResolution.sh
-!.config/autostart/resolucao-omarchy.sh
-!.config/autostart/xinputI3.sh
-!.config/bashmacs/config.el
-!.config/bashmacs/init.el
-!.config/bashmacs/custom.el
-!.config/bashmacs/keybindings.el
-!.config/doom/
+
+# 2. Exceções Seletivas dentro de .config
+# Estas regras re-incluem as pastas/arquivos de configuração que você listou.
+# O '/' no final garante que é uma pasta (diretório).
+
+# Pastas de Gerenciadores de Janela / Ambientes Gráficos
 !.config/cosmic/
-!.config/fish/
-!.config/ghostty/
 !.config/hypr/
 !.config/i3/
+!.config/qtile/
+!.config/sway/
+
+# Pastas de Terminais
+!.config/alacritty/
+!.config/ghostty/
 !.config/kitty/
-!.config/kvantum/
+!.config/rio/
+!.config/wezterm/
+
+# Pastas de Editores/IDEs
+!.config/doom/
 !.config/lazyvim/
 !.config/leovim/
 !.config/neovide/
 !.config/nvim/
-!.config/picom/
-!.config/polybar/
-!.config/qtile/
-!.config/rio/
-!.config/rofi/
-!.config/sway/
-!.config/waybar/
-!.config/wezterm/
-!.config/yazi/
-!.config/fastfetch/
-!.config/fish/
-!.config/xsettingsd/
 !.config/zed/
 
-# arquivos ou pastas fora do .config
-!.local/share/fonts/
-!.fonts/
-*Zone.Identifier*
+# Outras Pastas
+!.config/fish/
+!.config/kvantum/
+!.config/polybar/
+!.config/picom/
+!.config/rofi/
+!.config/waybar/
+!.config/yazi/
+!.config/fastfetch/
 
-#arquivos ou pastas dentro do .config
-.config/nvim/lazy-lock.json
+# Arquivos/Pastas específicos
+!.config/autostart/
+.config/autostart/*
+!.config/autostart/*.sh
+
+!.config/bashmacs/
+.config/bashmacs/*
+!.config/bashmacs/*.el
+
+# Arquivo específico dentro de nvim (Importante!)
+# Como já permitimos nvim/ acima, podemos ser mais específicos:
+!.config/nvim/lazy-lock.json
+
+# Arquivo de tema/configuração de GTK
+!.config/xsettingsd/
+
+# 📂 Exceções Fora do .config
+# O asterisco final (/*) é opcional, mas ajuda a garantir que subitens sejam incluídos.
+# Permite o diretório para fontes.
+!/.local/share/fonts/
+!/.fonts/
+
+# 🗑️ Regras de Exclusão Adicionais (Geralmente Não Necessárias com 'ignorar tudo' acima, mas bom manter)
+# Se você tiver * na primeira linha, esta parte é mais para garantir que nunca entre
+# arquivos que possam ter sido criados por downloads ou outras ferramentas.
+*Zone.Identifier*
