@@ -196,31 +196,31 @@
 ;; ---------------------------------------------------------
 
 (ignore-errors
- 
-(defun leo/set-font-with-fallback (families height)
-  (catch 'font-found
-    (dolist (family families)
-      (when (member family (font-family-list))
-        (set-face-attribute 'default nil
-                            :family family
-                            :height height
-                            :weight 'regular)
-        (message "Fonte aplicada: %s" family)
-        (throw 'font-found t)))
-    (message "Nenhuma fonte encontrada: %s" families)))
+  
+  (defun leo/set-font-with-fallback (families height)
+    (catch 'font-found
+      (dolist (family families)
+	(when (member family (font-family-list))
+          (set-face-attribute 'default nil
+                              :family family
+                              :height height
+                              :weight 'regular)
+          (message "Fonte aplicada: %s" family)
+          (throw 'font-found t)))
+      (message "Nenhuma fonte encontrada: %s" families)))
 
-(leo/set-font-with-fallback
- '(
-   "JetBrainsMono Nerd Font"
-   "JetBrainsMono NF"
-   "Iosevka NF"
-   "Iosevka Nerd Font"
-   "FiraCode Nerd Font"
-   )
- 120)
+  (leo/set-font-with-fallback
+   '(
+     "JetBrainsMono Nerd Font"
+     "JetBrainsMono NF"
+     "Iosevka NF"
+     "Iosevka Nerd Font"
+     "FiraCode Nerd Font"
+     )
+   120)
 
-(setq-default line-spacing 0.1)
-(setq doom-themes-enable-italic nil))
+  (setq-default line-spacing 0.1)
+  (setq doom-themes-enable-italic nil))
 
 ;; ---------------------------------------------------------
 ;; Tema
@@ -296,7 +296,8 @@
   (vertico-multiform-mode 1)
 
   (setq vertico-multiform-commands
-        '((consult-buffer grid)
+        '((execute-extended-command buffer)
+	  (consult-buffer grid)
           (consult-imenu buffer)
           (consult-ripgrep buffer)
           (consult-line buffer)
@@ -681,19 +682,19 @@
 
   ;; registra vtsls corretamente (API oficial)
   (with-eval-after-load 'lsp-mode
-  ;; desativa servidores legados
-  (setq lsp-disabled-clients
-        '(javascript-typescript-langserver ts-ls))
+    ;; desativa servidores legados
+    (setq lsp-disabled-clients
+          '(javascript-typescript-langserver ts-ls))
 
-  ;; registra vtsls por MAJOR MODE (robusto)
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-stdio-connection '("vtsls" "--stdio"))
-    :major-modes '(js-ts-mode
-                    typescript-ts-mode
-                    tsx-ts-mode)
-    :server-id 'vtsls)))
-)
+    ;; registra vtsls por MAJOR MODE (robusto)
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection (lsp-stdio-connection '("vtsls" "--stdio"))
+      :major-modes '(js-ts-mode
+                     typescript-ts-mode
+                     tsx-ts-mode)
+      :server-id 'vtsls)))
+  )
 
 ;; =========================================================
 ;; 8.4 IDE — JavaScript / TypeScript (vtsls)
@@ -876,8 +877,8 @@
 
 (use-package js
   :ensure nil
-  :mode ("\\.[mc]?js\\'" . js-ts-mode)
-  :hook (js-ts-mode . leonam/javascript-common-setup)
+  :mode ("\\.[mc]?js\\'" . js2-mode)
+  :hook (js2-mode . leonam/javascript-common-setup)
   :config
   (setq js-indent-level 2))
 
