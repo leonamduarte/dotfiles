@@ -76,5 +76,5 @@
   "venv-selector.nvim": { "branch": "main", "commit": "58bae72c84b9f7f864c879ec1896e384296f9ffb" },
   "which-key.nvim": { "branch": "main", "commit": "3aab2147e74890957785941f0c1ad87d0a44c15a" },
   "yanky.nvim": { "branch": "main", "commit": "04fc42b94305d94948c9c197f679336668af3292" },
-  "yazi.nvim": { "branch": "main", "commit": "4bdbbd763bd5dbf5eefe778024fd5b10728feb05" }
+  "yazi.nvim": { "branch": "main", "commit": "125d3eb2112ff597fcd0119e077acf9de3f09f8f" }
 }

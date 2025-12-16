@@ -25,33 +25,31 @@
 ;; Estado e histórico
 ;; ---------------------------------------------------------
 
-(use-package recentf
-  :init
-  ;; 1. Habilita o modo
-  (recentf-mode 1)
-
-  :config
-  ;; 2. Configuraes
-  (setq recentf-max-saved-items 200
-        recentf-max-menu-items 50
-        recentf-auto-cleanup 'never
-        recentf-exclude
-        '("/tmp/" "/ssh:" "/sudo:" "\\.git/" "COMMIT_EDITMSG"))
-  (add-hook 'kill-emacs-hook #'recentf-save-list)
-  (run-at-time nil (* 5 60) #'recentf-save-list))
-
-;; ---------------------------------------------------------
-;; Organização de arquivos (no-littering)
-;; ---------------------------------------------------------
-
 (use-package no-littering
-  
   :demand t
   :config
   (setq auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))
         recentf-save-file
         (no-littering-expand-var-file-name "recentf")))
+
+;; agora sim: recentf
+(setq recentf-max-saved-items 200
+      recentf-max-menu-items 50
+      recentf-auto-cleanup 'never
+      recentf-exclude
+      '("/tmp/" "/ssh:" "/sudo:" "\\.git/" "COMMIT_EDITMSG"))
+
+(recentf-mode 1)
+
+;; garante carga no startup
+(add-hook 'emacs-startup-hook #'recentf-load-list)
+
+;; garante salvamento
+(add-hook 'kill-emacs-hook #'recentf-save-list)
+
+;; salvamento periódico (extra seguro)
+(run-at-time nil (* 5 60) #'recentf-save-list)
 
 ;; ---------------------------------------------------------
 ;; Garbage Collector — rápido no startup, normal depois
@@ -237,20 +235,92 @@
                         doom-modeline-buffer-file-name-style
                         'truncate-upto-project))
 
+;; ---------------------------------------------------------
+;; ESLint LSP
+;; ---------------------------------------------------------
+
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-language-id-configuration '(js-ts-mode . "javascript"))
+  (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
+  (add-to-list 'lsp-language-id-configuration '(typescript-ts-mode . "typescript")))
+
+(with-eval-after-load 'lsp-mode
+  (setq lsp-eslint-auto-fix-on-save nil
+        lsp-eslint-format-enable nil))
+
+
 ;; =========================================================
 ;; 5. COMPLETION STACK (VERTICO)
 ;; =========================================================
 
 ;; ---------------------------------------------------------
-;; Vertico — UI do minibuffer
+;; Vertico (minibuffer moderno)
 ;; ---------------------------------------------------------
 
 (use-package vertico
-  
   :init
   (vertico-mode 1)
   :custom
-  (vertico-cycle t))
+  (vertico-cycle t)
+  (vertico-count 17)
+  (vertico-resize nil)
+  :config
+  ;; multiform vem junto com vertico
+  (require 'vertico-multiform)
+
+  (vertico-multiform-mode 1)
+
+  (setq vertico-multiform-commands
+        '((consult-buffer grid)
+          (consult-imenu buffer)
+          (consult-ripgrep buffer)
+          (consult-line buffer)
+          )))
+
+(add-to-list 'display-buffer-alist
+             '("\\*Completions\\*"
+               display-buffer-at-bottom
+               (window-height . 0.3)))
+
+;; ---------------------------------------------------------
+;; Orderless (matching poderoso, domado)
+;; ---------------------------------------------------------
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides
+   '((file (styles orderless partial-completion))))
+  (orderless-component-separator
+   #'orderless-escapable-split-on-space))
+
+;; ---------------------------------------------------------
+;; Consult preview controlado
+;; ---------------------------------------------------------
+
+(use-package consult
+  :bind
+  (("C-x b"   . consult-buffer)
+   ("C-x C-r" . consult-recent-file)
+   ("M-y"     . consult-yank-pop))
+  :config
+  ;; integração correta com completion
+  (setq completion-in-region-function
+        (lambda (&rest args)
+          (apply #'consult-completion-in-region args)))
+
+  (consult-customize
+   consult-ripgrep
+   consult-git-grep
+   consult-grep
+   consult-recent-file
+   consult-bookmark
+   :preview-key "C-SPC")
+
+  (consult-customize
+   consult-theme
+   :preview-key (list "C-SPC" :debounce 0.5 'any)))
 
 ;; ---------------------------------------------------------
 ;; Savehist — histórico do minibuffer
@@ -270,32 +340,6 @@
   :after vertico
   :init
   (marginalia-mode 1))
-
-;; ---------------------------------------------------------
-;; Orderless — estilo de matching
-;; ---------------------------------------------------------
-
-(use-package orderless
-  
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides
-   '((file (styles basic partial-completion)))))
-
-;; ---------------------------------------------------------
-;; Consult — comandos poderosos
-;; ---------------------------------------------------------
-
-(use-package consult
-  
-  :bind
-  (("C-x b"     . consult-buffer)
-   ("C-x C-r"   . consult-recent-file)
-   ("M-y"       . consult-yank-pop))
-  :config
-  (setq consult-preview-key 'any
-        completion-in-region-function
-        #'consult-completion-in-region))
 
 ;; ---------------------------------------------------------
 ;; Embark — ações contextuais
@@ -469,35 +513,70 @@
 ;; =========================================================
 
 ;; ---------------------------------------------------------
-;; Corfu — completion leve e moderno
+;; Corfu
 ;; ---------------------------------------------------------
 
 (use-package corfu
-  
   :init
   (global-corfu-mode 1)
   :custom
-  ;; sugestões automáticas, mas discretas
   (corfu-auto t)
   (corfu-auto-delay 0.2)
   (corfu-auto-prefix 2)
-
-  ;; navegação previsível
   (corfu-cycle t)
   (corfu-preselect 'prompt)
-
-  ;; aparência
   (corfu-min-width 30)
-  (corfu-max-width 80))
+  (corfu-max-width 80)
+  (tab-always-indent 'complete))
+
+(with-eval-after-load 'corfu
+  (define-key corfu-map (kbd "C-SPC") #'corfu-complete))
 
 ;; ---------------------------------------------------------
-;; Integração com Evil (insert only)
+;; Cape — fallback inteligente
 ;; ---------------------------------------------------------
 
-(with-eval-after-load 'evil
-  ;; chama completion manualmente se quiser
-  (define-key evil-insert-state-map
-              (kbd "C-SPC") #'completion-at-point))
+(use-package cape
+  :after corfu
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-keyword))
+
+(with-eval-after-load 'cape
+  (advice-add #'lsp-completion-at-point :around #'cape-wrap-nonexclusive))
+
+(defun leonam/corfu-dabbrev-or-next (&optional arg)
+  "Abre completion via dabbrev se não houver popup, senão navega."
+  (interactive "p")
+  (if corfu--candidates
+      (corfu-next arg)
+    (require 'cape)
+    (cape-dabbrev t)
+    (when (> corfu--total 0)
+      (corfu--goto (or arg 0)))))
+
+(defun leonam/corfu-dabbrev-or-prev (&optional arg)
+  "Abre completion via dabbrev se não houver popup, senão navega."
+  (interactive "p")
+  (if corfu--candidates
+      (corfu-previous arg)
+    (require 'cape)
+    (cape-dabbrev t)
+    (when (> corfu--total 0)
+      (corfu--goto (- corfu--total (or arg 1))))))
+
+(defun leonam/corfu-dabbrev-this-buffer ()
+  "Completa palavras apenas do buffer atual."
+  (interactive)
+  (require 'cape)
+  (let ((cape-dabbrev-check-other-buffers nil))
+    (cape-dabbrev t)))
+
+(with-eval-after-load 'corfu
+  (define-key corfu-map (kbd "C-n") #'leonam/corfu-dabbrev-or-next)
+  (define-key corfu-map (kbd "C-p") #'leonam/corfu-dabbrev-or-prev))
+
 
 ;; ---------------------------------------------------------
 ;; Ícones no popup
@@ -547,128 +626,92 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) 'black))
 
 ;; =========================================================
-;; 8.3 IDE — LSP (INTELIGÊNCIA)
+;; 8.3 IDE — LSP (Infraestrutura)
 ;; =========================================================
 
-;; ---------------------------------------------------------
-;; lsp-mode — núcleo
-;; ---------------------------------------------------------
+;; IPC rápido (essencial p/ JS/TS)
+(setq read-process-output-max (* 1024 1024))
+
+;; Comportamento controlado
+(setq lsp-idle-delay 0.5
+      lsp-keep-workspace-alive nil
+      lsp-auto-shutdown t
+      lsp-restart 'auto-restart)
+
+;; LSP não manda no editor
+(setq lsp-enable-on-type-formatting nil
+      lsp-enable-indentation nil
+      lsp-enable-symbol-highlighting t
+      lsp-headerline-breadcrumb-enable nil
+      lsp-modeline-code-actions-enable nil
+      lsp-modeline-diagnostics-enable nil)
+
+;; NÃO usar tsserver
+(setq lsp-disabled-clients '(ts-ls))
 
 (use-package lsp-mode
-  
   :commands (lsp lsp-deferred)
-  :hook
-  ((prog-mode . lsp-deferred)
-   ;; Emacs Lisp NÃO usa LSP
-   (emacs-lisp-mode . (lambda ()
-                        (setq-local lsp-enabled-clients nil))))
   :init
-  ;; prefixo padrão (não usamos SPC aqui)
-  (setq lsp-keymap-prefix "C-c l"
-
-        ;; performance
-        lsp-idle-delay 0.5
-        read-process-output-max (* 1024 1024))
-
+  (setq lsp-keymap-prefix "C-c l")
   :config
-  ;; NÃO deixar o LSP mandar no editor
-  (setq lsp-enable-on-type-formatting nil
-        lsp-enable-indentation nil
-        lsp-enable-symbol-highlighting t
-        lsp-warn-no-matched-clients nil))
+  (setq lsp-warn-no-matched-clients nil))
 
-;; ---------------------------------------------------------
-;; lsp-ui — UI auxiliar (hover, docs)
-;; ---------------------------------------------------------
+;; =========================================================
+;; 8.4 IDE — JavaScript / TypeScript (vtsls)
+;; =========================================================
+
+;; Indentação padrão
+(setq js-indent-level 2
+      typescript-indent-level 2)
+
+;; Registrar vtsls
+(with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-server-programs
+               '(vtsls . ("vtsls" "--stdio"))))
+
+;; Hooks LSP (somente onde importa)
+(add-hook 'js-ts-mode-hook #'lsp-deferred)
+(add-hook 'tsx-ts-mode-hook #'lsp-deferred)
+(add-hook 'typescript-ts-mode-hook #'lsp-deferred)
+
+;; UX TS/JS
+(with-eval-after-load 'lsp-mode
+  (setq lsp-typescript-suggest-auto-imports t
+        lsp-typescript-update-imports-on-file-move 'always
+        lsp-typescript-format-enable nil
+        lsp-javascript-format-enable nil
+        lsp-enable-file-watchers nil
+        lsp-completion-enable-additional-text-edit t))
+
+;; HTML / CSS
+(add-hook 'web-mode-hook #'lsp-deferred)
+
+(with-eval-after-load 'lsp-mode
+  (setq lsp-html-format-enable nil
+        lsp-css-format-enable nil))
+
+;; JSON (tree-sitter)
+(add-hook 'json-ts-mode-hook #'lsp-deferred)
+
+(add-hook 'python-mode-hook #'lsp-deferred)
+
+(with-eval-after-load 'lsp-mode
+  (setq lsp-pyright-typechecking-mode "basic"
+        lsp-pyright-use-library-code-for-types t))
+
+(use-package lsp-java
+  :after lsp-mode
+  :hook (java-mode . lsp-deferred)
+  :config
+  (setq lsp-java-format-enabled nil))
 
 (use-package lsp-ui
-  
   :after lsp-mode
   :commands lsp-ui-mode
   :custom
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-position 'at-point)
-  (lsp-ui-sideline-enable nil)) ;; sideline costuma poluir
-
-;; =========================================================
-;; 8.4 IDE — LINGUAGENS (MODOS + LSP)
-;; =========================================================
-
-;; ---------------------------------------------------------
-;; JavaScript / JSX (Windows-friendly)
-;; ---------------------------------------------------------
-
-(use-package js2-mode
-  
-  :hook
-  (js-mode . js2-minor-mode)
-  :config
-  (setq js2-mode-show-parse-errors nil
-        js2-mode-show-strict-warnings nil))
-
-(setq js-indent-level 2)
-
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-mode))
-;; ---------------------------------------------------------
-;; TypeScript / TSX
-;; ---------------------------------------------------------
-
-(use-package typescript-mode
-  
-  :mode (("\\.ts\\'"  . typescript-mode)
-         ("\\.tsx\\'" . typescript-mode)))
-
-;; ---------------------------------------------------------
-;; Web (HTML / CSS / PHP)
-;; ---------------------------------------------------------
-
-(use-package web-mode
-  
-  :mode (("\\.html?\\'" . web-mode)
-         ("\\.css\\'"   . web-mode)
-         ("\\.php\\'"   . web-mode))
-  :config
-  ;; melhor compatibilidade com LSP
-  (setq web-mode-enable-auto-quoting nil))
-
-;; ---------------------------------------------------------
-;; JSON
-;; ---------------------------------------------------------
-
-(use-package json-mode
-  
-  :mode "\\.json\\'")
-
-;; ---------------------------------------------------------
-;; Python
-;; ---------------------------------------------------------
-
-(use-package python
-  :ensure nil
-  :mode ("\\.py\\'" . python-mode))
-
-;; ---------------------------------------------------------
-;; Java (LSP dedicado)
-;; ---------------------------------------------------------
-
-(use-package lsp-java
-  
-  :after lsp-mode
-  :hook (java-mode . lsp-deferred))
-
-;; ---------------------------------------------------------
-;; Lua
-;; ---------------------------------------------------------
-
-(use-package lua-mode
-  
-  :mode "\\.lua\\'")
-
-;; ---------------------------------------------------------
-;; Shell / Bash
-;; ---------------------------------------------------------
-
-(add-hook 'sh-mode-hook #'lsp-deferred)
+  (lsp-ui-sideline-enable nil))
 
 ;; =========================================================
 ;; 8.5 IDE — COPILOT
@@ -690,33 +733,18 @@
 ;; 8.6 IDE — TREE-SITTER (TREESIT)
 ;; =========================================================
 
-;; ---------------------------------------------------------
-;; Instalação automática de grammars
-;; ---------------------------------------------------------
+(when (treesit-available-p)
+  ;; Highlight no nível do Doom
+  (setq treesit-font-lock-level 4))
 
 (use-package treesit-auto
-  :ensure t
   :demand t
   :custom
   (treesit-auto-install 'prompt)
   :config
+  ;; remapeia tudo automaticamente
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
-
-;; ---------------------------------------------------------
-;; Remapeamento de modos para Tree-sitter
-;; ---------------------------------------------------------
-
-(setq major-mode-remap-alist
-      '((js-mode          . js-ts-mode)
-        (typescript-mode  . typescript-ts-mode)
-        (css-mode         . css-ts-mode)
-        (json-mode        . json-ts-mode)))
-
-;; JSX / TSX
-(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
-
 
 ;; =========================================================
 ;; 9. NAVEGAÇÃO — TREEMACS
@@ -752,7 +780,6 @@
 (use-package dashboard
   
   :init
-  ;; configuração visual e conteúdo
   (setq dashboard-startup-banner 'logo
         dashboard-banner-logo-title "Bem-vindo ao Emacs do Leonam"
         dashboard-center-content t
@@ -763,17 +790,11 @@
         dashboard-items '((recents  . 5)
                           (projects . 5)))
   :config
-  ;; registra o dashboard no startup
   (dashboard-setup-startup-hook)
 
-  ;; abre o dashboard APÓS o init completo
   (add-hook 'after-init-hook
             (lambda ()
-              ;; garante que recentf esteja carregado
-              (recentf-cleanup)
               (recentf-save-list)
-
-              ;; agora sim renderiza o dashboard
               (dashboard-refresh-buffer)
               (switch-to-buffer "*dashboard*")))
 
@@ -801,6 +822,100 @@
   (setq default-directory (expand-file-name "~/")))
 
 (add-hook 'dashboard-mode-hook #'leonam/dashboard-set-default-directory)
+
+;; ---------------------------------------------------------
+;; Função comum JS / TS
+;; ---------------------------------------------------------
+(defun leonam/javascript-common-setup ()
+  "Configurações comuns para JavaScript e TypeScript."
+  ;; indentação melhor para chains
+  (setq-local js-chain-indent t)
+
+  ;; adiciona node_modules/.bin ao PATH
+  (leonam/javascript-add-npm-path))
+
+;; ---------------------------------------------------------
+;; JavaScript
+;; ---------------------------------------------------------
+(use-package js
+  :mode ("\\.[mc]?js\\'" . js-ts-mode)
+  :hook (js-ts-mode . leonam/javascript-common-setup)
+  :config
+  (setq js-indent-level 2))
+
+;; ---------------------------------------------------------
+;; TypeScript / TSX
+;; ---------------------------------------------------------
+(use-package typescript-ts-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-ts-mode . leonam/javascript-common-setup)
+  :config
+  (setq typescript-indent-level 2))
+
+(use-package tsx-ts-mode
+  :mode "\\.[tj]sx\\'"
+  :hook (tsx-ts-mode . leonam/javascript-common-setup))
+
+;; ---------------------------------------------------------
+;; nodejs-repl
+;; ---------------------------------------------------------
+(use-package nodejs-repl
+  :commands nodejs-repl)
+
+;; ---------------------------------------------------------
+;; Compilation: stacktrace do Node.js
+;; ---------------------------------------------------------
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist 'node)
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(node
+                 "^[[:blank:]]*at \\(.*(\\|\\)\\(.+?\\):\\([0-9]+\\):\\([0-9]+\\)"
+                 2 3 4)))
+
+(defvar leonam/javascript-npm-cache (make-hash-table :test 'equal))
+
+(defun leonam/project-root ()
+  "Retorna a raiz do projeto atual."
+  (if-let ((proj (project-current)))
+      (project-root proj)
+    default-directory))
+
+;;;###autoload
+(defun leonam/javascript-read-package-json (&optional refresh)
+  "Lê o package.json do projeto atual com cache."
+  (let* ((root (leonam/project-root))
+         (cached (gethash root leonam/javascript-npm-cache)))
+    (if (and cached (not refresh))
+        cached
+      (let ((file (expand-file-name "package.json" root)))
+        (when (file-exists-p file)
+          (require 'json)
+          (let ((json (json-read-file file)))
+            (puthash root json leonam/javascript-npm-cache)
+            json))))))
+
+;;;###autoload
+(defun leonam/javascript-npm-dep-p (package)
+  "Retorna non-nil se PACKAGE existir em dependencies ou devDependencies."
+  (when-let* ((data (leonam/javascript-read-package-json))
+              (deps (append (cdr (assq 'dependencies data))
+                            (cdr (assq 'devDependencies data)))))
+    (assq package deps)))
+
+;;;###autoload
+(defun leonam/javascript-add-npm-path ()
+  "Adiciona node_modules/.bin ao exec-path local."
+  (when-let* ((root (leonam/project-root))
+              (nm (locate-dominating-file root "node_modules/"))
+              (bin (expand-file-name "node_modules/.bin" nm)))
+    (make-local-variable 'exec-path)
+    (add-to-list 'exec-path bin)))
+
+;;;###autoload
+(defun leonam/javascript-open-repl ()
+  "Abre um REPL Node.js."
+  (interactive)
+  (nodejs-repl))
 
 (provide 'config)
 ;;; config.el ends here

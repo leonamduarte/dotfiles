@@ -14,15 +14,14 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "JetBrains Mono" :size 17)
-          doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 17))
+    (setq doom-font (font-spec :family "Hack Nerd Font" :size 16)
+          doom-variable-pitch-font (font-spec :family "Hack Nerd Font" :size 16))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)
         doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)))
 
 ;; UI Básica
-;; (setq doom-theme 'doom-one) 
-(setq doom-theme 'doom-moonlight) 
+(setq doom-theme 'doom-one) 
 ;; (setq doom-theme 'doom-rose-pine-moon) 
 ;; (setq doom-theme 'catppuccin)
 ;; (setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha

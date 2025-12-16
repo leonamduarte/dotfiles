@@ -99,7 +99,7 @@ return {
         -- Otimização: Desativamos em markdown para não gastar recurso à toa
         markdown = { enable = false },
         org = {
-          headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4" },
+          -- headline_highlights = { "Headline1", "Headline2", "Headline3", "Headline4" },
           bullets = { "◉", "●", "○", "◆", "●", "○", "◆" },
         },
       })
