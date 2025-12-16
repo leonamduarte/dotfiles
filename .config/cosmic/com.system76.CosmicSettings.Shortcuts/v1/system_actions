@@ -1,1 +1,3 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicSettings.Shortcuts/v1/system_actions
+{
+    Terminal: "cosmic-term",
+}

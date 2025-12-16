@@ -1,1 +1,9 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicBackground/v1/all
+(
+    output: "all",
+    source: Path("/home/bashln/dotfiles/imagens/nord-wallpaper/ign_colorful.png"),
+    filter_by_theme: true,
+    rotation_frequency: 3600,
+    filter_method: Lanczos,
+    scaling_mode: Zoom,
+    sampling_method: Alphanumeric,
+)

@@ -1,1 +1,7 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicComp/v1/input_default
+(
+    state: Enabled,
+    acceleration: Some((
+        profile: None,
+        speed: -0.81,
+    )),
+)

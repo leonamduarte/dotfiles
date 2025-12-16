@@ -1,1 +1,5 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicAppList/v1/favorites
+[
+    "brave-browser",
+    "com.system76.CosmicFiles",
+    "com.system76.CosmicTerm",
+]

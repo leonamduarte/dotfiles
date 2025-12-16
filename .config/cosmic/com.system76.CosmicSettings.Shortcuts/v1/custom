@@ -2,16 +2,8 @@
     (
         modifiers: [
             Super,
-            Shift,
         ],
-        key: "n",
-        description: Some("Neovim"),
-    ): Spawn("neovim"),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "b",
+        key: "f",
     ): Disable,
     (
         modifiers: [
@@ -24,9 +16,20 @@
             Super,
             Shift,
         ],
-        key: "m",
-        description: Some("Spotify"),
-    ): Spawn("spotify"),
+        key: "b",
+    ): System(WebBrowser),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "Return",
+    ): System(Terminal),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "b",
+    ): Disable,
     (
         modifiers: [
             Ctrl,
@@ -37,22 +40,31 @@
     (
         modifiers: [
             Super,
+            Shift,
+        ],
+        key: "m",
+        description: Some("Spotify"),
+    ): Spawn("spotify"),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "n",
+        description: Some("Neovim"),
+    ): Spawn("neovim"),
+    (
+        modifiers: [
+            Super,
+        ],
+        key: "w",
+    ): Close,
+    (
+        modifiers: [
+            Super,
+            Shift,
         ],
         key: "f",
-    ): Disable,
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "b",
-    ): System(WebBrowser),
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "Return",
     ): System(HomeFolder),
     (
         modifiers: [
@@ -69,16 +81,4 @@
         key: "e",
         description: Some("Emacs"),
     ): Spawn("emacs"),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "Return",
-    ): System(Terminal),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "w",
-    ): Close,
 }
