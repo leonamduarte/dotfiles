@@ -196,14 +196,31 @@
 ;; ---------------------------------------------------------
 
 (ignore-errors
- (set-face-attribute 'default nil
-                    :family "Iosevka NF"
-                    :height 140
-                    :weight 'regular)
+ 
+(defun leo/set-font-with-fallback (families height)
+  (catch 'font-found
+    (dolist (family families)
+      (when (member family (font-family-list))
+        (set-face-attribute 'default nil
+                            :family family
+                            :height height
+                            :weight 'regular)
+        (message "Fonte aplicada: %s" family)
+        (throw 'font-found t)))
+    (message "Nenhuma fonte encontrada: %s" families)))
+
+(leo/set-font-with-fallback
+ '(
+   "JetBrainsMono Nerd Font"
+   "JetBrainsMono NF"
+   "Iosevka NF"
+   "Iosevka Nerd Font"
+   "FiraCode Nerd Font"
+   )
+ 120)
 
 (setq-default line-spacing 0.1)
-(setq doom-themes-enable-italic nil)
-)
+(setq doom-themes-enable-italic nil))
 
 ;; ---------------------------------------------------------
 ;; Tema
