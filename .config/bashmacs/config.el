@@ -1,4 +1,4 @@
-;;; config.el --- M  dulos e Plugins do Leonam -*- lexical-binding: t; coding: utf-8 -*-
+;;; config.el --- M  dulos e Plugins do Bashln -*- lexical-binding: t; coding: utf-8 -*-
 
 ;;; Commentary:
 ;;; Configura    es principais do Emacs.
@@ -166,7 +166,7 @@
   (general-override-mode 1)
 
   ;; definer do leader
-  (general-create-definer leonam/leader-keys
+  (general-create-definer bashln/leader-keys
     :states '(normal visual motion)
     :keymaps 'override
     :prefix "SPC"
@@ -529,7 +529,7 @@
   :config
   (setq org-auto-tangle-default t))
 
-(defun leonam/org-insert-auto-tangle-tag ()
+(defun bashln/org-insert-auto-tangle-tag ()
   "Insere #+auto_tangle: t no início do arquivo."
   (interactive)
   (when (derived-mode-p 'org-mode)
@@ -575,7 +575,7 @@
 (with-eval-after-load 'cape
   (advice-add #'lsp-completion-at-point :around #'cape-wrap-nonexclusive))
 
-(defun leonam/corfu-dabbrev-or-next (&optional arg)
+(defun bashln/corfu-dabbrev-or-next (&optional arg)
   "Abre completion via dabbrev se não houver popup, senão navega."
   (interactive "p")
   (if corfu--candidates
@@ -585,7 +585,7 @@
     (when (> corfu--total 0)
       (corfu--goto (or arg 0)))))
 
-(defun leonam/corfu-dabbrev-or-prev (&optional arg)
+(defun bashln/corfu-dabbrev-or-prev (&optional arg)
   "Abre completion via dabbrev se não houver popup, senão navega."
   (interactive "p")
   (if corfu--candidates
@@ -595,7 +595,7 @@
     (when (> corfu--total 0)
       (corfu--goto (- corfu--total (or arg 1))))))
 
-(defun leonam/corfu-dabbrev-this-buffer ()
+(defun bashln/corfu-dabbrev-this-buffer ()
   "Completa palavras apenas do buffer atual."
   (interactive)
   (require 'cape)
@@ -603,8 +603,8 @@
     (cape-dabbrev t)))
 
 (with-eval-after-load 'corfu
-  (define-key corfu-map (kbd "C-n") #'leonam/corfu-dabbrev-or-next)
-  (define-key corfu-map (kbd "C-p") #'leonam/corfu-dabbrev-or-prev))
+  (define-key corfu-map (kbd "C-n") #'bashln/corfu-dabbrev-or-next)
+  (define-key corfu-map (kbd "C-p") #'bashln/corfu-dabbrev-or-prev))
 
 
 ;; ---------------------------------------------------------
@@ -819,7 +819,7 @@
   :after evil
   :init
   (setq dashboard-startup-banner 'logo
-        dashboard-banner-logo-title "Bem-vindo ao Emacs do Leonam"
+        dashboard-banner-logo-title "Welcome to Bashln Emacs"
         dashboard-center-content t
         dashboard-display-icons-p t
         dashboard-icon-type 'nerd-icons
@@ -853,23 +853,23 @@
 ;; Diretório base correto
 ;; ---------------------------------------------------------
 
-(defun leonam/dashboard-set-default-directory ()
+(defun bashln/dashboard-set-default-directory ()
   "Força o dashboard a usar ~/ como diretório base."
   (setq default-directory (expand-file-name "~/")))
 
-(add-hook 'dashboard-mode-hook #'leonam/dashboard-set-default-directory)
+(add-hook 'dashboard-mode-hook #'bashln/dashboard-set-default-directory)
 
 ;; =========================================================
 ;; JavaScript / TypeScript — Tree-sitter nativo (Emacs 29+)
 ;; =========================================================
 
-(defun leonam/javascript-common-setup ()
+(defun bashln/javascript-common-setup ()
   "Configurações comuns para JavaScript e TypeScript."
   ;; indentação melhor para chains
   (setq-local js-chain-indent t)
 
   ;; adiciona node_modules/.bin ao PATH
-  (leonam/javascript-add-npm-path))
+  (bashln/javascript-add-npm-path))
 
 ;; ---------------------------------------------------------
 ;; JavaScript (js-ts-mode)
@@ -878,7 +878,7 @@
 (use-package js
   :ensure nil
   :mode ("\\.[mc]?js\\'" . js2-mode)
-  :hook (js2-mode . leonam/javascript-common-setup)
+  :hook (js2-mode . bashln/javascript-common-setup)
   :config
   (setq js-indent-level 2))
 
@@ -889,7 +889,7 @@
 (use-package typescript-ts-mode
   :ensure nil
   :mode "\\.ts\\'"
-  :hook (typescript-ts-mode . leonam/javascript-common-setup)
+  :hook (typescript-ts-mode . bashln/javascript-common-setup)
   :config
   (setq typescript-indent-level 2))
 
@@ -900,7 +900,7 @@
 (use-package tsx-ts-mode
   :ensure nil
   :mode "\\.[tj]sx\\'"
-  :hook (tsx-ts-mode . leonam/javascript-common-setup))
+  :hook (tsx-ts-mode . bashln/javascript-common-setup))
 
 ;; =========================================================
 ;; Node.js tooling
@@ -924,43 +924,43 @@
 ;; Helpers npm / projeto
 ;; =========================================================
 
-(defvar leonam/javascript-npm-cache (make-hash-table :test 'equal))
+(defvar bashln/javascript-npm-cache (make-hash-table :test 'equal))
 
-(defun leonam/project-root ()
+(defun bashln/project-root ()
   "Retorna a raiz do projeto atual."
   (if-let ((proj (project-current)))
       (project-root proj)
     default-directory))
 
-(defun leonam/javascript-read-package-json (&optional refresh)
+(defun bashln/javascript-read-package-json (&optional refresh)
   "Lê o package.json do projeto atual com cache."
-  (let* ((root (leonam/project-root))
-         (cached (gethash root leonam/javascript-npm-cache)))
+  (let* ((root (bashln/project-root))
+         (cached (gethash root bashln/javascript-npm-cache)))
     (if (and cached (not refresh))
         cached
       (let ((file (expand-file-name "package.json" root)))
         (when (file-exists-p file)
           (require 'json)
           (let ((json (json-read-file file)))
-            (puthash root json leonam/javascript-npm-cache)
+            (puthash root json bashln/javascript-npm-cache)
             json))))))
 
-(defun leonam/javascript-npm-dep-p (package)
+(defun bashln/javascript-npm-dep-p (package)
   "Retorna non-nil se PACKAGE existir em dependencies ou devDependencies."
-  (when-let* ((data (leonam/javascript-read-package-json))
+  (when-let* ((data (bashln/javascript-read-package-json))
               (deps (append (cdr (assq 'dependencies data))
                             (cdr (assq 'devDependencies data)))))
     (assq package deps)))
 
-(defun leonam/javascript-add-npm-path ()
+(defun bashln/javascript-add-npm-path ()
   "Adiciona node_modules/.bin ao exec-path local."
-  (when-let* ((root (leonam/project-root))
+  (when-let* ((root (bashln/project-root))
               (nm (locate-dominating-file root "node_modules/"))
               (bin (expand-file-name "node_modules/.bin" nm)))
     (make-local-variable 'exec-path)
     (add-to-list 'exec-path bin)))
 
-(defun leonam/javascript-open-repl ()
+(defun bashln/javascript-open-repl ()
   "Abre um REPL Node.js."
   (interactive)
   (nodejs-repl))
