@@ -15,8 +15,6 @@
 
 # ignora tudo dentro de .config, exceto as pastas e arquivos listados abaixo
 .config/*
-.config/emacs/*
-.config/bashmacs/*
 !.config/autostart/*
 !.config/alacritty/
 !.config/autostart/screenResolution.sh
@@ -25,13 +23,8 @@
 !.config/bashmacs/config.el
 !.config/bashmacs/init.el
 !.config/bashmacs/custom.el
-!.config/bashmacs/early-init.el
 !.config/bashmacs/keybindings.el
-!.config/bashmacs/package-utils.el
 !.config/doom/
-!.config/emacs/lisp/
-!.config/emacs/init.el
-!.config/emacs/early-init.el
 !.config/cosmic/
 !.config/fish/
 !.config/ghostty/
