@@ -240,13 +240,16 @@
 ;; ---------------------------------------------------------
 
 (with-eval-after-load 'lsp-mode
+  (add-to-list 'lsp-disabled-clients 'javascript-typescript-langserver)
+  (add-to-list 'lsp-disabled-clients 'ts-ls)
   (add-to-list 'lsp-language-id-configuration '(js-ts-mode . "javascript"))
   (add-to-list 'lsp-language-id-configuration '(tsx-ts-mode . "typescriptreact"))
   (add-to-list 'lsp-language-id-configuration '(typescript-ts-mode . "typescript")))
 
 (with-eval-after-load 'lsp-mode
   (setq lsp-eslint-auto-fix-on-save nil
-        lsp-eslint-format-enable nil))
+        lsp-eslint-format-enable nil)
+  )
 
 
 ;; =========================================================
@@ -382,6 +385,9 @@
   :custom
   (magit-display-buffer-function
    #'magit-display-buffer-same-window-except-diff-v1))
+
+(setq vc-handled-backends nil)
+
 
 ;; ---------------------------------------------------------
 ;; hl-todo — destaque de TODO/FIXME
@@ -626,35 +632,46 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) 'black))
 
 ;; =========================================================
-;; 8.3 IDE — LSP (Infraestrutura)
+;; 8.3 IDE — LSP (Infraestrutura) 
 ;; =========================================================
 
-;; IPC rápido (essencial p/ JS/TS)
 (setq read-process-output-max (* 1024 1024))
-
-;; Comportamento controlado
-(setq lsp-idle-delay 0.5
-      lsp-keep-workspace-alive nil
-      lsp-auto-shutdown t
-      lsp-restart 'auto-restart)
-
-;; LSP não manda no editor
-(setq lsp-enable-on-type-formatting nil
-      lsp-enable-indentation nil
-      lsp-enable-symbol-highlighting t
-      lsp-headerline-breadcrumb-enable nil
-      lsp-modeline-code-actions-enable nil
-      lsp-modeline-diagnostics-enable nil)
-
-;; NÃO usar tsserver
-(setq lsp-disabled-clients '(ts-ls))
 
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
-  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-keymap-prefix "C-c l"
+        lsp-idle-delay 0.5
+        lsp-auto-shutdown t
+        lsp-restart 'auto-restart
+
+        ;; editor manda
+        lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil
+        lsp-headerline-breadcrumb-enable nil
+        lsp-modeline-code-actions-enable nil
+        lsp-modeline-diagnostics-enable nil)
+
   :config
-  (setq lsp-warn-no-matched-clients nil))
+  ;; nunca usar servidores legados
+  (setq lsp-disabled-clients
+        '(javascript-typescript-langserver ts-ls))
+
+  ;; registra vtsls corretamente (API oficial)
+  (with-eval-after-load 'lsp-mode
+  ;; desativa servidores legados
+  (setq lsp-disabled-clients
+        '(javascript-typescript-langserver ts-ls))
+
+  ;; registra vtsls por MAJOR MODE (robusto)
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection '("vtsls" "--stdio"))
+    :major-modes '(js-ts-mode
+                    typescript-ts-mode
+                    tsx-ts-mode)
+    :server-id 'vtsls)))
+)
 
 ;; =========================================================
 ;; 8.4 IDE — JavaScript / TypeScript (vtsls)
@@ -664,10 +681,8 @@
 (setq js-indent-level 2
       typescript-indent-level 2)
 
-;; Registrar vtsls
 (with-eval-after-load 'lsp-mode
-  (add-to-list 'lsp-server-programs
-               '(vtsls . ("vtsls" "--stdio"))))
+  (defvar lsp-server-programs nil))
 
 ;; Hooks LSP (somente onde importa)
 (add-hook 'js-ts-mode-hook #'lsp-deferred)
@@ -778,7 +793,7 @@
 ;; =========================================================
 
 (use-package dashboard
-  
+  :after evil
   :init
   (setq dashboard-startup-banner 'logo
         dashboard-banner-logo-title "Bem-vindo ao Emacs do Leonam"
@@ -796,9 +811,7 @@
             (lambda ()
               (recentf-save-list)
               (dashboard-refresh-buffer)
-              (switch-to-buffer "*dashboard*")))
-
-  :after evil)
+              (switch-to-buffer "*dashboard*"))))
 
 ;; ---------------------------------------------------------
 ;; Evil bindings dentro do Dashboard
@@ -823,9 +836,10 @@
 
 (add-hook 'dashboard-mode-hook #'leonam/dashboard-set-default-directory)
 
-;; ---------------------------------------------------------
-;; Função comum JS / TS
-;; ---------------------------------------------------------
+;; =========================================================
+;; JavaScript / TypeScript — Tree-sitter nativo (Emacs 29+)
+;; =========================================================
+
 (defun leonam/javascript-common-setup ()
   "Configurações comuns para JavaScript e TypeScript."
   ;; indentação melhor para chains
@@ -835,42 +849,57 @@
   (leonam/javascript-add-npm-path))
 
 ;; ---------------------------------------------------------
-;; JavaScript
+;; JavaScript (js-ts-mode)
 ;; ---------------------------------------------------------
+
 (use-package js
+  :ensure nil
   :mode ("\\.[mc]?js\\'" . js-ts-mode)
   :hook (js-ts-mode . leonam/javascript-common-setup)
   :config
   (setq js-indent-level 2))
 
 ;; ---------------------------------------------------------
-;; TypeScript / TSX
+;; TypeScript (typescript-ts-mode)
 ;; ---------------------------------------------------------
+
 (use-package typescript-ts-mode
+  :ensure nil
   :mode "\\.ts\\'"
   :hook (typescript-ts-mode . leonam/javascript-common-setup)
   :config
   (setq typescript-indent-level 2))
 
+;; ---------------------------------------------------------
+;; TSX / JSX (tsx-ts-mode) — builtin
+;; ---------------------------------------------------------
+
 (use-package tsx-ts-mode
+  :ensure nil
   :mode "\\.[tj]sx\\'"
   :hook (tsx-ts-mode . leonam/javascript-common-setup))
 
-;; ---------------------------------------------------------
-;; nodejs-repl
-;; ---------------------------------------------------------
+;; =========================================================
+;; Node.js tooling
+;; =========================================================
+
 (use-package nodejs-repl
   :commands nodejs-repl)
 
 ;; ---------------------------------------------------------
-;; Compilation: stacktrace do Node.js
+;; Compilation — stacktrace Node.js reconhecida
 ;; ---------------------------------------------------------
+
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist 'node)
   (add-to-list 'compilation-error-regexp-alist-alist
                '(node
                  "^[[:blank:]]*at \\(.*(\\|\\)\\(.+?\\):\\([0-9]+\\):\\([0-9]+\\)"
                  2 3 4)))
+
+;; =========================================================
+;; Helpers npm / projeto
+;; =========================================================
 
 (defvar leonam/javascript-npm-cache (make-hash-table :test 'equal))
 
@@ -880,7 +909,6 @@
       (project-root proj)
     default-directory))
 
-;;;###autoload
 (defun leonam/javascript-read-package-json (&optional refresh)
   "Lê o package.json do projeto atual com cache."
   (let* ((root (leonam/project-root))
@@ -894,7 +922,6 @@
             (puthash root json leonam/javascript-npm-cache)
             json))))))
 
-;;;###autoload
 (defun leonam/javascript-npm-dep-p (package)
   "Retorna non-nil se PACKAGE existir em dependencies ou devDependencies."
   (when-let* ((data (leonam/javascript-read-package-json))
@@ -902,7 +929,6 @@
                             (cdr (assq 'devDependencies data)))))
     (assq package deps)))
 
-;;;###autoload
 (defun leonam/javascript-add-npm-path ()
   "Adiciona node_modules/.bin ao exec-path local."
   (when-let* ((root (leonam/project-root))
@@ -911,7 +937,6 @@
     (make-local-variable 'exec-path)
     (add-to-list 'exec-path bin)))
 
-;;;###autoload
 (defun leonam/javascript-open-repl ()
   "Abre um REPL Node.js."
   (interactive)
