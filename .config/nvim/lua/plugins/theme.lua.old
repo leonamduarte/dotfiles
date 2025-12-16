@@ -1,3 +1,0 @@
-return {
-  dofile("~/bashln/.config/omarchy/current/theme/neovim.lua"),
-}

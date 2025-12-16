@@ -1,1 +1,0 @@
-("~/dotfiles/" "~/leo/development/dotfiles/" "~/leo/development/gerador-assinaturas/Assinatura-de-Email/" "i:/Testes_Assistencia/ATE-INV-NEO-DK912/")

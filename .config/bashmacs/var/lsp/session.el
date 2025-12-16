@@ -1,1 +1,0 @@
-#s(lsp-session ("c:/Users/itinerario/leo/development/gerador-assinaturas/Assinatura-de-Email" "i:/Testes_Assistencia/ATE-INV-NEO-DK912") nil #s(hash-table test equal) #s(hash-table test equal) #s(hash-table test equal))

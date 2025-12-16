@@ -1,3 +1,0 @@
-* Default
-** bashmacs
- - path :: ~/dotfiles/.config/bashmacs
