@@ -6,6 +6,8 @@
   (if (file-exists-p lfile)
       (load lfile)))
 
+(setq default-directory "~/")
+
 ;; -------------------------------
 ;; 1. IDENTIDADE & SISTEMA
 ;; -------------------------------

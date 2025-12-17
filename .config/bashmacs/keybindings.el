@@ -129,6 +129,13 @@
  "w d"  '(delete-window :which-key "Delete window")
  "w o"  '(delete-other-windows :which-key "Delete others")
 
+  ;; Workspaces
+  "TAB" '(:ignore t :which-key "workspace")
+  "TAB ." '(persp-switch :which-key "Switch workspace")
+  "TAB n" '(persp-next :which-key "Next workspace")
+  "TAB p" '(persp-prev :which-key "Previous workspace")
+  "TAB d" '(persp-drop :which-key "Delete workspace")
+ 
  ;; --- Toggles ---
  "t"   '(:ignore t :which-key "toggle")
  "t n"  '(display-line-numbers-mode :which-key "Line numbers")

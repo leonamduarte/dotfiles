@@ -304,8 +304,7 @@
           )))
 
 (setq display-buffer-alist
-      `(
-        ("\\*Completions\\*"
+      '(("\\*Completions\\*"
          (display-buffer-in-side-window)
          (side . bottom)
          (slot . 0)
@@ -315,9 +314,7 @@
          (display-buffer-in-side-window)
          (side . right)
          (slot . 1)
-         (window-width . 0.4))
-        ))
-
+         (window-width . 0.4))))
 
 ;; ---------------------------------------------------------
 ;; Orderless (matching poderoso, domado)
@@ -998,6 +995,31 @@
   "Abre um REPL Node.js."
   (interactive)
   (nodejs-repl))
+
+
+;; =========================================================
+;; workspace
+;; =========================================================
+
+(use-package perspective
+  :init
+  (persp-mode 1)
+  :custom
+  (persp-show-modestring nil) ; Doom esconde isso da modeline
+  :config
+  ;; Integração com Projectile: ao trocar de projeto, troca o workspace
+  (setq projectile-switch-project-action 'persp-switch-last-path)
+  
+  ;; Hook para garantir que cada projeto Projectile tenha seu próprio perspective
+  (add-hook 'projectile-after-switch-project-hook
+            (lambda ()
+              (persp-switch (projectile-project-name)))))
+
+
+
+
+
+
 
 (provide 'config)
 ;;; config.el ends here
