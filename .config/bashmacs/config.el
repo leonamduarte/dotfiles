@@ -297,16 +297,27 @@
 
   (setq vertico-multiform-commands
         '((execute-extended-command buffer)
-	  (consult-buffer grid)
+	  (consult-buffer buffer)
           (consult-imenu buffer)
           (consult-ripgrep buffer)
           (consult-line buffer)
           )))
 
-(add-to-list 'display-buffer-alist
-             '("\\*Completions\\*"
-               display-buffer-at-bottom
-               (window-height . 0.3)))
+(setq display-buffer-alist
+      `(
+        ("\\*Completions\\*"
+         (display-buffer-in-side-window)
+         (side . bottom)
+         (slot . 0)
+         (window-height . 0.3))
+
+        ("\\*Help\\*"
+         (display-buffer-in-side-window)
+         (side . right)
+         (slot . 1)
+         (window-width . 0.4))
+        ))
+
 
 ;; ---------------------------------------------------------
 ;; Orderless (matching poderoso, domado)
@@ -435,6 +446,22 @@
                              '("~/development/"
                                "~/projects/"
                                "~/workspace/")))
+
+(use-package perspective
+  :bind
+  ("C-x C-b" . persp-list-buffers)         ; or use a nicer switcher, see below
+  :custom
+  (persp-mode-prefix-key (kbd "C-c M-p"))  ; pick your own prefix key here
+  :init
+  (persp-mode))
+
+;; (tab-bar-mode 1)
+;; (with-eval-after-load 'evil
+;;   (define-key evil-normal-state-map (kbd "SPC TAB n") #'tab-bar-new-tab)
+;;   (define-key evil-normal-state-map (kbd "SPC TAB r") #'tab-bar-rename-tab)
+;;   (define-key evil-normal-state-map (kbd "SPC TAB d") #'tab-bar-close-tab)
+;;   (define-key evil-normal-state-map (kbd "SPC TAB ]") #'tab-bar-switch-to-next-tab)
+;;   (define-key evil-normal-state-map (kbd "SPC TAB [") #'tab-bar-switch-to-prev-tab))
 
 ;; ---------------------------------------------------------
 ;; Consult + Projectile
@@ -729,7 +756,7 @@
         lsp-css-format-enable nil))
 
 ;; JSON (tree-sitter)
-(add-hook 'json-ts-mode-hook #'lsp-deferred)
+(add-hook 'json-mode-hook #'lsp-deferred)
 
 (add-hook 'python-mode-hook #'lsp-deferred)
 
@@ -881,6 +908,13 @@
   :hook (js2-mode . bashln/javascript-common-setup)
   :config
   (setq js-indent-level 2))
+
+(use-package json-mode
+  :ensure nil
+  :mode "\\.json\\'"
+  :hook (json-mode . bashln/javascript-common-setup)
+  :config
+  (setq json-indent-offset 2))
 
 ;; ---------------------------------------------------------
 ;; TypeScript (typescript-ts-mode)
