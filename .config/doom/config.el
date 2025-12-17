@@ -19,8 +19,8 @@
     (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 16)
           doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 16))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)
-        doom-variable-pitch-font (font-spec :family "JetBrainsMono" :size 16 :weight 'medium)))
+  (setq doom-font (font-spec :family "Fira Code" :size 16 :weight 'medium)
+        doom-variable-pitch-font (font-spec :family "Fira Code" :size 16 :weight 'medium)))
 
 ;; UI Básica
 (setq doom-theme 'doom-one) 
