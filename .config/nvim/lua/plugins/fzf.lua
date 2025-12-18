@@ -1,11 +1,11 @@
 return {
   {
+    enabled = false,
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
     },
-
     opts = {
       -- 🎨 Janela / UI
       winopts = {
@@ -30,6 +30,7 @@ return {
         cwd_prompt = false,
         git_icons = true,
         file_icons = true,
+        fd_opts = "--hidden --no-ignore",
       },
 
       -- 🔎 Grep (funciona igual em Linux e Windows)
