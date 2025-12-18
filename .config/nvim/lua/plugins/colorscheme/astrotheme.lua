@@ -6,7 +6,7 @@ return {
     require("astrotheme").setup({
       palette = "astrodark", -- String of the default palette to use when calling `:colorscheme astrotheme`
       background = { -- :h background, palettes to use when using the core vim background colors
-        light = "astrolight",
+        light = "astrodark",
         dark = "astrodark",
       },
 
@@ -50,6 +50,6 @@ return {
         },
       },
     })
-    -- vim.cmd.colorscheme("astrotheme")
+    vim.cmd.colorscheme("astrotheme")
   end,
 }
