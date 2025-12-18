@@ -19,12 +19,12 @@
     (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 16)
           doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 16))
   ;; Linux (Arch/CachyOS)
-  (setq doom-font (font-spec :family "Fira Code" :size 16 :weight 'medium)
-        doom-variable-pitch-font (font-spec :family "Fira Code" :size 16 :weight 'medium)))
+  (setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
+        doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16)))
 
 ;; UI Básica
 (setq doom-theme 'doom-one) 
-;; (setq doom-theme 'doom-rose-pine-moon) 
+;; (setq doom-theme 'doom-rose-pine-moon)
 ;; (setq doom-theme 'catppuccin)
 ;; (setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
 (setq display-line-numbers-type t)
@@ -137,8 +137,9 @@
 (after! corfu
   (setq corfu-auto t
         corfu-auto-delay 0.1
-        corfu-cycle t))
-
+        corfu-cycle t
+        corfu-popupinfo-delay 0.5
+        corfu-popupinfo-max-height 6))
 ;; Ajuste no Orderless para busca
 (after! orderless
   (setq completion-styles '(orderless basic)
@@ -151,6 +152,10 @@
       "f r" #'consult-recent-file) ;; Arquivos recentes
 
 (map! "C-." #'embark-act)          ;; Ações contextuais rápidas
+
+(after! eldoc
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-display-functions '(eldoc-display-in-echo-area)))
 
 ;; -------------------------------
 ;; 5. Formatação de Texto

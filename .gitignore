@@ -1,88 +1,233 @@
-# 🚀 Estratégia Principal: Ignorar Tudo (exceto a raiz)
-# O asterisco duplo (**) garante que o git ignore arquivos em todos os subdiretórios.
+# # ============================================================
+# GUIA RÁPIDO (.gitignore) — ELI5 / COLA DE CONSULTA
+# ============================================================
+#
+# Como o Git lê este arquivo:
+# - Ele lê de CIMA para BAIXO.
+# - A última regra que combina é a que vale.
+#
+# ------------------------------------------------------------
+# *  (asterisco)
+# ------------------------------------------------------------
+# Significa: "qualquer coisa"
+# Exemplo:
+#   *            -> ignora TUDO (arquivos e pastas)
+#   .config/*    -> ignora tudo DENTRO de .config
+#
+# ------------------------------------------------------------
+# !  (exclamação)
+# ------------------------------------------------------------
+# Significa: "NÃO ignore isso" (desfaz uma regra anterior)
+# IMPORTANTE:
+# - O '!' só funciona se algo tiver sido ignorado antes.
+# - Ele NÃO cria arquivos, só reverte o ignore.
+#
+# Exemplo:
+#   *            -> ignora tudo
+#   !.config/   -> permite a pasta .config
+#
+# ------------------------------------------------------------
+# /  (barra no final)
+# ------------------------------------------------------------
+# Indica que o alvo é um DIRETÓRIO (pasta)
+#
+# Exemplo:
+#   !.config/   -> permite a pasta .config
+#   !.zshrc    -> permite o arquivo .zshrc
+#
+# ------------------------------------------------------------
+# REGRA DE OURO DO GITIGNORE
+# ------------------------------------------------------------
+# O Git NÃO entra em diretórios ignorados.
+# Se uma pasta está ignorada, o Git nem olha dentro dela.
+#
+# ERRADO (não funciona):
+#   *
+#   !.config/qtile/config.py
+#
+# CERTO:
+#   !.config/
+#   !.config/qtile/
+#   !.config/qtile/config.py
+#
+# Ou simplesmente:
+#   !.config/qtile/**
+#
+# ------------------------------------------------------------
+# **  (asterisco duplo)
+# ------------------------------------------------------------
+# Significa: "qualquer profundidade"
+# Usado para permitir (ou ignorar) tudo dentro de uma pasta,
+# incluindo subpastas infinitas.
+#
+# Exemplo:
+#   !.config/qtile/**   -> permite tudo dentro de qtile
+#
+# Sem '**', só o primeiro nível seria considerado.
+#
+# ------------------------------------------------------------
+# PADRÃO USADO NESTE REPOSITÓRIO
+# ------------------------------------------------------------
+# 1) Ignorar TUDO por padrão        -> *
+# 2) Liberar apenas a raiz necessária
+# 3) Limpar diretórios permitidos   -> pasta/*
+# 4) Re-incluir apenas o que importa-> !pasta/algo/**
+#
+# Esse modelo evita:
+# - lixo de cache
+# - arquivos temporários
+# - configs geradas automaticamente
+# - vazamento acidental de arquivos
+#
+# Para debugar regras, use:
+#   git check-ignore -v <arquivo>
+#
+# ============================================================
+
+# ===============================
+# Estratégia Principal: Ignorar tudo
+# ===============================
 *
 
-# 🎯 Exceções de Alto Nível (Permitir estes arquivos/pastas na raiz)
-# !/ : Garante que a exceção só se aplique à raiz do repositório.
-
-# Permite pastas essenciais (e seus conteúdos)
+# ===============================
+# Exceções de alto nível (raiz)
+# ===============================
 !/.config/
 !/imagens/
 !/scripts/
 
-# Permite arquivos de configuração na raiz (dotfiles)
 !/.zshrc
 !/.bashrc
 !/.gitignore
 !/stow.sh
 !/.stow-local-ignore
 
-# 🛑 Ignorar Conteúdos dentro de Diretórios Permitidos
-
-# 1. Ignora TUDO dentro de .config (o que foi permitido acima),
-# mas as subpastas em si e o .config não serão ignorados.
-# Isso 'limpa' o diretório para que possamos re-incluir seletivamente.
+# ===============================
+# Limpa .config
+# ===============================
 .config/*
 
-# 2. Exceções Seletivas dentro de .config
-# Estas regras re-incluem as pastas/arquivos de configuração que você listou.
-# O '/' no final garante que é uma pasta (diretório).
+# Permite navegação dentro de .config
+!.config/**/
 
-# Pastas de Gerenciadores de Janela / Ambientes Gráficos
+# ===============================
+# Window Managers / DEs
+# ===============================
 !.config/cosmic/
+!.config/cosmic/**
+
 !.config/hypr/
+!.config/hypr/**
+
 !.config/i3/
+!.config/i3/**
+
 !.config/qtile/
+!.config/qtile/**
+
 !.config/sway/
+!.config/sway/**
 
-# Pastas de Terminais
+# ===============================
+# Terminais
+# ===============================
 !.config/alacritty/
+!.config/alacritty/**
+
 !.config/ghostty/
+!.config/ghostty/**
+
 !.config/kitty/
+!.config/kitty/**
+
 !.config/rio/
+!.config/rio/**
+
 !.config/wezterm/
+!.config/wezterm/**
 
-# Pastas de Editores/IDEs
+# ===============================
+# Editores / IDEs
+# ===============================
 !.config/doom/
+!.config/doom/**
+
 !.config/lazyvim/
+!.config/lazyvim/**
+
 !.config/leovim/
+!.config/leovim/**
+
 !.config/neovide/
+!.config/neovide/**
+
+# Neovim (controle fino)
 !.config/nvim/
+!.config/nvim/**
+
+.config/nvim/*
+!.config/nvim/lua/
+!.config/nvim/lua/plugins/**
+!.config/nvim/lua/config/**
+!.config/nvim/lazy-lock.json
+
 !.config/zed/
+!.config/zed/**
 
-# Outras Pastas
+# ===============================
+# Outros
+# ===============================
 !.config/fish/
-!.config/kvantum/
-!.config/polybar/
-!.config/picom/
-!.config/rofi/
-!.config/waybar/
-!.config/yazi/
-!.config/fastfetch/
+!.config/fish/**
 
-# Arquivos/Pastas específicos
+!.config/kvantum/
+!.config/kvantum/**
+
+!.config/polybar/
+!.config/polybar/**
+
+!.config/picom/
+!.config/picom/**
+
+!.config/rofi/
+!.config/rofi/**
+
+!.config/waybar/
+!.config/waybar/**
+
+!.config/yazi/
+!.config/yazi/**
+
+!.config/fastfetch/
+!.config/fastfetch/**
+
+!.config/xsettingsd/
+!.config/xsettingsd/**
+
+# ===============================
+# Autostart (somente scripts)
+# ===============================
 !.config/autostart/
 .config/autostart/*
 !.config/autostart/*.sh
 
+# ===============================
+# Bashmacs (somente .el)
+# ===============================
 !.config/bashmacs/
 .config/bashmacs/*
 !.config/bashmacs/*.el
 
-# Arquivo específico dentro de nvim (Importante!)
-# Como já permitimos nvim/ acima, podemos ser mais específicos:
-!.config/nvim/lazy-lock.json
-
-# Arquivo de tema/configuração de GTK
-!.config/xsettingsd/
-
-# 📂 Exceções Fora do .config
-# O asterisco final (/*) é opcional, mas ajuda a garantir que subitens sejam incluídos.
-# Permite o diretório para fontes.
+# ===============================
+# Fontes
+# ===============================
 !/.local/share/fonts/
-!/.fonts/
+!/.local/share/fonts/**
 
-# 🗑️ Regras de Exclusão Adicionais (Geralmente Não Necessárias com 'ignorar tudo' acima, mas bom manter)
-# Se você tiver * na primeira linha, esta parte é mais para garantir que nunca entre
-# arquivos que possam ter sido criados por downloads ou outras ferramentas.
+!/.fonts/
+!/.fonts/**
+
+# ===============================
+# Lixo conhecido
+# ===============================
 *Zone.Identifier*
