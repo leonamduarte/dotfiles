@@ -169,7 +169,6 @@
 !.config/nvim/lua/
 !.config/nvim/lua/plugins/**
 !.config/nvim/lua/config/**
-!.config/nvim/lazy-lock.json
 
 !.config/zed/
 !.config/zed/**
