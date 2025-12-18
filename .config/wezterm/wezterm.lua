@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- ===== Fonte e cores =====
-config.font_size = 13
+config.font_size = 12
 config.font = wezterm.font_with_fallback({
 	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font",

@@ -1,3 +1,3 @@
 return {
-  { "nvim-telescope/telescope.nvim", enabled = true },
+  { "nvim-telescope/telescope.nvim", enabled = false },
 }

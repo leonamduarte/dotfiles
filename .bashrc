@@ -11,7 +11,7 @@ esac
 # 1) PATHs básicos
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+# eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # 2) Oh My Bash (OMB) + Plugins
 export OSH="$HOME/.oh-my-bash"
@@ -20,7 +20,7 @@ export OSH="$HOME/.oh-my-bash"
 # OSH_THEME="random"
 # OSH_THEME="zork"
 # Se quiser restringir, defina candidatos (opcional):
-# OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
+OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
 
 # Plugins do OMB (use só os que reabashlnente quer/tem)
 # Obs: "zsh-autosuggestions" e "zsh-syntax-highlighting" não existem em bash.
@@ -66,10 +66,10 @@ bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 
 # 7) zoxide (cd mais inteligente)
-# if command -v zoxide >/dev/null 2>&1; then
-#   eval "$(zoxide init bash)"
-#   alias cd='z'
-# fi
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init bash)"
+  alias cd='z'
+fi
 
 # 8) NVM (Node.js)
 export NVM_DIR="$HOME/.nvm"
@@ -128,11 +128,11 @@ alias demacs='emacs --daemon'
 alias kemacs='killall emacs'
 
 # 13) Aliases — ls com eza
-# alias ls='eza -al --color=always --group-directories-first --icons=always'
-# alias la='eza -a  --color=always --group-directories-first --icons=always'
-# alias ll='eza -l  --color=always --group-directories-first --icons=always'
-# alias lt='eza -aT --color=always --group-directories-first --icons=always'
-# alias l_.="eza -a | grep -e '^\.'"
+alias ls='eza -al --color=always --group-directories-first --icons=always'
+alias la='eza -a  --color=always --group-directories-first --icons=always'
+alias ll='eza -l  --color=always --group-directories-first --icons=always'
+alias lt='eza -aT --color=always --group-directories-first --icons=always'
+alias l_.="eza -a | grep -e '^\.'"
 
 # 14) Aliases — Sistema
 alias stowa='stow -t ~ --adopt dotfiles'

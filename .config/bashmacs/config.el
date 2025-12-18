@@ -301,8 +301,7 @@
           (consult-imenu buffer)
           (consult-ripgrep buffer)
           (consult-line buffer)
-          )))
-
+          ))
 (setq display-buffer-alist
       '(("\\*Completions\\*"
          (display-buffer-in-side-window)
@@ -315,6 +314,9 @@
          (side . right)
          (slot . 1)
          (window-width . 0.4))))
+
+  )
+
 
 ;; ---------------------------------------------------------
 ;; Orderless (matching poderoso, domado)

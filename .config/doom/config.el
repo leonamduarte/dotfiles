@@ -16,8 +16,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 16)
-          doom-variable-pitch-font (font-spec :family "FiraCode Nerd Font" :size 16))
+    (setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
+          doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16)))
@@ -176,16 +176,16 @@
 ;; 6. CUSTOM FACES (Aparência Fina)
 ;; -------------------------------
 (custom-set-faces!
-  '(org-level-8 :inherit outline-3 :height 1.0)
-  '(org-level-7 :inherit outline-3 :height 1.0)
-  '(org-level-6 :inherit outline-3 :height 1.0)
-  '(org-level-5 :inherit outline-3 :height 1.1)
-  '(org-level-4 :inherit outline-3 :height 1.1)
-  '(org-level-3 :inherit outline-3 :height 1.1)
-  '(org-level-2 :inherit outline-2 :height 1.2)
-  '(org-level-1 :inherit outline-1 :height 1.3)
+  '(org-level-8 :inherit outline-3 :height 1.1)
+  '(org-level-7 :inherit outline-3 :height 1.1)
+  '(org-level-6 :inherit outline-3 :height 1.2)
+  '(org-level-5 :inherit outline-3 :height 1.2)
+  '(org-level-4 :inherit outline-3 :height 1.3)
+  '(org-level-3 :inherit outline-3 :height 1.3)
+  '(org-level-2 :inherit outline-2 :height 1.4)
+  '(org-level-1 :inherit outline-1 :height 1.5)
   '(org-document-title  :height 1.5 :bold t :underline nil)
-  '(org-checkbox :height 1.3))
+  '(org-checkbox :height 1.5))
 
 ;; -------------------------------
 ;; 7. Keymaps Personalizados

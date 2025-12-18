@@ -1,6 +1,6 @@
 return {
   {
-    enabled = false,
+    enabled = true,
     "ibhagwan/fzf-lua",
     cmd = "FzfLua",
     dependencies = {
