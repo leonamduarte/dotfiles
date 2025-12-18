@@ -18,6 +18,7 @@
 ;; --- DEV & TOOLS ---
 (package! treesit-auto)
 (package! apheleia)
+(package! mason)
 
 ;; NOTAS SOBRE REMOÇÕES:
 ;; - vertico, orderless, consult, embark, marginalia: Removidos pois o módulo :completion vertico já instala.

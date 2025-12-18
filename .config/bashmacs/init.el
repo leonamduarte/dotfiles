@@ -78,10 +78,10 @@
    '(apheleia cape consult-projectile copilot corfu dashboard
 	      doom-modeline doom-themes embark-consult evil-collection
 	      general hl-todo js2-mode json-mode lsp-java lsp-ui
-	      lua-mode magit marginalia nerd-icons-corfu no-littering
-	      nodejs-repl orderless org-auto-tangle org-modern
-	      perspective treemacs-evil treesit-auto typescript-mode
-	      vertico web-mode)))
+	      lua-mode magit marginalia mason nerd-icons-corfu
+	      no-littering nodejs-repl orderless org-auto-tangle
+	      org-modern perspective treemacs-evil treesit-auto
+	      typescript-mode vertico web-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

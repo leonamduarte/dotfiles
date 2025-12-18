@@ -720,6 +720,11 @@
       :server-id 'vtsls)))
   )
 
+(use-package mason
+  :ensure t
+  :config
+  (mason-ensure))
+
 ;; =========================================================
 ;; 8.4 IDE — JavaScript / TypeScript (vtsls)
 ;; =========================================================

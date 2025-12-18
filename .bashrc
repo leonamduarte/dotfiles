@@ -66,10 +66,10 @@ bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 
 # 7) zoxide (cd mais inteligente)
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init bash)"
-  alias cd='z'
-fi
+# if command -v zoxide >/dev/null 2>&1; then
+#   eval "$(zoxide init bash)"
+#   alias cd='z'
+# fi
 
 # 8) NVM (Node.js)
 export NVM_DIR="$HOME/.nvm"
@@ -128,11 +128,11 @@ alias demacs='emacs --daemon'
 alias kemacs='killall emacs'
 
 # 13) Aliases — ls com eza
-alias ls='eza -al --color=always --group-directories-first --icons=always'
-alias la='eza -a  --color=always --group-directories-first --icons=always'
-alias ll='eza -l  --color=always --group-directories-first --icons=always'
-alias lt='eza -aT --color=always --group-directories-first --icons=always'
-alias l_.="eza -a | grep -e '^\.'"
+# alias ls='eza -al --color=always --group-directories-first --icons=always'
+# alias la='eza -a  --color=always --group-directories-first --icons=always'
+# alias ll='eza -l  --color=always --group-directories-first --icons=always'
+# alias lt='eza -aT --color=always --group-directories-first --icons=always'
+# alias l_.="eza -a | grep -e '^\.'"
 
 # 14) Aliases — Sistema
 alias stowa='stow -t ~ --adopt dotfiles'
@@ -211,5 +211,5 @@ fopen() {
 FNM_PATH="/home/bashln/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
-  eval "`fnm env`"
+  eval "$(fnm env)"
 fi

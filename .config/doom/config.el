@@ -126,6 +126,10 @@
   (setq copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
 
+(use-package! mason
+  :config
+  (mason-ensure))
+
 ;; -------------------------------
 ;; 4. COMPLETION & NAVEGAÇÃO
 ;; -------------------------------
