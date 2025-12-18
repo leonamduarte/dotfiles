@@ -1,6 +1,6 @@
 (
     output: "all",
-    source: Path("/home/bashln/dotfiles/imagens/nord-wallpaper/ign_colorful.png"),
+    source: Path("/home/bashln/dotfiles/imagens/nord-wallpaper"),
     filter_by_theme: true,
     rotation_frequency: 3600,
     filter_method: Lanczos,

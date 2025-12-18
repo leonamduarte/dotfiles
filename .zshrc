@@ -83,11 +83,11 @@ fi
 
 
 ## ==========================================================
-## 8) NVM (Node.js)
+## Node.js (fnm)
 ## ==========================================================
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+export FNM_PATH="$HOME/.local/share/fnm"
+export PATH="$FNM_PATH:$PATH"
+eval "$(fnm env)"
 
 
 ## ==========================================================

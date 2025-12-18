@@ -206,3 +206,10 @@ fopen() {
 #   https://github.com/marlonrichert/bash-autocomplete (autocomplete) ou
 #   https://github.com/arzzen/calc.plugin.bash (exemplo de plugin OMB)
 #   fzf já cobre boa parte do fluxo.
+
+# fnm
+FNM_PATH="/home/bashln/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi

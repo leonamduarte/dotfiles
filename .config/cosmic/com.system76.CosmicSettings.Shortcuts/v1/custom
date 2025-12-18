@@ -3,13 +3,35 @@
         modifiers: [
             Super,
         ],
+        key: "Return",
+    ): System(Terminal),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "n",
+        description: Some("Neovim"),
+    ): Spawn("neovim"),
+    (
+        modifiers: [
+            Super,
+            Shift,
+        ],
         key: "f",
-    ): Disable,
+    ): System(HomeFolder),
+    (
+        modifiers: [
+            Ctrl,
+            Shift,
+        ],
+        key: "w",
+    ): System(WorkspaceOverview),
     (
         modifiers: [
             Super,
         ],
-        key: "t",
+        key: "f",
     ): Disable,
     (
         modifiers: [
@@ -22,21 +44,16 @@
         modifiers: [
             Super,
         ],
-        key: "Return",
-    ): System(Terminal),
+        key: "w",
+    ): Close,
     (
         modifiers: [
             Super,
-        ],
-        key: "b",
-    ): Disable,
-    (
-        modifiers: [
-            Ctrl,
             Shift,
         ],
-        key: "w",
-    ): System(WorkspaceOverview),
+        key: "e",
+        description: Some("Emacs"),
+    ): Spawn("emacs"),
     (
         modifiers: [
             Super,
@@ -48,37 +65,13 @@
     (
         modifiers: [
             Super,
-            Shift,
         ],
-        key: "n",
-        description: Some("Neovim"),
-    ): Spawn("neovim"),
+        key: "t",
+    ): Disable,
     (
         modifiers: [
             Super,
         ],
-        key: "w",
-    ): Close,
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "f",
-    ): System(HomeFolder),
-    (
-        modifiers: [
-            Super,
-        ],
-        key: "e",
-        description: Some("Bashmacs"),
-    ): Spawn("emacs --init-directory ~/.config/bashmacs"),
-    (
-        modifiers: [
-            Super,
-            Shift,
-        ],
-        key: "e",
-        description: Some("Emacs"),
-    ): Spawn("emacs"),
+        key: "b",
+    ): Disable,
 }
