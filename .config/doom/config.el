@@ -161,6 +161,14 @@
   (setq eldoc-echo-area-use-multiline-p nil
         eldoc-display-functions '(eldoc-display-in-echo-area)))
 
+(setq completion-in-region-function
+      (lambda (&rest args)
+        (apply (if vertico-mode
+                   #'consult-completion-in-region
+                 #'completion--in-region)
+               args)))
+
+
 ;; -------------------------------
 ;; 5. Formatação de Texto
 ;; -------------------------------

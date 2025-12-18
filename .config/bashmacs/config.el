@@ -215,12 +215,13 @@
      "JetBrainsMono NF"
      "Iosevka NF"
      "Iosevka Nerd Font"
+     "AdwaitaMono Nerd Font"
      "FiraCode Nerd Font"
      )
-   120)
+   120))
 
-  (setq-default line-spacing 0.1)
-  (setq doom-themes-enable-italic nil))
+  ;; (setq-default line-spacing 0.1)
+  ;; (setq doom-themes-enable-italic nil))
 
 ;; ---------------------------------------------------------
 ;; Tema
@@ -282,53 +283,136 @@
 ;; Vertico (minibuffer moderno)
 ;; ---------------------------------------------------------
 
+;; (use-package vertico
+;;   :init
+;;   (vertico-mode 1)
+;;   :custom
+;;   ;; multiform vem junto com vertico
+;;   (vertico-scroll-margin 0) ;; Different scroll margin
+;;   (vertico-count 12) ;; Show more candidates
+;;   (vertico-resize nil) ;; Grow and shrink the Vertico minibuffer
+;;   (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+;;   :config
+;;   (require 'vertico-multiform)
+
+;; ;; Enable vertico-multiform
+;; (vertico-multiform-mode)
+
+;; ;; Configure the display per command.
+;; ;; Use a buffer with indices for imenu
+;; ;; and a flat (Ido-like) menu for M-x.
+;; (setq vertico-multiform-commands
+;;       '(
+;; 	;; (execute-extended-command buffer)
+;; 	  (consult-buffer buffer)
+;;           (consult-imenu buffer indexed)
+;;           (consult-ripgrep buffer)
+;;           (consult-line buffer)
+;;           ))
+
+;; ;; Configure the display per completion category.
+;; ;; Use the grid display for files and a buffer
+;; ;; for the consult-grep commands.
+;; (setq vertico-multiform-categories
+;;       '((file indexed)
+;;         (consult-grep buffer)))
+
+;; (setq display-buffer-alist
+;;       '(("\\*Completions\\*"
+;;          (display-buffer-in-side-window)
+;;          (side . bottom)
+;;          (slot . 0)
+;;          (window-height . 0.3))
+
+;;         ("\\*Help\\*"
+;;          (display-buffer-in-side-window)
+;;          (side . bottom)
+;;          (slot . 1)
+;;          (window-width . 0.4)))))
+
 (use-package vertico
-  :init
-  (vertico-mode 1)
+  :demand t                             ; Otherwise won't get loaded immediately
+  :general
+  (:keymaps '(normal insert visual motion)
+            "M-." #'vertico-repeat)
+  (:keymaps 'vertico-map
+            "<tab>" #'vertico-insert ; Set manually otherwise setting `vertico-quick-insert' overrides this
+            "<escape>" #'minibuffer-keyboard-quit
+            "?" #'minibuffer-completion-help
+            "C-M-n" #'vertico-next-group
+            "C-M-p" #'vertico-previous-group
+            ;; Multiform toggles
+            "<backspace>" #'vertico-directory-delete-char
+            "C-w" #'vertico-directory-delete-word
+            "C-<backspace>" #'vertico-directory-delete-word
+            "RET" #'vertico-directory-enter
+            "C-i" #'vertico-quick-insert
+            "C-o" #'vertico-quick-exit
+            "M-o" #'kb/vertico-quick-embark
+            "M-G" #'vertico-multiform-grid
+            "M-F" #'vertico-multiform-flat
+            "M-R" #'vertico-multiform-reverse
+            "M-U" #'vertico-multiform-unobtrusive
+            "C-l" #'kb/vertico-multiform-flat-toggle)
+  :hook ((rfn-eshadow-update-overlay . vertico-directory-tidy) ; Clean up file path when typing
+         (minibuffer-setup . vertico-repeat-save)) ; Make sure vertico state is saved
   :custom
-  ;; multiform vem junto com vertico
-  (vertico-scroll-margin 0) ;; Different scroll margin
-  (vertico-count 20) ;; Show more candidates
-  (vertico-resize nil) ;; Grow and shrink the Vertico minibuffer
-  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  (vertico-count 13)
+  (vertico-resize t)
+  (vertico-cycle nil)
+  ;; Extensions
+  (setq vertico-multiform-categories
+        '((file indexed)
+          (library indexed)
+          (imenu buffer)
+          (consult-grep buffer)
+          (t reverse)))
+  (setq vertico-multiform-commands
+        '((consult-buffer buffer)
+          (execute-extended-command buffer)
+          (consult-yank-pop indexed)))
+  :init
+  (defun kb/vertico-multiform-flat-toggle ()
+    "Toggle between flat and reverse."
+    (interactive)
+    (vertico-multiform--display-toggle 'vertico-flat-mode)
+    (if vertico-flat-mode
+        (vertico-multiform--temporary-mode 'vertico-reverse-mode -1)
+      (vertico-multiform--temporary-mode 'vertico-reverse-mode 1)))
+  (defun kb/vertico-quick-embark (&optional arg)
+    "Embark on candidate using quick keys."
+    (interactive)
+    (when (vertico-quick-jump)
+      (embark-act arg)))
+
+  ;; Workaround for problem with `tramp' hostname completions. This overrides
+  ;; the completion style specifically for remote files! See
+  ;; https://github.com/minad/vertico#tramp-hostname-completion
+  (defun kb/basic-remote-try-completion (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-try-completion string table pred point)))
+  (defun kb/basic-remote-all-completions (string table pred point)
+    (and (vertico--remote-p string)
+         (completion-basic-all-completions string table pred point)))
+  (add-to-list 'completion-styles-alist
+               '(basic-remote           ; Name of `completion-style'
+                 kb/basic-remote-try-completion kb/basic-remote-all-completions nil))
   :config
-  (require 'vertico-multiform)
+  (vertico-mode)
+  ;; Extensions
+  (vertico-multiform-mode)
 
+  ;; Prefix the current candidate with “» ”. From
+  ;; https://github.com/minad/vertico/wiki#prefix-current-candidate-with-arrow
+  (advice-add #'vertico--format-candidate :around
+              (lambda (orig cand prefix suffix index _start)
+                (setq cand (funcall orig cand prefix suffix index _start))
+                (concat
+                 (if (= vertico--index index)
+                     (propertize "» " 'face 'vertico-current)
+                   "  ")
+                 cand))))
 
-;; Enable vertico-multiform
-(vertico-multiform-mode)
-
-;; Configure the display per command.
-;; Use a buffer with indices for imenu
-;; and a flat (Ido-like) menu for M-x.
-(setq vertico-multiform-commands
-      '(
-	;; (execute-extended-command buffer)
-	  (consult-buffer buffer)
-          (consult-imenu buffer indexed)
-          (consult-ripgrep buffer)
-          (consult-line buffer)
-          ))
-
-;; Configure the display per completion category.
-;; Use the grid display for files and a buffer
-;; for the consult-grep commands.
-(setq vertico-multiform-categories
-      '((file grid)
-        (consult-grep buffer)))
-
-(setq display-buffer-alist
-      '(("\\*Completions\\*"
-         (display-buffer-in-side-window)
-         (side . bottom)
-         (slot . 0)
-         (window-height . 0.3))
-
-        ("\\*Help\\*"
-         (display-buffer-in-side-window)
-         (side . bottom)
-         (slot . 1)
-         (window-width . 0.4)))))
 
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
@@ -351,33 +435,109 @@
   (minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt)))
 
+
 ;; ---------------------------------------------------------
 ;; Orderless (matching poderoso, domado)
 ;; ---------------------------------------------------------
 
 (use-package orderless
   :custom
-  ;; Configure a custom style dispatcher (see the Consult wiki)
-  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
-  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
-  (completion-category-overrides '((file (styles partial-completion))))
-  (completion-category-defaults nil) ;; Disable defaults, use our settings
-  (completion-pcm-leading-wildcard t) ;; Emacs 31: partial-completion behaves like substring
-  (completion-styles '(orderless basic))
-  (orderless-component-separator
-   #'orderless-escapable-split-on-space))
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)    ; I want to be in control!
+  (completion-category-overrides
+   '((file (styles basic-remote ; For `tramp' hostname completion with `vertico'
+                   orderless
+                   ))
+     ))
 
-;; Configure directory extension.
-(use-package vertico-directory
-  :after vertico
-  :ensure nil
-  ;; More convenient directory navigation commands
-  :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
-  ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+  (orderless-component-separator 'orderless-escapable-split-on-space)
+  (orderless-matching-styles
+   '(orderless-literal
+     orderless-prefixes
+     orderless-initialism
+     orderless-regexp
+     ;; orderless-flex
+     ;; orderless-strict-leading-initialism
+     ;; orderless-strict-initialism
+     ;; orderless-strict-full-initialism
+     ;; orderless-without-literal          ; Recommended for dispatches instead
+     ))
+  (orderless-style-dispatchers
+   '(prot-orderless-literal-dispatcher
+     prot-orderless-strict-initialism-dispatcher
+     prot-orderless-flex-dispatcher))
+  :init
+  (defun orderless--strict-*-initialism (component &optional anchored)
+    "Match a COMPONENT as a strict initialism, optionally ANCHORED.
+The characters in COMPONENT must occur in the candidate in that
+order at the beginning of subsequent words comprised of letters.
+Only non-letters can be in between the words that start with the
+initials.
+
+If ANCHORED is `start' require that the first initial appear in
+the first word of the candidate.  If ANCHORED is `both' require
+that the first and last initials appear in the first and last
+words of the candidate, respectively."
+    (orderless--separated-by
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)))
+      (cl-loop for char across component collect `(seq word-start ,char))
+      (when anchored '(seq (group buffer-start) (zero-or-more (not alpha))))
+      (when (eq anchored 'both)
+        '(seq (zero-or-more alpha) word-end (zero-or-more (not alpha)) eol))))
+
+  (defun orderless-strict-initialism (component)
+    "Match a COMPONENT as a strict initialism.
+This means the characters in COMPONENT must occur in the
+candidate in that order at the beginning of subsequent words
+comprised of letters.  Only non-letters can be in between the
+words that start with the initials."
+    (orderless--strict-*-initialism component))
+
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-strict-initialism-dispatcher (pattern _index _total)
+    "Leading initialism  dispatcher using the comma suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "," pattern)
+      `(orderless-strict-initialism . ,(substring pattern 0 -1))))
+
+  (defun prot-orderless-flex-dispatcher (pattern _index _total)
+    "Flex  dispatcher using the tilde suffix.
+It matches PATTERN _INDEX and _TOTAL according to how Orderless
+parses its input."
+    (when (string-suffix-p "." pattern)
+      `(orderless-flex . ,(substring pattern 0 -1)))))
+
+
+;; (use-package orderless
+;;   :custom
+;;   ;; Configure a custom style dispatcher (see the Consult wiki)
+;;   ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+;;   ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+;;   (completion-category-overrides '((file (styles partial-completion))))
+;;   (completion-category-defaults nil) ;; Disable defaults, use our settings
+;;   (completion-pcm-leading-wildcard t) ;; Emacs 31: partial-completion behaves like substring
+;;   (completion-styles '(orderless basic))
+;;   (orderless-component-separator
+;;    #'orderless-escapable-split-on-space))
+
+;; ;; Configure directory extension.
+;; (use-package vertico-directory
+;;   :after vertico
+;;   :ensure nil
+;;   ;; More convenient directory navigation commands
+;;   :bind (:map vertico-map
+;;               ("RET" . vertico-directory-enter)
+;;               ("DEL" . vertico-directory-delete-char)
+;;               ("M-DEL" . vertico-directory-delete-word))
+;;   ;; Tidy shadowed file names
+;;   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 ;; ---------------------------------------------------------
 ;; Consult preview controlado
@@ -390,8 +550,12 @@
    ("M-y"     . consult-yank-pop))
   :config
   ;; integração correta com completion
-  (setq completion-in-region-function
-      #'corfu--completion-in-region)
+(setq completion-in-region-function
+      (lambda (&rest args)
+        (apply (if vertico-mode
+                   #'consult-completion-in-region
+                 #'corfu--completion-in-region)
+               args)))
 
   (consult-customize
    consult-ripgrep
@@ -410,10 +574,41 @@
 ;; ---------------------------------------------------------
 
 (use-package marginalia
-  
+    ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
   :after vertico
+  ;; The :init section is always executed.
+  :custom
+  (marginalia-max-relative-age 0)
+  (marginalia-align 'right)
   :init
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
   (marginalia-mode 1))
+
+(with-eval-after-load 'marginalia
+  ;; Usa o annotator completo para arquivos
+  (setq marginalia-annotators
+        '(marginalia-annotate-file
+          marginalia-annotate-buffer
+          marginalia-annotate-symbol
+          marginalia-annotate-command
+          marginalia-annotate-variable
+          marginalia-annotate-function
+          marginalia-annotate-face)
+	marginalia-align 'right))
+
+(use-package nerd-icons-completion
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode 1)
+  (add-hook 'marginalia-mode-hook
+            #'nerd-icons-completion-marginalia-setup))
+
 
 ;; ---------------------------------------------------------
 ;; Embark — ações contextuais
