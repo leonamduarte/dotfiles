@@ -286,22 +286,37 @@
   :init
   (vertico-mode 1)
   :custom
-  (vertico-cycle t)
-  (vertico-count 17)
-  (vertico-resize nil)
-  :config
   ;; multiform vem junto com vertico
+  (vertico-scroll-margin 0) ;; Different scroll margin
+  (vertico-count 20) ;; Show more candidates
+  (vertico-resize nil) ;; Grow and shrink the Vertico minibuffer
+  (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  :config
   (require 'vertico-multiform)
 
-  (vertico-multiform-mode 1)
 
-  (setq vertico-multiform-commands
-        '((execute-extended-command buffer)
+;; Enable vertico-multiform
+(vertico-multiform-mode)
+
+;; Configure the display per command.
+;; Use a buffer with indices for imenu
+;; and a flat (Ido-like) menu for M-x.
+(setq vertico-multiform-commands
+      '(
+	;; (execute-extended-command buffer)
 	  (consult-buffer buffer)
-          (consult-imenu buffer)
+          (consult-imenu buffer indexed)
           (consult-ripgrep buffer)
           (consult-line buffer)
           ))
+
+;; Configure the display per completion category.
+;; Use the grid display for files and a buffer
+;; for the consult-grep commands.
+(setq vertico-multiform-categories
+      '((file grid)
+        (consult-grep buffer)))
+
 (setq display-buffer-alist
       '(("\\*Completions\\*"
          (display-buffer-in-side-window)
@@ -311,12 +326,30 @@
 
         ("\\*Help\\*"
          (display-buffer-in-side-window)
-         (side . right)
+         (side . bottom)
          (slot . 1)
-         (window-width . 0.4))))
+         (window-width . 0.4)))))
 
-  )
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
 
+;; Emacs minibuffer configurations.
+(use-package emacs
+  :custom
+  ;; Enable context menu. `vertico-multiform-mode' adds a menu in the minibuffer
+  ;; to switch display modes.
+  (context-menu-mode t)
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  ;; Do not allow the cursor in the minibuffer prompt
+  (minibuffer-prompt-properties
+   '(read-only t cursor-intangible t face minibuffer-prompt)))
 
 ;; ---------------------------------------------------------
 ;; Orderless (matching poderoso, domado)
@@ -324,12 +357,27 @@
 
 (use-package orderless
   :custom
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+  ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil) ;; Disable defaults, use our settings
+  (completion-pcm-leading-wildcard t) ;; Emacs 31: partial-completion behaves like substring
   (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides
-   '((file (styles orderless partial-completion))))
   (orderless-component-separator
    #'orderless-escapable-split-on-space))
+
+;; Configure directory extension.
+(use-package vertico-directory
+  :after vertico
+  :ensure nil
+  ;; More convenient directory navigation commands
+  :bind (:map vertico-map
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word))
+  ;; Tidy shadowed file names
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 ;; ---------------------------------------------------------
 ;; Consult preview controlado
@@ -343,8 +391,7 @@
   :config
   ;; integração correta com completion
   (setq completion-in-region-function
-        (lambda (&rest args)
-          (apply #'consult-completion-in-region args)))
+      #'corfu--completion-in-region)
 
   (consult-customize
    consult-ripgrep
@@ -357,15 +404,6 @@
   (consult-customize
    consult-theme
    :preview-key (list "C-SPC" :debounce 0.5 'any)))
-
-;; ---------------------------------------------------------
-;; Savehist — histórico do minibuffer
-;; ---------------------------------------------------------
-
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode 1))
 
 ;; ---------------------------------------------------------
 ;; Marginalia — descrições ricas
@@ -572,8 +610,27 @@
 ;; ---------------------------------------------------------
 
 (use-package corfu
+  ;; Optional customizations
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match 'insert) ;; Configure handling of exact matches
+
+  ;; Enable Corfu only for certain modes. See also `global-corfu-modes'.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
   :init
+  ;; Recommended: Enable Corfu globally.  Recommended since many modes provide
+  ;; Capfs and Dabbrev can be used globally (M-/).  See also the customization
+  ;; variable `global-corfu-modes' to exclude certain modes.
   (global-corfu-mode 1)
+  ;; Enable optional extension modes:
+  ;; (corfu-history-mode)
+  ;; (corfu-popupinfo-mode)
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.2)
@@ -585,7 +642,26 @@
   (tab-always-indent 'complete))
 
 (with-eval-after-load 'corfu
-  (define-key corfu-map (kbd "C-SPC") #'corfu-complete))
+  (define-key corfu-map (kbd "M-SPC") #'corfu-complete))
+
+;; A few more useful configurations...
+(use-package emacs
+  :custom
+  ;; TAB cycle if there are only few candidates
+  ;; (completion-cycle-threshold 3)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (tab-always-indent 'complete)
+
+  ;; Emacs 30 and newer: Disable Ispell completion function.
+  ;; Try `cape-dict' as an alternative.
+  (text-mode-ispell-word-completion nil)
+
+  ;; Hide commands in M-x which do not apply to the current mode.  Corfu
+  ;; commands are hidden, since they are not used via M-x. This setting is
+  ;; useful beyond Corfu.
+  (read-extended-command-predicate #'command-completion-default-include-p))
 
 ;; ---------------------------------------------------------
 ;; Cape — fallback inteligente
@@ -593,10 +669,23 @@
 
 (use-package cape
   :after corfu
+  ;; Bind prefix keymap providing all Cape commands under a mnemonic key.
+  ;; Press C-c p ? to for help.
+  :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+  ;; Alternatively bind Cape commands individually.
+  ;; :bind (("C-c p d" . cape-dabbrev)
+  ;;        ("C-c p h" . cape-history)
+  ;;        ("C-c p f" . cape-file)
+  ;;        ...)
   :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-keyword))
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-hook 'completion-at-point-functions #'cape-history))
 
 (with-eval-after-load 'cape
   (advice-add #'lsp-completion-at-point :around #'cape-wrap-nonexclusive))
@@ -722,10 +811,10 @@
       :server-id 'vtsls)))
   )
 
-(use-package mason
-  :ensure t
-  :config
-  (mason-ensure))
+;; (use-package mason
+;;   :ensure t
+;;   :config
+;;   (mason-ensure))
 
 ;; =========================================================
 ;; 8.4 IDE — JavaScript / TypeScript (vtsls)
@@ -808,8 +897,8 @@
 
 (use-package treesit-auto
   :demand t
-  :custom
-  (treesit-auto-install 'prompt)
+  ;; :custom
+  ;; (treesit-auto-install 'prompt)
   :config
   ;; remapeia tudo automaticamente
   (treesit-auto-add-to-auto-mode-alist 'all)
@@ -903,13 +992,16 @@
   (bashln/javascript-add-npm-path))
 
 ;; ---------------------------------------------------------
-;; JavaScript (js-ts-mode)
+;; JavaScript (js2-mode)
 ;; ---------------------------------------------------------
 
-(use-package js
-  :ensure nil
-  :mode ("\\.[mc]?js\\'" . js2-mode)
-  :hook (js2-mode . bashln/javascript-common-setup)
+(use-package js2-mode
+  :mode ("\\.js\\'" . js2-mode)
+  :hook
+  ((js2-mode . bashln/javascript-common-setup)
+   (js2-mode . (lambda ()
+                 (setq-local js2-mode-show-parse-errors nil
+                             js2-mode-show-strict-warnings nil))))
   :config
   (setq js-indent-level 2))
 
