@@ -1070,6 +1070,11 @@ parses its input."
 ;; 8.5 IDE — COPILOT
 ;; =========================================================
 
+(let ((node-bin (expand-file-name "~/.nvm/versions/node/v20.11.1/bin")))
+  (when (file-directory-p node-bin)
+    (add-to-list 'exec-path node-bin)
+    (setenv "PATH" (concat node-bin ":" (getenv "PATH")))))
+
 (use-package copilot
   
   :hook
@@ -1080,7 +1085,8 @@ parses its input."
         ("TAB"   . copilot-accept-completion)
         ("C-TAB" . copilot-accept-completion-by-word))
   :config
-  (setq copilot-indent-offset-warning-disable t))
+  (setq copilot-idle-delay 0.5
+   copilot-indent-offset-warning-disable t))
 
 ;; =========================================================
 ;; 8.6 IDE — TREE-SITTER (TREESIT)

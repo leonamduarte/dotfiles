@@ -164,8 +164,6 @@
 # Neovim (controle fino)
 !.config/nvim/
 !.config/nvim/**
-
-.config/nvim/*
 !.config/nvim/lua/
 !.config/nvim/lua/plugins/**
 !.config/nvim/lua/config/**
