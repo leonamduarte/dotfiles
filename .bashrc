@@ -20,8 +20,8 @@ export OSH="$HOME/.oh-my-bash"
 # OSH_THEME="random"
 # OSH_THEME="zork"
 # Se quiser restringir, defina candidatos (opcional):
-OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
-POWERLINE_PROMPT="user_info scm python_venv ruby cwd"
+# OMB_THEME_RANDOM_CANDIDATES=("agnoster" "powerline-light" "font" "minimal")
+# POWERLINE_PROMPT="user_info scm python_venv ruby cwd"
 
 # Plugins do OMB (use só os que reabashlnente quer/tem)
 # Obs: "zsh-autosuggestions" e "zsh-syntax-highlighting" não existem em bash.

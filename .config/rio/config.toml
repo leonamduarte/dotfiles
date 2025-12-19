@@ -63,7 +63,7 @@ use-split = true
 [window]
 
 mode = "Maximized"
-opacity = 0.8
+opacity = 0.9
 blur = true
 decorations = "disabled" # outras: "Enabled" | "Disabled" | "Buttonless"
 # draw-bold-text-with-light-colors = false
