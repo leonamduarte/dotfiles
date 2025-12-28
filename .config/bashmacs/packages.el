@@ -1,1 +1,1 @@
-(require 'package-utils)
+../../dotfiles/.config/bashmacs/packages.el
