@@ -1,0 +1,200 @@
+# O mod key é "Mod4" (super ou a tecla do Windows)
+set $mod Mod4
+
+# Definições de programas
+set $term wezterm
+set $browser brave-browser-nightly
+set $browser2 firefox-developer-edition
+set $files thunar
+set $code code
+set $music flatpak run com.spotify.Client
+set $emacs emacs
+set $nvim neovide
+set $logout wlogout
+
+# Atalhos de teclado
+# Os essenciais
+bindsym $mod+Return exec --no-startup-id $term
+bindsym $mod+shift+d exec --no-startup-id rofi -show drun
+bindsym $mod+shift+s exec --no-startup-id flameshot gui
+bindsym $mod+shift+Return exec --no-startup-id $files
+bindsym $mod+shift+p exec --no-startup-id i3-msg exit
+bindsym $mod+Control+s exec --no-startup-id systemctl poweroff
+bindsym $mod+Control+r exec --no-startup-id systemctl reboot
+bindsym $mod+Control+p exec --no-startup-id systemctl suspend
+bindsym $mod+shift+w exec --no-startup-id $browser
+bindsym $mod+F1 exec --no-startup-id $browser2
+bindsym $mod+F2 exec --no-startup-id $code
+bindsym $mod+F3 exec --no-startup-id $nvim
+bindsym $mod+F4 exec --no-startup-id $music
+bindsym $mod+Tab exec --no-startup-id i3-msg layout toggle split
+bindsym $mod+shift+q kill
+bindsym $mod+shift+r exec --no-startup-id i3-msg reload
+bindsym $mod+x exec --no-startup-id $logout
+bindsym $mod+r exec --no-startup-id rofi -show run
+
+# Mover foco da janela
+bindsym $mod+h focus left
+bindsym $mod+l focus right
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+space focus next
+
+# Mover janelas
+bindsym $mod+shift+h move left
+bindsym $mod+shift+l move right
+bindsym $mod+shift+j move down
+bindsym $mod+shift+k move up
+
+# Redimensionar janelas
+bindsym $mod+equal resize grow width 20 px or 2 ppt
+bindsym $mod+minus resize shrink width 20 px or 2 ppt
+bindsym $mod+Control+h resize grow left
+bindsym $mod+Control+l resize grow right
+bindsym $mod+Control+j resize grow down
+bindsym $mod+Control+k resize grow up
+bindsym $mod+n layout default
+bindsym $mod+m fullscreen enable
+bindsym $mod+t floating toggle
+bindsym $mod+f fullscreen toggle
+
+# Alternar entre monitores
+bindsym $mod+period focus output right
+bindsym $mod+comma focus output left
+
+# Grupos de workspaces
+# A numeração de workspaces do i3 é baseada em números, e você pode usar labels.
+set $ws1 "1:I"
+set $ws2 "2:II"
+set $ws3 "3:III"
+set $ws4 "4:IV"
+set $ws5 "5:V"
+set $ws6 "6:VI"
+
+# Alocações de programas para workspaces
+assign [class="firefox-developer-edition"] $ws2
+assign [class="Vivaldi-stable"] $ws2
+assign [class="brave"] $ws2
+assign [class="code"] $ws1
+assign [class="Spotify"] $ws4
+assign [class="thunar"] $ws5
+assign [class="wezterm"] $ws1
+assign [class="discord"] $ws6
+
+# Mudar para workspaces
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+
+# Mover janela para workspace
+bindsym $mod+shift+1 move container to workspace $ws1
+bindsym $mod+shift+2 move container to workspace $ws2
+bindsym $mod+shift+3 move container to workspace $ws3
+bindsym $mod+shift+4 move container to workspace $ws4
+bindsym $mod+shift+5 move container to workspace $ws5
+bindsym $mod+shift+6 move container to workspace $ws6
+
+# Layouts
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+d layout default
+
+# Regras para janelas flutuantes
+for_window [class="confirmreset"] floating enable
+for_window [class="dialog"] floating enable
+for_window [class="download"] floating enable
+for_window [class="error"] floating enable
+for_window [class="file_progress"] floating enable
+for_window [class="kdenlive"] floating enable
+for_window [class="makebranch"] floating enable
+for_window [class="maketag"] floating enable
+for_window [class="notification"] floating enable
+for_window [class="pinentry-gtk-2"] floating enable
+for_window [class="ssh-askpass"] floating enable
+for_window [class="toolbar"] floating enable
+for_window [class="Yad"] floating enable
+for_window [title="branchdialog"] floating enable
+for_window [title="Confirmation"] floating enable
+for_window [title="Qalculate!"] floating enable
+for_window [title="pinentry"] floating enable
+for_window [title="tastycharts"] floating enable
+for_window [title="tastytrade"] floating enable
+for_window [title="tastytrade - Portfolio Report"] floating enable
+for_window [class="tasty.javafx.launcher.LauncherFxApp"] floating enable
+
+
+for_window [title="Guild Wars 2"] fullscreen enable
+
+# Amarrar cada workspace a um monitor
+workspace $ws1 output HDMI-A-0
+workspace $ws2 output DisplayPort-0
+
+# Alternar para eles ao iniciar
+exec_always --no-startup-id i3-msg "workspace $ws1; workspace $ws2"
+
+default_border pixel
+default_floating_border pixel
+
+# Configurações de inicialização
+# exec ~/.config/qtile/autostart.sh
+gaps inner 8
+# gaps outer 0
+
+# manage monitors
+
+# Saídas fixas para workspaces
+# workspace ws1 output HDMI-A-0
+# workspace ws2 output DisplayPort-0
+
+# Programas que precisam sempre reiniciar com reload
+exec_always --no-startup-id sh -c "sleep 1 && ~/.config/autostart/xinputI3.sh"
+exec_always --no-startup-id sh -c "sleep 1 && ~/.config/polybar/launch.sh"
+exec_always --no-startup-id variety
+exec_always --no-startup-id dunst
+# Desliga screensaver/blank/DPMS sempre que recarregar
+exec_always --no-startup-id sh -c "pgrep -x xscreensaver >/dev/null 2>&1 && xscreensaver-command -exit || true; xset s off; xset s noblank; xset -dpms"
+exec_always --no-startup-id sh -c "xset s off; xset s noblank; xset -dpms"
+exec_always --no-startup-id xset s off
+exec_always --no-startup-id xset s noblank
+exec_always --no-startup-id xset -dpms
+
+# Programas que iniciam apenas uma vez
+exec --no-startup-id sh -c "sleep 1 && ~/.config/autostart/screenResolution.sh"
+exec --no-startup-id xfce4-power-manager
+exec --no-startup-id numlockx on
+exec --no-startup-id lxsession 
+# exec --no-startup-id nm-applet
+exec --no-startup-id libinput-gestures-setup start
+exec --no-startup-id steam -silent
+
+# exec_always --no-startup-id sh -c "sleep 2 && ~/.config/autostart/screenResolution.sh"
+# exec_always --no-startup-id xrdb .Xresources
+# exec_always --no-startup-id picom
+# exec_always xrandr --output DisplayPort-0 --mode 1440x900 --pos 1920x0 --rotate normal --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal
+
+# Create Log out, Reboot, Poweroff bindings
+mode "(S)uspend, (L)ogout, (R)eboot, (P)oweroff" {
+        bindsym r exec --no-startup-id systemctl reboot
+        bindsym s exec --no-startup-id systemctl suspend; mode "default"
+        bindsym l exit
+        bindsym p exec --no-startup-id systemctl poweroff
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+Shift+e mode "(S)uspend, (L)ogout, (R)eboot, (P)oweroff"
+
+# Impedir que janelas de notificação roubem foco
+for_window [window_role="popup"] focus no
+for_window [window_role="bubble"] focus no
+for_window [title="Notification"] focus no
+for_window [class="Dunst"] focus no
+for_window [urgent=latest] focus no
+
+

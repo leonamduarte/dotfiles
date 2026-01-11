@@ -1,1 +1,4 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicComp/v1/workspaces
+(
+    workspace_mode: OutputBound,
+    workspace_layout: Vertical,
+)

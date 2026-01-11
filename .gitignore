@@ -1,1 +1,230 @@
-dotfiles/.gitignore
+# # ============================================================
+# GUIA RÁPIDO (.gitignore) — ELI5 / COLA DE CONSULTA
+# ============================================================
+#
+# Como o Git lê este arquivo:
+# - Ele lê de CIMA para BAIXO.
+# - A última regra que combina é a que vale.
+#
+# ------------------------------------------------------------
+# *  (asterisco)
+# ------------------------------------------------------------
+# Significa: "qualquer coisa"
+# Exemplo:
+#   *            -> ignora TUDO (arquivos e pastas)
+#   .config/*    -> ignora tudo DENTRO de .config
+#
+# ------------------------------------------------------------
+# !  (exclamação)
+# ------------------------------------------------------------
+# Significa: "NÃO ignore isso" (desfaz uma regra anterior)
+# IMPORTANTE:
+# - O '!' só funciona se algo tiver sido ignorado antes.
+# - Ele NÃO cria arquivos, só reverte o ignore.
+#
+# Exemplo:
+#   *            -> ignora tudo
+#   !.config/   -> permite a pasta .config
+#
+# ------------------------------------------------------------
+# /  (barra no final)
+# ------------------------------------------------------------
+# Indica que o alvo é um DIRETÓRIO (pasta)
+#
+# Exemplo:
+#   !.config/   -> permite a pasta .config
+#   !.zshrc    -> permite o arquivo .zshrc
+#
+# ------------------------------------------------------------
+# REGRA DE OURO DO GITIGNORE
+# ------------------------------------------------------------
+# O Git NÃO entra em diretórios ignorados.
+# Se uma pasta está ignorada, o Git nem olha dentro dela.
+#
+# ERRADO (não funciona):
+#   *
+#   !.config/qtile/config.py
+#
+# CERTO:
+#   !.config/
+#   !.config/qtile/
+#   !.config/qtile/config.py
+#
+# Ou simplesmente:
+#   !.config/qtile/**
+#
+# ------------------------------------------------------------
+# **  (asterisco duplo)
+# ------------------------------------------------------------
+# Significa: "qualquer profundidade"
+# Usado para permitir (ou ignorar) tudo dentro de uma pasta,
+# incluindo subpastas infinitas.
+#
+# Exemplo:
+#   !.config/qtile/**   -> permite tudo dentro de qtile
+#
+# Sem '**', só o primeiro nível seria considerado.
+#
+# ------------------------------------------------------------
+# PADRÃO USADO NESTE REPOSITÓRIO
+# ------------------------------------------------------------
+# 1) Ignorar TUDO por padrão        -> *
+# 2) Liberar apenas a raiz necessária
+# 3) Limpar diretórios permitidos   -> pasta/*
+# 4) Re-incluir apenas o que importa-> !pasta/algo/**
+#
+# Esse modelo evita:
+# - lixo de cache
+# - arquivos temporários
+# - configs geradas automaticamente
+# - vazamento acidental de arquivos
+#
+# Para debugar regras, use:
+#   git check-ignore -v <arquivo>
+#
+# ============================================================
+
+# ===============================
+# Estratégia Principal: Ignorar tudo
+# ===============================
+*
+
+# ===============================
+# Exceções de alto nível (raiz)
+# ===============================
+!/.config/
+!/imagens/
+!/scripts/
+
+!/.zshrc
+!/.bashrc
+!/.gitignore
+!/stow.sh
+!/.stow-local-ignore
+
+# ===============================
+# Limpa .config
+# ===============================
+.config/*
+
+# Permite navegação dentro de .config
+!.config/**/
+
+# ===============================
+# Window Managers / DEs
+# ===============================
+!.config/cosmic/
+!.config/cosmic/**
+
+!.config/hypr/
+!.config/hypr/**
+
+!.config/i3/
+!.config/i3/**
+
+!.config/qtile/
+!.config/qtile/**
+
+!.config/sway/
+!.config/sway/**
+
+# ===============================
+# Terminais
+# ===============================
+!.config/alacritty/
+!.config/alacritty/**
+
+!.config/ghostty/
+!.config/ghostty/**
+
+!.config/kitty/
+!.config/kitty/**
+
+!.config/rio/
+!.config/rio/**
+
+!.config/wezterm/
+!.config/wezterm/**
+
+# ===============================
+# Editores / IDEs
+# ===============================
+!.config/doom/
+!.config/doom/**
+
+!.config/lazyvim/
+!.config/lazyvim/**
+
+!.config/leovim/
+!.config/leovim/**
+
+!.config/neovide/
+!.config/neovide/**
+
+# Neovim (controle fino)
+!.config/nvim/
+!.config/nvim/**
+!.config/nvim/lua/
+!.config/nvim/lua/plugins/**
+!.config/nvim/lua/config/**
+
+!.config/zed/
+!.config/zed/**
+
+# ===============================
+# Outros
+# ===============================
+!.config/fish/
+!.config/fish/**
+
+!.config/kvantum/
+!.config/kvantum/**
+
+!.config/polybar/
+!.config/polybar/**
+
+!.config/picom/
+!.config/picom/**
+
+!.config/rofi/
+!.config/rofi/**
+
+!.config/waybar/
+!.config/waybar/**
+
+!.config/yazi/
+!.config/yazi/**
+
+!.config/fastfetch/
+!.config/fastfetch/**
+
+!.config/xsettingsd/
+!.config/xsettingsd/**
+
+# ===============================
+# Autostart (somente scripts)
+# ===============================
+!.config/autostart/
+.config/autostart/*
+!.config/autostart/*.sh
+
+# ===============================
+# Bashmacs (somente .el)
+# ===============================
+!.config/bashmacs/
+.config/bashmacs/*
+!.config/bashmacs/*.el
+
+# ===============================
+# Fontes
+# ===============================
+!/.local/share/fonts/
+!/.local/share/fonts/**
+
+!/.fonts/
+!/.fonts/**
+
+# ===============================
+# Lixo conhecido
+# ===============================
+*Zone.Identifier*

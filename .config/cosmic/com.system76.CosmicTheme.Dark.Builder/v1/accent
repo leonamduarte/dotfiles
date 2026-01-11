@@ -1,1 +1,5 @@
-../../../../dotfiles/.config/cosmic/com.system76.CosmicTheme.Dark.Builder/v1/accent
+Some((
+    red: 0.9058823,
+    green: 0.6117647,
+    blue: 0.99607843,
+))
