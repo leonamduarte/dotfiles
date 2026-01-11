@@ -99,8 +99,6 @@
 !/.zshrc
 !/.bashrc
 !/.gitignore
-!/stow.sh
-!/.stow-local-ignore
 
 # ===============================
 # Limpa .config
