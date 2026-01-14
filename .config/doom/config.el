@@ -16,8 +16,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "JetBrainsMono NF" :size 16)
-          doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 16))
+    (setq doom-font (font-spec :family "JetBrainsMono NF" :size 15)
+          doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 15))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16)))
