@@ -11,7 +11,7 @@
 ;; -------------------------------
 ;; 1. IDENTIDADE & SISTEMA
 ;; -------------------------------
-(setq user-full-name "bashln" 
+(setq user-full-name "bashln"
       user-mail-address "lpdmonteiro+doom@gmail.com")
 
 ;; Configuração condicional de Fontes
@@ -23,7 +23,7 @@
         doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16)))
 
 ;; UI Básica
-(setq doom-theme 'doom-one) 
+(setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-rose-pine-moon)
 ;; (setq doom-theme 'catppuccin)
 ;; (setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha

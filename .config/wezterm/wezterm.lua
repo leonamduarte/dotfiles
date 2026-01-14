@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- ===== Fonte e cores =====
-config.font_size = 12
+config.font_size = 13
 config.font = wezterm.font_with_fallback({
 	"Maple Mono NF",
 	"JetBrainsMono Nerd Font",
@@ -61,6 +61,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.use_fancy_tab_bar = false
 
 	config.font = wezterm.font_with_fallback({
+		"SauceCodePro NF",
 		"Maple Mono NF",
 		"JetBrainsMono Nerd Font",
 	})
