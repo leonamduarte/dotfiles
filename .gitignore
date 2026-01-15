@@ -87,7 +87,7 @@
 # ===============================
 # Estratégia Principal: Ignorar tudo
 # ===============================
-*
+/*
 
 # ===============================
 # Exceções de alto nível (raiz)
@@ -111,20 +111,12 @@
 # ===============================
 # Window Managers / DEs
 # ===============================
-!.config/cosmic/
-!.config/cosmic/**
 
 !.config/hypr/
 !.config/hypr/**
 
-!.config/i3/
-!.config/i3/**
-
 !.config/qtile/
 !.config/qtile/**
-
-!.config/sway/
-!.config/sway/**
 
 # ===============================
 # Terminais
@@ -137,9 +129,6 @@
 
 !.config/kitty/
 !.config/kitty/**
-
-!.config/rio/
-!.config/rio/**
 
 !.config/wezterm/
 !.config/wezterm/**
@@ -166,17 +155,9 @@
 !.config/nvim/lua/plugins/**
 !.config/nvim/lua/config/**
 
-!.config/zed/
-!.config/zed/**
-
 # ===============================
 # Outros
 # ===============================
-!.config/fish/
-!.config/fish/**
-
-!.config/kvantum/
-!.config/kvantum/**
 
 !.config/polybar/
 !.config/polybar/**
@@ -187,17 +168,8 @@
 !.config/rofi/
 !.config/rofi/**
 
-!.config/waybar/
-!.config/waybar/**
-
 !.config/yazi/
 !.config/yazi/**
-
-!.config/fastfetch/
-!.config/fastfetch/**
-
-!.config/xsettingsd/
-!.config/xsettingsd/**
 
 # ===============================
 # Autostart (somente scripts)
