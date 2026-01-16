@@ -61,9 +61,9 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.use_fancy_tab_bar = false
 
 	config.font = wezterm.font_with_fallback({
+		"JetBrainsMono Nerd Font",
 		"SauceCodePro NF",
 		"Maple Mono NF",
-		"JetBrainsMono Nerd Font",
 	})
 	-- ===== Util =====
 	local function file_exists(p)

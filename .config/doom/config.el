@@ -207,4 +207,22 @@
 (map! :leader
       :desc "Neotree Directory" "o N" #'neotree-dir)
 
+;; -------------------------------
+;; 8. Greese.el (pacote local) (https://github.com/mwac-dev/grease.el)
+;; -------------------------------
+
+(use-package! grease
+  ;; :commands (grease-open grease-toggle grease-here)
+  :init
+  (setq grease-sort-method 'type
+        grease-show-hidden nil
+        grease-preview-window-width 0.4)
+  :config
+  (map! :leader
+        (:prefix ("o g" . "Grease")
+         :desc "Toggle Grease"           "g" #'grease-toggle
+         :desc "Open Grease (current)"   "o" #'grease-open
+         :desc "Open at project root"    "h" #'grease-here)
+        :desc "Toggle Grease like Oil.nvim" "-" #'grease-toggle))
+
 ;; Fim do config.el

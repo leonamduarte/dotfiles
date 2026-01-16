@@ -20,6 +20,9 @@
 (package! apheleia)
 (package! mason)
 
+(package! grease
+  :recipe (:local-repo "lisp/grease"))
+
 ;; NOTAS SOBRE REMOÇÕES:
 ;; - vertico, orderless, consult, embark, marginalia: Removidos pois o módulo :completion vertico já instala.
 ;; - corfu, corfu-terminal: Removidos pois o módulo :completion corfu já instala.
