@@ -225,4 +225,12 @@
          :desc "Open at project root"    "h" #'grease-here)
         :desc "Toggle Grease like Oil.nvim" "-" #'grease-toggle))
 
+;; ----------------------------------------------
+;; 9. Mason (Gerenciador de LSP/DAP/Formatadores)
+;; ----------------------------------------------
+
+(use-package! mason
+  :config
+  (mason-setup))
+
 ;; Fim do config.el

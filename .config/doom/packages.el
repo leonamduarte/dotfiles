@@ -21,7 +21,10 @@
 (package! mason)
 
 (package! grease
-  :recipe (:local-repo "lisp/grease"))
+  ;; :recipe (:local-repo "lisp/grease"))
+  :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
+
+(package! mason)
 
 ;; NOTAS SOBRE REMOÇÕES:
 ;; - vertico, orderless, consult, embark, marginalia: Removidos pois o módulo :completion vertico já instala.
