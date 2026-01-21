@@ -10,9 +10,9 @@ config.font = wezterm.font_with_fallback({
 })
 
 -- config.color_scheme = "Operator Mono Dark"
--- config.color_scheme = "Astrodark (Gogh)"
+config.color_scheme = "Astrodark (Gogh)"
 -- config.color_scheme = "Catppuccin Mocha"
-config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "Kanagawa (Gogh)"
 -- config.color_scheme = "Tomorrow Night Blue"
 -- config.color_scheme = "Cobalt 2 (Gogh)"
 -- config.color_scheme = "Catppuccin Macchiato (Gogh)"
