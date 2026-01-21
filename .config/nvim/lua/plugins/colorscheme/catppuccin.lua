@@ -63,7 +63,7 @@ return {
     end,
   },
   -- {
-  --   "LazyVim/LazyVim",
+  --   "lazyvim/lazyvim",
   --   opts = {
   --     colorscheme = "catppuccin",
   --   },
