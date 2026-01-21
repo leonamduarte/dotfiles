@@ -67,5 +67,5 @@ return {
   --   opts = {
   --     colorscheme = "catppuccin",
   --   },
-  -- },
+  -- }
 }

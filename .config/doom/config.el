@@ -16,8 +16,8 @@
 
 ;; Configuração condicional de Fontes
 (if (eq system-type 'windows-nt)
-    (setq doom-font (font-spec :family "JetBrainsMono NF" :size 15)
-          doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 15))
+    (setq doom-font (font-spec :family "JetBrainsMono NF" :size 16)
+          doom-variable-pitch-font (font-spec :family "JetBrainsMono NF" :size 1 ))
   ;; Linux (Arch/CachyOS)
   (setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
         doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16)))
@@ -26,7 +26,7 @@
 (setq doom-theme 'doom-one)
 ;; (setq doom-theme 'doom-rose-pine-moon)
 ;; (setq doom-theme 'catppuccin)
-;; (setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
+(setq catppuccin-flavor 'macchiato) ;; Opções: latte, frappe, macchiato, mocha
 (setq display-line-numbers-type t)
 (setq confirm-kill-emacs nil)
 (setq-default tab-width 2)
@@ -233,4 +233,4 @@
   :config
   (mason-setup))
 
-;; Fim do config.el
+  ;; Fim do config.el

@@ -1,4 +1,13 @@
-general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
+general.import = [
+  # "~/.config/omarchy/current/theme/alacritty.toml"
+  # "~/.config/alacritty/catppuccin-latte.toml"
+  # "~/.config/alacritty/catppuccin-frappe.toml"
+  "~/.config/alacritty/catppuccin-macchiato.toml"
+  # "~/.config/alacritty/catppuccin-mocha.toml"
+]
+  
+
+
 
 [env]
 TERM = "xterm-256color"

@@ -1,5 +1,24 @@
+
 # Ignora tudo na raiz
 /*
+
+# ============================================================
+# SEGURANÇA CRÍTICA
+# ============================================================
+
+# NUNCA rastreie dados sensíveis (mesmo que permitidos depois)
+.ssh/
+.gnupg/
+.password-store/
+*.pem
+*.key
+*_rsa
+*_ed25519
+*id_rsa*
+*id_ed25519*
+*.ppk
+.aws/
+.kube/
 
 # Permite arquivos específicos na raiz
 !.gitignore
