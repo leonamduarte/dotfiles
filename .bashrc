@@ -6,6 +6,7 @@ esac
 
 # Path to your oh-my-bash installation.
 export OSH='/home/bashln/.oh-my-bash'
+export PATH="/c/Users/itinerario/.npm-global/bin:$PATH"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-bash is loaded.
