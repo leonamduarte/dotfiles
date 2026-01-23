@@ -19,6 +19,7 @@
 *.ppk
 .aws/
 .kube/
+.config/fish/conf.d/secrets.fish
 
 # Permite arquivos específicos na raiz
 !.gitignore
