@@ -20,6 +20,7 @@
 .aws/
 .kube/
 .config/fish/conf.d/secrets.fish
+.config/fish/fish_variables
 
 # Permite arquivos específicos na raiz
 !.gitignore
