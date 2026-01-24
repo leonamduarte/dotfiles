@@ -29,10 +29,8 @@
 
 # Permite pastas específicas na raiz
 !.config/
-!imagens/
 !scripts/
 !.local/
-!.fonts/
 
 # Ignora tudo dentro de .config
 .config/*
