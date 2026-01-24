@@ -38,6 +38,8 @@
 .config/*
 
 # Permite apenas o que importa dentro de .config
+!.config/hypr/*.conf
+!.config/hypr/dms/
 !.config/hypr/
 !.config/qtile/
 !.config/alacritty/
@@ -58,6 +60,20 @@
 
 # Ignora lixo
 *Zone.Identifier*
+
+# Neovim / Vim swap & undo
+*.swp
+*.swo
+undo/
+.netrwhist
+shada/
+
+# Doom Emacs / Emacs
+.dir-locals.el
+.elc
+*~
+\#*\#
+.projectile
 
 # Permite fontes
 !.local/share/
