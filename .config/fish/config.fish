@@ -29,6 +29,7 @@ if status is-interactive
     # 2) Configurações Nativas do Fish
     # ----------------------------------------------------------
     set -U fish_greeting ""
+    set -gx NODE_OPTIONS --no-deprecation
 
     # ----------------------------------------------------------
     # 3) Ferramentas Modernas
@@ -192,7 +193,7 @@ function pom
         -sound Crystal
 
     gum confirm "Ready for a break?" && timer $break && terminal-notifier -message Pomodoro \
-            -title 'Break is over! Get back to work 😬' \
+        -title 'Break is over! Get back to work 😬' \
         -sound Crystal \
         || pom
 end
