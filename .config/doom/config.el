@@ -180,6 +180,12 @@
   (setf (alist-get 'css-mode apheleia-mode-alist) 'prettier)
   (apheleia-global-mode +1))
 
+;; Força a remoção de trailing whitespace em TODOS os arquivos ao salvar
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Opcional: Configura o stylua para usar indentação de 2 ou 4 espaços (ajuste conforme gosto)
+(setq-hook! 'lua-mode-hook +format-with-lsp nil) ; Prefira o formatador externo ao LSP
+
 ;; -------------------------------
 ;; 6. CUSTOM FACES (Aparência Fina)
 ;; -------------------------------
