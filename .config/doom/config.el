@@ -233,4 +233,48 @@
   :config
   (mason-setup))
 
-  ;; Fim do config.el
+;; ---------------------
+;; 10. emacs-lsp-booster
+;; ---------------------
+
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+         (funcall bytecode))))
+   (apply old-fn args)))
+(advice-add (if (progn (require 'json)
+                       (fboundp 'json-parse-buffer))
+                'json-parse-buffer
+              'json-read)
+            :around
+            #'lsp-booster--advice-json-parse)
+
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)                             ;; for check lsp-server-present?
+             (not (file-remote-p default-directory)) ;; see lsp-booster--advice-tramp-remote-path
+             lisp-use-plists
+             (not (functionp 'json-rpc-connection))  ;; native json-rpc
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (message "Using emacs-lsp-booster for %s!" orig-result)
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
+;; Aumenta o limite de leitura de processos (crucial para LSP)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+;; Usa plists para deserialização (muito mais rápido que hash-tables)
+(setenv "LSP_USE_PLISTS" "true")
+(setq lsp-use-plists t)
+
+;; Ajuste de delay para parecer mais "snappy"
+(setq lsp-idle-delay 0.500)
+(setq lsp-log-io nil) ; Bloat de log mata performance
+
+;; Fim do config.el
