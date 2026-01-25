@@ -22,7 +22,10 @@ return {
       -- O preset 'enter' ou 'default' geralmente já mapeia C-n,
       -- mas aqui garantimos que ele faça a seleção do próximo item.
       ["<C-n>"] = { "select_next", "fallback" },
+      ["<TAB>"] = { "select_next", "fallback" },
       ["<C-p>"] = { "select_prev", "fallback" },
+      ["<S-TAB>"] = { "select_prev", "fallback" },
+
       -- Ao pressionar Seta Cima/Baixo, ignora o menu e move o cursor no texto
       ["<Up>"] = { "fallback" },
       ["<Down>"] = { "fallback" },
