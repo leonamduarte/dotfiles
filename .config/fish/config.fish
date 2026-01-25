@@ -135,7 +135,7 @@ if status is-interactive
     abbr --add yay paru
     abbr --add vpninova 'sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
     abbr --add doomsync './.config/emacs/bin/doom sync'
-    abbr --add doomsupd './.config/emacs/bin/doom upgrade'
+    abbr --add doomupd './.config/emacs/bin/doom upgrade'
     abbr --add dotsize 'du -sh .git && git count-objects -vH'
 
     # ----------------------------------------------------------
