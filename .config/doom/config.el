@@ -99,6 +99,7 @@
 (after! corfu
   (setq corfu-auto t
         corfu-auto-delay 0.1
+        corfu-auto-prefix 2
         corfu-cycle t
         corfu-popupinfo-delay 0.5
         corfu-popupinfo-max-height 6))
