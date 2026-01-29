@@ -80,13 +80,13 @@
 (use-package! treesit-auto
   :config (global-treesit-auto-mode))
 
-;; Copilot
+;; Copilot - FIX: Não conflita com corfu
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word))
+              ;; MUDANÇA: Use C-j ao invés de TAB para não conflitar com corfu
+              ("C-j" . 'copilot-accept-completion)
+              ("C-S-j" . 'copilot-accept-completion-by-word))
   :config
   (setq copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
@@ -101,8 +101,16 @@
         corfu-auto-delay 0.1
         corfu-auto-prefix 2
         corfu-cycle t
+        corfu-quit-no-match 'separator  ;; FIX: Evita o erro de nil
+        corfu-preselect 'prompt         ;; Não pré-seleciona primeira opção
         corfu-popupinfo-delay 0.5
-        corfu-popupinfo-max-height 6))
+        corfu-popupinfo-max-height 6)
+  ;; IMPORTANTE: Garante que TAB funciona com corfu
+  (map! :map corfu-map
+        "TAB" #'corfu-next
+        [tab] #'corfu-next
+        "S-TAB" #'corfu-previous
+        [backtab] #'corfu-previous))
 
 (after! orderless
   (setq completion-styles '(orderless basic)
@@ -154,6 +162,7 @@
   (setq lsp-use-plists t
         lsp-idle-delay 0.500
         lsp-log-io nil
+        lsp-completion-provider :none  ;; FIX: Desativa completion do LSP, usa só corfu
         lsp-headerline-breadcrumb-enable nil ;; Desativa breadcrumbs (menos ruído visual/proc)
         +format-with-lsp nil)) ;; Desativa globalmente, confiamos no módulo :editor format
 
@@ -179,7 +188,7 @@
   (let ((orig-result (funcall old-fn cmd test?)))
     (if (and (not test?)
              (not (file-remote-p default-directory))
-             lisp-use-plists
+             lsp-use-plists
              (not (functionp 'json-rpc-connection))
              (executable-find "emacs-lsp-booster"))
         (progn
