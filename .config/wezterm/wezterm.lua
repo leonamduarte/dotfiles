@@ -100,6 +100,7 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Ordem de fontes no Windows
 	config.font = wezterm.font_with_fallback({
+		"GeistMono NFM",
 		"JetBrainsMono Nerd Font",
 		"SauceCodePro NF",
 		"Maple Mono NF",
