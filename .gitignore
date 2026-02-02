@@ -51,6 +51,7 @@
 !.config/nvim/
 !.config/polybar/
 !.config/picom/
+!.config/rio/
 !.config/rofi/
 !.config/yazi/
 !.config/autostart/*.sh
