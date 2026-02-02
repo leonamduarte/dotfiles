@@ -11,8 +11,11 @@
       user-mail-address "lpdmonteiro+doom@gmail.com")
 
 ;; Fontes (Monospace & Variable Pitch)
-(setq doom-font (font-spec :family "CommitMono Nerd Font" :size 16)
-      doom-variable-pitch-font (font-spec :family "CommitMono Nerd Font" :size 16))
+(let ((font-family (if (eq system-type 'windows-nt)
+                       "GeistMono NFM"
+                     "CommitMono Nerd Font")))
+  (setq doom-font (font-spec :family font-family :size 16)
+        doom-variable-pitch-font (font-spec :family font-family :size 16)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
