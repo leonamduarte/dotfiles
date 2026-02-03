@@ -8,6 +8,7 @@ local config = wezterm.config_builder()
 -- ===== Fonte e Cores =====
 config.font_size = 13
 config.font = wezterm.font_with_fallback({
+	"DMMono Nerd Font",
 	"Maple Mono NF",
 	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font",
@@ -20,7 +21,6 @@ config.colors = {
 }
 config.force_reverse_video_cursor = true
 
--- ===== Funções Auxiliares =====
 local function file_exists(path)
 	local f = io.open(path, "r")
 	if f then
@@ -100,10 +100,10 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Ordem de fontes no Windows
 	config.font = wezterm.font_with_fallback({
-		"GeistMono NFM",
+		"DMMono Nerd Font",
+		"Maple Mono NF",
 		"JetBrainsMono Nerd Font",
 		"SauceCodePro NF",
-		"Maple Mono NF",
 	})
 
 	-- ===== Background Opcional =====

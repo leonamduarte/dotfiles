@@ -1,6 +1,7 @@
 return {
   "scottmckendry/cyberdream.nvim",
   lazy = false,
+  enabled = true,
   priority = 1000,
   config = function()
     require("cyberdream").setup({
