@@ -12,7 +12,7 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "GeistMono NFM"
+                       "BlexMono Nerd Font"
                      "CommitMono Nerd Font")))
   (setq doom-font (font-spec :family font-family :size 16)
         doom-variable-pitch-font (font-spec :family font-family :size 16)))
@@ -225,6 +225,14 @@
          :desc "Open Grease (current)"    "o" #'grease-open
          :desc "Open at project root"     "h" #'grease-here)
         :desc "Toggle Grease like Oil.nvim" "-" #'grease-toggle))
+
+;; fzf recursivo com fd
+(map! :leader
+      :desc "fzf search files" "s z" #'counsel-fzf)
+
+;; Configurar fd como backend do fzf
+(after! counsel
+  (setq counsel-fzf-cmd "fd --type f --hidden --follow --exclude .git"))
 
 ;; Mason (Opcional - Recomendado usar PARU no lugar)
 ;; (use-package! mason :config (mason-setup))

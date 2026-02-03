@@ -88,7 +88,10 @@ return
 
     -- what Neovim should do a when a file was opened (selected) in yazi.
     -- Defaults to simply opening the file.
-    open_file_function = function(chosen_file, config, state) end,
+    -- open_file_function = function(chosen_file, config, state) end,
+    open_file_function = function(chosen_file, config, state)
+      vim.cmd("edit " .. chosen_file)
+    end,
 
     -- customize the keymaps that are active when yazi is open and focused. The
     -- defaults are listed below. Note that the keymaps simply hijack input and

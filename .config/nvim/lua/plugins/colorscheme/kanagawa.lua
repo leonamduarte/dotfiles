@@ -1,5 +1,6 @@
 return {
   "rebelot/kanagawa.nvim",
+  enabled = false,
   priority = 1000, -- garante que o tema carrega antes de tudo
   config = function()
     vim.o.background = "dark" -- importante definir antes

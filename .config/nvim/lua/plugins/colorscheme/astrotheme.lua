@@ -1,5 +1,6 @@
 return {
   "AstroNvim/astrotheme",
+  enabled = false,
   name = "astrotheme",
   priority = 1000,
   config = function()
