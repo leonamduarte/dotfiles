@@ -86,16 +86,6 @@ config.keys = {
 -- CONFIGURAÇÕES ESPECÍFICAS POR SISTEMA OPERACIONAL
 -- ============================================================================
 
--- ===== Funções Auxiliares =====
-local function file_exists(path)
-	local f = io.open(path, "r")
-	if f then
-		f:close()
-		return true
-	end
-	return false
-end
-
 -- ====== LINUX ======
 if wezterm.target_triple:find("linux") then
 	-- Wayland/EGL
@@ -125,7 +115,7 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 		"SauceCodePro NF",
 	})
 	-- ===== Background Opcional =====
-	local bg_flag = false
+	bg_flag = false
 	if bg_flag then
 		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 		if cfg then
