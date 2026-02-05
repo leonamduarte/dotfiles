@@ -21,6 +21,25 @@ config.colors = {
 }
 config.force_reverse_video_cursor = true
 
+config.background = {
+	{
+		source = {
+			Gradient = {
+				orientation = "Vertical",
+				colors = {
+					-- "#16161e",
+					-- "#1a0f2e",
+					-- "#0a1a1f",
+					-- "#0f1a26",
+					"#011628",
+				},
+			},
+		},
+		width = "100%",
+		height = "100%",
+	},
+}
+
 local function file_exists(path)
 	local f = io.open(path, "r")
 	if f then
@@ -31,7 +50,7 @@ local function file_exists(path)
 end
 
 -- ===== Background Opcional =====
-local bg_flag = true
+local bg_flag = false
 if bg_flag then
 	local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 	if cfg then
@@ -105,9 +124,8 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 		"JetBrainsMono Nerd Font",
 		"SauceCodePro NF",
 	})
-
 	-- ===== Background Opcional =====
-	local bg_flag = true
+	local bg_flag = false
 	if bg_flag then
 		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 		if cfg then
