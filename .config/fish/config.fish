@@ -110,7 +110,7 @@ if status is-interactive
     # para garantir que você leia a lista de pacotes antes de quebrar algo.
 
     abbr --add update 'sudo pacman -Syu'
-    abbr --add install 'sudo pacman -S'
+    abbr --add install 'sudo pacman -S --noconfirm --needed'
     abbr --add search 'pacman -Ss'
 
     # Remoção Segura e Recursiva
