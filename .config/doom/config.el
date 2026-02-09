@@ -2,7 +2,7 @@
 
 ;; --- FIX: TRANSIENT ---
 (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-     (if (file-exists-p lfile) (load lfile)))
+  (if (file-exists-p lfile) (load lfile)))
 
 ;; -------------------------------
 ;; 1. IDENTIDADE & SISTEMA
@@ -12,10 +12,10 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                     "JetBrainsMono NF"
+                       "JetBrainsMono NF"
                      "CommitMono Nerd Font")))
-                     (setq doom-font (font-spec :family font-family :size 16)
-                           doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 16)
+        doom-variable-pitch-font (font-spec :family font-family :size 16)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
