@@ -14,31 +14,33 @@ config.font = wezterm.font_with_fallback({
 	"FiraCode Nerd Font",
 })
 
-config.color_scheme = "Eldritch"
+config.color_scheme = "OneDark (base16)"
+-- config.color_scheme = "Eldritch"
+-- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
 	cursor_bg = "white",
 	cursor_border = "white",
 }
 config.force_reverse_video_cursor = true
 
-config.background = {
-	{
-		source = {
-			Gradient = {
-				orientation = "Vertical",
-				colors = {
-					-- "#16161e",
-					-- "#1a0f2e",
-					-- "#0a1a1f",
-					-- "#0f1a26",
-					"#011628",
-				},
-			},
-		},
-		width = "100%",
-		height = "100%",
-	},
-}
+-- config.background = {
+-- 	{
+-- 		source = {
+-- 			Gradient = {
+-- 				orientation = "Vertical",
+-- 				colors = {
+-- 					-- "#16161e",
+-- 					-- "#1a0f2e",
+-- 					-- "#0a1a1f",
+-- 					-- "#0f1a26",
+-- 					-- "#011628",
+-- 				},
+-- 			},
+-- 		},
+-- 		width = "100%",
+-- 		height = "100%",
+-- 	},
+-- }
 
 local function file_exists(path)
 	local f = io.open(path, "r")
@@ -109,9 +111,9 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 
 	-- Ordem de fontes no Windows
 	config.font = wezterm.font_with_fallback({
-		"Maple Mono NF",
 		"DMMono Nerd Font",
 		"JetBrainsMono Nerd Font",
+		"Maple Mono NF",
 		"SauceCodePro NF",
 	})
 	-- ===== Background Opcional =====
