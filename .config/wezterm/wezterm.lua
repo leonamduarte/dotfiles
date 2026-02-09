@@ -6,11 +6,12 @@ local config = wezterm.config_builder()
 -- ============================================================================
 
 -- ===== Fonte e Cores =====
-config.font_size = 13
+config.font_size = 14
 config.font = wezterm.font_with_fallback({
+	"Iosevka Nerd Font",
+	"JetBrainsMono Nerd Font",
 	"DMMono Nerd Font",
 	"Maple Mono NF",
-	"JetBrainsMono Nerd Font",
 	"FiraCode Nerd Font",
 })
 
@@ -110,13 +111,14 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.window_decorations = "RESIZE"
 	config.use_fancy_tab_bar = false
 
-	-- Ordem de fontes no Windows
-	config.font = wezterm.font_with_fallback({
-		"DMMono Nerd Font",
-		"JetBrainsMono Nerd Font",
-		"Maple Mono NF",
-		"SauceCodePro NF",
-	})
+	-- -- Ordem de fontes no Windows
+	-- config.font = wezterm.font_with_fallback({
+	--    "JetBrainsMono Nerd Font",
+	-- 	"DMMono Nerd Font",
+	-- 	"Maple Mono NF",
+	-- 	"SauceCodePro NF",
+	-- })
+
 	-- ===== Background Opcional =====
 	bg_flag = false
 	if bg_flag then
