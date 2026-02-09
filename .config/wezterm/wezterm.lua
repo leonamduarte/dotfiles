@@ -14,7 +14,8 @@ config.font = wezterm.font_with_fallback({
 	"FiraCode Nerd Font",
 })
 
-config.color_scheme = "OneDark (base16)"
+config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "OneDark (base16)"
 -- config.color_scheme = "Eldritch"
 -- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
@@ -68,7 +69,7 @@ end
 config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 config.initial_rows = 35
 config.initial_cols = 120

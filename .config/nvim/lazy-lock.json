@@ -1,5 +1,5 @@
 {
-  "Doom-One.nvim": { "branch": "main", "commit": "83c6ea9b6673568f229618bfcdb659774fc18ede" },
+  "Doom-One.nvim": { "branch": "main", "commit": "328136cfb42fa4333cf3f7d0dc34cd2dda9070ff" },
   "LazyVim": { "branch": "main", "commit": "28db03f958d58dfff3c647ce28fdc1cb88ac158d" },
   "LuaSnip": { "branch": "master", "commit": "dae4f5aaa3574bd0c2b9dd20fb9542a02c10471c" },
   "SchemaStore.nvim": { "branch": "main", "commit": "ff73799fc8df725d51eada87a113581ba4d3717b" },
