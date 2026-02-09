@@ -1,81 +1,111 @@
-[general]
-working-directory = "$HOME"
+# ~/.config/rio/config.toml
 
-# ===== Cursor =====
+confirm-before-quit = false
+# ===========================================
+# FONTES
+# ===========================================
+[fonts]
+size = 16
+
+# Windows
+family = "Geist Mono"# Linux: Maple Mono NF (descomente se estiver no Linux)
+# regular = "Maple Mono NF"
+
+# ===========================================
+# CORES E TEMA
+# ===========================================
+[colors]
+# Rio tem suporte a temas built-in
+# Para Eldritch, use cores customizadas:
+background = "#0d0d0d"
+foreground = "#ebfafa"
+cursor = "#ffffff"
+selection-background = "#37375a"
+selection-foreground = "#ebfafa"
+
+# Cores normais
+black = "#04060c"
+red = "#f16c75"
+green = "#37f499"
+yellow = "#f1fc79"
+blue = "#04d1f9"
+magenta = "#a48cf2"
+cyan = "#7081d0"
+white = "#ebfafa"
+
+# Cores brilhantes
+bright-black = "#323449"
+bright-red = "#f16c75"
+bright-green = "#37f499"
+bright-yellow = "#f1fc79"
+bright-blue = "#04d1f9"
+bright-magenta = "#a48cf2"
+bright-cyan = "#7081d0"
+bright-white = "#ebfafa"
+
+# ===========================================
+# JANELA
+# ===========================================
+[window]
+# width = 120
+# height = 35
+opacity = 0.8
+decorations = "Disabled"  # "Enabled" no Windows se preferir
+blur = false
+
+[window.padding]
+x = 5
+y = 0
+
+# Background (opcional - descomente se tiver a imagem)
+# background-image = "~/.config/rio/bg-blurred.png"
+
+# ===========================================
+# CURSOR
+# ===========================================
 [cursor]
 shape = "beam"
 blinking = false
 
-# Opcional (novas versões): esconder cursor enquanto digita
-hide-cursor-when-typing = false
-
-# ===== Fontes =====
-[fonts]
-size = 16
-features = []
-use-drawable-chars = true
-symbol-map = []
-additional-dirs = []
-hinting = true            # antes estava como fonts.hinting; mantém aqui
-# line-height = 1.5
-
-# Desativa avisos de fonte ausente (mantém limpo em setups multi-SO)
-disable-warnings-not-found = false
-
-[fonts.regular]
-# family = "Hack Nerd Font"
-family = "BlexMono Nerd Font"
-# family = "GeistMono Nerd Font"
-# family = "Terminess Nerd Font Mono"
-# family = "JetBrainsMono Nerd Font"
-style = "Normal"
-width = "Normal"
-weight = 400
-
-[fonts.bold]
-family = "BlexMono Nerd Font"
-style = "Normal"
-width = "Normal"
-weight = 800
-
-[fonts.italic]
-family = "BlexMono Nerd Font"
-style = "Italic"
-width = "Normal"
-weight = 400
-
-[fonts.bold-italic]
-family = "BlexMono Nerd Font"
-style = "Italic"
-width = "Normal"
-weight = 800
-
-# ===== Navegação / Splits =====
+# ===========================================
+# NAVEGAÇÃO
+# ===========================================
 [navigation]
-use-split = true
-# Se quiser variar tabs/breadcrumb:
-# mode = "CollapsedTab"  # "Breadcrumb" | "TopTab" | "BottomTab"
-# unfocused-split-opacity = 0.9
+mode = "BottomTab"
+hide-if-single = true
 
-# ===== Janela =====
-[window]
-opacity = 1.0
-# blur = true
-decorations = "Disabled" # outras: "Enabled" | "Disabled" | "Buttonless"
+# ===========================================
+# SHELL (auto-detecta por padrão)
+# ===========================================
+# Rio detecta automaticamente o shell
+# Descomente apenas se quiser forçar:
 
-# Imagem de fundo (API suportada oficialmente)
-# [window.background-image]
-# path = "$HOME/.config/wezterm/bg-blurred.png"
-# opacity = 1.0
-# x = 0.0
-# y = -100.0
-# Recomendo definir width/height se quiser consistência entre monitores:
-# width = 1920.0
-# height = 1080.0
+# Linux:
+# [shell]
+# program = "/usr/bin/zsh"
+# args = ["-l"]
 
-# Evita “bold fica claro demais” — moveu daqui de [cursor]
-draw-bold-text-with-light-colors = false
+# Windows (Git Bash):
+# [shell]
+# program = "C:\\Program Files\\Git\\usr\\bin\\bash.exe"
+# args = ["--login", "-i"]
 
-# ===== Geral =====
-# Pede confirmação pra fechar? (false = não pergunta)
-confirm-before-quit = false
+# Windows (PowerShell):
+# [shell]
+# program = "powershell.exe"
+# args = ["-NoLogo"]
+
+# ===========================================
+# PERFORMANCE
+# ===========================================
+[renderer]
+performance = "High"
+target-fps = 120
+
+# ===========================================
+# ATALHOS
+# ===========================================
+[bindings]
+keys = [
+    { key = "v", with = "super", action = "Paste" },
+]

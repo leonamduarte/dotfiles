@@ -1,288 +1,238 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
+;; --- FIX: TRANSIENT ---
+(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+  (if (file-exists-p lfile) (load lfile)))
 
-;; Doom exposes five (optional) variables for controlling fonts in Doom:
-;;
-;; - `doom-font' -- the primary font to use
-;; - `doom-variable-pitch-font' -- a non-monospace font (where applicable)
-;; - `doom-big-font' -- used for `doom-big-font-mode'; use this for
-;;   presentations or streaming.
-;; - `doom-unicode-font' -- for unicode glyphs
-;; - `doom-serif-font' -- for the `fixed-pitch-serif' face
-;;
-;; See 'C-h v doom-font' for documentation and more examples of what they
-;; accept. For example:
-;;
-;;(setq doom-font (font-spec :family "Fira Code" :size 12 :weight 'semi-light)
-;;      doom-variable-pitch-font (font-spec :family "Fira Sans" :size 13))
-;;
-;; If you or Emacs can't find your font, use 'M-x describe-font' to look them
-;; up, `M-x eval-region' to execute elisp code, and 'M-x doom/reload-font' to
-;; refresh your font settings. If Emacs still can't find your font, it likely
-;; wasn't installed correctly. Font issues are rarely Doom issues!
-
-;; system-type is a variable defined in `C source code'.
-;; Its value is darwin
-
-;; Documentation:
-;; Value is symbol indicating type of operating system you are using.
-;; Special values:
-;;   `gnu'         compiled for a GNU Hurd system.
-;;   `gnu/linux'   compiled for a GNU/Linux system.
-;;   `darwin'      compiled for Darwin (GNU-Darwin, Mac OS X, ...).
-;;   `ms-dos'      compiled as an MS-DOS application.
-;;   `windows-nt'  compiled as a native W32 application.
-;;   `cygwin'      compiled using the Cygwin library.
-;; Anything else indicates some sort of Unix system.
-
-(if (eq system-type 'windows-nt)
-    (progn
-      ;; Configurações para Windows
-      (setq doom-font (font-spec :family "CaskaydiaCove NF" :size 17 :weight 'semi-light)
-            doom-variable-pitch-font (font-spec :family "CaskaydiaCove NF" :size 18)))
-  (progn
-    ;; Configurações para outros sistemas (Linux, macOS, etc.)
-    (setq doom-font (font-spec :family "CaskaydiaCove Nerd Font" :size 17 :weight 'semi-light)
-          doom-variable-pitch-font (font-spec :family "CaskaydiaCove Nerd Font" :size 18))))
-
-(setq doom-theme 'doom-one)
-;; (setq doom-theme 'doom-moonlight)
-;; (setq doom-theme 'catppuccin)
-;; (setq catppuccin-flavor 'frappe) ; or 'frappe 'latte, 'macchiato, or 'mocha
-;; (load-theme 'catppuccin t)
-;; (require 'kaolin-themes)
-;; (load-theme 'kaolin-valley-dark t)
-
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets. It is optional.
-
+;; -------------------------------
+;; 1. IDENTIDADE & SISTEMA
+;; -------------------------------
 (setq user-full-name "bashln"
-      user-mail-address "lpdmonteiro@gmail.com")
+      user-mail-address "lpdmonteiro+doom@gmail.com")
 
-;; Whenever you reconfigure a package, make sure to wrap your config in an
-;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
-;;
-;;   (after! PACKAGE
-;;     (setq x y))
-;;
-;; The exceptions to this rule:
-;;
-;;   - Setting file/directory variables (like `org-directory')
-;;   - Setting variables which explicitly tell you to set them before their
-;;     package is loaded (see 'C-h v VARIABLE' to look up their documentation).
-;;   - Setting doom variables (which start with 'doom-' or '+').
-;;
-;; Here are some additional functions/macros that will help you configure Doom.
-;;
-;; - `load!' for loading external *.el files relative to this one
-;; - `use-package!' for configuring packages
-;; - `after!' for running code after a package has loaded
-;; - `add-load-path!' for adding directories to the `load-path', relative to
-;;   this file. Emacs searches the `load-path' when you load packages with
-;;   `require' or `use-package'.
-;; - `map!' for binding new keys
-;;
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
-;; This will open documentation for it, including demos of how they are used.
-;; Alternatively, use `C-h o' to look up a symbol (functions, variables, faces,
-;; etc).
-;;
-;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
-;; they are implemented.
+;; Fontes (Monospace & Variable Pitch)
+(let ((font-family (if (eq system-type 'windows-nt)
+                       "BlexMono Nerd Font"
+                     "CommitMono Nerd Font")))
+  (setq doom-font (font-spec :family font-family :size 16)
+        doom-variable-pitch-font (font-spec :family font-family :size 16)))
 
-;; source: https://nayak.io/posts/golang-development-doom-emacs/
-;; golang formatting set up
-;; use gofumpt
-(after! lsp-mode
-  (setq  lsp-go-use-gofumpt t)
-  )
+;; UI / Tema
+(setq doom-theme 'doom-one)
+;; (setq doom-theme 'catppuccin)
+;; (setq catppuccin-flavor 'macchiato)
+(setq display-line-numbers-type t
+      confirm-kill-emacs nil)
+(setq-default tab-width 2)
 
-;; enable all analyzers; not done by default
-(after! lsp-mode
-  (setq  lsp-go-analyses '((nilness . t)
-                           (shadow . t)
-                           (unusedparams . t)
-                           (unusedwrite . t)
-                           (useany . t)
-                           (unusedvariable . t)))
-  )
+;; -------------------------------
+;; 2. ORG MODE
+;; -------------------------------
+(after! org
+  (setq org-directory "~/org/"
+        org-default-notes-file (expand-file-name "inbox.org" org-directory)
+        org-ellipsis " ▼ "
+        org-log-done 'time
+        org-log-into-drawer t
+        org-hide-emphasis-markers t
+        org-todo-keywords
+        '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAIT(w)" "PROJ(p)" "|" "DONE(d)" "CANCELLED(c)")))
+  (add-to-list 'org-modules 'org-habit))
 
-(setq confirm-kill-emacs nil)        ;; Don't confirm on exit
-;; (setq initial-buffer-choice 'eshell) ;; Eshell is initial buffer
+(after! org-agenda
+  (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$") ; Pega tudo recursivamente
+        org-agenda-start-on-weekday nil
+        org-agenda-span 1
+        org-agenda-skip-deadline-if-done t
+        org-agenda-skip-scheduled-if-done t))
 
-;; Org base
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(add-hook 'org-mode-hook #'hl-todo-mode)
+(use-package! org-super-agenda
+  :after org-agenda
+  :config
+  (org-super-agenda-mode)
+  (setq org-super-agenda-groups
+        '((:name "🔥 Urgente"  :deadline today :priority "A")
+          (:name "🗓 Hoje"       :scheduled today)
+          (:name "📦 Projetos" :tag "project")
+          (:name "✅ Concluídas" :todo "DONE" :order 99))))
+
+(use-package! org-modern
+  :hook (org-mode . org-modern-mode)
+  :config
+  (setq org-modern-table t
+        org-modern-hide-stars t))
+
+(use-package! org-auto-tangle
+  :hook (org-mode . org-auto-tangle-mode)
+  :config (setq org-auto-tangle-default t))
 
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
-(after! org
-  (setq org-directory "~/org/"
-        org-modern-table t
-        org-modern-table-vertical 1
-        org-default-notes-file (expand-file-name "notes.org" org-directory)
-        org-ellipsis " ▼ "
-        org-superstar-headline-bullets-list '("◉" "●" "○" "◆" "●" "○" "◆")
-        org-superstar-itembullet-alist '((?+ . ?➤) (?- . ?✦)) ; changes +/- symbols in item lists
-        org-log-done 'time
-        org-hide-emphasis-markers t
-        ;; ex. of org-link-abbrev-alist in action
-        ;; [[arch-wiki:Name_of_Page][Description]]
-        ;; org-link-abbrev-alist    ; This overwrites the default Doom org-link-abbrev-list
-        ;; '(("google" . "http://www.google.com/search?q=")
-        ;;   ("arch-wiki" . "https://wiki.archlinux.org/index.php/")
-        ;;   ("ddg" . "https://duckduckgo.com/?q=")
-        ;;   ("wiki" . "https://en.wikipedia.org/wiki/"))
-        org-table-convert-region-max-lines 20000
-        org-todo-keywords        ; This overwrites the default Doom org-todo-keywords
-        '((sequence
-           "TODO(t)"           ; A task that is ready to be tackled
-           "BLOG(b)"           ; Blog writing assignments
-           "GYM(g)"            ; Things to accomplish at the gym
-           "PROJ(p)"           ; A project that contains other tasks
-           "VIDEO(v)"          ; Video assignments
-           "WAIT(w)"           ; Something is holding up this task
-           "|"                 ; The pipe necessary to separate "active" states and "inactive" states
-           "DONE(d)"           ; Task has been completed
-           "CANCELLED(c)" )))) ; Task has been cancelled
 
-;; Org-auto-tangle
-;; org-auto-tangle allows you to add the option #+auto_tangle: t in your Org file so that it automatically tangles when you save the document.  I have made adding this to your file even easier by creating a function ‘bashln/insert-auto-tangle-tag’ and setting it to a keybinding ‘SPC i a’.
-(use-package! org-auto-tangle
-  :hook (org-mode . org-auto-tangle-mode)
-  :config
-  (setq org-auto-tangle-default t))
+;; -------------------------------
+;; 3. DESENVOLVIMENTO & LSP
+;; -------------------------------
 
-(defun bashln/insert-auto-tangle-tag ()
-  "Insert '#+auto_tangle: t' at point or top of buffer in a literate config."
-  (interactive)
-  (if (derived-mode-p 'org-mode)
-      (progn
-        (evil-org-open-below 1)
-        (insert "#+auto_tangle: t\n")
-        (evil-force-normal-state))
-    (message "Not in an Org buffer!")))
+;; Tuning JS/TS
+(after! js2-mode
+  (setq js2-basic-offset 2
+        js2-bounce-indent-p nil
+        js2-strict-missing-semi-warning nil))
 
-(map! :leader
-      :desc "Insert auto_tangle tag"
-      "i a" #'bashln/insert-auto-tangle-tag)
+;; Treesitter Auto Install
+(use-package! treesit-auto
+  :config (global-treesit-auto-mode))
 
-
-;; This sets the font size for each Org header level.  Having variable font sizes in an Org outline makes it visually appealing and more readable.
-(custom-theme-set-faces!
-  'doom-one
-  '(org-level-8 :inherit outline-3 :height 1.0)
-  '(org-level-7 :inherit outline-3 :height 1.0)
-  '(org-level-6 :inherit outline-3 :height 1.1)
-  '(org-level-5 :inherit outline-3 :height 1.2)
-  '(org-level-4 :inherit outline-3 :height 1.3)
-  '(org-level-3 :inherit outline-3 :height 1.4)
-  '(org-level-2 :inherit outline-2 :height 1.5)
-  '(org-level-1 :inherit outline-1 :height 1.6)
-  '(org-document-title  :height 1.8 :bold t :underline nil))
-
-;; Markdown Mode
-(custom-set-faces
- '(markdown-header-face ((t (:inherit font-lock-function-name-face :weight bold :family "variable-pitch"))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.6))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.5))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :height 1.4))))
- '(markdown-header-face-4 ((t (:inherit markdown-header-face :height 1.3))))
- '(markdown-header-face-5 ((t (:inherit markdown-header-face :height 1.2))))
- '(markdown-header-face-6 ((t (:inherit markdown-header-face :height 1.1)))))
-
-(defun bashln/toggle-markdown-view-mode ()
-  ;; "Toggle between `markdown-mode' and `markdown-view-mode'."
-  (interactive)
-  (if (eq major-mode 'markdown-view-mode)
-      (markdown-mode)
-    (markdown-view-mode)))
-
-;; workaround the error
-;; condition-case: Error in a Doom startup hook: doom-first-file-hook, global-git-commit-mode, (void-function transient--set-layout)
-
-(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-  (if (file-exists-p lfile)
-      (load lfile)))
-
-;; Copilot.el
-
-;; accept completion from copilot and fallback to company
+;; Copilot - FIX: Não conflita com corfu
 (use-package! copilot
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("<tab>" . 'copilot-accept-completion)
-              ("TAB" . 'copilot-accept-completion)
-              ("C-TAB" . 'copilot-accept-completion-by-word)
-              ("C-<tab>" . 'copilot-accept-completion-by-word)
-              ("C-n" . 'copilot-next-completion)
-              ("C-p" . 'copilot-previous-completion))
-
+              ;; MUDANÇA: Use C-j ao invés de TAB para não conflitar com corfu
+              ("C-j" . 'copilot-accept-completion)
+              ("C-S-j" . 'copilot-accept-completion-by-word))
   :config
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
-  (add-to-list 'copilot-indentation-alist '(org-mode 2))
-  (add-to-list 'copilot-indentation-alist '(text-mode 2))
-  (add-to-list 'copilot-indentation-alist '(clojure-mode 2))
-  (add-to-list 'copilot-indentation-alist '(emacs-lisp-mode 2))
-  :init
   (setq copilot-indent-offset-warning-disable t)
-  )
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
 
-(setq-default tab-width 2)
+;; -------------------------------
+;; 4. COMPLETION (Vertico/Corfu)
+;; -------------------------------
+(after! marginalia (marginalia-mode))
 
-;; Remove js2-mode from auto-mode-alist for .js files and replace it with js2-mode
+(after! corfu
+  (setq corfu-auto t
+        corfu-auto-delay 0.1
+        corfu-auto-prefix 2
+        corfu-cycle t
+        corfu-quit-no-match 'separator  ;; FIX: Evita o erro de nil
+        corfu-preselect 'prompt         ;; Não pré-seleciona primeira opção
+        corfu-popupinfo-delay 0.5
+        corfu-popupinfo-max-height 6)
+  ;; IMPORTANTE: Garante que TAB funciona com corfu
+  (map! :map corfu-map
+        "TAB" #'corfu-next
+        [tab] #'corfu-next
+        "S-TAB" #'corfu-previous
+        [backtab] #'corfu-previous))
 
-(add-to-list 'major-mode-remap-alist '(js-mode . js2-mode))
-(after! js2-mode
-  (setq js2-basic-offset 2     
-        js2-bounce-indent-p nil))
+(after! orderless
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; Prettier como formatador via Apheleia
+(map! :leader
+      "b b" #'consult-buffer
+      "f r" #'consult-recent-file)
+(map! "C-." #'embark-act)
+
+(after! eldoc
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-display-functions '(eldoc-display-in-echo-area)))
+
+;; -------------------------------
+;; 5. FORMATAÇÃO (ESTILO NEOVIM)
+;; -------------------------------
+
+;; 1. Desativa o 'mordomo' (ws-butler) que protege espaços
+(setq ws-butler-mode nil)
+
+;; 2. Configura Apheleia (Formatador Assíncrono)
 (after! apheleia
   (setf (alist-get 'prettier apheleia-formatters)
-        '("npx" "prettier" "--config" "~/.config/prettier/.prettierrc" "--stdin-filepath" filepath))
-  (dolist (m '(js2-mode typescript-mode tsx-ts-mode json-mode))
-    (setf (alist-get m apheleia-mode-alist) '(prettier))))
+        '("prettier" "--stdin-filepath" filepath))
+  (setf (alist-get 'css-mode apheleia-mode-alist) 'prettier)
+  (apheleia-global-mode +1))
 
+;; 3. Hooks de Limpeza Nuclear (Igual ao Nvim)
+;; Garante remoção de espaços e nova linha no final SEMPRE.
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq require-final-newline t)
 
-;; Tree Sitter
-;; (setq +tree-sitter-hl-enabled-modes t)
-;; (after! tree-sitter
-;;         (global-tree-sitter-mode)
-;;         (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+;; 4. Prioridade de Formatação
+(setq-hook! 'lua-mode-hook +format-with-lsp nil) ;; Usa stylua, não lua-lsp
+(setq-hook! 'python-mode-hook +format-with-lsp nil) ;; Usa black/ruff, não pyright
 
-(use-package! treesit-auto
-  :custom
-  ;; Pergunta antes de instalar grammar
-  (treesit-auto-install 'prompt)
+;; -------------------------------
+;; 6. LSP TUNING & BOOSTER (PERFORMANCE CRÍTICA)
+;; -------------------------------
+
+(after! lsp-mode
+  ;; Configs Gerais
+  (setq lsp-go-use-gofumpt t
+        lsp-go-analyses '((nilness . t) (unusedparams . t) (unusedwrite . t)))
+
+  ;; Tuning de Performance
+  (setq lsp-use-plists t
+        lsp-idle-delay 0.500
+        lsp-log-io nil
+        lsp-completion-provider :none  ;; FIX: Desativa completion do LSP, usa só corfu
+        lsp-headerline-breadcrumb-enable nil ;; Desativa breadcrumbs (menos ruído visual/proc)
+        +format-with-lsp nil)) ;; Desativa globalmente, confiamos no módulo :editor format
+
+;; Emacs LSP Booster Wrapper
+(defun lsp-booster--advice-json-parse (old-fn &rest args)
+  "Try to parse bytecode instead of json."
+  (or
+   (when (equal (following-char) ?#)
+     (let ((bytecode (read (current-buffer))))
+       (when (byte-code-function-p bytecode)
+         (funcall bytecode))))
+   (apply old-fn args)))
+
+(advice-add (if (progn (require 'json)
+                       (fboundp 'json-parse-buffer))
+                'json-parse-buffer
+              'json-read)
+            :around
+            #'lsp-booster--advice-json-parse)
+
+(defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
+  "Prepend emacs-lsp-booster command to lsp CMD."
+  (let ((orig-result (funcall old-fn cmd test?)))
+    (if (and (not test?)
+             (not (file-remote-p default-directory))
+             lsp-use-plists
+             (not (functionp 'json-rpc-connection))
+             (executable-find "emacs-lsp-booster"))
+        (progn
+          (cons "emacs-lsp-booster" orig-result))
+      orig-result)))
+(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
+
+;; Limites de I/O
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setenv "LSP_USE_PLISTS" "true")
+
+;; -------------------------------
+;; 7. EXTRA TOOLS
+;; -------------------------------
+
+;; Neotree
+(map! :leader
+      :desc "Toggle Neotree" "o n" #'neotree-toggle
+      :desc "Neotree Directory" "o N" #'neotree-dir)
+
+;; Grease
+(use-package! grease
+  :init
+  (setq grease-sort-method 'type
+        grease-show-hidden nil
+        grease-preview-window-width 0.4)
   :config
-  ;; Por enquanto, só quero tree-sitter nessas linguagens
-  (setq treesit-auto-langs '(tsx typescript))
+  (map! :leader
+        (:prefix ("o g" . "Grease")
+         :desc "Toggle Grease"            "g" #'grease-toggle
+         :desc "Open Grease (current)"    "o" #'grease-open
+         :desc "Open at project root"     "h" #'grease-here)
+        :desc "Toggle Grease like Oil.nvim" "-" #'grease-toggle))
 
-  ;; Usa essa lista pra configurar auto-mode-alist
-  (treesit-auto-add-to-auto-mode-alist)
+;; fzf recursivo com fd
+(map! :leader
+      :desc "fzf search files" "s z" #'counsel-fzf)
 
-  ;; Liga o modo global de decisão entre *-mode e *-ts-mode
-  (global-treesit-auto-mode))
+;; Configurar fd como backend do fzf
+(after! counsel
+  (setq counsel-fzf-cmd "fd --type f --hidden --follow --exclude .git"))
 
-
-(add-hook 'js2-mode-hook #'apheleia-mode)  ;; formatar ao salvar nesse modo
-;; ou globalmente:
-(apheleia-global-mode +1)
-
-;; Já que você usa js2-mode, silencie o aviso de ponto-e-vírgula se quiser:
-(after! js2-mode
-  (setq js2-strict-missing-semi-warning nil))
-
-;; LSP continua com Eglot:
-;; (setq eglot-format-on-save nil) ; deixa a formatação pro Prettier
-
-
+;; Mason (Opcional - Recomendado usar PARU no lugar)
+;; (use-package! mason :config (mason-setup))

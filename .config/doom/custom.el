@@ -4,16 +4,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("5291b60ee27dfc12078f787929498ce82efe5e4d42decdbb994be80cdb2def1f"
-     "9d5a33a0097c43f44759530c846e1adf9c40171f232a4b2ae561feccc99a03c4"
-     "1e6997bc08f0b11a2b5b6253525aed4e1eb314715076a0c0c2486bd97569f18a"
-     "83550d0386203f010fa42ad1af064a766cfec06fc2f42eb4f2d89ab646f3ac01" default))
- '(helm-minibuffer-history-key "M-p")
- '(package-selected-packages '(copilot tss)))
+ '(package-selected-packages '(eglot mason)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-checkbox ((t (:height 1.5))))
+ '(org-document-title ((t (:height 1.5 :bold t :underline nil))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.3))))
+ '(org-level-4 ((t (:inherit outline-3 :height 1.3))))
+ '(org-level-5 ((t (:inherit outline-3 :height 1.2))))
+ '(org-level-6 ((t (:inherit outline-3 :height 1.2))))
+ '(org-level-7 ((t (:inherit outline-3 :height 1.1))))
+ '(org-level-8 ((t (:inherit outline-3 :height 1.1)))))

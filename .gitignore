@@ -1,48 +1,80 @@
-# Ignora tudo por padrão
+
+# Ignora tudo na raiz
 /*
 
-# Exceto o .config e arquivos específicos na raiz
-!.config/
-!.zshrc
-!.gitignore
+# ============================================================
+# SEGURANÇA CRÍTICA
+# ============================================================
 
-# Dentro do .config, ignora tudo...
+# NUNCA rastreie dados sensíveis (mesmo que permitidos depois)
+.ssh/
+.gnupg/
+.password-store/
+*.pem
+*.key
+*_rsa
+*_ed25519
+*id_rsa*
+*id_ed25519*
+*.ppk
+.aws/
+.kube/
+.config/fish/conf.d/secrets.fish
+.config/fish/fish_variables
+
+# Permite arquivos específicos na raiz
+!.gitignore
+!.zshrc
+!.bashrc
+
+# Permite pastas específicas na raiz
+!.config/
+!scripts/
+!.local/
+
+# Ignora tudo dentro de .config
 .config/*
 
-# ...exceto as pastas importantes
-!.config/alacritty/
-!.config/autostart/
-!.config/doom/
-!.config/emacs/
-!.config/fish/
-!.config/ghostty/
+# Permite apenas o que importa dentro de .config
+!.config/hypr/*.conf
+!.config/hypr/dms/
 !.config/hypr/
-!.config/i3/
+!.config/qtile/
+!.config/alacritty/
+!.config/ghostty/
 !.config/kitty/
-!.config/kvantum/
+!.config/wezterm/
+!.config/doom/
 !.config/lazyvim/
+!.config/leovim/
 !.config/neovide/
 !.config/nvim/
-!.config/picom/
 !.config/polybar/
-!.config/qtile/
+!.config/picom/
 !.config/rio/
 !.config/rofi/
-!.config/sway/
-!.config/variety/
-!.config/waybar/
-!.config/wezterm/
 !.config/yazi/
-!.config/tabby/
-!.config/fastfetch/
+!.config/autostart/*.sh
+!.config/bashmacs/*.el
 
-# Arquivos diretos dentro de .config
-!.config/mimeapps.list
-
-# Fontes
-!.local/share/fonts/
-!.fonts/
-
-# Ignora arquivos de metadados do Windows
+# Ignora lixo
 *Zone.Identifier*
 
+# Neovim / Vim swap & undo
+*.swp
+*.swo
+undo/
+.netrwhist
+shada/
+
+# Doom Emacs / Emacs
+.dir-locals.el
+.elc
+*~
+\#*\#
+.projectile
+
+# Permite fontes
+!.local/share/
+.local/share/*
+!.local/share/fonts/

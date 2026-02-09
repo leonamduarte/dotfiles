@@ -37,11 +37,6 @@ from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
 # from spotify import Spotify
 
 
-@hook.subscribe.startup_once
-def autostart():
-    subprocess.Popen(["/usr/lib/xfce4/notifyd/xfce4-notifyd"])
-
-
 def dmlogout():
     qtile.cmd_spawn("sh -c /home/lm/.config/qtile/scripts/dm-logout.sh")
 
@@ -63,12 +58,11 @@ powerline = {
 
 mod = "mod4"  # Sets mod key to SUPER/WINDOWS
 myTerm = "wezterm"  # My terminal of choice
-myBrowser = "firefox-developer-edition"  # My browser of choice
-myBrowser2 = "zen-browser"  # My browser of choice
+myBrowser = "brave"  # My browser of choice
 myFiles = "thunar"  # My file manager of choice
 myCode = "code"  # vscode
-myMusic = "flatpak run com.spotify.Client"  # spotify
-myEmacs = "emacs"  # The space at the end is IMPORTANT!
+myMusic = "spotify"  # spotify
+myEmacs = "emacs --init-directory ~/.config/bashmacs"  # The space at the end is IMPORTANT!
 myNeovim = "neovide"
 logOut = dmlogout
 
@@ -107,20 +101,13 @@ keys = [
     # The essentials
     Key([mod], "Return", lazy.spawn(myTerm), desc="Terminal"),
     Key([mod, "shift"], "d", lazy.spawn("rofi -show drun"), desc="Run Launcher"),
-    Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
+    # Key([mod, "shift"], "s", lazy.spawn("flameshot gui"), desc="Run screenshot"),
     Key([mod, "shift"], "Return", lazy.spawn(myFiles), desc="Run thunar"),
     Key([mod, "shift"], "p", lazy.shutdown(), desc="Shutdown Qtile"),
-    Key([mod, "shift"], "w", lazy.spawn(myBrowser), desc="Web browser 2"),
-    Key([mod], "F1", lazy.spawn(myBrowser2), desc="Web browser"),
+    Key([mod, "shift"], "w", lazy.spawn(myBrowser), desc="Web browser"),
     Key([mod], "F2", lazy.spawn(myCode), desc="code"),
-    Key([mod], "F3", lazy.spawn(myNeovim), desc="nvim"),
-    Key([mod], "F4", lazy.spawn(myMusic), desc="spotify"),
-    # Fechar notificação mais recente
-    Key(["mod4"], "n", lazy.spawn("dunstctl close")),
-    # Fechar todas as notificações
-    Key(["mod4", "shift"], "n", lazy.spawn("dunstctl close-all")),
-    # Reabrir última notificação fechada
-    Key(["mod4", "control"], "n", lazy.spawn("dunstctl history-pop")),
+    Key([mod, "shift"], "n", lazy.spawn(myNeovim), desc="nvim"),
+    Key([mod, "shift"], "s", lazy.spawn(myMusic), desc="spotify"),
     Key(
         [mod],
         "b",
@@ -128,7 +115,7 @@ keys = [
         desc="Toggles the bar to show/hide",
     ),
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod, "shift"], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "r", lazy.reload_config(), desc="Reload the config"),
     Key(
         [mod, "shift"],
@@ -224,7 +211,6 @@ keys = [
     Key(
         [mod],
         "f",
-        maximize_by_switching_layout(),
         lazy.window.toggle_fullscreen(),
         desc="toggle fullscreen",
     ),
@@ -250,7 +236,7 @@ for key, (cmd, desc) in power_commands.items():
     keys.append(Key([mod, "control"], key, lazy.spawn(cmd), desc=desc))
 
 
-groups = []
+# groups = []
 group_names = ["1", "2", "3", "4", "5"]
 # group_names = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
 # group_labels = ["DEV", "WWW", "SYS", "MUS", "VBOX", "CHAT", "DOC", "VID", "GFX", "MISC"]
@@ -258,38 +244,25 @@ group_names = ["1", "2", "3", "4", "5"]
 # group_labels = ["I", "II", "III", "IV", "V", "VI"]
 # group_labels = ["", "", "", "", "", ""]
 group_labels = ["", "", "", "", ""]
-group_layouts = [
-    "monadtall",
-    "monadtall",
-    "monadtall",
-    "monadtall",
-    "monadtall",
-]
+group_layouts = ["monadtall"] * len(group_names)
 
-for name, label in zip(group_names, group_labels):
+# Cria grupos 1-5
+groups = []
+
+for i, name in enumerate(group_names):
+    matches = []
+    if name == "2":
+        matches = [Match(wm_class="firefox-developer-edition")]
+
     groups.append(
         Group(
             name=name,
-            layout="monadtall",
-            label=label,
-        )
-    )
-
-
-# Cria grupos 1-5
-for i in range(len(group_names)):
-    # Define a lista de 'matches' para cada grupo
-    matches = None
-    if group_names[i] == "2":
-        # Se o grupo for o '2', adiciona a regra para o Vivaldi
-        matches = [Match(wm_class="firefox-developer-edition")]
-    groups.append(
-        Group(
-            name=group_names[i],
-            layout=group_layouts[i].lower(),
             label=group_labels[i],
+            layout=group_layouts[i],
+            matches=matches,
         )
     )
+
 
 # Keybindings para grupos 1-5
 # for group in groups[:-1]:  # Exclui o �ltimo grupo ("6")
@@ -317,7 +290,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="0xProto Nerd Font Mono", fontsize=12, padding=0, background=color[0]
+    font="JetBrainsMono", fontsize=12, padding=0, background=color[0]
 )
 
 
@@ -327,7 +300,7 @@ extension_defaults = widget_defaults.copy()
 def separator():
     return widget.TextBox(
         text="|",
-        font="0xProto Nerd Font Mono",
+        font="JetBrainsMono",
         foreground=color[9],
         padding=2,
         fontsize=14,
@@ -342,7 +315,7 @@ def init_widgets_list():
             scale="False",
             mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("rofi -show drun")},
         ),
-        widget.Prompt(font="0xProto Nerd Font Mono", fontsize=10, foreground=color[1]),
+        widget.Prompt(font="JetBrainsMono", fontsize=10, foreground=color[1]),
         widget.GroupBox(
             fontsize=22,
             margin_y=3,
@@ -373,10 +346,11 @@ def init_widgets_list():
             foreground=color[3],
         ),
         separator(),
-        widget.CurrentLayout(foreground=color[8], padding=5),
+        widget.CurrentLayout(foreground=color[8], padding=5, **powerline),
+
         widget.TextBox(
             text="|",
-            font="0xProto Nerd Font Mono",
+            font="JetBrainsMono",
             foreground=color[9],
             padding=2,
             fontsize=14,
@@ -429,6 +403,15 @@ def init_widgets_list():
             # Uncomment for time only
             format="⧗  %I:%M %p",
         ),
+        # Adicione na lista de widgets, por exemplo, após o GenPollText (uname -r)
+        # Requer o pacote libqtile-extras ou a libqtile nativa (CheckUpdates)
+        widget.CheckUpdates(
+            distro="Arch",
+            update_interval=1800, # 30 minutos
+            display_format="📦 {updates}",
+            no_update_string="📦 0 ",
+            mouse_callbacks={"Button1": lambda: qtile.cmd_spawn(myTerm + " -e sudo pacman -Syu")},
+        ),
         widget.Systray(padding=6),
         widget.Spacer(length=8),
     ]
@@ -444,10 +427,18 @@ def init_widgets_screen1():
 
 
 def init_widgets_screen2():
-    widgets_screen2 = init_widgets_list()
-    del widgets_screen2[16:20]
-    return widgets_screen2
+    widgets = []
 
+    for w in init_widgets_list():
+        if isinstance(w, widget.Systray):
+            continue
+        widgets.append(w)
+
+    # Remove Spacer final se existir
+    if widgets and isinstance(widgets[-1], widget.Spacer):
+        widgets.pop()
+
+    return widgets
 
 # For adding transparency to your bar, add (background="#00000000") to the "Screen" line(s)
 # For ex: Screen(top=bar.Bar(widgets=init_widgets_screen2(), background="#00000000", size=24)),
@@ -469,39 +460,6 @@ if __name__ in ["config", "__main__"]:
     widgets_list = init_widgets_list()
     widgets_screen1 = init_widgets_screen1()
     widgets_screen2 = init_widgets_screen2()
-
-
-def window_to_prev_group(qtile):
-    if qtile.currentWindow is not None:
-        i = qtile.groups.index(qtile.currentGroup)
-        qtile.currentWindow.togroup(qtile.groups[i - 1].name)
-
-
-def window_to_next_group(qtile):
-    if qtile.currentWindow is not None:
-        i = qtile.groups.index(qtile.currentGroup)
-        qtile.currentWindow.togroup(qtile.groups[i + 1].name)
-
-
-def window_to_previous_screen(qtile):
-    i = qtile.screens.index(qtile.current_screen)
-    if i != 0:
-        group = qtile.screens[i - 1].group.name
-        qtile.current_window.togroup(group)
-
-
-def window_to_next_screen(qtile):
-    i = qtile.screens.index(qtile.current_screen)
-    if i + 1 != len(qtile.screens):
-        group = qtile.screens[i + 1].group.name
-        qtile.current_window.togroup(group)
-
-
-def switch_screens(qtile):
-    i = qtile.screens.index(qtile.current_screen)
-    group = qtile.screens[i - 1].group
-    qtile.current_screen.set_group(group)
-
 
 mouse = [
     Drag(
@@ -567,16 +525,9 @@ wl_input_rules = None
 @hook.subscribe.startup_once
 def start_once():
     home = os.path.expanduser("~")
-    # subprocess.call([home + '/.config/qtile/scripts/autostart.sh'])
-    subprocess.call([home + "/.config/qtile/autostart.sh"])
-
+    autostart_path = os.path.expanduser("~/.config/qtile/autostart.sh")
+    qtile.cmd_spawn(autostart_path)
 
 # @hook.subscribe.startup_once
-
-
-def _move_group6_to_secondary():
-    # Mova o grupo "6" para o segundo monitor (indice 1)
-    qtile.groups["6"].cmd_toscreen(1)
-
 
 wmname = "LG3D"

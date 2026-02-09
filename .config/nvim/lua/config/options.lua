@@ -1,6 +1,6 @@
--- Options são carregadas antes do LazyVim: veja os defaults aqui:
--- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
--- Este arquivo apenas complementa/sobrepõe.
+-- Options are automatically loaded before lazy.nvim startup
+-- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+-- Add any additional options here
 
 local opt = vim.opt
 local g = vim.g
@@ -41,6 +41,7 @@ opt.timeoutlen = 400
 -- ========== Outros ==========
 opt.splitbelow = true
 opt.splitright = true
+opt.conceallevel = 2
 
 -- ===== LazyVim specifics =====
 -- ESLint autoformat (se estiver usando extras linting.eslint)

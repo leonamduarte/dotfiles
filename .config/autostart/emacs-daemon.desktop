@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Emacs Daemon
-Exec=emacs --daemon
-Comment=Start Emacs as a daemon

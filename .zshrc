@@ -1,65 +1,122 @@
-#!/usr/bin/env zsh
-# ────────────────────────────────────────────────
-# Autor      : leonamsh
-# Data       : 2025-09-01
-# Descrição  : Configuração simplificada do Zsh com Oh My Zsh, plugins e aliases
-# Licença    : Uso pessoal
-# Contato    : github.com/leonamsh
-# ────────────────────────────────────────────────
+############################################################
+# Zsh config — Leo (bashln)
+# Distro: Pop!_OS 24.04 (APT)
+# Data: 2025-09-01
+# Descrição: Zsh + Starship + fzf + zoxide + aliases pessoais
+############################################################
 
-# 0) Powerlevel10k instant prompt (deve ficar no topo)
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+## ==========================================================
+## 0) Só para shells interativos
+## ==========================================================
+[[ -o interactive ]] || return
 
-# 1) PATHs básicos
+
+## ==========================================================
+## 1) PATHs
+## ==========================================================
+source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 export PATH="$HOME/.local/bin:$HOME/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH"
 
-# 2) Oh My Zsh + Tema
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"   # usa p10k via oh-my-zsh
+# Neovim manual (se existir)
+[ -d /opt/nvim-linux-x86_64/bin ] && export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
-# Plugins (ordem importa: syntax-highlighting por último)
-plugins=(
-  git
-  zsh-autosuggestions
-  history-substring-search
-  zsh-syntax-highlighting
-)
+# Linuxbrew
+if [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
 
-# Carrega Oh My Zsh e o tema
-source "$ZSH/oh-my-zsh.sh"
 
-# p10k (carrega configuração se existir)
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+## ==========================================================
+## 2) Editor padrão
+## ==========================================================
+export EDITOR=nvim
 
-# 3) Autocomplete e histórico
-autoload -Uz compinit && compinit -C
 
+## ==========================================================
+## 3) História (estilo Fish)
+## ==========================================================
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-setopt INC_APPEND_HISTORY SHARE_HISTORY HIST_IGNORE_ALL_DUPS
+
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+
+
+## ==========================================================
+## 4) Completion moderna
+## ==========================================================
+autoload -Uz compinit
+compinit
 
 # Case-insensitive completion
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
-# zsh-autosuggestions: cor discreta
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
+# Menu interativo
+zstyle ':completion:*' menu select
 
-# 4) Ferramentas/integrações opcionais
-# zoxide (cd mais inteligente). Obs: redefine 'cd' para 'z' — comente se não quiser.
-eval "$(zoxide init zsh)"
-alias cd="z"
 
-# nvm (Node.js)
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && . "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && . "$NVM_DIR/bash_completion"
+## ==========================================================
+## 5) Starship (prompt)
+## ==========================================================
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
-# 5) Atalhos comuns (agrupados)
-# 5.1 — Git
+
+## ==========================================================
+## 6) fzf (APT-friendly)
+## ==========================================================
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+
+## ==========================================================
+## 7) zoxide (cd inteligente)
+## ==========================================================
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+fi
+
+
+## ==========================================================
+## Node.js (fnm)
+## ==========================================================
+export FNM_PATH="$HOME/.local/share/fnm"
+export PATH="$FNM_PATH:$PATH"
+eval "$(fnm env)"
+
+
+## ==========================================================
+## 9) Keybinds úteis
+## ==========================================================
+autoload -Uz up-line-or-beginning-search
+autoload -Uz down-line-or-beginning-search
+
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
+
+## ==========================================================
+## 10) Aliases — ls (eza)
+## ==========================================================
+alias ls='eza -al --color=always --group-directories-first --icons'
+alias la='eza -a  --color=always --group-directories-first --icons'
+alias ll='eza -l  --color=always --group-directories-first --icons'
+alias lt='eza -aT --color=always --group-directories-first --icons'
+alias l.='eza -a | grep -e "^\."' 
+
+
+## ==========================================================
+## 11) Aliases — Git
+## ==========================================================
 alias gs='git status'
 alias ga='git add -A'
 alias gc='git commit -m'
@@ -68,84 +125,139 @@ alias gl='git pull'
 alias gco='git checkout'
 alias gitr='git remote set-url origin'
 alias clone='git clone'
+alias lz='lazygit'
 
-# 5.2 — Navegação
+
+## ==========================================================
+## 12) Aliases — Navegação
+## ==========================================================
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
-alias cdg='cd ~/.config'
-alias cddev='cd /run/media/lm/dev/'
 
-# 5.3 — Neovim / Emacs
-export EDITOR=nvim
+alias cdg='cd ~/.config'
+alias cddev='cd ~/bashln/'
+alias cdprojeto='cd ~/bashln/projeto-mercado'
+
+
+## ==========================================================
+## 13) Aliases — Neovim / Emacs
+## ==========================================================
 alias v='nvim'
 alias vim='nvim'
-# atalhos de edição/configuração
+
 alias nkitty='nvim ~/.config/kitty/kitty.conf'
 alias nwez='nvim ~/.config/wezterm/wezterm.lua'
+alias nmacs='nvim ~/.config/emacs/'
+alias nalac='nvim ~/.config/alacritty/alacritty.toml'
+alias nghost='nvim ~/.config/ghostty/config'
 alias nzsh='nvim ~/.zshrc'
+alias nbash='nvim ~/.bashrc'
 alias nfish='nvim ~/.config/fish/config.fish'
-# ambientes Neovim
-alias nvima='env NVIM_APPNAME=astronvim nvim'
-alias nvimc='env NVIM_APPNAME=nvchad nvim'
-alias nviml='env NVIM_APPNAME=lazynvim nvim'
+
+alias nprojeto='nvim ~/gitlab/projeto-mercado/'
+alias nsway='nvim ~/.config/sway'
+alias nrascunho='nvim ~/Documents/rascunhos/'
+
+# Ambientes Neovim
+alias nvima='NVIM_APPNAME=astronvim nvim'
+alias nvimc='NVIM_APPNAME=nvchad nvim'
+alias nviml='NVIM_APPNAME=lazyvim nvim'
+
 # Doom Emacs
 alias doomsync='~/.config/emacs/bin/doom sync'
 alias doomupd='~/.config/emacs/bin/doom upgrade'
 alias doomdoc='~/.config/emacs/bin/doom doctor'
 alias doompurge='~/.config/emacs/bin/doom purge'
+
 alias emacs='emacs -nw'
+alias demacs='emacs --daemon'
+alias kemacs='killall emacs'
 
-# 5.4 — ls com eza
-alias ls='eza -al --color=always --group-directories-first --icons=always'
-alias la='eza -a  --color=always --group-directories-first --icons=always'
-alias ll='eza -l  --color=always --group-directories-first --icons=always'
-alias lt='eza -aT --color=always --group-directories-first --icons=always'
-alias l_.="eza -a | grep -e '^\.'"
 
-# 5.5 — Sistema
-alias stowa='stow . --adopt'
-alias grubup="sudo grub-mkconfig -o /boot/grub/grub.cfg"
-alias fixpacman="sudo rm /var/lib/pacman/db.lck"
+## ==========================================================
+## 14) Aliases — Sistema (APT)
+## ==========================================================
+alias update='sudo apt update && sudo apt upgrade -y'
+alias install='sudo apt install'
+alias remove='sudo apt remove'
+alias autoremove='sudo apt autoremove -y'
+alias search='apt search'
+
+alias jctl='journalctl -p 3 -xb'
+alias wget='wget -c'
 alias tarnow='tar -acf '
 alias untar='tar -zxvf '
-alias wget='wget -c '
-alias psmem='ps auxf | sort -nr -k 4'
-alias psmem10='ps auxf | sort -nr -k 4 | head -10'
-alias jctl="journalctl -p 3 -xb"
-alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
-# 5.6 — Pessoais 
-alias S='sudo pacman -S --noconfirm'
-alias Ss='pacman -Ss'
-alias pS='paru -S --noconfirm'
-alias pSs='paru -Ss'
-alias upds='~/.config/autostart/xinputI3.sh'
-alias update='/run/media/lm/dev/gitlab/scripts/1-fedora/update.sh'
-alias limpao='/run/media/lm/dev/gitlab/scripts/1-fedora/update-clean-arch.sh'
-alias srcfish='source ~/.config/fish/config.fish'
+
+## ==========================================================
+## 15) Aliases — Pessoais
+## ==========================================================
 alias srczsh='source ~/.zshrc'
-alias cdaula='cd /run/media/lm/dev/maisPraTi/'
-alias naula='nvim /run/media/lm/dev/maisPraTi/'
-alias ninstall='nvim /run/media/lm/dev/gitlab/scripts/1-fedora/post-install.sh'
-alias ngit='nvim /run/media/lm/dev/gitlab'
+alias srcfish='source ~/.config/fish/config.fish'
 
-# 6) Funções úteis
+alias cdaula='cd ~/gitlab/maisPraTi/'
+alias naula='nvim ~/gitlab/maisPraTi/'
+alias ninstall='nvim ~/gitlab/scripts/post-install.sh'
+alias ngit='nvim ~/gitlab'
 
-# 6.1 — Yazi: retorna para o diretório que você saiu do TUI
-function y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+alias vpninova='sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
+alias exithypr='hyprctl dispatch exit'
+
+
+## ==========================================================
+## 16) Funções
+## ==========================================================
+
+# log: executa comando e salva stdout/stderr
+log() {
+  local cmd="$*"
+  local base="${1##*/}"
+  local ts
+  ts="$(date +%Y%m%d-%H%M%S)"
+  zsh -ic "$cmd" 2>&1 | tee "${base}-${ts}.log"
+}
+
+# yazi com retorno de diretório
+y() {
+  local tmp cwd
+  tmp="$(mktemp -t yazi-cwd.XXXXXX)"
   yazi "$@" --cwd-file="$tmp"
-  IFS= read -r -d '' cwd < "$tmp"
-  [[ -n "$cwd" && "$cwd" != "$PWD" ]] && builtin cd -- "$cwd"
+  cwd="$(tr -d '\0' <"$tmp")"
+  [[ -n "$cwd" && "$cwd" != "$PWD" ]] && cd -- "$cwd"
   rm -f -- "$tmp"
 }
 
-# 7) Keybindings (setas ↑/↓ para buscar no histórico incrementalmente)
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+# fopen com fzf + xdg-open
+fopen() {
+  local root="${1:-.}"
+  fd -t f -H -0 . "$root" |
+    fzf --read0 --multi --select-1 --exit-0 \
+      --bind 'enter:execute-silent(xdg-open {+})+abort' \
+      --prompt='files> '
+}
 
-# Fim.
+## ==========================================================
+## 17) sources
+## ==========================================================
 
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+
+# fnm
+FNM_PATH="/home/bashln/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
+
+# fnm
+FNM_PATH="/home/bashln/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "`fnm env`"
+fi
