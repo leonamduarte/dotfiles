@@ -12,10 +12,10 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "JetBrainsMono NF"
+                       "Iosevka NFM"
                      "CommitMono Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 16)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 17)
+        doom-variable-pitch-font (font-spec :family font-family :size 17)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
