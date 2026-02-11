@@ -12,10 +12,10 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "BlexMono Nerd Font"
+                       "CommitMono Nerd Font Mono"
                      "CommitMono Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 16)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 16 :weight 'semi-light)
+        doom-variable-pitch-font (font-spec :family font-family :size 16 :weight 'semi-light)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
@@ -79,6 +79,15 @@
         js2-bounce-indent-p nil
         js2-strict-missing-semi-warning nil))
 
+;; Typescript/Web defaults
+(after! typescript-mode
+  (setq typescript-indent-level 2))
+
+(after! web-mode
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2))
+
 ;; Treesitter Auto Install
 (use-package! treesit-auto
   :config (global-treesit-auto-mode))
@@ -141,6 +150,16 @@
   (setf (alist-get 'prettier apheleia-formatters)
         '("prettier" "--stdin-filepath" filepath))
   (setf (alist-get 'css-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'scss-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'less-css-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'web-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'js-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'typescript-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'tsx-ts-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'json-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'json-ts-mode apheleia-mode-alist) 'prettier)
+  (setf (alist-get 'yaml-mode apheleia-mode-alist) 'prettier)
   (apheleia-global-mode +1))
 
 ;; 3. Hooks de Limpeza Nuclear (Igual ao Nvim)
@@ -168,6 +187,22 @@
         lsp-completion-provider :none  ;; FIX: Desativa completion do LSP, usa só corfu
         lsp-headerline-breadcrumb-enable nil ;; Desativa breadcrumbs (menos ruído visual/proc)
         +format-with-lsp nil)) ;; Desativa globalmente, confiamos no módulo :editor format
+
+(after! lsp-eslint
+  (setq lsp-eslint-enable t
+        lsp-eslint-auto-fix-on-save nil
+        lsp-eslint-run "onType"))
+
+(after! lsp-sqls
+  (setq lsp-sqls-workspace-config
+        '((formatter
+           (language "sql"
+                     (indent 2)))
+          (lint
+           (colon true))
+          (connections
+           ())))
+  (add-hook 'sql-mode-hook #'lsp-deferred))
 
 ;; Emacs LSP Booster Wrapper
 (defun lsp-booster--advice-json-parse (old-fn &rest args)
