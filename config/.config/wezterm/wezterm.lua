@@ -6,39 +6,44 @@ local config = wezterm.config_builder()
 -- ============================================================================
 
 -- ===== Fonte e Cores =====
-config.font_size = 13
+config.font_size = 12
 config.font = wezterm.font_with_fallback({
-	"DMMono Nerd Font",
-	"Maple Mono NF",
+	"CommitMono Nerd Font",
 	"JetBrainsMono Nerd Font",
+	"Maple Mono NF",
+	"DMMono Nerd Font",
+	"Iosevka Nerd Font",
 	"FiraCode Nerd Font",
 })
 
-config.color_scheme = "Eldritch"
+config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "OneDark (base16)"
+-- config.color_scheme = "Eldritch"
+-- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
 	cursor_bg = "white",
 	cursor_border = "white",
 }
 config.force_reverse_video_cursor = true
 
-config.background = {
-	{
-		source = {
-			Gradient = {
-				orientation = "Vertical",
-				colors = {
-					-- "#16161e",
-					-- "#1a0f2e",
-					-- "#0a1a1f",
-					-- "#0f1a26",
-					"#011628",
-				},
-			},
-		},
-		width = "100%",
-		height = "100%",
-	},
-}
+-- config.background = {
+-- 	{
+-- 		source = {
+-- 			Gradient = {
+-- 				orientation = "Vertical",
+-- 				colors = {
+-- 					-- "#16161e",
+-- 					-- "#1a0f2e",
+-- 					-- "#0a1a1f",
+-- 					-- "#0f1a26",
+-- 					-- "#011628",
+-- 				},
+-- 			},
+-- 		},
+-- 		width = "100%",
+-- 		height = "100%",
+-- 	},
+-- }
 
 local function file_exists(path)
 	local f = io.open(path, "r")
@@ -66,7 +71,7 @@ end
 config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = true
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
 config.initial_rows = 35
 config.initial_cols = 120
@@ -107,13 +112,14 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.window_decorations = "RESIZE"
 	config.use_fancy_tab_bar = false
 
-	-- Ordem de fontes no Windows
-	config.font = wezterm.font_with_fallback({
-		"Maple Mono NF",
-		"DMMono Nerd Font",
-		"JetBrainsMono Nerd Font",
-		"SauceCodePro NF",
-	})
+	-- -- Ordem de fontes no Windows
+	-- config.font = wezterm.font_with_fallback({
+	--    "JetBrainsMono Nerd Font",
+	-- 	"DMMono Nerd Font",
+	-- 	"Maple Mono NF",
+	-- 	"SauceCodePro NF",
+	-- })
+
 	-- ===== Background Opcional =====
 	bg_flag = false
 	if bg_flag then
