@@ -60,3 +60,8 @@ vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
   command = "tabdo wincmd =",
 })
+
+-- Configuração do Orgmode TOC Automático
+require("config.org_toc").setup({
+  max_depth = 3, -- Profundidade padrão, pode ser sobrescrita por vim.b.org_toc_depth
+})
