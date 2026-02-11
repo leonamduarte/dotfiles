@@ -28,6 +28,7 @@
 ;; -------------------------------
 ;; 2. ORG MODE
 ;; -------------------------------
+
 (after! org
   (setq org-directory "~/org/"
         org-default-notes-file (expand-file-name "inbox.org" org-directory)
