@@ -1,1 +1,1 @@
-stow -v -t ~ shell git config
+stow -v -t ~ shell git config --adopt
