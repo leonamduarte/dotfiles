@@ -8,17 +8,17 @@ local config = wezterm.config_builder()
 -- ===== Fonte e Cores =====
 config.font_size = 12
 config.font = wezterm.font_with_fallback({
-	"CommitMono Nerd Font",
 	"JetBrainsMono Nerd Font",
+	"CommitMono Nerd Font",
 	"Maple Mono NF",
 	"DMMono Nerd Font",
 	"Iosevka Nerd Font",
 	"FiraCode Nerd Font",
 })
 
-config.color_scheme = "Kanagawa (Gogh)"
+-- config.color_scheme = "Kanagawa (Gogh)"
 -- config.color_scheme = "OneDark (base16)"
--- config.color_scheme = "Eldritch"
+config.color_scheme = "Eldritch"
 -- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
 	cursor_bg = "white",
@@ -55,7 +55,7 @@ local function file_exists(path)
 end
 
 -- ===== Background Opcional =====
-local bg_flag = false
+local bg_flag = true
 if bg_flag then
 	local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 	if cfg then
