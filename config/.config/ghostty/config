@@ -1,0 +1,34 @@
+# Ghostty config baseada nas preferências do Kitty e WezTerm
+
+# Tema/cores (equivalente ao include de tema no Kitty)
+# Ajuste para o tema instalado no Ghostty, se necessário.
+theme = Kanagawa
+
+# Fonte
+font-family = "JetBrainsMono Nerd Font"
+font-family-bold = "JetBrainsMono Nerd Font"
+font-family-italic = "JetBrainsMono Nerd Font"
+font-family-bold-italic = "JetBrainsMono Nerd Font"
+font-size = 12
+
+# Janela / UI
+window-decoration = false
+window-padding-x = 2
+window-padding-y = 2
+window-save-state = always
+
+# Comportamento
+confirm-close-surface = false
+cursor-style = block
+cursor-style-blink = false
+
+# Tabs
+tab-bar-position = bottom
+
+# Atalhos (equivalentes aos do Kitty/WezTerm)
+keybind = ctrl+insert=copy_to_clipboard
+keybind = shift+insert=paste_from_clipboard
+keybind = ctrl+v=paste_from_clipboard
+
+# Fundo (equivalente ao background_image do Kitty)
+background-image = /home/bashln/.config/wezterm/bg-blurred.png
