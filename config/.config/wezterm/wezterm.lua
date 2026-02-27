@@ -73,9 +73,10 @@ config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = true
 config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
-config.initial_rows = 35
-config.initial_cols = 120
 config.window_close_confirmation = "NeverPrompt"
+config.initial_cols = 95
+config.initial_rows = 28
+config.use_resize_increments = false
 
 -- ===== Desempenho / Cursor =====
 config.max_fps = 120
@@ -95,7 +96,7 @@ config.keys = {
 if wezterm.target_triple:find("linux") then
 	-- Wayland/EGL
 	config.enable_wayland = true
-	config.prefer_egl = true
+	-- config.prefer_egl = true
 
 	-- Comportamento de janelas (evita mensagem de spawn)
 	config.prefer_to_spawn_tabs = false
@@ -111,6 +112,8 @@ elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	-- Decorações de janela
 	config.window_decorations = "RESIZE"
 	config.use_fancy_tab_bar = false
+	config.initial_rows = 35
+	config.initial_cols = 120
 
 	-- -- Ordem de fontes no Windows
 	-- config.font = wezterm.font_with_fallback({

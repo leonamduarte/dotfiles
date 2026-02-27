@@ -12,8 +12,8 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "CommitMono Nerd Font Mono"
-                     "CommitMono Nerd Font")))
+                       "JetBrainsMono NF"
+                     "JetBrainsMono Nerd Font")))
   (setq doom-font (font-spec :family font-family :size 16 :weight 'semi-light)
         doom-variable-pitch-font (font-spec :family font-family :size 16 :weight 'semi-light)))
 
@@ -30,8 +30,7 @@
 ;; -------------------------------
 
 (after! org
-  (setq org-directory "~/org/"
-        org-default-notes-file (expand-file-name "inbox.org" org-directory)
+  (setq org-default-notes-file (expand-file-name "inbox.org" org-directory)
         org-ellipsis " ▼ "
         org-log-done 'time
         org-log-into-drawer t
@@ -39,23 +38,6 @@
         org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAIT(w)" "PROJ(p)" "|" "DONE(d)" "CANCELLED(c)")))
   (add-to-list 'org-modules 'org-habit))
-
-(after! org-agenda
-  (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$") ; Pega tudo recursivamente
-        org-agenda-start-on-weekday nil
-        org-agenda-span 1
-        org-agenda-skip-deadline-if-done t
-        org-agenda-skip-scheduled-if-done t))
-
-(use-package! org-super-agenda
-  :after org-agenda
-  :config
-  (org-super-agenda-mode)
-  (setq org-super-agenda-groups
-        '((:name "🔥 Urgente"  :deadline today :priority "A")
-          (:name "🗓 Hoje"       :scheduled today)
-          (:name "📦 Projetos" :tag "project")
-          (:name "✅ Concluídas" :todo "DONE" :order 99))))
 
 (use-package! org-modern
   :hook (org-mode . org-modern-mode)
@@ -103,6 +85,9 @@
   :config
   (setq copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
+
+(use-package! kdl-mode
+  :mode "\\.kdl\\'")
 
 ;; -------------------------------
 ;; 4. COMPLETION (Vertico/Corfu)
