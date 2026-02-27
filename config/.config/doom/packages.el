@@ -25,6 +25,7 @@
   :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
 
 (package! mason)
+(package! kdl-mode)
 
 ;; NOTAS SOBRE REMOÇÕES:
 ;; - vertico, orderless, consult, embark, marginalia: Removidos pois o módulo :completion vertico já instala.
