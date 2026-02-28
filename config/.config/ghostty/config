@@ -2,7 +2,7 @@
 
 # Tema/cores (equivalente ao include de tema no Kitty)
 # Ajuste para o tema instalado no Ghostty, se necessário.
-theme = Atom One Dark
+theme = Catppuccin Mocha
 
 # Fonte
 font-family = "JetBrainsMono Nerd Font"
@@ -32,4 +32,4 @@ keybind = ctrl+v=paste_from_clipboard
 
 # Fundo (equivalente ao background_image do Kitty)
 # background-image = /home/bashln/.config/wezterm/bg-blurred.png
-background-image-fit = cover
+# background-image-fit = cover

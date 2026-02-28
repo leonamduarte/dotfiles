@@ -1,39 +1,34 @@
-# font_family GeistMono Nerd Font
-# font_family Terminess Nerd Font Mono
-# font_family AdwaitaMono Nerd Font
-# font_family BlexMono Nerd Font Mono
+# include ~/.config/omarchy/current/theme/kitty.conf
+include ~/.config/kitty/current-theme.conf
+
+# Font
 font_family JetBrainsMono Nerd Font
-# font_family 0xProto Nerd Font
-
-font_size 13.0
-bold_font auto
-italic_font auto
 bold_italic_font auto
+font_size        12.0
 
+# Window
+window_padding_width 2
 hide_window_decorations yes
-
-# background_image ~/dotfiles/.config/wezterm/bg-blurred.png
-background_opacity 1.00
-background_blur 1
-dynamic_background_opacity 1
 confirm_os_window_close 0
 
-# Animated cursor
-cursor_trail 1
+# Keybindings
+map ctrl+insert copy_to_clipboard
+map shift+insert paste_from_clipboard
 
-# change to x11 or wayland or leave auto
-linux_display_server auto
+# Allow remote access
+allow_remote_control yes
 
-scrollback_lines 2000
-wheel_scroll_min_lines 1
-
+# Aesthetics
+cursor_shape block
 enable_audio_bell no
 
-window_padding_width 4
+# Minimal Tab bar styling
+tab_bar_edge                bottom
+tab_bar_style               powerline
+tab_powerline_style         slanted
+tab_title_template          {title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}
 
-# selection_foreground none
-# selection_background none
+# background_image /home/bashln/.config/wezterm/bg-blurred.png
 
-# foreground #dddddd
-# background #000000
-# cursor #dddddd
+
+map ctrl+shift+a pipe @screen_scrollback to=clipboard
