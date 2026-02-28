@@ -4,6 +4,9 @@ local config = wezterm.config_builder()
 -- ============================================================================
 -- CONFIGURAÇÕES GLOBAIS (Windows + Linux)
 -- ============================================================================
+config.keys = {
+	{ key = "F12", mods = "NONE", action = wezterm.action.ActivateCommandPalette },
+}
 
 -- ===== Fonte e Cores =====
 config.font_size = 12
@@ -16,34 +19,11 @@ config.font = wezterm.font_with_fallback({
 	"FiraCode Nerd Font",
 })
 
--- config.color_scheme = "Kanagawa (Gogh)"
--- config.color_scheme = "OneDark (base16)"
-config.color_scheme = "Eldritch"
--- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
 	cursor_bg = "white",
 	cursor_border = "white",
 }
 config.force_reverse_video_cursor = true
-
--- config.background = {
--- 	{
--- 		source = {
--- 			Gradient = {
--- 				orientation = "Vertical",
--- 				colors = {
--- 					-- "#16161e",
--- 					-- "#1a0f2e",
--- 					-- "#0a1a1f",
--- 					-- "#0f1a26",
--- 					-- "#011628",
--- 				},
--- 			},
--- 		},
--- 		width = "100%",
--- 		height = "100%",
--- 	},
--- }
 
 local function file_exists(path)
 	local f = io.open(path, "r")
@@ -67,46 +47,37 @@ if bg_flag then
 	end
 end
 
--- ===== Janela / UI =====
+-- ===== Janela / UI (Ajustado para Niri) =====
 config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = true
-config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
+
+-- 1. Zere o padding ou use valores simétricos para testar.
+-- Recomendo 0 para isolar o problema de geometria primeiro.
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+
 config.window_close_confirmation = "NeverPrompt"
-config.initial_cols = 95
-config.initial_rows = 28
+
+-- 2. REMOVA OU COMENTE ESTAS LINHAS:
+-- config.initial_cols = 95  <-- ISSO QUEBRA O NIRI
+-- config.initial_rows = 28  <-- ISSO QUEBRA O NIRI
+
+-- 3. ESSENCIAL: Impede que o WezTerm tente redimensionar a si mesmo
 config.use_resize_increments = false
+config.adjust_window_size_when_changing_font_size = false
 
--- ===== Desempenho / Cursor =====
-config.max_fps = 120
-config.animation_fps = 60
-config.default_cursor_style = "SteadyBar"
-
--- ===== Atalhos =====
-config.keys = {
-	{ key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
-}
-
--- ============================================================================
--- CONFIGURAÇÕES ESPECÍFICAS POR SISTEMA OPERACIONAL
--- ============================================================================
+-- ... (Performance / Cursor igual)
 
 -- ====== LINUX ======
 if wezterm.target_triple:find("linux") then
-	-- Wayland/EGL
 	config.enable_wayland = true
-	-- config.prefer_egl = true
 
-	-- Comportamento de janelas (evita mensagem de spawn)
+	-- Se o problema persistir, force a renderização WebGpu (mais estável no Wayland atual)
+	config.front_end = "WebGpu"
+
 	config.prefer_to_spawn_tabs = false
-
-	-- Shell padrão (descomente se necessário)
-	-- config.default_prog = { "zsh", "-l" }
-
-	-- Mantém decorações no Linux (ou use "NONE" se preferir)
 	config.window_decorations = "NONE"
-
 -- ====== WINDOWS ======
 elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	-- Decorações de janela
@@ -173,15 +144,10 @@ end
 -- TEMAS COMENTADOS (para referência rápida)
 -- ============================================================================
 --[[
-config.color_scheme = "Operator Mono Dark"
-config.color_scheme = "Astrodark (Gogh)"
 config.color_scheme = "Catppuccin Mocha"
-config.color_scheme = "Kanagawa (Gogh)"
-config.color_scheme = "Tomorrow Night Blue"
-config.color_scheme = "Cobalt 2 (Gogh)"
-config.color_scheme = "Catppuccin Macchiato (Gogh)"
-config.color_scheme = "Eldritch"
+config.color_scheme = "Operator Mono Dark"
 config.color_scheme = "Catppuccin Macchiato"
 --]]
+config.color_scheme = "Dracula (Official)"
 
 return config
