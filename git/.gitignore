@@ -49,6 +49,7 @@
 !.config/leovim/
 !.config/neovide/
 !.config/nvim/
+!.config/opencode/
 !.config/polybar/
 !.config/picom/
 !.config/rio/
