@@ -80,8 +80,8 @@
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ;; MUDANÇA: Use C-j ao invés de TAB para não conflitar com corfu
-              ("C-j" . 'copilot-accept-completion)
-              ("C-S-j" . 'copilot-accept-completion-by-word))
+              ("<backtab>" . 'copilot-accept-completion))
+  ;; ("C-M-TAB" . 'copilot-accept-completion-by-word))
   :config
   (setq copilot-indent-offset-warning-disable t)
   (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
@@ -132,21 +132,7 @@
 (setq ws-butler-mode nil)
 
 ;; 2. Configura Apheleia (Formatador Assíncrono)
-(after! apheleia
-  (setf (alist-get 'prettier apheleia-formatters)
-        '("prettier" "--stdin-filepath" filepath))
-  (setf (alist-get 'css-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'scss-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'less-css-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'web-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'js-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'js-ts-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'typescript-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'tsx-ts-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'json-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'json-ts-mode apheleia-mode-alist) 'prettier)
-  (setf (alist-get 'yaml-mode apheleia-mode-alist) 'prettier)
-  (apheleia-global-mode +1))
+;; (Removido: O módulo :format +onsave já configura isso de forma otimizada)
 
 ;; 3. Hooks de Limpeza Nuclear (Igual ao Nvim)
 ;; Garante remoção de espaços e nova linha no final SEMPRE.
@@ -170,6 +156,7 @@
   (setq lsp-use-plists t
         lsp-idle-delay 0.500
         lsp-log-io nil
+        lsp-enable-file-watchers nil
         lsp-completion-provider :none  ;; FIX: Desativa completion do LSP, usa só corfu
         lsp-headerline-breadcrumb-enable nil ;; Desativa breadcrumbs (menos ruído visual/proc)
         +format-with-lsp nil)) ;; Desativa globalmente, confiamos no módulo :editor format
@@ -255,5 +242,66 @@
 (after! counsel
   (setq counsel-fzf-cmd "fd --type f --hidden --follow --exclude .git"))
 
-;; Mason (Opcional - Recomendado usar PARU no lugar)
-;; (use-package! mason :config (mason-setup))
+;; Otimização de Garbage Collection (GCMH)
+(use-package! gcmh
+  :hook (after-init . gcmh-mode)
+  :config
+  (setq gcmh-idle-delay 5
+        gcmh-high-cons-threshold (* 16 1024 1024)))
+
+;; Otimização de Scrolling
+(setq fast-but-imprecise-scrolling t)
+
+;; Personal Keybindings
+
+;; Mover linha ou região usando ALT + J e ALT + K, similar ao comportamento do Neovim
+
+(defun leo/move-line-up ()
+  "Move the current line up by one."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2))
+
+(defun leo/move-line-down ()
+  "Move the current line down by one."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1))
+
+(defun leo/move-text-up ()
+  "Move region up, or current line up if no region is active."
+  (interactive)
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (text (delete-and-extract-region beg end)))
+        ;; vai pra linha anterior e insere
+        (goto-char beg)
+        (forward-line -1)
+        (let ((new-beg (point)))
+          (insert text)
+          ;; reativa a região no novo lugar
+          (set-mark new-beg)
+          (goto-char (+ new-beg (length text)))
+          (setq deactivate-mark nil)))
+    (leo/move-line-up)))
+
+(defun leo/move-text-down ()
+  "Move region down, or current line down if no region is active."
+  (interactive)
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (text (delete-and-extract-region beg end)))
+        (goto-char beg)
+        (forward-line 1)
+        (let ((new-beg (point)))
+          (insert text)
+          (set-mark new-beg)
+          (goto-char (+ new-beg (length text)))
+          (setq deactivate-mark nil)))
+    (leo/move-line-down)))
+
+(map! :nvi "M-j" #'leo/move-text-down
+      :nvi "M-k" #'leo/move-text-up)

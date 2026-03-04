@@ -1,13 +1,4 @@
-general.import = [
-  # "~/.config/omarchy/current/theme/alacritty.toml"
-  # "~/.config/alacritty/catppuccin-latte.toml"
-  # "~/.config/alacritty/catppuccin-frappe.toml"
-  "~/.config/alacritty/catppuccin-macchiato.toml"
-  # "~/.config/alacritty/catppuccin-mocha.toml"
-]
-  
-
-
+general.import = [ "~/.config/omarchy/current/theme/alacritty.toml" ]
 
 [env]
 TERM = "xterm-256color"
@@ -16,7 +7,7 @@ TERM = "xterm-256color"
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
-size = 12
+size = 9
 
 [window]
 padding.x = 14
@@ -28,3 +19,6 @@ bindings = [
 { key = "Insert", mods = "Shift", action = "Paste" },
 { key = "Insert", mods = "Control", action = "Copy" }
 ]
+
+[terminal]
+osc52 = "CopyPaste"

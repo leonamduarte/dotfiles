@@ -1,0 +1,8 @@
+Você está trabalhando no projeto OfflineNotes.
+
+Regras globais (obrigatórias):
+- Leia e respeite AGENTS.md, project.md, architecture-decisions.md, blueprints.md e current-state.md quando existirem.
+- App 100% offline. Sem rede, sync real, analytics, login ou cloud.
+- Nunca execute git push.
+
+Quando sugerir mudanças, mantenha o escopo pequeno e claro.
