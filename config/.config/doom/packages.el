@@ -17,14 +17,12 @@
 
 ;; --- DEV & TOOLS ---
 (package! treesit-auto)
-(package! apheleia)
-(package! mason)
 
 (package! grease
   ;; :recipe (:local-repo "lisp/grease"))
   :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
 
-(package! mason)
+(package! gcmh)
 (package! kdl-mode)
 
 ;; NOTAS SOBRE REMOÇÕES:
