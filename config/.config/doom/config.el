@@ -1,5 +1,27 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
+;; ----------------------------------------------------------------------------
+;; REQUISITOS DO SISTEMA (PARA PARIDADE TOTAL COM NEOVIM)
+;; ----------------------------------------------------------------------------
+;; Para que esta configuração funcione perfeitamente (LSP, Formatters, Linters):
+;;
+;; 1. NPM (Global):
+;;    npm install -g typescript typescript-language-server vscode-langservers-extracted
+;;    npm install -g pyright bash-language-server dockerfile-language-server-nodejs
+;;    npm install -g yaml-language-server terraform-ls diagnostic-languageserver
+;;    npm install -g prettier eslint @tailwindcss/language-server markdownlint-cli
+;;
+;; 2. OUTROS (Go, Python, Lua, Shell):
+;;    - Go: go install golang.org/x/tools/gopls@latest
+;;    - Python: pip install black ruff isort pyflakes
+;;    - Lua: (Mason-like) sudo pacman -S lua-language-server stylua (ou via brew/scoop)
+;;    - Shell: sudo pacman -S shellcheck shfmt
+;;
+;; 3. TOOLS:
+;;    - fd & ripgrep (Essenciais para busca e consult-fd)
+;;    - emacs-lsp-booster (Para performance do LSP)
+;; ----------------------------------------------------------------------------
+
 ;; --- FIX: TRANSIENT ---
 (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
   (if (file-exists-p lfile) (load lfile)))
@@ -212,13 +234,14 @@
 (setenv "LSP_USE_PLISTS" "true")
 
 ;; -------------------------------
-;; 7. EXTRA TOOLS
+;; 7. EXTRA TOOLS & KEYBINDINGS
 ;; -------------------------------
 
-;; Neotree
+;; Toggle vterm (Toggleterm equivalent)
 (map! :leader
-      :desc "Toggle Neotree" "o n" #'neotree-toggle
-      :desc "Neotree Directory" "o N" #'neotree-dir)
+      :desc "Toggle vterm" "t v" #'+vterm/toggle)
+
+;; Treemacs (Doom default SPC o p)
 
 ;; Grease
 (use-package! grease
@@ -234,13 +257,9 @@
          :desc "Open at project root"     "h" #'grease-here)
         :desc "Toggle Grease like Oil.nvim" "-" #'grease-toggle))
 
-;; fzf recursivo com fd
+;; Search files with fd (Telescope-like)
 (map! :leader
-      :desc "fzf search files" "s z" #'counsel-fzf)
-
-;; Configurar fd como backend do fzf
-(after! counsel
-  (setq counsel-fzf-cmd "fd --type f --hidden --follow --exclude .git"))
+      :desc "Search files (fd)" "s z" #'consult-fd)
 
 ;; Otimização de Garbage Collection (GCMH)
 (use-package! gcmh
@@ -305,3 +324,45 @@
 
 (map! :nvi "M-j" #'leo/move-text-down
       :nvi "M-k" #'leo/move-text-up)
+
+;; -------------------------------
+;; 8. NEOVIM PARITY & BEHAVIORS
+;; -------------------------------
+
+;; Clipboard: p e x não sobrescrevem registro principal
+(setq evil-kill-on-visual-paste nil) ;; p no visual mode não mata o registro
+(map! :n "x" "\"_x")                ;; x deleta para o black hole register
+
+;; Visual Mode: Indent com reselect (como no Neovim)
+(map! :v "<" (λ! (evil-shift-left (region-beginning) (region-end)) (evil-normal-state) (evil-visual-restore))
+      :v ">" (λ! (evil-shift-right (region-beginning) (region-end)) (evil-normal-state) (evil-visual-restore)))
+
+;; Folding: Markdown headings navigation/folding (zj, zk, z;, zi)
+(after! markdown-mode
+  (map! :map markdown-mode-map
+        :nv "zj" #'markdown-next-visible-heading
+        :nv "zk" #'markdown-previous-visible-heading
+        :nv "z;" #'markdown-cycle
+        :nv "zi" #'markdown-cycle-global))
+
+;; Harpoon (Quick file access)
+(use-package! harpoon
+  :config
+  (map! :leader
+        :desc "Harpoon toggle"       "j t" #'harpoon-toggle-file
+        :desc "Harpoon list"         "j l" #'harpoon-toggle-quick-menu
+        :desc "Harpoon 1"            "j 1" #'harpoon-go-to-1
+        :desc "Harpoon 2"            "j 2" #'harpoon-go-to-2
+        :desc "Harpoon 3"            "j 3" #'harpoon-go-to-3
+        :desc "Harpoon 4"            "j 4" #'harpoon-go-to-4))
+
+;; Trouble-like (Diagnostics)
+(map! :leader
+      (:prefix-map ("x" . "diagnostics/trouble")
+       :desc "Document diagnostics" "x" #'consult-lsp-diagnostics
+       :desc "Project diagnostics"  "X" (λ! (consult-lsp-diagnostics t))
+       :desc "Flycheck list"        "l" #'flycheck-list-errors))
+
+;; Extra: Inc Rename (LSP rename com mais visibilidade)
+(map! :leader
+      :desc "LSP Rename (Inc Rename)" "c r" #'lsp-rename)
