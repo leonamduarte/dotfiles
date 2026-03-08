@@ -1,7 +1,7 @@
 # Font
-font_family JetBrainsMono Nerd Font
+font_family CaskaydiaCove Nerd Font
 bold_italic_font auto
-font_size        10.0
+font_size        11.0
 
 # Window
 window_padding_width 14
@@ -24,3 +24,10 @@ tab_bar_edge                bottom
 tab_bar_style               powerline
 tab_powerline_style         slanted
 tab_title_template          {title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}
+
+
+# BEGIN_KITTY_THEME
+# Catppuccin-Macchiato
+include current-theme.conf
+background_image ../wezterm/bg-blurred.png
+# END_KITTY_THEME

@@ -278,8 +278,8 @@ window-rule {
     match app-id=r#"brave-browser$"#
     match app-id=r#"discord$"#
     match app-id=r#"gimp$"#
-    // match app-id=r#"ghostty$"#
-    match app-id=r#"kitty$"#
+    match app-id=r#"ghostty$"#
+    // match app-id=r#"kitty$"#
     // match app-id=r#"wezterm$"#
     // match app-id=r#"Emacs$"#
     // match app-id=r#"thunar$"#
@@ -333,5 +333,6 @@ include "dms/binds.kdl"
 include "dms/outputs.kdl"
 include "dms/cursor.kdl"
 include "dms/windowrules.kdl"
+include "cfg/autostart.kdl"
 
 spawn-at-startup "/usr/bin/emacs" "--daemon"

@@ -98,10 +98,11 @@ if status is-interactive
     abbr --add nwez 'nvim ~/.config/wezterm/wezterm.lua'
     abbr --add nzsh 'nvim ~/.zshrc'
     abbr --add nfish 'nvim ~/.config/fish/config.fish'
+    abbr --add ngho 'nvim ~/.config/ghostty/config'
 
     # Ambientes Neovim
     alias nvima='NVIM_APPNAME=astronvim nvim'
-    alias nvimc='NVIM_APPNAME=nvchad nvim'
+    alias bv='NVIM_APPNAME=bash-nvim nvim'
     alias nviml='NVIM_APPNAME=lazyvim nvim'
 
     # --- Sistema (PACMAN / ARCH) ---
@@ -138,6 +139,7 @@ if status is-interactive
     abbr --add doomsync './.config/emacs/bin/doom sync'
     abbr --add doomupd './.config/emacs/bin/doom upgrade'
     abbr --add dotsize 'du -sh .git && git count-objects -vH'
+    abbr --add cl clear
 
     # ----------------------------------------------------------
     # 5) Funções
@@ -197,3 +199,6 @@ function pom
         -sound Crystal \
         || pom
 end
+
+# opencode
+fish_add_path /home/bashln/.opencode/bin
