@@ -57,6 +57,8 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
     { import = "lazyvim.plugins.extras.util.project" },
     { import = "lazyvim.plugins.extras.util.dot" },
+    -- lsp
+    { import = "lazyvim.plugins.extras.lsp.none-ls" },
     -- linting
     { import = "lazyvim.plugins.extras.linting.eslint" },
     -- ui
