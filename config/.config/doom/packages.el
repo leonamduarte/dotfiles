@@ -17,13 +17,15 @@
 
 ;; --- DEV & TOOLS ---
 (package! treesit-auto)
+(package! harpoon)
 
 (package! grease
-  ;; :recipe (:local-repo "lisp/grease"))
-  :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
+  :recipe (:local-repo "lisp/grease"))
+  ;; :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
 
-(package! gcmh)
+;; (package! gcmh)
 (package! kdl-mode)
+(package! consult-lsp)
 
 ;; NOTAS SOBRE REMOÇÕES:
 ;; - vertico, orderless, consult, embark, marginalia: Removidos pois o módulo :completion vertico já instala.
