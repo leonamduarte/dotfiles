@@ -1,5 +1,14 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
+;; Shell POSIX (resolve warning do doom doctor)
+(setq shell-file-name (executable-find "bash"))
+(setq-default vterm-shell "/bin/fish")
+(setq-default explicit-shell-file-name "/bin/fish")
+
+;; Go tools PATH
+(setenv "PATH" (concat (getenv "HOME") "/go/bin:" (getenv "PATH")))
+(push "/home/bashln/go/bin" exec-path)
+
 ;; ----------------------------------------------------------------------------
 ;; REQUISITOS DO SISTEMA (PARA PARIDADE TOTAL COM NEOVIM)
 ;; ----------------------------------------------------------------------------
@@ -23,8 +32,9 @@
 ;; ----------------------------------------------------------------------------
 
 ;; --- FIX: TRANSIENT ---
-(let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-  (if (file-exists-p lfile) (load lfile)))
+;; ( INVESTIGATING: Check if this workaround is still needed in 2026 )
+;; (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
+;;   (if (file-exists-p lfile) (load lfile)))
 
 ;; -------------------------------
 ;; 1. IDENTIDADE & SISTEMA
@@ -79,10 +89,11 @@
 ;; -------------------------------
 
 ;; Tuning JS/TS
-(after! js2-mode
-  (setq js2-basic-offset 2
-        js2-bounce-indent-p nil
-        js2-strict-missing-semi-warning nil))
+;; ( DISABLED: Redundant with :tools tree-sitter enabled? )
+;; (after! js2-mode
+;;   (setq js2-basic-offset 2
+;;         js2-bounce-indent-p nil
+;;         js2-strict-missing-semi-warning nil))
 
 ;; Typescript/Web defaults
 (after! typescript-mode
@@ -96,6 +107,14 @@
 ;; Treesitter Auto Install
 (use-package! treesit-auto
   :config (global-treesit-auto-mode))
+
+;; FIX: Kotlin Tree-sitter Grammar — registra fonte e auto-instala se ausente
+(after! treesit
+  (setq treesit-font-lock-level 4)
+  (add-to-list 'treesit-language-source-alist
+               '(kotlin "https://github.com/fwcd/tree-sitter-kotlin"))
+  (unless (treesit-language-available-p 'kotlin)
+    (treesit-install-language-grammar 'kotlin)))
 
 ;; Copilot - FIX: Não conflita com corfu
 (use-package! copilot
@@ -275,20 +294,20 @@
 
 ;; Mover linha ou região usando ALT + J e ALT + K, similar ao comportamento do Neovim
 
-(defun leo/move-line-up ()
+(defun +leo/move-line-up ()
   "Move the current line up by one."
   (interactive)
   (transpose-lines 1)
   (forward-line -2))
 
-(defun leo/move-line-down ()
+(defun +leo/move-line-down ()
   "Move the current line down by one."
   (interactive)
   (forward-line 1)
   (transpose-lines 1)
   (forward-line -1))
 
-(defun leo/move-text-up ()
+(defun +leo/move-text-up ()
   "Move region up, or current line up if no region is active."
   (interactive)
   (if (use-region-p)
@@ -304,9 +323,9 @@
           (set-mark new-beg)
           (goto-char (+ new-beg (length text)))
           (setq deactivate-mark nil)))
-    (leo/move-line-up)))
+    (+leo/move-line-up)))
 
-(defun leo/move-text-down ()
+(defun +leo/move-text-down ()
   "Move region down, or current line down if no region is active."
   (interactive)
   (if (use-region-p)
@@ -320,10 +339,10 @@
           (set-mark new-beg)
           (goto-char (+ new-beg (length text)))
           (setq deactivate-mark nil)))
-    (leo/move-line-down)))
+    (+leo/move-line-down)))
 
-(map! :nvi "M-j" #'leo/move-text-down
-      :nvi "M-k" #'leo/move-text-up)
+(map! :nvi "M-j" #'+leo/move-text-down
+      :nvi "M-k" #'+leo/move-text-up)
 
 ;; -------------------------------
 ;; 8. NEOVIM PARITY & BEHAVIORS
@@ -362,6 +381,9 @@
        :desc "Document diagnostics" "x" #'consult-lsp-diagnostics
        :desc "Project diagnostics"  "X" (λ! (consult-lsp-diagnostics t))
        :desc "Flycheck list"        "l" #'flycheck-list-errors))
+
+;; Popup Rules (Trouble-like Panel)
+(set-popup-rule! "^\\*Flycheck errors\\*$" :side 'bottom :size 0.25 :select nil :quit nil :ttl nil)
 
 ;; Extra: Inc Rename (LSP rename com mais visibilidade)
 (map! :leader

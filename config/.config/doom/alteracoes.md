@@ -1,142 +1,194 @@
 # Relatório de Alterações: Doom Emacs vs Neovim
 
-Este relatório descreve o estado real da configuração atual do Doom Emacs, mapeando equivalentes do ecossistema Neovim e apontando o que já está implementado, o que é apenas paridade parcial e o que ainda falta para uma reprodução mais fiel da experiência.
+Este relatório descreve o estado real da configuração atual do Doom Emacs, mapeando equivalentes do ecossistema Neovim e acompanhando o progresso das melhorias.
 
 ## 1. Tabela De/Para (Neovim -> Doom)
 
 | Plugin / Conceito Neovim | Equivalente no Doom Emacs | Estado atual |
 | :--- | :--- | :--- |
-| **LSPConfig / Mason** | `:tools (lsp +peek)` + `:lang <lang> +lsp` | Implementado em `init.el` |
-| **nvim-cmp / blink.cmp** | `:completion (corfu +icons +terminal +orderless)` | Implementado em `init.el` + `config.el` |
-| **Telescope / fzf-lua** | `vertico` + `consult` | Parcial — `SPC s z` usa `counsel-fzf` (stack errada, quebra em install limpa) |
-| **Oil.nvim** | `grease` (local em `lisp/grease/`) | Implementado — mas `packages.el` aponta pro GitHub em vez do local |
-| **Harpoon.nvim** | `harpoon` | Implementado em `packages.el` + `config.el` |
-| **Conform.nvim / null-ls** | `:editor (format +onsave)` + hooks de save | Implementado em `init.el` + `config.el` |
-| **Toggleterm.nvim** | `vterm` | Parcial — sem binding de toggle rápido |
-| **Gitsigns / mini.diff** | `:ui (vc-gutter +pretty)` | Implementado em `init.el` |
-| **Trouble.nvim** | `consult-lsp-diagnostics` + `flycheck-list-errors` | Parcial — `consult-lsp` não está declarado em `packages.el` |
-| **Nvim-tree / Neo-tree** | `neotree` + `treemacs` | Redundância — ambos ativos ao mesmo tempo no `init.el` |
-| **Copilot.lua** | `copilot.el` | Implementado em `packages.el` + `config.el` |
-| **Treesitter** | `:tools tree-sitter` + `treesit-auto` | Implementado em `init.el` + `packages.el` + `config.el` |
-| **vim-surround** | `evil-surround` (via módulo `:editor evil`) | Já coberto pelo Doom — não precisa de pacote extra |
-| **Comment.nvim** | `evil-nerd-commenter` (via módulo `:editor evil`) | Já coberto pelo Doom — gc/gcc funcionam |
-| **which-key.nvim** | `which-key` (incluído no Doom) | Já coberto pelo Doom |
-| **Auto-pairs** | `smartparens` (via `:config default +smartparens`) | Já coberto pelo Doom |
-| **Session management** | `persp-mode` (via `:ui workspaces`) | Já coberto pelo Doom |
+| **LSPConfig / Mason** | `:tools (lsp +peek)` + `:lang <lang> +lsp` | Implementado |
+| **nvim-cmp / blink.cmp** | `:completion (corfu +icons +terminal +orderless)` | Implementado |
+| **Telescope / fzf-lua** | `vertico` + `consult-fd` | Implementado |
+| **Oil.nvim** | `grease` (local em `lisp/grease/`) | Implementado (Local) |
+| **Harpoon.nvim** | `harpoon` | Implementado |
+| **Conform.nvim / null-ls** | `:editor (format +onsave)` | Implementado |
+| **Toggleterm.nvim** | `vterm` (com toggle `SPC t v`) | Implementado |
+| **Gitsigns / mini.diff** | `:ui (vc-gutter +pretty)` | Implementado |
+| **Trouble.nvim** | `consult-lsp-diagnostics` + `flycheck-list-errors` | Implementado (Painel Bottom) |
+| **Nvim-tree / Neo-tree** | `treemacs` | Consolidado |
+| **Copilot.lua** | `copilot.el` | Implementado |
+| **Treesitter** | `:tools tree-sitter` | Implementado |
 
-## 2. O que está realmente implementado hoje
+## 2. Status das Implementações (Checklist)
 
-### Módulos ativos em `init.el`
-- **Completion**: `corfu +icons +terminal +orderless` e `vertico +icons`.
-- **UI**: `vc-gutter +pretty`, `neotree`, `treemacs`, `workspaces`, `popup +defaults`, `modeline`, `hl-todo`, `indent-guides`, `ophints`.
-- **Editor**: `evil +everywhere`, `fold`, `format +onsave`, `snippets`, `file-templates`.
-- **Emacs**: `dired +icons`, `electric`, `undo`, `vc`.
-- **Term**: `eshell` e `vterm`.
-- **Checkers**: `syntax +flycheck` e `spell +flyspell`.
-- **Tools**: `lsp +peek`, `magit`, `tree-sitter`, `lookup +dictionary +offline +docsets`, `eval +overlay`, `debugger`.
-- **Lang**: C/C++, CSS, Elm, Emacs Lisp, Go, GraphQL, Haskell, JSON, Java, JavaScript, Kotlin, Lua, Markdown, Org, Python, SQL, Shell, TypeScript, Web, YAML.
+### 🟢 Alta Prioridade (Bugs & Core)
+- [x] **Declarar `consult-lsp` em `packages.el`**: Garante que `SPC x` funcione em instalações limpas.
+- [x] **Substituir `counsel-fzf` por `consult-fd`**: Remove dependência quebrada do Ivy/Counsel e usa o stack Vertico correto.
+- [x] **Corrigir dependência do `grease`**: Agora aponta corretamente para `:local-repo "lisp/grease"`.
 
-### Pacotes extras declarados em `packages.el`
-- `copilot`
-- `harpoon`
-- `grease` (apontando para GitHub — deveria usar `:local-repo "lisp/grease"`)
-- `treesit-auto`
-- `gcmh` (**redundante** — Doom já inclui gcmh internamente)
-- `kdl-mode`
-- `org-auto-tangle`
-- `org-modern`
-- `org-super-agenda`
+### 🟡 Média Prioridade (Limpeza & Consistência)
+- [x] **Remover redundância `gcmh`**: Removido de `packages.el` (Doom já possui), mantendo apenas tuning no `config.el`.
+- [x] **Desativar `neotree`**: Removido do `init.el` para evitar conflitos com Treemacs e Grease.
+- [x] **Limpeza de Keybindings**: Removidos atalhos do Neotree e referências ao Counsel.
 
-### Comportamentos e atalhos configurados em `config.el`
-- `SPC -` abre `grease-toggle`, equivalente ao Oil.nvim.
-- `SPC j` concentra o fluxo do harpoon (`t`, `l`, `1-4`).
-- `SPC x` concentra diagnostics com `consult-lsp-diagnostics` (pacote não declarado) e `flycheck-list-errors`.
-- `M-j` e `M-k` movem linha ou região.
-- `evil-kill-on-visual-paste nil` preserva o registro principal ao colar sobre seleção visual.
-- `x` em modo normal deleta para o black hole register.
-- `<` e `>` em visual mode reindentam e re-selecionam a região.
-- `copilot-mode` está ligado em `prog-mode`, com `<backtab>` para aceitar (sem conflito com corfu).
-- LSP tuning com `emacs-lsp-booster`, `read-process-output-max` e completion delegada ao corfu.
-- `SPC o n` abre Neotree (redundante com Treemacs).
+### 🔵 Baixa Prioridade (UX & Paridade)
+- [x] **Toggle de Terminal**: Adicionado `SPC t v` para `+vterm/toggle` (Toggleterm vibe).
+- [x] **Documentação de Requisitos**: Adicionado comentário no início do `config.el` com comandos `npm` necessários.
 
-## 3. Lacunas e bugs confirmados (análise dos arquivos reais)
+## 3. Próximos Passos Sugeridos
+- [x] **Remover `simpleclip.el`** (código morto — ver seção 4).
+- [x] **Investigar workaround do `transient`**: Código comentado em `config.el` para testar se o problema persiste.
+- [ ] Validar performance do `emacs-lsp-booster` em diferentes linguagens.
+- [x] **Adicionar painel persistente de diagnósticos**: Regra `set-popup-rule!` adicionada para `*Flycheck errors*` (bottom, 25%, persistente).
+- [x] **Kotlin Syntax**: Grammar source explicitamente adicionada ao `config.el`.
 
-### BUG — Quebra em instalação limpa
+## 4. Sugestões da Análise de Código
 
-**1. `SPC s z` usa `counsel-fzf` sem ivy/counsel no stack**
-- `config.el` (linhas 238–243) usa `counsel-fzf` e configura `after! counsel`
-- O stack ativo é `vertico + consult` — `counsel`/`ivy` não estão declarados em nenhum lugar
-- Em install limpa esse binding falha silenciosamente ou lança erro
-- **Fix:** Substituir por `consult-fd` (já disponível via módulo vertico), remover `after! counsel`
+Achados da revisão estática dos arquivos `.el`:
 
-**2. `SPC x x/X` chama `consult-lsp-diagnostics` sem pacote declarado**
-- `config.el` (linhas 343–344) usa `consult-lsp-diagnostics`
-- `consult-lsp` não está em `packages.el`
-- Em install limpa o símbolo não existe
-- **Fix:** Adicionar `(package! consult-lsp)` em `packages.el`
+### 🟢 Alta Prioridade
+- [x] **Remover `simpleclip.el`**: Arquivo removido (código morto).
 
-### AMBIGUIDADE
+### 🟡 Média Prioridade
+- [x] **Revisar bloco `js2-mode`**: Bloco comentado em `config.el` (redundante com `tree-sitter` habilitado).
+- [x] **Investigar workaround do `transient`**: Bloco comentado em `config.el` para validação.
 
-**3. `grease` aponta para GitHub, mas versão local existe em `lisp/grease/`**
-- `packages.el` (linhas 22–24): a linha `:recipe (:local-repo "lisp/grease")` está comentada
-- O arquivo `lisp/grease/grease.el` (2034 linhas) é a versão local customizada
-- Usar o GitHub carrega uma versão diferente e possivelmente incompatível
-- **Fix:** Descomentar `:local-repo "lisp/grease"`, comentar a recipe do GitHub
+### 🔵 Baixa Prioridade
+- [x] **Padronizar prefixo de funções customizadas**: Funções `leo/` renomeadas para `+leo/` para seguir convenção do Doom.
 
-### REDUNDÂNCIAS
+## 5. Kotlin: LSP e Syntax Highlighting
 
-**4. `gcmh` declarado em `packages.el` quando Doom já o inclui**
-- O Doom framework usa gcmh internamente para GC tuning
-- Declarar `(package! gcmh)` pode conflitar com a versão interna
-- **Fix:** Remover `(package! gcmh)` de `packages.el` — manter o bloco `use-package! gcmh` em `config.el` para sobrescrever apenas os valores (isso funciona com o gcmh do Doom)
+### Problema Reportado
+- Arquivos `.kt` abrem sem syntax highlighting/cores
+- Buffer do kotlin-ls mostra erro SLF4J
 
-**5. `neotree` E `treemacs` ambos ativos em `init.el`**
-- Dois file-tree explorers carregados ao mesmo tempo
-- Consomem hooks, memória e podem competir por `SPC o p`
-- `grease` já cobre navegação Oil.nvim-style
-- **Fix:** Remover `:ui neotree` do `init.el` + remover os bindings `SPC o n / o N` do `config.el` — Treemacs já tem `SPC o p` pelo Doom
+### Diagnóstico
 
-### LACUNA
+**Erro SLF4J — Benigno (não causa perda de highlights)**
+```
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+```
+O `kotlin-language-server` foi compilado sem implementação de logger concreta.
+O LSP funciona normalmente — apenas sem arquivo de log. Pode ser ignorado.
 
-**6. Sem toggle rápido de terminal (Toggleterm equiv.)**
-- `vterm` existe mas não há binding de toggle rápido
-- Doom fornece `+vterm/toggle`
-- **Fix:** Adicionar `(map! :leader :desc "Toggle vterm" "t v" #'+vterm/toggle)`
+**Causa real: grammar tree-sitter de Kotlin não instalada**
+- `init.el` habilita `(kotlin +lsp +tree-sitter)` corretamente
+- O módulo Doom registra a grammar via `set-tree-sitter!` mas **não a instala automaticamente**
+- Sem a grammar compilada, Emacs usa `kotlin-mode` (highlighting mínimo)
+- Com a grammar: modo remapeado para `kotlin-ts-mode` (highlighting completo)
 
-## 4. O que NÃO precisa ser adicionado (já coberto pelo Doom)
+### Correção Aplicada (config.el)
 
-Estes itens do ecossistema Neovim já estão cobertos por módulos do Doom e **não devem ser duplicados**:
+- Adicionada fonte explícita da grammar em `config.el`:
+  ```elisp
+  (after! treesit
+    (add-to-list 'treesit-language-source-alist
+                 '(kotlin "https://github.com/fwcd/tree-sitter-kotlin")))
+  ```
+- **Ação necessária do usuário:**
+  - Execute `M-x treesit-install-language-grammar RET kotlin RET` para baixar/compilar.
+  - Reinicie o Emacs.
 
-| Feature | Coberto por |
-| :--- | :--- |
-| vim-surround | `evil-surround` via módulo `:editor evil` |
-| Comment.nvim (gc/gcc) | `evil-nerd-commenter` via `:editor evil` |
-| which-key.nvim | Incluído no Doom por padrão |
-| Auto-pairs | `smartparens` via `:config default +smartparens` |
-| Session/Workspace | `persp-mode` via `:ui workspaces` |
-| Git blame | `magit-blame` via `:tools magit` |
-| Fold | Módulo `:editor fold` |
-| Marks | Marks do Evil (vim nativo) |
-| Undo history | Módulo `:emacs undo` |
+### Verificação
+- `M-x describe-mode` em um `.kt` → deve mostrar `kotlin-ts-mode`
+- `M-x +tree-sitter/doctor` → verifica status da grammar
+- Highlights completos de tipos, funções, strings devem aparecer
 
-## 5. Prioridade de implementação
+## 6. Doom Doctor
 
-### Alta (bugs que quebram)
-1. Declarar `consult-lsp` em `packages.el`
-2. Substituir `counsel-fzf` por `consult-fd` em `config.el`
+Resultado de `doom doctor` — 3 warnings encontrados.
 
-### Média (consistência e limpeza)
-3. Corrigir `grease` para usar `:local-repo` em `packages.el`
-4. Remover `(package! gcmh)` de `packages.el` (redundância com Doom)
-5. Remover `:ui neotree` do `init.el` + bindings associados em `config.el`
+### Warning: Shell não-POSIX (/bin/fish)
+**Status: Já corrigido** — `config.el` linhas 4-6:
+```elisp
+(setq shell-file-name (executable-find "bash"))     ; Doom usa bash internamente
+(setq-default vterm-shell "/bin/fish")              ; vterm continua com fish
+(setq-default explicit-shell-file-name "/bin/fish")
+```
 
-### Baixa (paridade de UX)
-6. Adicionar toggle rápido para vterm (`SPC t v`)
+### Warnings: Go — Ferramentas não instaladas
+**Status: Ação necessária do usuário**
 
-## 6. Conclusão
+`:lang go` habilitado em `init.el` (linha 140) mas faltam:
 
-A base para uma experiência "Neovim-like" no Doom Emacs está sólida: Evil, LSP, Corfu, Vertico, Harpoon, Grease, Vterm, diagnostics e vários ajustes comportamentais já estão no lugar.
+| Ferramenta | Propósito | Instalar |
+| :--- | :--- | :--- |
+| `gopls` | Language server (LSP) | `go install golang.org/x/tools/gopls@latest` |
+| `gomodifytags` | Manipulação de struct tags | `go install github.com/fatih/gomodifytags@latest` |
+| `gore` | REPL | `go install github.com/x-motemen/gore/cmd/gore@latest` |
 
-Os dois itens críticos que **quebram em instalação limpa** são o binding `SPC s z` (dependência de `counsel` ausente) e os bindings `SPC x x/X` (dependência de `consult-lsp` não declarada). Os demais problemas são de limpeza e consistência.
+Após instalar, garantir que `$(go env GOPATH)/bin` está no `$PATH`.
 
-O risco de adicionar mais pacotes para cobrir features que o Doom já fornece (surround, comments, which-key, etc.) é maior que o benefício — duplicidade causa conflitos e degrada a performance.
+---
+
+## 7. Instalação no Windows (Alternativas)
+
+### Métodos de Instalação Windows
+
+| Método | Comando |
+|--------|--------|
+| **Wget** | `winget install --id Pacote` |
+| **Scoop** | `scoop install <pacote>` |
+| **Chocolatey** | `choco install <pacote>` |
+
+### Tabela de Equivalências (Arch → Windows)
+
+| Pacote Arch (pacman) | Scoop | Chocolatey | Winget | Observação |
+|---------------------|-------|------------|--------|------------|
+| **Go** | `go` | `golang` | `GoLang.Go` | |
+| **gopls** | `gopls` (via go install) | (via go install) | - | `go install golang.org/x/tools/gopls@latest` |
+| **gomodifytags** | (via go install) | (via go install) | - | `go install github.com/fatih/gomodifytags@latest` |
+| **gore** | (via go install) | (via go install) | - | `go install github.com/x-motemen/gore/cmd/gore@latest` |
+| **gotests** | (via go install) | (via go install) | - | `go install github.com/cweill/gotests@latest` |
+| **ghc** | `ghc` | `ghc` | `Python.GHC` | Haskell compiler |
+| **cabal-install** | (manual) | (manual) | - | Haskell package manager |
+| **haskell-language-server** | (manual) | (manual) | - | Via cabal/hackage |
+| **hoogle** | (manual) | (manual) | - | Via cabal |
+| **ktlint** | (manual) | (manual) | - | Via SDKMAN ou download |
+| **marked** | (npm) | (npm) | - | `npm i -g marked` |
+| **maim** | (WSL) | (WSL) | - | Usa alternativa Windows |
+| **scrot** | (WSL) | (WSL) | - | Usa alternativa Windows |
+| **graphviz** | `graphviz` | `graphviz` | `Graphviz.Graphviz` | |
+| **python-black** | `black` | `python-black` | - | `pip install black` |
+| **python-pyflakes** | `pyflakes` | `python-pyflakes` | - | `pip install pyflakes` |
+| **python-isort** | `isort` | `python-isort` | - | `pip install isort` |
+| **python-pytest** | `pytest` | `python-pytest` | - | `pip install pytest` |
+| **python-pipenv** | `pipenv` | `python-pipenv` | - | `pip install pipenv` |
+| **python-nose** | `nose` | `python-nose` | - | `pip install nose` |
+| **tidy** | `tidy` | `tidy` | `XMLLINT.Tidy` | HTML validator |
+| **stylelint** | (npm) | (npm) | - | `npm i -g stylelint` |
+| **js-beautify** | (npm) | (npm) | - | `npm i -g js-beautify` |
+| **ttf-symbola** | (manual) | (manual) | - | Download manual |
+| **shellcheck** | `shellcheck` | `shellcheck` | `koalaman.shellcheck` | |
+| **shfmt** | (go install) | (go install) | - | `go install mvdan.cc/sh/v3/cmd/shfmt@latest` |
+| **ripgrep** | `ripgrep` | `ripgrep` | `BurntSushi.ripgrep` | |
+| **fd** | `fd` | (go install) | - | `cargo install fd-find` |
+
+### Install Script (PowerShell)
+
+```powershell
+# Install via Scoop (recomendado)
+scoop install go ghc cabal graphviz fd ripgrep shellcheck
+
+# Install via Chocolatey
+choco install golang ghc graphviz ripgrep shellcheck tidy
+
+# NPM globals
+npm i -g typescript typescript-language-server vscode-langservers-extracted
+npm i -g pyright bash-language-server dockerfile-language-server-nodejs
+npm i -g yaml-language-server prettier eslint stylelint js-beautify marked
+
+# Go tools
+go install golang.org/x/tools/gopls@latest
+go install github.com/fatih/gomodifytags@latest
+go install github.com/x-motemen/gore/cmd/gore@latest
+go install github.com/cweill/gotests@latest
+go install mvdan.cc/sh/v3/cmd/shfmt@latest
+
+# Python tools (via pip)
+pip install black pyflakes isort pytest pipenv nose ruff
+```
+
+---
+*Última atualização: 08 de Março de 2026*
