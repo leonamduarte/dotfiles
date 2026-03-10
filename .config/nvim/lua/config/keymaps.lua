@@ -18,9 +18,6 @@ Snacks = Snacks
 map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
 map("n", "<leader>.", "<cmd>Yazi<cr>", { desc = "Open yazi at the current wile" })
 
--- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
-map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
-
 map("n", "<leader>fp", function()
   vim.ui.input({
     prompt = "Find path: ",
