@@ -4,180 +4,154 @@ local config = wezterm.config_builder()
 -- ============================================================================
 -- CONFIGURAÇÕES GLOBAIS (Windows + Linux)
 -- ============================================================================
+config.keys = {
+  { key = "F12",       mods = "NONE", action = wezterm.action.ActivateCommandPalette },
+  { key = "UpArrow",   mods = "ALT",  action = wezterm.action.ScrollToPrompt(-1) },
+  { key = "DownArrow", mods = "ALT",  action = wezterm.action.ScrollToPrompt(1) },
+  { key = "x",         mods = "ALT",  action = wezterm.action.ActivateCopyMode },
+}
+
 
 -- ===== Fonte e Cores =====
-config.font_size = 14
+config.font_size = 12
 config.font = wezterm.font_with_fallback({
-	"Iosevka Nerd Font",
-	"JetBrainsMono Nerd Font",
-	"DMMono Nerd Font",
-	"Maple Mono NF",
-	"FiraCode Nerd Font",
+  "JetBrainsMono Nerd Font",
+  "FiraCode Nerd Font",
+  "CommitMono Nerd Font",
+  "Maple Mono NF",
+  "DMMono Nerd Font",
+  "Iosevka Nerd Font",
 })
 
-config.color_scheme = "Kanagawa (Gogh)"
--- config.color_scheme = "OneDark (base16)"
--- config.color_scheme = "Eldritch"
--- config.color_scheme = "One Dark (Gogh)"
 config.colors = {
-	cursor_bg = "white",
-	cursor_border = "white",
+  cursor_bg = "white",
+  cursor_border = "white",
 }
 config.force_reverse_video_cursor = true
 
--- config.background = {
--- 	{
--- 		source = {
--- 			Gradient = {
--- 				orientation = "Vertical",
--- 				colors = {
--- 					-- "#16161e",
--- 					-- "#1a0f2e",
--- 					-- "#0a1a1f",
--- 					-- "#0f1a26",
--- 					-- "#011628",
--- 				},
--- 			},
--- 		},
--- 		width = "100%",
--- 		height = "100%",
--- 	},
--- }
-
 local function file_exists(path)
-	local f = io.open(path, "r")
-	if f then
-		f:close()
-		return true
-	end
-	return false
+  local f = io.open(path, "r")
+  if f then
+    f:close()
+    return true
+  end
+  return false
 end
 
 -- ===== Background Opcional =====
-local bg_flag = false
+local bg_flag = true
 if bg_flag then
-	local cfg = os.getenv("WEZTERM_CONFIG_FILE")
-	if cfg then
-		local bg = cfg:gsub("wezterm.lua", "bg-blurred.png")
-		if file_exists(bg) then
-			config.window_background_image = bg
-			config.window_background_opacity = 1.0
-		end
-	end
+  local cfg = os.getenv("WEZTERM_CONFIG_FILE")
+  if cfg then
+    local bg = cfg:gsub("wezterm.lua", "bg-blurred.png")
+    if file_exists(bg) then
+      config.window_background_image = bg
+      config.window_background_opacity = 1.0
+    end
+  end
 end
 
--- ===== Janela / UI =====
+-- ===== Janela / UI (Ajustado para Niri) =====
 config.window_decorations = "NONE"
 config.hide_tab_bar_if_only_one_tab = true
 config.tab_bar_at_bottom = true
-config.use_fancy_tab_bar = true
-config.window_padding = { left = 5, right = 0, top = 5, bottom = 0 }
-config.initial_rows = 35
-config.initial_cols = 120
+config.use_fancy_tab_bar = false
+
+-- 1. Zere o padding ou use valores simétricos para testar.
+-- Recomendo 0 para isolar o problema de geometria primeiro.
+-- config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+
 config.window_close_confirmation = "NeverPrompt"
 
--- ===== Desempenho / Cursor =====
-config.max_fps = 120
-config.animation_fps = 60
-config.default_cursor_style = "SteadyBar"
+-- 2. REMOVA OU COMENTE ESTAS LINHAS:
+-- config.initial_cols = 95  <-- ISSO QUEBRA O NIRI
+-- config.initial_rows = 28  <-- ISSO QUEBRA O NIRI
 
--- ===== Atalhos =====
-config.keys = {
-	{ key = "v", mods = "CTRL", action = wezterm.action({ PasteFrom = "Clipboard" }) },
-}
+-- 3. ESSENCIAL: Impede que o WezTerm tente redimensionar a si mesmo
+config.use_resize_increments = false
+config.adjust_window_size_when_changing_font_size = false
 
--- ============================================================================
--- CONFIGURAÇÕES ESPECÍFICAS POR SISTEMA OPERACIONAL
--- ============================================================================
+-- ... (Performance / Cursor igual)
 
 -- ====== LINUX ======
 if wezterm.target_triple:find("linux") then
-	-- Wayland/EGL
-	config.enable_wayland = true
-	config.prefer_egl = true
+  config.enable_wayland = false
 
-	-- Comportamento de janelas (evita mensagem de spawn)
-	config.prefer_to_spawn_tabs = false
+  -- Se o problema persistir, force a renderização WebGpu (mais estável no Wayland atual)
+  config.front_end = "WebGpu"
 
-	-- Shell padrão (descomente se necessário)
-	-- config.default_prog = { "zsh", "-l" }
-
-	-- Mantém decorações no Linux (ou use "NONE" se preferir)
-	config.window_decorations = "NONE"
-
--- ====== WINDOWS ======
+  config.prefer_to_spawn_tabs = false
+  config.window_decorations = "NONE"
+  -- ====== WINDOWS ======
 elseif wezterm.target_triple == "x86_64-pc-windows-msvc" then
-	-- Decorações de janela
-	config.window_decorations = "RESIZE"
-	config.use_fancy_tab_bar = false
+  -- Decorações de janela
+  config.window_decorations = "RESIZE"
+  config.use_fancy_tab_bar = false
+  config.initial_rows = 35
+  config.initial_cols = 120
 
-	-- -- Ordem de fontes no Windows
-	-- config.font = wezterm.font_with_fallback({
-	--    "JetBrainsMono Nerd Font",
-	-- 	"DMMono Nerd Font",
-	-- 	"Maple Mono NF",
-	-- 	"SauceCodePro NF",
-	-- })
+  -- -- Ordem de fontes no Windows
+  -- config.font = wezterm.font_with_fallback({
+  --    "JetBrainsMono Nerd Font",
+  -- 	"DMMono Nerd Font",
+  -- 	"Maple Mono NF",
+  -- 	"SauceCodePro NF",
+  -- })
 
-	-- ===== Background Opcional =====
-	bg_flag = false
-	if bg_flag then
-		local cfg = os.getenv("WEZTERM_CONFIG_FILE")
-		if cfg then
-			local bg = cfg:gsub("wezterm.lua", "bg-blurred.png")
-			if file_exists(bg) then
-				config.window_background_image = bg
-				config.window_background_opacity = 1.0
-			end
-		end
-	end
+  -- ===== Background Opcional =====
+  bg_flag = false
+  if bg_flag then
+    local cfg = os.getenv("WEZTERM_CONFIG_FILE")
+    if cfg then
+      local bg = cfg:gsub("wezterm.lua", "bg-blurred.png")
+      if file_exists(bg) then
+        config.window_background_image = bg
+        config.window_background_opacity = 1.0
+      end
+    end
+  end
 
-	-- ===== Shell Padrão: Git Bash (com fallback) =====
-	do
-		local candidates = {
-			"C:\\Program Files\\Git\\usr\\bin\\bash.exe",
-			"C:\\Program Files\\Git\\bin\\bash.exe",
-			"C:\\Program Files (x86)\\Git\\usr\\bin\\bash.exe",
-			"C:\\Program Files (x86)\\Git\\bin\\bash.exe",
-		}
+  -- ===== Shell Padrão: Git Bash (com fallback) =====
+  do
+    local candidates = {
+      "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+      "C:\\Program Files\\Git\\bin\\bash.exe",
+      "C:\\Program Files (x86)\\Git\\usr\\bin\\bash.exe",
+      "C:\\Program Files (x86)\\Git\\bin\\bash.exe",
+    }
 
-		local shell
-		for _, p in ipairs(candidates) do
-			if file_exists(p) then
-				shell = p
-				break
-			end
-		end
+    local shell
+    for _, p in ipairs(candidates) do
+      if file_exists(p) then
+        shell = p
+        break
+      end
+    end
 
-		if not shell then
-			-- Fallback para PowerShell
-			config.default_prog = { "powershell.exe", "-NoLogo" }
-		else
-			if shell:match("git%-bash%.exe$") then
-				config.default_prog = { shell }
-			else
-				config.default_prog = { shell, "--login", "-i" }
-			end
-		end
-	end
+    if not shell then
+      -- Fallback para PowerShell
+      config.default_prog = { "powershell.exe", "-NoLogo" }
+    else
+      if shell:match("git%-bash%.exe$") then
+        config.default_prog = { shell }
+      else
+        config.default_prog = { shell, "--login", "-i" }
+      end
+    end
+  end
 
-	-- Diretório inicial
-	config.default_cwd = os.getenv("USERPROFILE") or "C:\\"
+  -- Diretório inicial
+  config.default_cwd = os.getenv("USERPROFILE") or "C:\\"
 end
 
 -- ============================================================================
 -- TEMAS COMENTADOS (para referência rápida)
 -- ============================================================================
 --[[
-config.color_scheme = "Operator Mono Dark"
-config.color_scheme = "Astrodark (Gogh)"
 config.color_scheme = "Catppuccin Mocha"
-config.color_scheme = "Kanagawa (Gogh)"
-config.color_scheme = "Tomorrow Night Blue"
-config.color_scheme = "Cobalt 2 (Gogh)"
-config.color_scheme = "Catppuccin Macchiato (Gogh)"
-config.color_scheme = "Eldritch"
+config.color_scheme = "Operator Mono Dark"
 config.color_scheme = "Catppuccin Macchiato"
 --]]
+config.color_scheme = "Dracula (Official)"
 
 return config

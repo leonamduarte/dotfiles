@@ -1,17 +1,15 @@
 return {
   {
     "bashln/Doom-One.nvim",
-    enabled = true,
     lazy = false,
     priority = 1000,
     opts = {
-      transparent = false,
-      colors = {},
-      highlights = {},
+      transparent = true,
+      background = "dark",
+      styles = {
+        comments = { italic = true },
+        conditionals = { italic = true },
+      },
     },
-    config = function(_, opts)
-      require("doom-one").setup(opts)
-      vim.cmd.colorscheme("doom-one")
-    end,
   },
 }

@@ -8,7 +8,7 @@ confirm-before-quit = false
 size = 16
 
 # Windows
-family = "Geist Mono"# Linux: Maple Mono NF (descomente se estiver no Linux)
+family = "JetBrainsMono Nerd Font" # Linux: Maple Mono NF (descomente se estiver no Linux)
 # regular = "Maple Mono NF"
 
 # ===========================================
@@ -49,9 +49,9 @@ bright-white = "#ebfafa"
 [window]
 # width = 120
 # height = 35
-opacity = 0.8
-decorations = "Disabled"  # "Enabled" no Windows se preferir
-blur = false
+opacity = 0.93
+decorations = "Disabled" # "Enabled" no Windows se preferir
+blur = true
 
 [window.padding]
 x = 5
@@ -64,7 +64,7 @@ y = 0
 # CURSOR
 # ===========================================
 [cursor]
-shape = "beam"
+shape = "block"
 blinking = false
 
 # ===========================================
@@ -106,6 +106,4 @@ target-fps = 120
 # ATALHOS
 # ===========================================
 [bindings]
-keys = [
-    { key = "v", with = "super", action = "Paste" },
-]
+keys = [{ key = "v", with = "super", action = "Paste" }]
