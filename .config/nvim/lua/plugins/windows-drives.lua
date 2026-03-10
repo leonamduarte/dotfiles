@@ -1,6 +1,29 @@
 -- ~/.config/nvim/lua/plugins/windows-drives.lua
 -- Atalhos rápidos para drives do Windows (estilo Doom Emacs melhorado)
 
+local path_nav = require("config.path_navigation")
+
+local function open_unc_share(path)
+  local normalized = path_nav.normalize_path(path)
+  if normalized == "" then
+    vim.notify("UNC path is required", vim.log.levels.WARN)
+    return
+  end
+
+  if not path_nav.is_unc_path(normalized) and vim.fn.has("win32") == 1 and normalized:match("^%a:[/\\]") == nil then
+    vim.notify("Path must be UNC (\\\\server\\share) or drive root", vim.log.levels.ERROR)
+    return
+  end
+
+  local ok, dir = path_nav.directory_exists(normalized)
+  if not ok then
+    vim.notify("Directory not found: " .. normalized, vim.log.levels.ERROR)
+    return
+  end
+
+  path_nav.open_oil(dir or normalized)
+end
+
 return {
   {
     "snacks.nvim",
@@ -45,6 +68,40 @@ return {
           end)
         end,
         desc = "Find files in directory (prompt)",
+      },
+
+      {
+        "<leader>fus",
+        function()
+          vim.ui.input({
+            prompt = "UNC share (e.g., \\\\server\\share): ",
+            default = "\\\\",
+            completion = "dir",
+          }, function(input)
+            if not input or input == "" then
+              return
+            end
+
+            open_unc_share(input)
+          end)
+        end,
+        desc = "Open UNC share (prompt)",
+      },
+
+      {
+        "<leader>fus1",
+        function()
+          open_unc_share(vim.g.unc_share_1 or "I:/")
+        end,
+        desc = "Open UNC share 1",
+      },
+
+      {
+        "<leader>fus2",
+        function()
+          open_unc_share(vim.g.unc_share_2 or "Z:/")
+        end,
+        desc = "Open UNC share 2",
       },
 
       -- ========== ATALHOS DIRETOS PARA DRIVES (Windows) ==========

@@ -4,6 +4,7 @@
 
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local path_nav = require("config.path_navigation")
 
 -- LuaLS: declare a global Snacks para evitar warning de undefined-global
 ---@class Snacks
@@ -19,6 +20,20 @@ map("n", "<leader>.", "<cmd>Yazi<cr>", { desc = "Open yazi at the current wile" 
 
 -- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
 map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
+
+map("n", "<leader>fp", function()
+  vim.ui.input({
+    prompt = "Find path: ",
+    default = vim.loop.cwd() .. "/",
+    completion = "file",
+  }, function(input)
+    if not input or input == "" then
+      return
+    end
+
+    path_nav.open_find_path(input)
+  end)
+end, { desc = "Find path (file or directory)" })
 
 -- lua/config/keys-explorer-here.lua (ou dentro do seu snacks.lua)
 vim.keymap.set("n", "<leader>e", function()

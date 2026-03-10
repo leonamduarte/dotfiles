@@ -13,6 +13,8 @@ return {
     },
   },
   config = function()
+    local path_nav = require("config.path_navigation")
+
     require("oil").setup({
       -- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
       -- Set to false if you want some other plugin (e.g. netrw) to open when you edit directories.
@@ -108,8 +110,17 @@ return {
         show_hidden = true,
         -- This function defines what is considered a "hidden" file
         is_hidden_file = function(name, bufnr)
-          local m = name:match("^%.")
-          return m ~= nil
+          if name:match("^%.") ~= nil then
+            return true
+          end
+
+          local current_dir = require("oil").get_current_dir(bufnr)
+          if current_dir and path_nav.is_unc_path(current_dir) then
+            local full_path = path_nav.join_path(current_dir, name)
+            return path_nav.is_hidden_windows(full_path)
+          end
+
+          return false
         end,
         -- This function defines what will never be shown, even when `show_hidden` is set
         is_always_hidden = function(name, bufnr)
