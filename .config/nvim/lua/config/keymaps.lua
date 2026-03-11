@@ -374,7 +374,7 @@ local function open_in_file_manager()
     vim.fn.system(command)
     print("Opened file in Finder: " .. file_path)
   elseif vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
-    local command = 'explorer /select,' .. vim.fn.shellescape(file_path)
+    local command = "explorer /select," .. vim.fn.shellescape(file_path)
     vim.fn.system(command)
     print("Opened file in Explorer: " .. file_path)
   else

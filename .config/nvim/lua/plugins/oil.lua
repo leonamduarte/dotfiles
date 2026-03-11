@@ -49,5 +49,5 @@ return {
     }
   end,
   dependencies = { { "nvim-mini/mini.icons", opts = {} }, { "refractalize/oil-git-status.nvim" } },
-  lazy = true,
+  lazy = false,
 }

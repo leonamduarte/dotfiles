@@ -44,10 +44,11 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "Maple Mono NF"
+                       "Terminess Nerd Font"
+                     ;; "FantasqueSansM Nerd Font"
                      "CaskaydiaCove Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 16)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 18)
+        doom-variable-pitch-font (font-spec :family font-family :size 18)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
