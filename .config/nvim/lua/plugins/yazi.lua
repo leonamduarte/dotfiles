@@ -1,6 +1,5 @@
-return
 ---@type LazySpec
-{
+return {
   "mikavilpas/yazi.nvim",
   version = "*", -- use the latest stable version
   event = "VeryLazy",
@@ -80,7 +79,7 @@ return
     -- Defaults to simply opening the file.
     -- open_file_function = function(chosen_file, config, state) end,
     open_file_function = function(chosen_file, config, state)
-      vim.cmd("edit " .. chosen_file)
+      vim.cmd("edit " .. vim.fn.fnameescape(chosen_file))
     end,
 
     -- customize the keymaps that are active when yazi is open and focused. The
@@ -123,7 +122,14 @@ return
       end,
 
       -- when yazi was successfully closed
-      yazi_closed_successfully = function(chosen_file, config, state) end,
+      yazi_closed_successfully = function(chosen_file, config, state)
+        if state and state.last_directory then
+          local ok, path_nav = pcall(require, "config.path_navigation")
+          if ok then
+            path_nav._last_dir = path_nav.normalize_path(state.last_directory.filename)
+          end
+        end
+      end,
 
       -- when yazi opened multiple files. The default is to send them to the
       -- quickfix list, but if you want to change that, you can define it here

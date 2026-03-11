@@ -1,5 +1,7 @@
 local M = {}
 
+M._last_dir = nil
+
 local uv = vim.uv or vim.loop
 
 local function trim(value)
@@ -156,13 +158,72 @@ function M.open_find_path(input_path)
   return true
 end
 
+function M.browse_path(start_dir)
+  start_dir = start_dir or uv.cwd()
+  start_dir = M.normalize_path(start_dir)
+  M._last_dir = start_dir
+
+  local items = {}
+
+  -- Add ".." unless we're at a drive root (e.g. C:/ or C:\)
+  local parent = vim.fn.fnamemodify(start_dir, ":h")
+  if parent ~= start_dir then
+    table.insert(items, { text = "../", _full_path = parent, _is_dir = true })
+  end
+
+  -- Read directory contents
+  local ok, handle = pcall(uv.fs_opendir, start_dir, nil, 100)
+  if ok and handle then
+    while true do
+      local entries = uv.fs_readdir(handle)
+      if not entries then
+        break
+      end
+      for _, entry in ipairs(entries) do
+        local full = M.join_path(start_dir, entry.name)
+        local is_dir = entry.type == "directory"
+        table.insert(items, {
+          text = entry.name .. (is_dir and "/" or ""),
+          _full_path = full,
+          _is_dir = is_dir,
+        })
+      end
+    end
+    uv.fs_closedir(handle)
+  else
+    vim.notify("Cannot read directory: " .. start_dir, vim.log.levels.WARN)
+    return
+  end
+
+  local ok_snacks, Snacks = pcall(require, "snacks")
+  if not ok_snacks then
+    return M.open_oil(start_dir)
+  end
+
+  Snacks.picker({
+    title = " " .. start_dir,
+    items = items,
+    format = function(item, _)
+      return { { item.text, item._is_dir and "Directory" or "Normal" } }
+    end,
+    confirm = function(picker, item)
+      picker:close()
+      if item._is_dir then
+        M.browse_path(item._full_path)
+      else
+        M.open_find_path(item._full_path)
+      end
+    end,
+  })
+end
+
 function M.is_hidden_windows(path)
   if not M.is_windows() then
     return false
   end
 
-  local escaped = path:gsub("/", "\\")
-  local output = vim.fn.systemlist('attrib "' .. escaped .. '"')
+  local escaped = vim.fn.shellescape(path)
+  local output = vim.fn.systemlist("attrib " .. escaped)
   if vim.v.shell_error ~= 0 or not output or #output == 0 then
     return false
   end
@@ -170,5 +231,41 @@ function M.is_hidden_windows(path)
   local first_line = output[1] or ""
   return first_line:match("%f[%a]H%f[%A]") ~= nil
 end
+
+-- Auto-sync _last_dir quando o cwd do Neovim muda (qualquer ferramenta)
+vim.api.nvim_create_autocmd("DirChanged", {
+  callback = function()
+    M._last_dir = M.normalize_path(vim.uv.cwd())
+  end,
+})
+
+-- Auto-sync _last_dir ao navegar em buffers oil (oil não muda o cwd)
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "oil://*",
+  callback = function()
+    local ok, oil = pcall(require, "oil")
+    if ok then
+      local dir = oil.get_current_dir()
+      if dir then
+        M._last_dir = M.normalize_path(dir)
+      end
+    end
+  end,
+})
+
+-- Auto-sync _last_dir ao entrar em qualquer arquivo real
+-- Cobre: recent files do dashboard, pickers, :e, gf, etc.
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    local buf = vim.api.nvim_get_current_buf()
+    if vim.bo[buf].buftype ~= "" then return end   -- ignora terminal, quickfix, etc.
+    local name = vim.api.nvim_buf_get_name(buf)
+    if name == "" or name:match("^oil://") then return end
+    local dir = M.normalize_path(vim.fn.fnamemodify(name, ":p:h"))
+    if dir ~= "" and dir ~= M._last_dir then
+      M._last_dir = dir
+    end
+  end,
+})
 
 return M
