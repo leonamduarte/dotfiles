@@ -10,8 +10,8 @@ config.keys = {
 	{ key = "DownArrow", mods = "ALT", action = wezterm.action.ScrollToPrompt(1) },
 	{ key = "x", mods = "ALT", action = wezterm.action.ActivateCopyMode },
 	-- Split pane bindings (tmux-like)
-	{ key = "s", mods = "CTRL|SHIFT", action = wezterm.action.SplitVertical },
-	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal },
+	{ key = "s", mods = "ALT|SHIFT", action = wezterm.action.SplitVertical },
+	{ key = "v", mods = "ALT|SHIFT", action = wezterm.action.SplitHorizontal },
 	-- Pane navigation (tmux-like)
 	{ key = "LeftArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
 	{ key = "RightArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
@@ -21,17 +21,38 @@ config.keys = {
 	{ key = "w", mods = "ALT|SHIFT", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 }
 
+-- ===== Command Palette =====
+local act = wezterm.action
+
+wezterm.on("augment-command-palette", function(window, pane)
+	return {
+		{
+			brief = "Rename tab",
+			icon = "md_rename_box",
+			action = act.PromptInputLine({
+				description = "Enter new name for tab",
+				initial_value = window:active_tab():get_title(),
+				action = wezterm.action_callback(function(window, pane, line)
+					if line then
+						window:active_tab():set_title(line)
+					end
+				end),
+			}),
+		},
+	}
+end)
+
 -- ===== Fonte e Cores =====
-config.font_size = 14
+config.font_size = 12
 config.font = wezterm.font_with_fallback({
-	"ShureTechMono Nerd Font Mono",
+	"JetBrainsMono Nerd Font",
+	"AdwaitaMono Nerd Font Mono",
 	"Iosevka Nerd Font",
+	"ShureTechMono Nerd Font Mono",
 	"Maple Mono NF",
 	"DMMono Nerd Font",
-	"AdwaitaMono Nerd Font Mono",
 	"CommitMono Nerd Font",
 	"FiraCode Nerd Font",
-	"JetBrainsMono Nerd Font",
 })
 
 config.colors = {
