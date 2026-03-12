@@ -4,6 +4,7 @@
 
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local path_nav = require("config.path_navigation")
 
 -- LuaLS: declare a global Snacks para evitar warning de undefined-global
 ---@class Snacks
@@ -15,10 +16,33 @@ Snacks = Snacks
 -- ===== Arquivos / Gerenciadores =====
 -- Oil (diretório pai em float)
 map("n", "-", "<cmd>Oil --float<CR>", { desc = "Oil: Parent (float)" })
-map("n", "<leader>.", "<cmd>Yazi<cr>", { desc = "Open yazi at the current wile" })
+map("n", "<leader>.", "<cmd>Yazi<cr>", { desc = "Open yazi at the current file" })
 
--- Força a revelação do diretório de trabalho atual (cwd) no Neotree.
-map("n", "\\", "<Cmd>Neotree reveal<CR>", { desc = "Neotree reveal current file " })
+map("n", "<leader>fp", function()
+  path_nav.browse_path(path_nav._last_dir or vim.uv.cwd())
+end, { desc = "Browse path (Emacs-style)" })
+
+map("n", "<leader>fd", function()
+  local items = {}
+  for c = string.byte("A"), string.byte("Z") do
+    local drive = string.char(c) .. ":/"
+    if vim.fn.isdirectory(drive) == 1 then
+      table.insert(items, { text = drive, _path = drive })
+    end
+  end
+  local Snacks = require("snacks")
+  Snacks.picker({
+    title = " Drives",
+    items = items,
+    format = function(item, _)
+      return { { item.text } }
+    end,
+    confirm = function(picker, item)
+      picker:close()
+      path_nav.browse_path(item._path)
+    end,
+  })
+end, { desc = "Pick drive / root" })
 
 -- lua/config/keys-explorer-here.lua (ou dentro do seu snacks.lua)
 vim.keymap.set("n", "<leader>e", function()
@@ -340,14 +364,21 @@ end, { desc = "[P]Fold the heading cursor currently on" })
 -- Function to open current file in Finder or ForkLift
 local function open_in_file_manager()
   local file_path = vim.fn.expand("%:p")
-  if file_path ~= "" then
-    -- -- Open in Finder or in ForkLift
-    -- local command = "open -R " .. vim.fn.shellescape(file_path)
-    local command = "open -a ForkLift " .. vim.fn.shellescape(file_path)
-    vim.fn.system(command)
-    print("Opened file in ForkLift: " .. file_path)
-  else
+  if file_path == "" then
     print("No file is currently open")
+    return
+  end
+
+  if vim.fn.has("macunix") == 1 then
+    local command = "open -R " .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    print("Opened file in Finder: " .. file_path)
+  elseif vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1 then
+    local command = "explorer /select," .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    print("Opened file in Explorer: " .. file_path)
+  else
+    vim.notify("Open in file manager not supported on this OS", vim.log.levels.WARN)
   end
 end
 
