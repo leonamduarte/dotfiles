@@ -1,34 +1,24 @@
 return {
   "saghen/blink.cmp",
-  ---@module 'blink.cmp'
+  ---@module "blink.cmp"
   ---@type blink.cmp.Config
-  opts = {
-    completion = {
-      list = {
-        selection = {
-          -- 1. Quando 'false', o menu abre sem selecionar o primeiro item
-          preselect = false,
+  opts = function(_, opts)
+    opts.completion = opts.completion or {}
+    opts.completion.list = opts.completion.list or {}
+    opts.completion.list.selection = vim.tbl_deep_extend("force", opts.completion.list.selection or {}, {
+      preselect = false,
+      auto_insert = true,
+    })
 
-          -- 2. Quando 'true', insere o texto automaticamente ao navegar.
-          -- Se você prefere apenas ver a seleção e dar <Tab> ou <CR> para confirmar,
-          -- pode querer deixar como 'false' também, mas 'true' costuma ser o padrão confortável.
-          auto_insert = true,
-        },
-      },
-    },
-
-    -- Garantia dos Keymaps
-    keymap = {
-      -- O preset 'enter' ou 'default' geralmente já mapeia C-n,
-      -- mas aqui garantimos que ele faça a seleção do próximo item.
+    opts.keymap = vim.tbl_deep_extend("force", opts.keymap or {}, {
       ["<C-n>"] = { "select_next", "fallback" },
-      ["<TAB>"] = { "select_next", "fallback" },
+      ["<Tab>"] = { "select_next", "fallback" },
       ["<C-p>"] = { "select_prev", "fallback" },
-      ["<S-TAB>"] = { "select_prev", "fallback" },
-
-      -- Ao pressionar Seta Cima/Baixo, ignora o menu e move o cursor no texto
+      ["<S-Tab>"] = { "select_prev", "fallback" },
       ["<Up>"] = { "fallback" },
       ["<Down>"] = { "fallback" },
-    },
-  },
+    })
+
+    return opts
+  end,
 }

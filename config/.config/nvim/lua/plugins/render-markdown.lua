@@ -11,8 +11,8 @@
 -- after the config.lazy in the init.lua file lamw25wmal
 
 return {
-  "MeanderingProgrammer/render-markdown.nvim",
   enabled = true,
+  "MeanderingProgrammer/render-markdown.nvim",
   -- Moved highlight creation out of opts as suggested by plugin maintainer
   -- There was no issue, but it was creating unnecessary noise when ran
   -- :checkhealth render-markdown
@@ -80,6 +80,22 @@ return {
         "Headline5Fg",
         "Headline6Fg",
       },
+      -- Width of the heading background.
+      -- | block | width of the heading text |
+      -- | full  | full width of the window  |
+      -- Can also be a list of the above values evaluated by `clamp(value, context.level)`.
+      width = "block",
+      -- Determines if a border is added above and below headings.
+      -- Can also be a list of booleans evaluated by `clamp(value, context.level)`.
+      border = false,
+      -- Always use virtual lines for heading borders instead of attempting to use empty lines.
+      border_virtual = false,
+      -- Highlight the start of the border using the foreground highlight.
+      border_prefix = false,
+      -- Used above heading for border.
+      above = "",
+      -- Used below heading for border.
+      below = "",
     },
     code = {
       -- if I'm not using yabai, I cannot make the color of the codeblocks
