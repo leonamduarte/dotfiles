@@ -48,6 +48,7 @@
 !.config/lazyvim/
 !.config/leovim/
 !.config/neovide/
+!.config/opencode/
 !.config/nvim/
 !.config/polybar/
 !.config/picom/
