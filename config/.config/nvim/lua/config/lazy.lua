@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "doom-one",
+        colorscheme = "cyberdream",
       },
     },
     -- ai
@@ -40,7 +40,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.editor.dial" },
     { import = "lazyvim.plugins.extras.editor.inc-rename" },
     { import = "lazyvim.plugins.extras.coding.blink" },
-    { import = "lazyvim.plugins.extras.editor.neo-tree" },
     -- lang
     { import = "lazyvim.plugins.extras.lang.docker" },
     { import = "lazyvim.plugins.extras.lang.go" },
@@ -69,8 +68,6 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.dap.core" },
     -- { import = "lazyvim.plugins.extras.lang.php" },
     -- { import = "lazyvim.plugins.extras.ai.copilot-chat" },
-    -- import/override with your plugins
-    { import = "plugins" },
     -- import/override with your plugins
     { import = "plugins" },
     { import = "plugins/colorscheme" },
