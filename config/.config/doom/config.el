@@ -44,10 +44,11 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "JetBrainsMono NF"
+                       "Terminess Nerd Font"
+                     ;; "FantasqueSansM Nerd Font"
                      "CaskaydiaCove Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 16)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 18)
+        doom-variable-pitch-font (font-spec :family font-family :size 18)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
@@ -63,7 +64,7 @@
 
 (after! org
   (setq org-default-notes-file (expand-file-name "inbox.org" org-directory)
-        org-ellipsis " ▼ "
+        org-ellipsis " ◉ "
         org-log-done 'time
         org-log-into-drawer t
         org-hide-emphasis-markers t
