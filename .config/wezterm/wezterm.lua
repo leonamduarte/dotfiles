@@ -43,11 +43,14 @@ wezterm.on("augment-command-palette", function(window, pane)
 end)
 
 -- ===== Fonte e Cores =====
-config.font_size = 14
+config.font_size = 12
 config.font = wezterm.font_with_fallback({
+	"Liga SFMono Nerd Font",
+	"GeistMono Nerd Font Mono",
+	"Maple Mono NF",
+	"CaskaydiaCove Nerd Font",
 	"Terminess Nerd Font Mono",
 	"JetBrainsMono Nerd Font",
-	"Maple Mono NF",
 	"DMMono Nerd Font",
 })
 
