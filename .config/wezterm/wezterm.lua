@@ -9,13 +9,23 @@ config.keys = {
 	{ key = "UpArrow", mods = "ALT", action = wezterm.action.ScrollToPrompt(-1) },
 	{ key = "DownArrow", mods = "ALT", action = wezterm.action.ScrollToPrompt(1) },
 	{ key = "x", mods = "ALT", action = wezterm.action.ActivateCopyMode },
+	-- Split pane bindings (tmux-like)
+	{ key = "s", mods = "CTRL|SHIFT", action = wezterm.action.SplitVertical },
+	{ key = "v", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal },
+	-- Pane navigation (tmux-like)
+	{ key = "LeftArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Left") },
+	{ key = "RightArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Right") },
+	{ key = "UpArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Up") },
+	{ key = "DownArrow", mods = "CTRL", action = wezterm.action.ActivatePaneDirection("Down") },
+	-- Close current pane (Alt+Shift+W to avoid closing tab with Ctrl+Shift+W)
+	{ key = "w", mods = "ALT|SHIFT", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
 }
 
 -- ===== Fonte e Cores =====
-config.font_size = 13
+config.font_size = 14
 config.font = wezterm.font_with_fallback({
-	"Iosevka Nerd Font",
 	"ShureTechMono Nerd Font Mono",
+	"Iosevka Nerd Font",
 	"Maple Mono NF",
 	"DMMono Nerd Font",
 	"AdwaitaMono Nerd Font Mono",
