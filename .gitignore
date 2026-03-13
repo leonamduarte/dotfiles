@@ -79,3 +79,40 @@ shada/
 !.local/share/
 .local/share/*
 !.local/share/fonts/
+
+# ============================================================
+# OTIMIZAÇÃO: Dados gerados e binários (não são configurações)
+# ============================================================
+
+# Emacs - dados gerados (straight instala isso post-clone)
+.config/emacs/.local/
+.config/emacs/straight/repos/
+.config/emacs/straight/build-*/
+
+# Binários nativos (tree-sitter compila localmente)
+*.dll
+*.so
+*.dylib
+*.exe
+
+# Mídia de documentação (GIFs de demos, screenshots)
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mp4
+*.mov
+
+# Fontes grandes (baixar post-clone se necessário)
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# ============================================================
+# SHALLOW CLONES: Configuração para submódulos futuros
+# ============================================================
+# Para clonar com depth=1:
+#   git submodule add --depth 1 <repo>
+#   git clone --depth 1 --recurse-submodules ...
