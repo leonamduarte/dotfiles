@@ -1,0 +1,1 @@
+../../../../../dotfiles/config/.config/nvim/lua/plugins/colorscheme/doomone.lua
