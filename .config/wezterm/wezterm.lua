@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+wezterm.color.load_scheme(os.getenv("HOME") .. "/.config/wezterm/colors/matteblack.toml")
 
 -- ============================================================================
 -- CONFIGURAÇÕES GLOBAIS (Windows + Linux)
@@ -45,19 +46,18 @@ end)
 -- ===== Fonte e Cores =====
 config.font_size = 12
 config.font = wezterm.font_with_fallback({
-	"Liga SFMono Nerd Font",
-	"GeistMono Nerd Font Mono",
-	"Maple Mono NF",
-	"CaskaydiaCove Nerd Font",
-	"Terminess Nerd Font Mono",
-	"JetBrainsMono Nerd Font",
+	"AdwaitaMono Nerd Font Mono",
 	"DMMono Nerd Font",
+	"Maple Mono NF",
+	"JetBrainsMono Nerd Font",
+	"Liga SFMono Nerd Font",
 })
 
-config.colors = {
-	cursor_bg = "white",
-	cursor_border = "white",
-}
+-- config.colors = {
+-- 	cursor_bg = "white",
+-- 	cursor_border = "white",
+-- }
+
 config.force_reverse_video_cursor = true
 
 local function file_exists(path)
@@ -70,7 +70,7 @@ local function file_exists(path)
 end
 
 -- ===== Background Opcional =====
-local bg_flag = true
+local bg_flag = false
 if bg_flag then
 	local cfg = os.getenv("WEZTERM_CONFIG_FILE")
 	if cfg then
@@ -186,7 +186,8 @@ end
 config.color_scheme = "Catppuccin Mocha"
 config.color_scheme = "Operator Mono Dark"
 config.color_scheme = "Catppuccin Macchiato"
---]]
 config.color_scheme = "Dracula (Official)"
+--]]
+config.color_scheme = "matteblack"
 
 return config
