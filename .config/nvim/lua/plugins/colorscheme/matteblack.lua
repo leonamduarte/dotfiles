@@ -1,8 +1,16 @@
 return {
-  "tahayvr/matteblack.nvim",
-  lazy = false,
-  priority = 1000,
-  config = function()
-    vim.cmd.colorscheme("matteblack")
-  end,
+  {
+    "bashln/matteblack.nvim",
+    lazy = true,
+    enabled = true,
+    priority = 1000,
+    opts = {
+      transparent = true,
+      background = "dark",
+      styles = {
+        comments = { italic = true },
+        conditionals = { italic = true },
+      },
+    },
+  },
 }

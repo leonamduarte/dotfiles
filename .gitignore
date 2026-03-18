@@ -88,6 +88,12 @@ shada/
 .config/emacs/.local/
 .config/emacs/straight/repos/
 .config/emacs/straight/build-*/
+.config/emacs-vanilla/elpaca/
+.config/emacs-vanilla/elpa/
+.config/emacs-vanilla/eln-cache/
+.config/emacs-vanilla/auto-save-list/
+.config/emacs-vanilla/transient/
+.config/emacs-vanilla/.local/
 
 # Binários nativos (tree-sitter compila localmente)
 *.dll
