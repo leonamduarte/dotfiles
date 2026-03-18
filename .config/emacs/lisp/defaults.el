@@ -13,7 +13,7 @@
 (delete-selection-mode 1)
 (electric-pair-mode 1)
 (electric-indent-mode 1)
-(global-auto-revert-mode 1)
+(add-hook 'find-file-hook #'auto-revert-mode)
 (recentf-mode 1)
 (savehist-mode 1)
 (show-paren-mode 1)

@@ -296,7 +296,7 @@
 ;; Layer 7: minimal Copilot support.
 (use-package copilot
   :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-  :hook (prog-mode . copilot-mode)
+  :hook ((js-ts-mode typescript-ts-mode go-ts-mode python-ts-mode web-mode) . copilot-mode)
   :bind (:map copilot-completion-map
               ("<backtab>" . copilot-accept-completion)
               ("C-c C-y" . copilot-accept-completion))
@@ -309,7 +309,7 @@
 (use-package highlight-indent-guides
   :hook (prog-mode . highlight-indent-guides-mode)
   :init
-  (setq highlight-indent-guides-method 'character
+  (setq highlight-indent-guides-method 'bitmap
         highlight-indent-guides-responsive 'top))
 
 (use-package emmet-mode
@@ -328,7 +328,7 @@
   :hook (after-init . yas-global-mode))
 
 (use-package vi-tilde-fringe
-  :hook (after-init . global-vi-tilde-fringe-mode))
+  :hook ((prog-mode text-mode) . vi-tilde-fringe-mode))
 
 (use-package popper
   :hook (after-init . popper-mode)
@@ -373,7 +373,7 @@
   (setq harpoon-separate-by-branch t))
 
 (use-package diff-hl
-  :hook (after-init . global-diff-hl-mode)
+  :hook ((prog-mode text-mode) . diff-hl-mode)
   :init
   (setq diff-hl-side 'right))
 
