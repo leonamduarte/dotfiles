@@ -17,7 +17,7 @@
 
 (column-number-mode 1)
 (setq global-hl-line-sticky-flag 'window)
-(global-hl-line-mode 1)
+(add-hook 'after-init-hook #'global-hl-line-mode)
 
 (when (display-graphic-p)
   (let* ((candidates (if (eq system-type 'windows-nt)

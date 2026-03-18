@@ -177,8 +177,8 @@
         corfu-quit-no-match 'separator
         corfu-popupinfo-delay 0.5
         corfu-popupinfo-max-height 6)
+  :hook (after-init . global-corfu-mode)
   :config
-  (global-corfu-mode 1)
   (corfu-popupinfo-mode 1)
   (define-key corfu-map (kbd "TAB") #'corfu-next)
   (define-key corfu-map (kbd "<tab>") #'corfu-next)
@@ -198,22 +198,11 @@
 ;; Layer 3: minimal LSP foundation.
 (use-package eglot
   :commands (eglot eglot-ensure)
-  :hook ((js-mode . eglot-ensure)
-         (js-ts-mode . eglot-ensure)
-         (json-mode . eglot-ensure)
-         (json-ts-mode . eglot-ensure)
-         (go-mode . eglot-ensure)
+  :hook ((js-ts-mode . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure)
          (go-ts-mode . eglot-ensure)
-         (python-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
-         (lua-mode . eglot-ensure)
-         (lua-ts-mode . eglot-ensure)
-         (yaml-mode . eglot-ensure)
-         (yaml-ts-mode . eglot-ensure)
-         (web-mode . eglot-ensure)
-         (kotlin-mode . eglot-ensure)
-         (typescript-mode . eglot-ensure)
-         (typescript-ts-mode . eglot-ensure))
+         (web-mode . eglot-ensure))
   :init
   (setq eglot-autoshutdown t)
   :config
@@ -258,8 +247,7 @@
   :if (fboundp 'treesit-available-p)
   :init
   (setq treesit-auto-install nil)
-  :config
-  (global-treesit-auto-mode))
+  :hook (after-init . global-treesit-auto-mode))
 
 (when (require 'treesit nil t)
   (setq treesit-font-lock-level 4)
@@ -300,8 +288,10 @@
     (leo/enable-apheleia-mode pattern 'prettier "prettier"))
   (leo/enable-apheleia-mode "\\.py\\'" 'black "black")
   (leo/enable-apheleia-mode "\\.go\\'" 'gofmt "gofmt")
-  (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua")
-  (apheleia-global-mode 1))
+  (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua"))
+
+(use-package apheleia
+  :hook (after-init . apheleia-global-mode))
 
 ;; Layer 7: minimal Copilot support.
 (use-package copilot

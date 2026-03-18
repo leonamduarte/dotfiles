@@ -221,17 +221,31 @@ When NAME is non-nil, use it as the snapshot name."
           :current (1+ current-index)
           :tabs (mapcar #'leo/workspace--snapshot-tab tabs))))
 
-(defun leo/workspace--saved-snapshots ()
-  "Return an alist of saved workspace names to files."
-  (let ((dir (leo/workspace-snapshot-directory))
-        snapshots)
-    (dolist (file (directory-files dir t "\\.el\\'") (nreverse snapshots))
-      (condition-case nil
-          (let* ((data (leo/workspace--read-data file))
-                 (name (plist-get data :name)))
-            (when (stringp name)
-              (push (cons name file) snapshots)))
-        (error nil)))))
+(defvar leo/workspace--saved-snapshots-cache nil
+  "Cached alist of saved workspace names to files.")
+
+(defun leo/workspace--saved-snapshots (&optional no-cache)
+  "Return an alist of saved workspace names to files.
+When NO-CACHE is non-nil, bypass the cache."
+  (if (and (not no-cache) leo/workspace--saved-snapshots-cache)
+      leo/workspace--saved-snapshots-cache
+    (let ((dir (leo/workspace-snapshot-directory))
+          snapshots)
+      (dolist (file (directory-files dir t "\\.el\\'") (nreverse snapshots))
+        (condition-case nil
+            (let* ((data (leo/workspace--read-data file))
+                   (name (plist-get data :name)))
+              (when (stringp name)
+                (push (cons name file) snapshots)))
+          (error nil)))
+      (setq leo/workspace--saved-snapshots-cache snapshots))))
+
+(defun leo/workspace--invalidate-snapshot-cache ()
+  "Invalidate the saved snapshots cache."
+  (setq leo/workspace--saved-snapshots-cache nil))
+
+(add-hook 'leo/workspace-after-save-hook #'leo/workspace--invalidate-snapshot-cache)
+(add-hook 'leo/workspace-after-delete-hook #'leo/workspace--invalidate-snapshot-cache)
 
 (defun leo/workspace--restore-buffers (buffers)
   "Prepare BUFFERS for a workspace restore."
@@ -280,6 +294,7 @@ When REUSE-CURRENT is non-nil, restore into the current workspace."
   (interactive (list (read-string "Save workspace as: " (leo/workspace-current-name))))
   (let ((file (leo/workspace--snapshot-file name)))
     (leo/workspace--write-data file (leo/workspace--snapshot-tab nil name))
+    (leo/workspace--invalidate-snapshot-cache)
     (leo/workspace-message (format "Saved '%s' workspace" name) 'success)))
 
 (defun leo/workspace-load (name &optional snapshots)
@@ -314,6 +329,7 @@ SNAPSHOTS, if non-nil, reuses a precomputed snapshot alist."
     (unless file
       (user-error "Unknown saved workspace: %s" name))
     (delete-file file)
+    (leo/workspace--invalidate-snapshot-cache)
     (leo/workspace-message (format "Deleted saved workspace '%s'" name) 'success)))
 
 (defun leo/workspace--switch-to-index (index)

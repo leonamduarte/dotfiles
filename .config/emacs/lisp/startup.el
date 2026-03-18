@@ -8,7 +8,7 @@
   (switch-to-buffer "*dashboard*"))
 
 (use-package dashboard
-  :demand t
+  :defer t
   :init
   (setq dashboard-startup-banner 'ascii
         dashboard-banner-ascii
