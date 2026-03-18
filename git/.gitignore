@@ -75,6 +75,12 @@ shada/
 \#*\#
 .projectile
 
+mimeapps.list
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
 # Permite fontes
 !.local/share/
 .local/share/*
