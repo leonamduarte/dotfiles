@@ -11,6 +11,9 @@
       (dired (project-root project))
     (call-interactively #'dired)))
 
+(defvar leo/config-candidates-skip '("elpaca" "tree-sitter" "auto-save" "backups" ".git" "workspaces")
+  "Directories to skip when listing config candidates.")
+
 (defun leo/config-candidates (root)
   "Return relative file and directory candidates under ROOT."
   (let ((entries (directory-files root t directory-files-no-dot-files-regexp))
@@ -18,7 +21,7 @@
     (dolist (entry entries candidates)
       (let ((name (file-relative-name entry root)))
         (if (file-directory-p entry)
-            (progn
+            (unless (member name leo/config-candidates-skip)
               (push (concat name "/") candidates)
               (dolist (child (leo/config-candidates entry))
                 (push (concat name "/" child) candidates)))
@@ -52,17 +55,25 @@
   '((t (:inherit default)))
   "Face for non-selected workspaces in the echo area.")
 
-(defun leo/workspace-storage-directory ()
-  "Return the directory used to store saved workspaces."
+(defvar leo/workspace--storage-dir
   (let ((dir (expand-file-name "workspaces/" user-emacs-directory)))
     (make-directory dir t)
-    dir))
+    dir)
+  "Directory used to store saved workspaces.")
+
+(defvar leo/workspace--snapshot-dir
+  (let ((dir (expand-file-name "saved/" leo/workspace--storage-dir)))
+    (make-directory dir t)
+    dir)
+  "Directory used to store saved workspace snapshots.")
+
+(defun leo/workspace-storage-directory ()
+  "Return the directory used to store saved workspaces."
+  leo/workspace--storage-dir)
 
 (defun leo/workspace-snapshot-directory ()
   "Return the directory used to store saved workspace snapshots."
-  (let ((dir (expand-file-name "saved/" (leo/workspace-storage-directory))))
-    (make-directory dir t)
-    dir))
+  leo/workspace--snapshot-dir)
 
 (defun leo/workspace-last-session-file ()
   "Return the autosave file used for the last workspace session."
@@ -271,14 +282,16 @@ When REUSE-CURRENT is non-nil, restore into the current workspace."
     (leo/workspace--write-data file (leo/workspace--snapshot-tab nil name))
     (leo/workspace-message (format "Saved '%s' workspace" name) 'success)))
 
-(defun leo/workspace-load (name)
-  "Load a saved workspace snapshot named NAME."
+(defun leo/workspace-load (name &optional snapshots)
+  "Load a saved workspace snapshot named NAME.
+SNAPSHOTS, if non-nil, reuses a precomputed snapshot alist."
   (interactive
    (let ((snapshots (leo/workspace--saved-snapshots)))
      (unless snapshots
        (user-error "No saved workspaces"))
-     (list (completing-read "Load workspace: " snapshots nil t))))
-  (let* ((snapshots (leo/workspace--saved-snapshots))
+     (list (completing-read "Load workspace: " snapshots nil t)
+           snapshots)))
+  (let* ((snapshots (or snapshots (leo/workspace--saved-snapshots)))
          (file (cdr (assoc name snapshots))))
     (unless file
       (user-error "Unknown saved workspace: %s" name))
@@ -287,14 +300,16 @@ When REUSE-CURRENT is non-nil, restore into the current workspace."
     (leo/workspace--restore-snapshot (leo/workspace--read-data file))
     (leo/workspace-message (format "Loaded '%s' workspace" name) 'success)))
 
-(defun leo/workspace-delete-saved (name)
-  "Delete the saved workspace snapshot named NAME."
+(defun leo/workspace-delete-saved (name &optional snapshots)
+  "Delete the saved workspace snapshot named NAME.
+SNAPSHOTS, if non-nil, reuses a precomputed snapshot alist."
   (interactive
    (let ((snapshots (leo/workspace--saved-snapshots)))
      (unless snapshots
        (user-error "No saved workspaces"))
-     (list (completing-read "Delete saved workspace: " snapshots nil t))))
-  (let* ((snapshots (leo/workspace--saved-snapshots))
+     (list (completing-read "Delete saved workspace: " snapshots nil t)
+           snapshots)))
+  (let* ((snapshots (or snapshots (leo/workspace--saved-snapshots)))
          (file (cdr (assoc name snapshots))))
     (unless file
       (user-error "Unknown saved workspace: %s" name))
@@ -407,12 +422,22 @@ When REUSE-CURRENT is non-nil, restore into the current workspace."
             (not (member name '("*Messages*" "*scratch*" "*dashboard*"))))))
    (buffer-list)))
 
+(defun leo/workspace--kill-user-buffers ()
+  "Kill all user buffers that can be safely removed."
+  (dolist (buffer (leo/workspace--killable-buffers))
+    (when (buffer-live-p buffer)
+      (ignore-errors (kill-buffer buffer)))))
+
+(defun leo/workspace--close-other-tabs ()
+  "Close all tab-bar tabs except the current one."
+  (while (> (length (leo/workspace-list-tabs)) 1)
+    (tab-bar-select-tab (length (leo/workspace-list-tabs)))
+    (tab-bar-close-tab)))
+
 (defun leo/workspace-reset-main ()
   "Reset the current workspace to a clean `main' state."
   (interactive)
-  (dolist (buffer (leo/workspace--killable-buffers))
-    (when (buffer-live-p buffer)
-      (ignore-errors (kill-buffer buffer))))
+  (leo/workspace--kill-user-buffers)
   (delete-other-windows)
   (unless (string= (leo/workspace-current-name) leo/workspace-main-name)
     (tab-bar-rename-tab leo/workspace-main-name))
@@ -439,9 +464,7 @@ If it is the last workspace, reset it to `main' instead."
   "Kill all workspaces and return to a clean `main' session."
   (interactive)
   (leo/workspace-save-last-session)
-  (while (> (length (leo/workspace-list-tabs)) 1)
-    (tab-bar-select-tab (length (leo/workspace-list-tabs)))
-    (tab-bar-close-tab))
+  (leo/workspace--close-other-tabs)
   (leo/workspace-reset-main)
   (leo/workspace-message "Killed workspace session" 'success))
 
@@ -456,12 +479,8 @@ If it is the last workspace, reset it to `main' instead."
            (current (or (plist-get session :current) 1)))
       (unless tabs
         (user-error "Saved workspace session is empty"))
-      (while (> (length (leo/workspace-list-tabs)) 1)
-        (tab-bar-select-tab (length (leo/workspace-list-tabs)))
-        (tab-bar-close-tab))
-      (dolist (buffer (leo/workspace--killable-buffers))
-        (when (buffer-live-p buffer)
-          (ignore-errors (kill-buffer buffer))))
+      (leo/workspace--close-other-tabs)
+      (leo/workspace--kill-user-buffers)
       (leo/workspace--restore-snapshot (car tabs) t)
       (dolist (snapshot (cdr tabs))
         (leo/workspace--restore-snapshot snapshot))
@@ -597,19 +616,21 @@ If it is the last workspace, reset it to `main' instead."
   (interactive)
   (delete-char 1))
 
+(defun leo/evil-visual-shift (shift-fn)
+  "Apply SHIFT-FN to the visual selection and restore it."
+  (funcall shift-fn (region-beginning) (region-end))
+  (evil-normal-state)
+  (evil-visual-restore))
+
 (defun leo/evil-visual-shift-left ()
   "Shift the active visual selection left and restore it."
   (interactive)
-  (evil-shift-left (region-beginning) (region-end))
-  (evil-normal-state)
-  (evil-visual-restore))
+  (leo/evil-visual-shift #'evil-shift-left))
 
 (defun leo/evil-visual-shift-right ()
   "Shift the active visual selection right and restore it."
   (interactive)
-  (evil-shift-right (region-beginning) (region-end))
-  (evil-normal-state)
-  (evil-visual-restore))
+  (leo/evil-visual-shift #'evil-shift-right))
 
 (provide 'utils)
 ;;; utils.el ends here

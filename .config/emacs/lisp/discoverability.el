@@ -51,19 +51,17 @@
 (define-key leo/leader-tabs-map (kbd "x") #'leo/workspace-kill-session)
 (define-key leo/leader-tabs-map (kbd "k") #'leo/workspace-kill)
 (dotimes (i 9)
-  (global-set-key
-   (kbd (format "M-%d" (1+ i)))
-   `(lambda ()
-      (interactive)
-      (leo/workspace-switch-to ,(1+ i)))))
+  (let ((n (1+ i)))
+    (global-set-key
+     (kbd (format "M-%d" n))
+     (lambda () (interactive) (leo/workspace-switch-to n)))))
 (global-set-key (kbd "M-0") #'leo/workspace-switch-to-final)
 (dotimes (i 9)
-  (define-key
-    leo/leader-tabs-map
-    (kbd (number-to-string (1+ i)))
-    `(lambda ()
-       (interactive)
-       (leo/workspace-switch-to ,(1+ i)))))
+  (let ((n (1+ i)))
+    (define-key
+      leo/leader-tabs-map
+      (kbd (number-to-string n))
+      (lambda () (interactive) (leo/workspace-switch-to n)))))
 
 (define-prefix-command 'leo/leader-files-map)
 (define-key leo/leader-map (kbd "f") 'leo/leader-files-map)
@@ -180,22 +178,7 @@
         (copy-tree (get 'leo/which-key-replacement-alist 'initial-value)))
   (which-key-add-key-based-replacements
     "SPC" "<leader>"
-    "C-c m" "<leader>"
-    "SPC ." "find file"
-    "SPC TAB" "workspace"
-    "SPC f" "+files"
-    "SPC b" "+buffers"
-    "SPC w" "+windows"
-    "SPC p" "+project"
-    "SPC g" "+git"
-    "SPC j" "+harpoon"
-    "SPC c" "+code"
-    "SPC o" "+open"
-    "SPC h" "+help"
-    "SPC d" "+dired"
-    "SPC t" "+toggles"
-    "SPC s" "+Search"
-    "SPC x" "+diagnostics")
+    "C-c m" "<leader>")
   (which-key-add-keymap-based-replacements
     leo/leader-map
     "." "find file"

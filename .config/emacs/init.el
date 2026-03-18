@@ -18,15 +18,10 @@
   (setq shell-file-name bash
         explicit-shell-file-name fish))
 
-(dolist (dir (delete-dups
-              (delq nil
-                    (list (expand-file-name "go/bin" (or (getenv "HOME") "~"))
-                          (let ((legacy-go-bin "/home/bashln/go/bin"))
-                            (when (file-directory-p legacy-go-bin)
-                              legacy-go-bin))))))
-  (when (file-directory-p dir)
-    (add-to-list 'exec-path dir)
-    (setenv "PATH" (concat dir path-separator (getenv "PATH")))))
+(let ((go-bin (expand-file-name "go/bin" (or (getenv "HOME") "~"))))
+  (when (file-directory-p go-bin)
+    (add-to-list 'exec-path go-bin)
+    (setenv "PATH" (concat go-bin path-separator (getenv "PATH")))))
 
 (setq backup-directory-alist
       `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
@@ -47,24 +42,12 @@
 
 (add-hook 'elpaca-after-init-hook
           (lambda ()
-            (load custom-file 'noerror 'nomessage)
-            (setq gc-cons-threshold (* 32 1024 1024))))
-
-(defun leo/first-executable (&rest names)
-  "Return the first executable found in NAMES."
-  (seq-find #'executable-find names))
+            (load custom-file 'noerror 'nomessage)))
 
 (defun leo/enable-apheleia-mode (pattern formatter executable)
   "Enable FORMATTER for files matching PATTERN when EXECUTABLE exists."
   (when (executable-find executable)
     (add-to-list 'apheleia-mode-alist (cons pattern formatter))))
-
-(defun leo/register-auto-mode (library mode patterns)
-  "Register MODE from LIBRARY for all PATTERNS when LIBRARY is available."
-  (when (locate-library library)
-    (autoload mode library nil t)
-    (dolist (pattern patterns)
-      (add-to-list 'auto-mode-alist (cons pattern mode)))))
 
 ;; Elpaca bootstrap.
 (defvar elpaca-installer-version 0.12)
@@ -144,21 +127,6 @@
 (elpaca-wait)
 
 (require 'defaults)
-
-(leo/register-auto-mode "typescript-mode" 'typescript-mode '("\\.ts\\'"))
-(leo/register-auto-mode "web-mode" 'web-mode '("\\.tsx\\'" "\\.jsx\\'" "\\.html?\\'"))
-(leo/register-auto-mode "graphql-mode" 'graphql-mode '("\\.gql\\'" "\\.graphql\\'"))
-(leo/register-auto-mode "haml-mode" 'haml-mode '("\\.haml\\'"))
-(leo/register-auto-mode "markdown-mode" 'markdown-mode '("\\.md\\'"))
-(leo/register-auto-mode "pip-requirements" 'pip-requirements-mode '("requirements[^/]*\\.txt\\'"))
-(leo/register-auto-mode "pug-mode" 'pug-mode '("\\.pug\\'"))
-(leo/register-auto-mode "sass-mode" 'sass-mode '("\\.s[ac]ss\\'"))
-(leo/register-auto-mode "slim-mode" 'slim-mode '("\\.slim\\'"))
-(leo/register-auto-mode "go-mode" 'go-mode '("\\.go\\'"))
-(leo/register-auto-mode "json-mode" 'json-mode '("\\.json\\'"))
-(leo/register-auto-mode "lua-mode" 'lua-mode '("\\.lua\\'"))
-(leo/register-auto-mode "kotlin-mode" 'kotlin-mode '("\\.kt\\'"))
-(leo/register-auto-mode "yaml-mode" 'yaml-mode '("\\.ya?ml\\'"))
 
 ;; Layer 1: minimal modal editing foundation.
 (use-package evil
@@ -265,8 +233,7 @@
   (add-to-list 'eglot-server-programs
                '((lua-mode lua-ts-mode) "lua-language-server"))
   (add-to-list 'eglot-server-programs
-               '((kotlin-mode) "kotlin-language-server"))
-  (setq eglot-autoshutdown t))
+               '((kotlin-mode) "kotlin-language-server")))
 
 (use-package eldoc
   :ensure nil
@@ -329,14 +296,8 @@
         '("gofmt"))
   (setf (alist-get 'stylua apheleia-formatters)
         '("stylua" "--search-parent-directories" "--stdin-filepath" filepath "-"))
-  (when (executable-find "prettier")
-    (dolist (entry '(("\\.jsx?\\'" . prettier)
-                     ("\\.tsx?\\'" . prettier)
-                     ("\\.json\\'" . prettier)
-                     ("\\.ya?ml\\'" . prettier)
-                     ("\\.css\\'" . prettier)
-                     ("\\.html?\\'" . prettier)))
-      (add-to-list 'apheleia-mode-alist entry)))
+  (dolist (pattern '("\\.jsx?\\'" "\\.tsx?\\'" "\\.json\\'" "\\.ya?ml\\'" "\\.css\\'" "\\.html?\\'"))
+    (leo/enable-apheleia-mode pattern 'prettier "prettier"))
   (leo/enable-apheleia-mode "\\.py\\'" 'black "black")
   (leo/enable-apheleia-mode "\\.go\\'" 'gofmt "gofmt")
   (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua")
@@ -568,7 +529,6 @@
 
 (setq read-process-output-max (* 1024 1024)
       fast-but-imprecise-scrolling t)
-(setenv "LSP_USE_PLISTS" "true")
 
 (use-package hideshow
   :ensure nil
