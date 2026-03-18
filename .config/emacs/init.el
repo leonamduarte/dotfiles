@@ -288,15 +288,17 @@
     (leo/enable-apheleia-mode pattern 'prettier "prettier"))
   (leo/enable-apheleia-mode "\\.py\\'" 'black "black")
   (leo/enable-apheleia-mode "\\.go\\'" 'gofmt "gofmt")
-  (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua"))
-
-(use-package apheleia
+  (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua")
   :hook (after-init . apheleia-global-mode))
 
 ;; Layer 7: minimal Copilot support.
 (use-package copilot
   :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
-  :hook ((js-ts-mode typescript-ts-mode go-ts-mode python-ts-mode web-mode) . copilot-mode)
+  :hook ((js-ts-mode . copilot-mode)
+         (typescript-ts-mode . copilot-mode)
+         (go-ts-mode . copilot-mode)
+         (python-ts-mode . copilot-mode)
+         (web-mode . copilot-mode))
   :bind (:map copilot-completion-map
               ("<backtab>" . copilot-accept-completion)
               ("C-c C-y" . copilot-accept-completion))
@@ -328,7 +330,8 @@
   :hook (after-init . yas-global-mode))
 
 (use-package vi-tilde-fringe
-  :hook ((prog-mode text-mode) . vi-tilde-fringe-mode))
+  :hook (prog-mode . vi-tilde-fringe-mode)
+  :hook (text-mode . vi-tilde-fringe-mode))
 
 (use-package popper
   :hook (after-init . popper-mode)
@@ -373,7 +376,8 @@
   (setq harpoon-separate-by-branch t))
 
 (use-package diff-hl
-  :hook ((prog-mode text-mode) . diff-hl-mode)
+  :hook (prog-mode . diff-hl-mode)
+  :hook (text-mode . diff-hl-mode)
   :init
   (setq diff-hl-side 'right))
 

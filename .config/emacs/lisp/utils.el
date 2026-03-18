@@ -244,9 +244,6 @@ When NO-CACHE is non-nil, bypass the cache."
   "Invalidate the saved snapshots cache."
   (setq leo/workspace--saved-snapshots-cache nil))
 
-(add-hook 'leo/workspace-after-save-hook #'leo/workspace--invalidate-snapshot-cache)
-(add-hook 'leo/workspace-after-delete-hook #'leo/workspace--invalidate-snapshot-cache)
-
 (defun leo/workspace--restore-buffers (buffers)
   "Prepare BUFFERS for a workspace restore."
   (dolist (entry buffers)
