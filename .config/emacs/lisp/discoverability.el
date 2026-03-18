@@ -20,7 +20,10 @@
   (add-hook 'which-key-init-buffer-hook
             (lambda ()
               (setq-local line-spacing 3)))
-  (which-key-mode 1))
+  (which-key-mode 1)
+  ;; ESC fecha o which-key imediatamente
+  (define-key which-key-mode-map (kbd "ESC") #'which-key-abort)
+  (define-key which-key-mode-map (kbd "<escape>") #'which-key-abort))
 
 (define-prefix-command 'leo/leader-map)
 (global-set-key (kbd "C-c m") #'leo/leader-map)

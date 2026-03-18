@@ -542,6 +542,22 @@
   (evil-define-key 'visual 'global (kbd "<") #'leo/evil-visual-shift-left)
   (evil-define-key 'visual 'global (kbd ">") #'leo/evil-visual-shift-right))
 
+;; ESC fecha janelas de ajuda e popups com um único pressionamento
+(global-set-key (kbd "<escape>") #'keyboard-escape-quit)
+
+;; Mapeamentos específicos para modos comuns
+(with-eval-after-load 'help-mode
+  (define-key help-mode-map (kbd "ESC") #'quit-window))
+
+(with-eval-after-load 'debugger-mode
+  (define-key debugger-mode-map (kbd "ESC") #'debugger-quit))
+
+(with-eval-after-load 'messages-buffer-mode
+  (define-key messages-buffer-mode-map (kbd "ESC") #'quit-window))
+
+(with-eval-after-load 'special-mode
+  (define-key special-mode-map (kbd "ESC") #'quit-window))
+
 (add-to-list 'display-buffer-alist
              '("\\*Flymake diagnostics\\*"
                display-buffer-in-side-window
