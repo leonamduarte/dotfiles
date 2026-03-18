@@ -40,6 +40,10 @@
               fill-column 80
               sentence-end-double-space nil)
 
+(let ((tree-sitter-dir (expand-file-name "tree-sitter/" user-emacs-directory)))
+  (when (file-directory-p tree-sitter-dir)
+    (add-to-list 'treesit-extra-load-path tree-sitter-dir)))
+
 (add-hook 'elpaca-after-init-hook
           (lambda ()
             (load custom-file 'noerror 'nomessage)))
@@ -261,7 +265,8 @@
                     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
     (add-to-list 'treesit-language-source-alist source t))
   (when (treesit-language-available-p 'javascript)
-    (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode)))
+    (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode))
+    (add-to-list 'major-mode-remap-alist '(javascript-mode . js-ts-mode)))
   (when (treesit-language-available-p 'json)
     (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode)))
   (when (treesit-language-available-p 'go)
@@ -544,6 +549,7 @@
 
 ;; ESC fecha janelas de ajuda e popups com um único pressionamento
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
+(global-set-key (kbd "M-x") #'execute-extended-command)
 
 ;; Mapeamentos específicos para modos comuns
 (with-eval-after-load 'help-mode
