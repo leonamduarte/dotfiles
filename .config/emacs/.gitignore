@@ -1,0 +1,11 @@
+# Emacs volatile/runtime dirs
+elpaca/
+auto-save-list/
+*.save
+.backup*
+
+# Generated data
+.elpa/
+.url-cache/
+tramp
+*~
