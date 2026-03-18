@@ -44,7 +44,7 @@
 
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
-                       "FantasqueSansM Nerd Font"
+                       "JetBrainsMono NF"
                      "CaskaydiaCove Nerd Font")))
   (setq doom-font (font-spec :family font-family :size 18)
         doom-variable-pitch-font (font-spec :family font-family :size 18)))

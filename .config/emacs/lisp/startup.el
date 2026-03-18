@@ -10,7 +10,17 @@
 (use-package dashboard
   :demand t
   :init
-  (setq dashboard-startup-banner 'official
+  (setq dashboard-startup-banner 'ascii
+        dashboard-banner-ascii
+        (mapconcat
+         #'identity
+         '(" ____    _    ____  _   _ __  __    _    ____ ____"
+           "| __ )  / \\  / ___|| | | |  \\/  |  / \\  / ___/ ___|"
+           "|  _ \\ / _ \\ \\___ \\| |_| | |\\/| | / _ \\| |   \\___ \\"
+           "| |_) / ___ \\ ___) |  _  | |  | |/ ___ \\ |___ ___) |"
+           "|____/_/   \\_\\____/|_| |_|_|  |_/_/   \\_\\____|____/")
+         "\n")
+        dashboard-banner-logo-title nil
         dashboard-center-content t
         dashboard-show-shortcuts nil
         dashboard-set-heading-icons nil

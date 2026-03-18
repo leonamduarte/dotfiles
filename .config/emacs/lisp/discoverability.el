@@ -5,13 +5,21 @@
   :init
   (setq which-key-idle-delay 0.6
         which-key-idle-secondary-delay 0.05
+        which-key-sort-uppercase-first nil
+        which-key-add-column-padding 1
         which-key-separator " -> "
         which-key-max-description-length 28
+        which-key-max-display-columns nil
+        which-key-min-display-lines 6
         which-key-side-window-location 'bottom
+        which-key-side-window-slot -10
         which-key-side-window-max-height 0.25
         which-key-sort-order 'which-key-key-order-alpha)
   :config
   (which-key-setup-side-window-bottom)
+  (add-hook 'which-key-init-buffer-hook
+            (lambda ()
+              (setq-local line-spacing 3)))
   (which-key-mode 1))
 
 (define-prefix-command 'leo/leader-map)
@@ -24,6 +32,38 @@
 
 (define-key leo/leader-map (kbd ".") #'find-file)
 (define-key leo/leader-map (kbd "SPC") #'execute-extended-command)
+(define-prefix-command 'leo/leader-tabs-map)
+(define-key leo/leader-map (kbd "TAB") 'leo/leader-tabs-map)
+(define-key leo/leader-tabs-map (kbd "TAB") #'leo/workspace-toggle-tab-bar)
+(define-key leo/leader-tabs-map (kbd ".") #'leo/workspace-switch-to)
+(define-key leo/leader-tabs-map (kbd "`") #'leo/workspace-other)
+(define-key leo/leader-tabs-map (kbd "[") #'leo/workspace-switch-left)
+(define-key leo/leader-tabs-map (kbd "]") #'leo/workspace-switch-right)
+(define-key leo/leader-tabs-map (kbd "0") #'leo/workspace-switch-to-final)
+(define-key leo/leader-tabs-map (kbd "n") #'leo/workspace-new)
+(define-key leo/leader-tabs-map (kbd "N") #'leo/workspace-new-named)
+(define-key leo/leader-tabs-map (kbd "l") #'leo/workspace-load)
+(define-key leo/leader-tabs-map (kbd "s") #'leo/workspace-save)
+(define-key leo/leader-tabs-map (kbd "r") #'leo/workspace-rename)
+(define-key leo/leader-tabs-map (kbd "R") #'leo/workspace-restore-last-session)
+(define-key leo/leader-tabs-map (kbd "d") #'leo/workspace-kill)
+(define-key leo/leader-tabs-map (kbd "D") #'leo/workspace-delete-saved)
+(define-key leo/leader-tabs-map (kbd "x") #'leo/workspace-kill-session)
+(define-key leo/leader-tabs-map (kbd "k") #'leo/workspace-kill)
+(dotimes (i 9)
+  (global-set-key
+   (kbd (format "M-%d" (1+ i)))
+   `(lambda ()
+      (interactive)
+      (leo/workspace-switch-to ,(1+ i)))))
+(global-set-key (kbd "M-0") #'leo/workspace-switch-to-final)
+(dotimes (i 9)
+  (define-key
+    leo/leader-tabs-map
+    (kbd (number-to-string (1+ i)))
+    `(lambda ()
+       (interactive)
+       (leo/workspace-switch-to ,(1+ i)))))
 
 (define-prefix-command 'leo/leader-files-map)
 (define-key leo/leader-map (kbd "f") 'leo/leader-files-map)
@@ -31,6 +71,7 @@
 (define-key leo/leader-files-map (kbd "r") #'consult-recent-file)
 (define-key leo/leader-files-map (kbd "s") #'save-buffer)
 (define-key leo/leader-files-map (kbd "d") #'dired)
+(define-key leo/leader-files-map (kbd "c") #'leo/open-config-entry)
 (define-key leo/leader-files-map (kbd "p") #'project-find-file)
 
 (define-prefix-command 'leo/leader-buffers-map)
@@ -60,6 +101,15 @@
 (define-key leo/leader-map (kbd "g") 'leo/leader-git-map)
 (define-key leo/leader-git-map (kbd "g") #'magit-status)
 (define-key leo/leader-git-map (kbd "b") #'magit-blame-addition)
+
+(define-prefix-command 'leo/leader-jump-map)
+(define-key leo/leader-map (kbd "j") 'leo/leader-jump-map)
+(define-key leo/leader-jump-map (kbd "t") #'harpoon-toggle-file)
+(define-key leo/leader-jump-map (kbd "l") #'harpoon-toggle-quick-menu)
+(define-key leo/leader-jump-map (kbd "1") #'harpoon-go-to-1)
+(define-key leo/leader-jump-map (kbd "2") #'harpoon-go-to-2)
+(define-key leo/leader-jump-map (kbd "3") #'harpoon-go-to-3)
+(define-key leo/leader-jump-map (kbd "4") #'harpoon-go-to-4)
 
 (define-prefix-command 'leo/leader-code-map)
 (define-key leo/leader-map (kbd "c") 'leo/leader-code-map)
@@ -102,83 +152,158 @@
 (define-prefix-command 'leo/leader-toggle-map)
 (define-key leo/leader-map (kbd "t") 'leo/leader-toggle-map)
 (define-key leo/leader-toggle-map (kbd "l") #'display-line-numbers-mode)
-(define-key leo/leader-toggle-map (kbd "v") #'visual-line-mode)
+(define-key leo/leader-toggle-map (kbd "w") #'visual-line-mode)
 (define-key leo/leader-toggle-map (kbd "h") #'hl-line-mode)
 (define-key leo/leader-toggle-map (kbd "t") #'leo/load-theme)
+(define-key leo/leader-toggle-map (kbd "v") #'leo/toggle-vterm)
 (define-key leo/leader-toggle-map (kbd "x") #'leo/toggle-truncate-lines)
 
 (define-prefix-command 'leo/leader-search-map)
 (define-key leo/leader-map (kbd "s") 'leo/leader-search-map)
 (define-key leo/leader-search-map (kbd "f") #'consult-fd)
+(define-key leo/leader-search-map (kbd "z") #'consult-fd)
 (define-key leo/leader-search-map (kbd "l") #'consult-line)
 (define-key leo/leader-search-map (kbd "g") #'consult-ripgrep)
 (define-key leo/leader-search-map (kbd "i") #'consult-imenu)
 
+(define-prefix-command 'leo/leader-diagnostics-map)
+(define-key leo/leader-map (kbd "x") 'leo/leader-diagnostics-map)
+(define-key leo/leader-diagnostics-map (kbd "x") #'flymake-show-buffer-diagnostics)
+(define-key leo/leader-diagnostics-map (kbd "X") #'flymake-show-project-diagnostics)
+
 (with-eval-after-load 'which-key
+  (unless (get 'leo/which-key-replacement-alist 'initial-value)
+    (put 'leo/which-key-replacement-alist
+         'initial-value
+         (copy-tree which-key-replacement-alist)))
+  (setq which-key-replacement-alist
+        (copy-tree (get 'leo/which-key-replacement-alist 'initial-value)))
   (which-key-add-key-based-replacements
-    "SPC" "leader"
-    "C-c m" "leader"
+    "SPC" "<leader>"
+    "C-c m" "<leader>"
     "SPC ." "find file"
-    "SPC f" "files"
-    "SPC b" "buffers"
-    "SPC w" "windows"
-    "SPC p" "project"
-    "SPC g" "git"
-    "SPC c" "code"
-    "SPC o" "open"
-    "SPC h" "help"
-    "SPC d" "dired"
-    "SPC t" "toggles"
-    "SPC s" "search")
+    "SPC TAB" "workspace"
+    "SPC f" "+files"
+    "SPC b" "+buffers"
+    "SPC w" "+windows"
+    "SPC p" "+project"
+    "SPC g" "+git"
+    "SPC j" "+harpoon"
+    "SPC c" "+code"
+    "SPC o" "+open"
+    "SPC h" "+help"
+    "SPC d" "+dired"
+    "SPC t" "+toggles"
+    "SPC s" "+Search"
+    "SPC x" "+diagnostics")
   (which-key-add-keymap-based-replacements
     leo/leader-map
     "." "find file"
-    "f" "files"
-    "b" "buffers"
-    "w" "windows"
-    "p" "project"
-    "g" "git"
-    "c" "code"
-    "o" "open"
-    "h" "help"
+    "TAB" "workspace"
+    "f" "+files"
+    "b" "+buffers"
+    "w" "+windows"
+    "p" "+project"
+    "g" "+git"
+    "j" "+harpoon"
+    "c" "+code"
+    "o" "+open"
+    "h" "+help"
+    "d" "+dired"
+    "t" "+toggles"
+    "s" "+Search"
+    "x" "+diagnostics")
+  (which-key-add-keymap-based-replacements
+    leo/leader-jump-map
+    "t" "toggle"
+    "l" "list"
+    "1" "goto 1"
+    "2" "goto 2"
+    "3" "goto 3"
+    "4" "goto 4")
+  (which-key-add-keymap-based-replacements
+    leo/leader-tabs-map
+    "TAB" "display tab bar"
+    "." "switch"
+    "`" "last"
+    "[" "previous"
+    "]" "next"
+    "0" "final workspace"
+    "1" "1st workspace"
+    "2" "2nd workspace"
+    "3" "3rd workspace"
+    "4" "4th workspace"
+    "5" "5th workspace"
+    "6" "6th workspace"
+    "7" "7th workspace"
+    "8" "8th workspace"
+    "9" "9th workspace"
+    "n" "new"
+    "N" "new named"
+    "l" "load from file"
+    "s" "save to file"
+    "r" "rename"
+    "R" "restore last"
+    "d" "kill this"
+    "D" "delete saved"
+    "x" "kill session"
+    "k" "kill this")
+  (which-key-add-keymap-based-replacements
+    leo/leader-files-map
+    "f" "find file"
+    "r" "recent"
+    "s" "save"
     "d" "dired"
-    "t" "toggles"
-    "s" "search")
+    "c" "config"
+    "p" "project files")
   (which-key-add-keymap-based-replacements
     leo/leader-help-map
-    "f" "describe function"
-    "v" "describe variable"
-    "k" "describe key"
-    "m" "describe mode"
-    "t" "theme switch"
-    "r" "reload config"
-    "R" "restart emacs")
+    "f" "function"
+    "v" "variable"
+    "k" "key"
+    "m" "mode"
+    "t" "theme"
+    "r" "reload"
+    "R" "restart")
   (which-key-add-keymap-based-replacements
     leo/leader-code-map
     "d" "definitions"
     "r" "references"
-    "a" "code actions"
+    "a" "actions"
     "n" "rename"
-    "b" "buffer diagnostics"
-    "p" "project diagnostics"
-    "f" "format buffer")
+    "b" "buffer diag"
+    "p" "project diag"
+    "f" "format")
   (which-key-add-keymap-based-replacements
     leo/leader-open-map
-    "a" "org agenda"
-    "c" "org capture"
+    "a" "agenda"
+    "c" "capture"
     "d" "dashboard"
     "e" "eshell"
     "f" "dired"
-    "n" "neotree toggle"
+    "n" "neotree"
     "s" "scratch"
     "t" "terminal"
-    "T" "org tangle")
+    "T" "tangle")
+  (which-key-add-keymap-based-replacements
+    leo/leader-toggle-map
+    "l" "line nums"
+    "w" "visual line"
+    "h" "hl-line"
+    "t" "theme"
+    "v" "vterm"
+    "x" "truncate")
   (which-key-add-keymap-based-replacements
     leo/leader-search-map
     "f" "find files"
-    "l" "current buffer"
+    "z" "fd"
+    "l" "line"
     "g" "ripgrep"
-    "i" "imenu"))
+    "i" "imenu")
+  (which-key-add-keymap-based-replacements
+    leo/leader-diagnostics-map
+    "x" "buffer diag"
+    "X" "project diag"))
 
 (provide 'discoverability)
 ;;; discoverability.el ends here

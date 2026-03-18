@@ -13,10 +13,28 @@
       load-prefer-newer t
       custom-file (expand-file-name "custom.el" user-emacs-directory))
 
+(let* ((bash (or (executable-find "bash") shell-file-name))
+       (fish (or (executable-find "fish") bash)))
+  (setq shell-file-name bash
+        explicit-shell-file-name fish))
+
+(dolist (dir (delete-dups
+              (delq nil
+                    (list (expand-file-name "go/bin" (or (getenv "HOME") "~"))
+                          (let ((legacy-go-bin "/home/bashln/go/bin"))
+                            (when (file-directory-p legacy-go-bin)
+                              legacy-go-bin))))))
+  (when (file-directory-p dir)
+    (add-to-list 'exec-path dir)
+    (setenv "PATH" (concat dir path-separator (getenv "PATH")))))
+
 (setq backup-directory-alist
       `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
 (setq auto-save-file-name-transforms
       `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t)))
+
+(make-directory (expand-file-name "backups/" user-emacs-directory) t)
+(make-directory (expand-file-name "auto-save/" user-emacs-directory) t)
 
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
@@ -31,6 +49,22 @@
           (lambda ()
             (load custom-file 'noerror 'nomessage)
             (setq gc-cons-threshold (* 32 1024 1024))))
+
+(defun leo/first-executable (&rest names)
+  "Return the first executable found in NAMES."
+  (seq-find #'executable-find names))
+
+(defun leo/enable-apheleia-mode (pattern formatter executable)
+  "Enable FORMATTER for files matching PATTERN when EXECUTABLE exists."
+  (when (executable-find executable)
+    (add-to-list 'apheleia-mode-alist (cons pattern formatter))))
+
+(defun leo/register-auto-mode (library mode patterns)
+  "Register MODE from LIBRARY for all PATTERNS when LIBRARY is available."
+  (when (locate-library library)
+    (autoload mode library nil t)
+    (dolist (pattern patterns)
+      (add-to-list 'auto-mode-alist (cons pattern mode)))))
 
 ;; Elpaca bootstrap.
 (defvar elpaca-installer-version 0.12)
@@ -85,10 +119,46 @@
 (elpaca jsonrpc)
 (elpaca project)
 (elpaca track-changes)
+(elpaca emmet-mode)
+(elpaca graphql-mode)
+(elpaca haml-mode)
+(elpaca markdown-mode)
+(elpaca pip-requirements)
+(elpaca pug-mode)
+(elpaca rainbow-mode)
+(elpaca sass-mode)
+(elpaca doom-modeline)
+(elpaca doom-themes)
+(elpaca (slim-mode :host github
+                    :repo "slim-template/emacs-slim"
+                    :files ("slim-mode.el")))
+(elpaca treesit-auto)
+(elpaca go-mode)
+(elpaca json-mode)
+(elpaca kotlin-mode)
+(elpaca lua-mode)
+(elpaca typescript-mode)
+(elpaca web-mode)
+(elpaca yaml-mode)
 
 (elpaca-wait)
 
 (require 'defaults)
+
+(leo/register-auto-mode "typescript-mode" 'typescript-mode '("\\.ts\\'"))
+(leo/register-auto-mode "web-mode" 'web-mode '("\\.tsx\\'" "\\.jsx\\'" "\\.html?\\'"))
+(leo/register-auto-mode "graphql-mode" 'graphql-mode '("\\.gql\\'" "\\.graphql\\'"))
+(leo/register-auto-mode "haml-mode" 'haml-mode '("\\.haml\\'"))
+(leo/register-auto-mode "markdown-mode" 'markdown-mode '("\\.md\\'"))
+(leo/register-auto-mode "pip-requirements" 'pip-requirements-mode '("requirements[^/]*\\.txt\\'"))
+(leo/register-auto-mode "pug-mode" 'pug-mode '("\\.pug\\'"))
+(leo/register-auto-mode "sass-mode" 'sass-mode '("\\.s[ac]ss\\'"))
+(leo/register-auto-mode "slim-mode" 'slim-mode '("\\.slim\\'"))
+(leo/register-auto-mode "go-mode" 'go-mode '("\\.go\\'"))
+(leo/register-auto-mode "json-mode" 'json-mode '("\\.json\\'"))
+(leo/register-auto-mode "lua-mode" 'lua-mode '("\\.lua\\'"))
+(leo/register-auto-mode "kotlin-mode" 'kotlin-mode '("\\.kt\\'"))
+(leo/register-auto-mode "yaml-mode" 'yaml-mode '("\\.ya?ml\\'"))
 
 ;; Layer 1: minimal modal editing foundation.
 (use-package evil
@@ -136,9 +206,16 @@
         corfu-auto-prefix 2
         corfu-cycle t
         corfu-preselect 'prompt
-        corfu-quit-no-match 'separator)
+        corfu-quit-no-match 'separator
+        corfu-popupinfo-delay 0.5
+        corfu-popupinfo-max-height 6)
   :config
-  (global-corfu-mode 1))
+  (global-corfu-mode 1)
+  (corfu-popupinfo-mode 1)
+  (define-key corfu-map (kbd "TAB") #'corfu-next)
+  (define-key corfu-map (kbd "<tab>") #'corfu-next)
+  (define-key corfu-map (kbd "S-TAB") #'corfu-previous)
+  (define-key corfu-map (kbd "<backtab>") #'corfu-previous))
 
 (use-package embark
   :bind (("C-." . embark-act)
@@ -155,6 +232,18 @@
   :commands (eglot eglot-ensure)
   :hook ((js-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
+         (json-mode . eglot-ensure)
+         (json-ts-mode . eglot-ensure)
+         (go-mode . eglot-ensure)
+         (go-ts-mode . eglot-ensure)
+         (python-mode . eglot-ensure)
+         (python-ts-mode . eglot-ensure)
+         (lua-mode . eglot-ensure)
+         (lua-ts-mode . eglot-ensure)
+         (yaml-mode . eglot-ensure)
+         (yaml-ts-mode . eglot-ensure)
+         (web-mode . eglot-ensure)
+         (kotlin-mode . eglot-ensure)
          (typescript-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure))
   :init
@@ -162,7 +251,28 @@
   :config
   (add-to-list 'eglot-server-programs
                '((js-mode js-ts-mode typescript-ts-mode)
-                 "typescript-language-server" "--stdio")))
+                 "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((web-mode) "typescript-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((json-mode json-ts-mode) "vscode-json-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((yaml-mode yaml-ts-mode) "yaml-language-server" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) "pyright-langserver" "--stdio"))
+  (add-to-list 'eglot-server-programs
+               '((go-mode go-ts-mode) "gopls"))
+  (add-to-list 'eglot-server-programs
+               '((lua-mode lua-ts-mode) "lua-language-server"))
+  (add-to-list 'eglot-server-programs
+               '((kotlin-mode) "kotlin-language-server"))
+  (setq eglot-autoshutdown t))
+
+(use-package eldoc
+  :ensure nil
+  :init
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-display-functions '(eldoc-display-in-echo-area)))
 
 ;; Layer 4: essential Git and terminal tools.
 (use-package magit
@@ -176,13 +286,35 @@
                         shell-file-name)))
 
 ;; Layer 5: JS/TS tree-sitter refinement.
+(use-package treesit-auto
+  :ensure nil
+  :if (fboundp 'treesit-available-p)
+  :init
+  (setq treesit-auto-install nil)
+  :config
+  (global-treesit-auto-mode))
+
 (when (require 'treesit nil t)
   (setq treesit-font-lock-level 4)
   (dolist (source '((javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-                    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")))
+                    (json "https://github.com/tree-sitter/tree-sitter-json")
+                    (kotlin "https://github.com/fwcd/tree-sitter-kotlin")
+                    (go "https://github.com/tree-sitter/tree-sitter-go" "master" "src")
+                    (python "https://github.com/tree-sitter/tree-sitter-python" "master" "src")
+                    (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+                    (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+                    (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
     (add-to-list 'treesit-language-source-alist source t))
   (when (treesit-language-available-p 'javascript)
     (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode)))
+  (when (treesit-language-available-p 'json)
+    (add-to-list 'major-mode-remap-alist '(json-mode . json-ts-mode)))
+  (when (treesit-language-available-p 'go)
+    (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode)))
+  (when (treesit-language-available-p 'python)
+    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
+  (when (treesit-language-available-p 'yaml)
+    (add-to-list 'major-mode-remap-alist '(yaml-mode . yaml-ts-mode)))
   (when (treesit-language-available-p 'typescript)
     (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))))
 
@@ -191,12 +323,23 @@
   :config
   (setf (alist-get 'prettier apheleia-formatters)
         '("prettier" "--stdin-filepath" filepath))
-  (dolist (entry '(("\\.jsx?\\'" . prettier)
-                   ("\\.tsx?\\'" . prettier)
-                   ("\\.json\\'" . prettier)
-                   ("\\.css\\'" . prettier)
-                   ("\\.html?\\'" . prettier)))
-    (add-to-list 'apheleia-mode-alist entry))
+  (setf (alist-get 'black apheleia-formatters)
+        '("black" "-q" "-"))
+  (setf (alist-get 'gofmt apheleia-formatters)
+        '("gofmt"))
+  (setf (alist-get 'stylua apheleia-formatters)
+        '("stylua" "--search-parent-directories" "--stdin-filepath" filepath "-"))
+  (when (executable-find "prettier")
+    (dolist (entry '(("\\.jsx?\\'" . prettier)
+                     ("\\.tsx?\\'" . prettier)
+                     ("\\.json\\'" . prettier)
+                     ("\\.ya?ml\\'" . prettier)
+                     ("\\.css\\'" . prettier)
+                     ("\\.html?\\'" . prettier)))
+      (add-to-list 'apheleia-mode-alist entry)))
+  (leo/enable-apheleia-mode "\\.py\\'" 'black "black")
+  (leo/enable-apheleia-mode "\\.go\\'" 'gofmt "gofmt")
+  (leo/enable-apheleia-mode "\\.lua\\'" 'stylua "stylua")
   (apheleia-global-mode 1))
 
 ;; Layer 7: minimal Copilot support.
@@ -204,7 +347,10 @@
   :ensure (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-              ("C-c C-y" . copilot-accept-completion)))
+              ("<backtab>" . copilot-accept-completion)
+              ("C-c C-y" . copilot-accept-completion))
+  :init
+  (setq copilot-indent-offset-warning-disable t))
 
 (use-package hl-todo
   :hook (prog-mode . hl-todo-mode))
@@ -214,6 +360,17 @@
   :init
   (setq highlight-indent-guides-method 'character
         highlight-indent-guides-responsive 'top))
+
+(use-package emmet-mode
+  :ensure nil
+  :hook ((web-mode . emmet-mode)
+         (css-mode . emmet-mode)))
+
+(use-package rainbow-mode
+  :ensure nil
+  :hook ((css-mode . rainbow-mode)
+         (web-mode . rainbow-mode)
+         (json-mode . rainbow-mode)))
 
 ;; Doom parity: editor, org, folding, VCS and small workflow extras.
 (use-package yasnippet
@@ -316,7 +473,73 @@
   :hook (org-mode . org-modern-mode)
   :init
   (setq org-modern-table t
-        org-modern-hide-stars t))
+        org-modern-star 'replace
+        org-modern-hide-stars 'leading
+        org-modern-list '((?+ . "◦")
+                          (?- . "–")
+                          (?* . "•"))))
+
+(use-package typescript-mode
+  :ensure nil
+  :defer t
+  :init
+  (setq typescript-indent-level 2))
+
+(use-package go-mode
+  :ensure nil
+  :mode "\\.go\\'")
+
+(use-package json-mode
+  :ensure nil
+  :mode "\\.json\\'")
+
+(use-package lua-mode
+  :ensure nil
+  :mode "\\.lua\\'"
+  :init
+  (setq lua-indent-level 2))
+
+(use-package kotlin-mode
+  :ensure nil
+  :mode "\\.kt\\'")
+
+(use-package web-mode
+  :ensure nil
+  :mode ("\\.tsx\\'" "\\.jsx\\'" "\\.html?\\'")
+  :init
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2))
+
+(use-package graphql-mode
+  :ensure nil
+  :mode ("\\.gql\\'" "\\.graphql\\'"))
+
+(use-package haml-mode
+  :ensure nil
+  :mode "\\.haml\\'")
+
+(use-package pip-requirements
+  :ensure nil
+  :mode "requirements[^/]*\\.txt\\'")
+
+(use-package pug-mode
+  :ensure nil
+  :mode "\\.pug\\'")
+
+(use-package sass-mode
+  :ensure nil
+  :mode "\\.s[ac]ss\\'")
+
+(use-package slim-mode
+  :ensure nil
+  :mode "\\.slim\\'")
+
+(use-package yaml-mode
+  :ensure nil
+  :mode "\\.ya?ml\\'"
+  :init
+  (setq yaml-indent-offset 2))
 
 (use-package org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode)
@@ -327,6 +550,7 @@
   :mode "\\.kdl\\'")
 
 (use-package markdown-mode
+  :ensure nil
   :mode "\\.md\\'"
   :init
   (setq markdown-command "pandoc")
@@ -342,14 +566,21 @@
   (setq gcmh-idle-delay 5
         gcmh-high-cons-threshold (* 16 1024 1024)))
 
+(setq read-process-output-max (* 1024 1024)
+      fast-but-imprecise-scrolling t)
+(setenv "LSP_USE_PLISTS" "true")
+
 (use-package hideshow
   :ensure nil
   :hook (prog-mode . hs-minor-mode))
 
 (when (fboundp 'tab-bar-mode)
+  (setq tab-bar-show nil
+        tab-bar-close-button-show nil
+        tab-bar-new-button-show nil
+        tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
   (tab-bar-mode 1)
-  (tab-bar-history-mode 1)
-  (setq tab-bar-show 1))
+  (tab-bar-history-mode 1))
 
 (with-eval-after-load 'evil
   (setq evil-kill-on-visual-paste nil)
@@ -370,6 +601,11 @@
 (require 'navigation)
 (require 'startup)
 (require 'ui)
+
+(when (fboundp 'tab-bar-mode)
+  (add-hook 'tab-bar-tab-post-select-functions #'leo/workspace--remember-last)
+  (add-hook 'kill-emacs-hook #'leo/workspace-save-last-session)
+  (leo/workspace-ensure-main))
 
 (global-set-key (kbd "M-j") #'leo/move-text-down)
 (global-set-key (kbd "M-k") #'leo/move-text-up)
