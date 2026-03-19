@@ -1,1 +1,0 @@
-../../../../../dotfiles/config/.config/nvim/lua/plugins/colorscheme/cyberdream.lua
