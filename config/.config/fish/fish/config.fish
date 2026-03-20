@@ -1,5 +1,5 @@
 # ==========================================================
-# Fish Config — CachyOS (Arch Based)
+# Fish Config — Fedora
 # SysAdmin: Linux | Data: 2025
 # ==========================================================
 
@@ -106,22 +106,18 @@ if status is-interactive
     alias bv='NVIM_APPNAME=bash-nvim nvim'
     alias nviml='NVIM_APPNAME=lazyvim nvim'
 
-    # --- Sistema (PACMAN / ARCH) ---
-    # Anatomia: -S (Sync), -y (Refresh DB), -u (Sys Upgrade)
-    # Importante: No Arch, evitamos o flag '--noconfirm' em aliases de update
-    # para garantir que você leia a lista de pacotes antes de quebrar algo.
+    # --- Sistema (DNF / Fedora) ---
+    # Anatomia: dnf update (upgrade), dnf install, dnf remove, dnf search
 
-    abbr --add update 'sudo pacman -Syu'
-    abbr --add install 'sudo pacman -S --noconfirm --needed'
-    abbr --add search 'pacman -Ss'
+    abbr --add update 'sudo dnf update'
+    abbr --add install 'sudo dnf install'
+    abbr --add search 'dnf search'
 
     # Remoção Segura e Recursiva
-    # -R (Remove), -s (Recursive/Dependencies), -n (No backup files)
-    abbr --add remove 'sudo pacman -Rsn'
+    abbr --add remove 'sudo dnf remove'
 
-    # Limpeza de Orfãos (Equivalente ao autoremove)
-    # Qtdq: Query, deps não requeridas (t), deps de deps (d), quiet (q)
-    abbr --add cleanup 'sudo pacman -Qtdq | sudo pacman -Rns -'
+    # Limpeza de Orfãos (autoremove)
+    abbr --add cleanup 'sudo dnf autoremove'
 
     # Logs do sistema
     abbr --add jctl 'journalctl -p 3 -xb'
@@ -135,7 +131,7 @@ if status is-interactive
     abbr --add cdaula 'cd ~/gitlab/maisPraTi/'
     abbr --add exithypr 'hyprctl dispatch exit'
     abbr --add ask gemini
-    abbr --add yay paru
+
     abbr --add vpninova 'sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
     abbr --add doomsync './.config/emacs/bin/doom sync'
     abbr --add doomupd './.config/emacs/bin/doom upgrade'
