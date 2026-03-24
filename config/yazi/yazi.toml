@@ -1,0 +1,9 @@
+[mgr]
+show_hidden = true
+
+[filetype]
+rules = [
+  # ... other rules
+  { name = "*", is = "hidden", bg = "cyan" },
+  # ... other rules
+]

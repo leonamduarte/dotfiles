@@ -1,0 +1,14 @@
+Você está trabalhando no projeto OfflineNotes — app 100% offline, sem rede, login, sync ou cloud.
+
+ARQUIVOS DE GOVERNANÇA (leia quando existirem, nesta ordem):
+- AGENTS.md — instruções específicas para agentes
+- project.md — visão e objetivos do projeto
+- architecture-decisions.md — decisões arquiteturais e suas razões
+- blueprints.md — mapa atual da arquitetura
+- current-state.md — estado atual de desenvolvimento
+
+REGRAS GLOBAIS:
+- Nunca execute git push.
+- Nunca implemente funcionalidades de rede, sync, analytics ou login.
+- Mantenha escopo pequeno: só altere o que foi explicitamente pedido.
+- Prefira código legível e manutenível a código "inteligente".
