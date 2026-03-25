@@ -1,5 +1,6 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+wezterm.color.load_scheme(os.getenv("HOME") .. "/.config/wezterm/colors/matteblack.toml")
 
 -- ============================================================================
 -- CONFIGURAÇÕES GLOBAIS (Windows + Linux)
@@ -187,6 +188,5 @@ config.color_scheme = "Catppuccin Mocha"
 config.color_scheme = "Operator Mono Dark"
 config.color_scheme = "Catppuccin Macchiato"
 --]]
-config.color_scheme = "Dracula (Official)"
-
+config.color_scheme = "matteblack"
 return config

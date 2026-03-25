@@ -41,7 +41,8 @@
     "executor": {
       "mode": "subagent",
       "description": "Executor: implementa features e testes.",
-      "model": "openai/gpt-5.3-codex",
+      "model": "opencode-go/minimax-m2.7",
+      // "model": "openai/gpt-5.3-codex",
       "prompt": "{file:./prompts/executor.txt}",
       "tools": {
         "write": true,
