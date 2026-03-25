@@ -1,5 +1,5 @@
 # ==========================================================
-# Fish Config — Fedora
+# Fish Config — CachyOS (Arch Based)
 # SysAdmin: Linux | Data: 2025
 # ==========================================================
 
@@ -106,23 +106,33 @@ if status is-interactive
     alias bv='NVIM_APPNAME=bash-nvim nvim'
     alias nviml='NVIM_APPNAME=lazyvim nvim'
 
-    # --- Sistema (DNF / Fedora) ---
-    # Anatomia: dnf update (upgrade), dnf install, dnf remove, dnf search
+    # --- Sistema (PACMAN / ARCH) ---
+    # Anatomia: -S (Sync), -y (Refresh DB), -u (Sys Upgrade)
 
-    abbr --add update 'sudo dnf update'
-    abbr --add install 'sudo dnf install'
-    abbr --add search 'dnf search'
+    abbr --add update 'sudo pacman -Syu --noconfirm'
+    abbr --add install 'sudo pacman -S --noconfirm --needed'
+    abbr --add search 'pacman -Ss'
 
     # Remoção Segura e Recursiva
-    abbr --add remove 'sudo dnf remove'
+    # -R (Remove), -s (Recursive/Dependencies), -n (No backup files)
+    abbr --add remove 'sudo pacman -Rsn'
 
-    # Limpeza de Orfãos (autoremove)
-    abbr --add cleanup 'sudo dnf autoremove'
+    # Limpeza de Orfãos (Equivalente ao autoremove)
+    # Qtdq: Query, deps não requeridas (t), deps de deps (d), quiet (q)
+    function cleanup
+        set orphans (pacman -Qtdq)
+        if test (count $orphans) -gt 0
+            sudo pacman -Rsn $orphans
+            echo "Removidos $orphans"
+        else
+            echo "Nenhum órfão encontrado."
+        end
+    end
 
     # Logs do sistema
     abbr --add jctl 'journalctl -p 3 -xb'
 
-    # Compressão
+    # Compressão (Usage: tarnow archive.tar file1 file2)
     alias tarnow='tar -acf '
     alias untar='tar -zxvf '
 
@@ -131,16 +141,12 @@ if status is-interactive
     abbr --add cdaula 'cd ~/gitlab/maisPraTi/'
     abbr --add exithypr 'hyprctl dispatch exit'
     abbr --add ask gemini
-
+    abbr --add yay paru
     abbr --add vpninova 'sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
     abbr --add doomsync './.config/emacs/bin/doom sync'
     abbr --add doomupd './.config/emacs/bin/doom upgrade'
     abbr --add dotsize 'du -sh .git && git count-objects -vH'
     abbr --add cl clear
-    abbr --add mnti 'sudo mount -t drvfs I: /mnt/i'
-    abbr --add cdi 'cd /mnt/i'
-    abbr --add mntc 'sudo mount -t drvfs C: /mnt/c'
-    abbr --add cdc 'cd /mnt/c'
 
     # ----------------------------------------------------------
     # 5) Funções
@@ -148,9 +154,8 @@ if status is-interactive
 
     function log
         set -l cmd $argv
-        set -l base ()
         set -l ts (date +%Y%m%d-%H%M%S)
-        eval $cmd 2>&1 | tee "$base-$ts.log"
+        eval $cmd 2>&1 | tee "$ts.log"
     end
 
     function y
