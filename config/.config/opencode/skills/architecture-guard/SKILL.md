@@ -19,7 +19,7 @@ Detectar violacoes de arquitetura e invariantes para evitar degradacao estrutura
 - Escopo: validar dependencias entre camadas e invariantes arquiteturais.
 - Nao escopo: corrigir codigo -> delegar para `apply-audit-fixes` ou `feature-implement`.
 - Nao escopo: auditoria funcional geral -> delegar para `audit-code`.
-- Nao escopo: mapeamento completo do repositorio -> delegar para `repo-scan`.
+- Nao escopo: mapeamento completo do repositorio -> delegar para `repo_analysis`.
 - Arquivos permitidos: nenhum.
 
 ### Criterios objetivos (Sim/Nao)
