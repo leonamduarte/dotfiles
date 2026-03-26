@@ -1,3 +1,9 @@
+---
+name: model_router
+description: Route tasks to the correct model and skill based on task type
+compatibility: opencode
+---
+
 # Skill: model_router
 
 Goal:
@@ -13,7 +19,7 @@ memory/recent_changes.md
 
 If the memory files do not exist or are outdated, call:
 
-skill: repo_memory
+skill: repo-docs
 
 
 Routing rules:
@@ -44,7 +50,7 @@ Use:
 
 model: codex-5.4-mini
 reasoning: medium
-skill: code_execute
+skill: feature-implement
 
 
 If the task involves:

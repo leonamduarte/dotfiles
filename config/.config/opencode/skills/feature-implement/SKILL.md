@@ -19,7 +19,7 @@ Implementar a menor solucao funcional para a feature solicitada sem quebrar inva
 - Escopo: implementar apenas o que foi solicitado no ticket/contexto.
 - Nao escopo: corrigir backlog completo de auditoria -> delegar para `apply-audit-fixes`.
 - Nao escopo: diagnostico profundo de bug intermitente -> delegar para `surgical-debug`.
-- Nao escopo: atualizar documentacao estrutural -> delegar para `repo-scan` ou `blueprint-sync`.
+- Nao escopo: atualizar documentacao estrutural -> delegar para `repo_analysis` ou `repo-docs`.
 - Arquivos proibidos: `AGENTS.md`, `project.md`, `blueprints.md`, `architecture-decisions.md`, `current-state.md`.
 
 ### Criterios objetivos (Sim/Nao)
@@ -40,3 +40,12 @@ Implementar a menor solucao funcional para a feature solicitada sem quebrar inva
 
 - Codigo implementado no menor escopo util.
 - Testes e instrucoes objetivas de validacao.
+
+## Modo execute
+
+Quando ja existe um plano tecnico detalhado (plano de `repo_analysis` ou equivalente):
+- Siga o plano exatamente.
+- Modifique apenas arquivos necessarios.
+- Produza patches minimos.
+- Nao reescreva secoes grandes.
+- Inclua teste se houver suite de testes.

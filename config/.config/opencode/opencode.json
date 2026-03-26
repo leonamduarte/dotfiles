@@ -25,12 +25,14 @@
           "find *": "allow"
         },
         "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "allow",
+          "repo_analysis": "allow",
+          "repo-docs": "allow",
           "architecture-guard": "allow",
           "feature-implement": "deny",
           "audit-code": "deny",
           "apply-audit-fixes": "deny",
+          "model_router": "allow",
+          "code_debug": "allow",
           "surgical-debug": "deny"
         }
       },
@@ -67,12 +69,15 @@
           "go list*": "allow"
         },
         "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "deny",
+          "repo_analysis": "allow",
+          "repo-docs": "allow",
           "architecture-guard": "allow",
           "feature-implement": "allow",
           "audit-code": "deny",
           "apply-audit-fixes": "allow",
+          "model_router": "allow",
+          "code_debug": "allow",
+          "code-simplifier": "allow",
           "surgical-debug": "deny"
         }
       },
@@ -100,8 +105,8 @@
           "git status*": "allow"
         },
         "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "deny",
+          "repo_analysis": "allow",
+          "repo-docs": "deny",
           "architecture-guard": "allow",
           "feature-implement": "deny",
           "audit-code": "allow",
@@ -132,6 +137,10 @@
           "git diff*": "allow",
           "git log*": "allow",
           "git status*": "allow"
+        },
+        "skill": {
+          "repo_analysis": "allow",
+          "code-simplifier": "allow"
         }
       },
       "temperature": 0.1,

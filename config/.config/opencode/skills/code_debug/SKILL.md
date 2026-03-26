@@ -1,3 +1,9 @@
+---
+name: code_debug
+description: Diagnose and fix complex bugs
+compatibility: opencode
+---
+
 # Skill: code_debug
 
 Model:
