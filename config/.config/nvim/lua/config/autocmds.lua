@@ -60,33 +60,3 @@ vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
   command = "tabdo wincmd =",
 })
-
--- Configurar conform para formatar ao salvar
-vim.api.nvim_create_autocmd("User", {
-  pattern = "LazyVimReady",
-  group = augroup("conform_setup"),
-  callback = function()
-    local status_ok, conform = pcall(require, "conform")
-    if not status_ok then
-      return
-    end
-
-    conform.setup({
-      formatters_by_ft = {
-        javascript = { "biome" },
-        typescript = { "biome" },
-        javascriptreact = { "biome" },
-        typescriptreact = { "biome" },
-        json = { "biome" },
-        css = { "biome" },
-        scss = { "biome" },
-        markdown = { "prettier" },
-        ["_"] = { "trim_whitespace" },
-      },
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
-    })
-  end,
-})
