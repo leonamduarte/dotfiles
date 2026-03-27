@@ -47,4 +47,4 @@ opt.conceallevel = 2
 -- ESLint autoformat (se estiver usando extras linting.eslint)
 g.lazyvim_eslint_auto_format = true
 -- Toggle global de autoformat no save (do LazyVim); deixe comentado se não quiser mexer.
--- g.autoformat = true
+g.autoformat = true
