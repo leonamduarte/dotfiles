@@ -60,3 +60,15 @@ vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
   command = "tabdo wincmd =",
 })
+
+-- Format on save using conform
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = augroup("format_on_save"),
+  callback = function(args)
+    local conform = require("conform")
+    local formatters = conform.list_formatters(args.buf)
+    if formatters and #formatters > 0 then
+      conform.format({ bufnr = args.buf, timeout_ms = 2000 })
+    end
+  end,
+})
