@@ -46,9 +46,9 @@
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
                      ;; "FantasqueSansM Nerd Font"
-                     "CaskaydiaCove Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 18)
-        doom-variable-pitch-font (font-spec :family font-family :size 18)))
+                     "Maple Mono NF")))
+  (setq doom-font (font-spec :family font-family :size 15)
+        doom-variable-pitch-font (font-spec :family font-family :size 15)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
@@ -85,6 +85,21 @@
 (map! :leader
       :desc "Org babel tangle" "m B" #'org-babel-tangle)
 
+(after! ispell
+  (setq ispell-program-name "hunspell"
+        ispell-dictionary "pt_BR"
+        ispell-async-preparse-characters "–")  ; hyphen
+  (unless (assoc "pt_BR" ispell-local-dictionary-alist)
+    (add-to-list 'ispell-local-dictionary-alist
+                 '("pt_BR" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
+                   ("-d" "pt_BR") nil utf-8))))
+
+(defun +org-set-pt-br-spellcheck-h ()
+  (setq-local ispell-local-dictionary "pt_BR")
+  (ispell-change-dictionary "pt_BR"))
+
+(add-hook 'org-mode-hook #'+org-set-pt-br-spellcheck-h)
+
 ;; -------------------------------
 ;; 3. DESENVOLVIMENTO & LSP
 ;; -------------------------------
@@ -107,7 +122,8 @@
 
 ;; Treesitter Auto Install
 (use-package! treesit-auto
-  :config (global-treesit-auto-mode))
+  :commands (treesit-auto-mode)
+  :hook (prog-mode . treesit-auto-mode))
 
 ;; FIX: Kotlin Tree-sitter Grammar — registra fonte e auto-instala se ausente
 (after! treesit
@@ -115,18 +131,24 @@
   (add-to-list 'treesit-language-source-alist
                '(kotlin "https://github.com/fwcd/tree-sitter-kotlin"))
   (unless (treesit-language-available-p 'kotlin)
-    (treesit-install-language-grammar 'kotlin)))
+    (message "Kotlin treesit grammar ausente. Instale manualmente com M-x treesit-install-language-grammar")))
+
+(after! smartparens
+  (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
+  (smartparens-global-mode -1)
+  (add-hook 'prog-mode-hook #'smartparens-mode))
 
 ;; Copilot - FIX: Não conflita com corfu
 (use-package! copilot
-  :hook (prog-mode . copilot-mode)
+  :commands (copilot-mode)
   :bind (:map copilot-completion-map
               ;; MUDANÇA: Use C-j ao invés de TAB para não conflitar com corfu
               ("<backtab>" . 'copilot-accept-completion))
   ;; ("C-M-TAB" . 'copilot-accept-completion-by-word))
   :config
   (setq copilot-indent-offset-warning-disable t)
-  (add-to-list 'copilot-indentation-alist '(prog-mode 2)))
+  (add-to-list 'copilot-indentation-alist '(prog-mode 2))
+  (map! :leader "t c" #'copilot-mode))
 
 (use-package! kdl-mode
   :mode "\\.kdl\\'")
@@ -189,7 +211,18 @@
 ;; 6. LSP TUNING & BOOSTER (PERFORMANCE CRÍTICA)
 ;; -------------------------------
 
+(defun +lsp-ensure-typescript-h (&rest _)
+  "Only start LSP if TypeScript is available in the project."
+  (or (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules/typescript")
+      (locate-dominating-file (or (buffer-file-name) default-directory) ".git")))
+
 (after! lsp-mode
+  (when (and (fboundp 'lsp!)
+             (not (advice-member-p #'+lsp-ensure-typescript-h 'lsp!)))
+    (advice-add 'lsp! :around (lambda (old-fn &rest args)
+                                 (when (+lsp-ensure-typescript-h)
+                                   (apply old-fn args)))))
+
   ;; Configs Gerais
   (setq lsp-go-use-gofumpt t
         lsp-go-analyses '((nilness . t) (unusedparams . t) (unusedwrite . t)))
@@ -386,6 +419,7 @@
 ;; Popup Rules (Trouble-like Panel)
 (set-popup-rule! "^\\*Flycheck errors\\*$" :side 'bottom :size 0.25 :select nil :quit nil :ttl nil)
 
-;; Extra: Inc Rename (LSP rename com mais visibilidade)
+(after! flycheck
+  (setq flycheck-global-modes nil))
 (map! :leader
       :desc "LSP Rename (Inc Rename)" "c r" #'lsp-rename)
