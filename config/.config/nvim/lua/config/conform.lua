@@ -12,7 +12,7 @@ conform.setup({
     json = { "biome" },
     css = { "biome" },
     scss = { "biome" },
-    markdown = { "biome" },
+    markdown = { "prettier" },
     -- Use a fallback formatter for other filetypes
     ["_"] = { "trim_whitespace" },
   },

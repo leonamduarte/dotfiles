@@ -80,7 +80,7 @@ vim.api.nvim_create_autocmd("User", {
         json = { "biome" },
         css = { "biome" },
         scss = { "biome" },
-        markdown = { "biome" },
+        markdown = { "prettier" },
         ["_"] = { "trim_whitespace" },
       },
       format_on_save = {
