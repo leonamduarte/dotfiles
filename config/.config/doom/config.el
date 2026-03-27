@@ -45,15 +45,14 @@
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
-                     ;; "FantasqueSansM Nerd Font"
-                     "Maple Mono NF")))
-  (setq doom-font (font-spec :family font-family :size 15)
-        doom-variable-pitch-font (font-spec :family font-family :size 15)))
+                     "Agave Nerd Font Mono")))
+  (setq doom-font (font-spec :family font-family :size 18 :weight 'semi-bold)
+        doom-variable-pitch-font (font-spec :family font-family :size 18 :weight 'semi-bold)))
 
 ;; UI / Tema
-(setq doom-theme 'doom-one)
-;; (setq doom-theme 'catppuccin)
-;; (setq catppuccin-flavor 'macchiato)
+;; (setq doom-theme 'doom-one)
+(setq doom-theme 'catppuccin)
+(setq catppuccin-flavor 'macchiato)
 (setq display-line-numbers-type t
       confirm-kill-emacs nil)
 (setq-default tab-width 2)
@@ -220,8 +219,8 @@
   (when (and (fboundp 'lsp!)
              (not (advice-member-p #'+lsp-ensure-typescript-h 'lsp!)))
     (advice-add 'lsp! :around (lambda (old-fn &rest args)
-                                 (when (+lsp-ensure-typescript-h)
-                                   (apply old-fn args)))))
+                                (when (+lsp-ensure-typescript-h)
+                                  (apply old-fn args)))))
 
   ;; Configs Gerais
   (setq lsp-go-use-gofumpt t
