@@ -21,5 +21,5 @@ for pkg in $DIR_PACKAGES; do
     ln -sf ../dotfiles/config/.config/$pkg ~/.config/$pkg
 done
 
-# Arquivos soltos em config/ que não estão em subdiretórios
-ln -sf ../dotfiles/config/mimeapps.list ~/.config/mimeapps.list 2>/dev/null
+# Arquivos soltos em config/.config/ que não estão em subdiretórios
+ln -sf ../dotfiles/config/.config/mimeapps.list ~/.config/mimeapps.list 2>/dev/null
