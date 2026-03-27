@@ -62,7 +62,8 @@ vim.api.nvim_create_autocmd("VimResized", {
 })
 
 -- Configurar conform para formatar ao salvar
-vim.api.nvim_create_autocmd("VeryLazy", {
+vim.api.nvim_create_autocmd("User", {
+  pattern = "LazyVimReady",
   group = augroup("conform_setup"),
   callback = function()
     local status_ok, conform = pcall(require, "conform")
