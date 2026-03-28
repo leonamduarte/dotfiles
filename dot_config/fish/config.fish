@@ -26,6 +26,9 @@ if status is-interactive
     # Editor Padrão
     set -gx EDITOR nvim
 
+    # Doom Emacs: aponta para source do chezmoi
+    set -gx DOOMDIR "$HOME/.local/share/chezmoi/dot_config/doom"
+
     # ----------------------------------------------------------
     # 2) Configurações Nativas do Fish
     # ----------------------------------------------------------
@@ -137,6 +140,16 @@ if status is-interactive
     alias untar='tar -zxvf '
 
     # --- Pessoais ---
+    # Chezmoi: importa alterações do ~/.config/ para o source directory
+    function chezmoi-import
+        set dirs alacritty doom fish ghostty kitty neovide nvim opencode picom qtile rofi-bashln waybar wezterm yazi
+        for dir in $dirs
+            if test -d "$HOME/.config/$dir"
+                chezmoi add "$HOME/.config/$dir"
+            end
+        end
+    end
+
     abbr --add srcfish 'source ~/.config/fish/config.fish'
     abbr --add cdaula 'cd ~/gitlab/maisPraTi/'
     abbr --add exithypr 'hyprctl dispatch exit'

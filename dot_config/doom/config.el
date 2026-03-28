@@ -50,9 +50,9 @@
         doom-variable-pitch-font (font-spec :family font-family :size 16 :weight 'semi-bold)))
 
 ;; UI / Tema
-;; (setq doom-theme 'doom-one)
-(setq doom-theme 'catppuccin)
-(setq catppuccin-flavor 'macchiato)
+(setq doom-theme 'doom-one)
+;; (setq doom-theme 'catppuccin)
+;; (setq catppuccin-flavor 'macchiato)
 (setq display-line-numbers-type t
       confirm-kill-emacs nil)
 (setq-default tab-width 2)

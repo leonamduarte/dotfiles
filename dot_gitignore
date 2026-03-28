@@ -60,6 +60,10 @@
 
 # Ignora lixo
 *Zone.Identifier*
+node_modules/
+__pycache__/
+*.pyc
+*.bak
 
 # Neovim / Vim swap & undo
 *.swp
