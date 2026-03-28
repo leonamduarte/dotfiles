@@ -1,3 +1,7 @@
 README.md
 stow.sh
 .git
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/*.bak
