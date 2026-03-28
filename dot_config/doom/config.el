@@ -17,12 +17,12 @@
 ;; 1. NPM (Global):
 ;;    npm install -g typescript typescript-language-server vscode-langservers-extracted
 ;;    npm install -g pyright bash-language-server dockerfile-language-server-nodejs
-;;    npm install -g yaml-language-server terraform-ls diagnostic-languageserver
+;;    npm install -g yaml-language-server @hashicorp/terraform-ls diagnostic-languageserver
 ;;    npm install -g prettier eslint @tailwindcss/language-server markdownlint-cli
 ;;
 ;; 2. OUTROS (Go, Python, Lua, Shell):
 ;;    - Go: go install golang.org/x/tools/gopls@latest
-;;    - Python: pip install black ruff isort pyflakes
+;;    - Python: pipx install black ruff isort pyflakes
 ;;    - Lua: (Mason-like) sudo pacman -S lua-language-server stylua (ou via brew/scoop)
 ;;    - Shell: sudo pacman -S shellcheck shfmt
 ;;
@@ -46,8 +46,8 @@
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
                      "JetBrainsMono Nerd Font Mono")))
-  (setq doom-font (font-spec :family font-family :size 16 :weight 'semi-bold)
-        doom-variable-pitch-font (font-spec :family font-family :size 16 :weight 'semi-bold)))
+  (setq doom-font (font-spec :family font-family :size 15 :weight 'medium)
+        doom-variable-pitch-font (font-spec :family font-family :size 15 :weight 'medium)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
