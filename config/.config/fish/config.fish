@@ -207,4 +207,4 @@ function pom
 end
 
 # opencode
-fish_add_path /home/bashln/.opencode/bin
+fish_add_path $HOME/.opencode/bin
