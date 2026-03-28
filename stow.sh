@@ -10,16 +10,16 @@ DIR_PACKAGES="fish nvim opencode alacritty ghostty kitty neovide niri picom qtil
 
 # Remove arquivos que o stow criou incorretamente (como arquivos soltos)
 for ext in lua json jsonc toml conf rasi md txt el py; do
-    rm -f ~/.config/*.$ext 2>/dev/null
+	rm -f ~/.config/*.$ext 2>/dev/null
 done
 rm -f ~/.config/config.fish ~/.config/fish_variables ~/.config/init.lua ~/.config/lazy-lock.json 2>/dev/null
 rm -f ~/.config/opencode.json ~/.config/tui.json ~/.config/prompts ~/.config/skills 2>/dev/null
 
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 for pkg in $DIR_PACKAGES; do
-    # Cria symlink de diretório
-    rm -rf ~/.config/$pkg
-    ln -sf ../dotfiles/config/.config/$pkg ~/.config/$pkg
+	rm -rf ~/.config/$pkg
+	ln -sf "$DOTFILES_DIR/config/.config/$pkg" ~/.config/$pkg
 done
 
-# Arquivos soltos em config/.config/ que não estão em subdiretórios
-ln -sf ../dotfiles/config/.config/mimeapps.list ~/.config/mimeapps.list 2>/dev/null
+ln -sf "$DOTFILES_DIR/config/.config/mimeapps.list" ~/.config/mimeapps.list 2>/dev/null
