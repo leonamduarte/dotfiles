@@ -1,6 +1,6 @@
 # dotfiles
 
-Repositorio de dotfiles para Linux, organizado com GNU Stow. Contem configs de shell, WM/DE e apps de terminal.
+Repositorio de dotfiles para Linux, organizado com chezmoi. Contem configs de shell, WM/DE e apps de terminal.
 
 ## Destaques
 - Shells: Bash e Zsh
@@ -10,42 +10,42 @@ Repositorio de dotfiles para Linux, organizado com GNU Stow. Contem configs de s
 - Outros: Yazi
 
 ## Estrutura
-- `shell/` -> `.bashrc` e `.zshrc`
-- `git/` -> `.gitignore`
-- `config/.config/` -> configs de apps (hypr, qtile, alacritty, kitty, wezterm, etc.)
-- `stow.sh` -> script helper do GNU Stow
+- `dot_config/` -> `~/.config/`
+- `dot_gitignore` -> `~/.gitignore`
+- `.chezmoiignore` -> arquivos ignorados pelo chezmoi
 
 ## Requisitos
 - Linux
-- GNU Stow
-- Dependencias opcionais conforme as configs (ex.: hyprland, qtile, alacritty, kitty, wezterm, rofi, polybar, nvim, doom-emacs)
+- chezmoi
+- Dependencias opcionais conforme as configs (ex.: qtile, alacritty, kitty, wezterm, rofi, nvim, doom-emacs)
 
 ## Instalacao rapida
-O script ja esta pronto para aplicar os pacotes principais:
 
 ```bash
-./stow.sh
+git clone https://github.com/paesmont/dotfiles.git ~/.local/share/chezmoi
+cd ~/.local/share/chezmoi
+git checkout linux
+chezmoi apply --force
 ```
-
-## Instalacao manual
-Para aplicar pacotes especificos:
-
-```bash
-stow -v -t ~ shell git config --adopt
-```
-
-Nota: `--adopt` move arquivos existentes para dentro do repo. Use com cuidado.
 
 ## Uso
-1. Ajuste os arquivos dentro de `shell/` e `config/.config/`.
-2. Reaplique o Stow quando adicionar novos arquivos.
+Para reaplicar os dotfiles depois de alterar o repo:
+
+```bash
+cd ~/.local/share/chezmoi
+chezmoi apply --force
+```
+
+1. Edite os arquivos dentro de `dot_config/` e `dot_gitignore`.
+2. Reaplique com `chezmoi apply --force`.
 
 ## Seguranca
 O `.gitignore` bloqueia arquivos sensiveis (ex.: `.ssh`, `.gnupg`, `.aws`, chaves privadas). Nao commit arquivos de credenciais.
 
 ## Workflow
 - A branch `main` nao deve ser alterada diretamente.
-- Trabalhe em uma branch separada (ex.: `docs/readme`) e abra PR.
+- A branch principal para Linux e `linux`.
+- Trabalhe em uma branch separada quando necessario e abra PR.
 
 ## Creditos
 Parte das configs (ex.: Qtile) vem de bases publicas e foram ajustadas localmente.
