@@ -1,6 +1,6 @@
 ---
 name: architecture-guard
-description: Verifica violacoes arquiteturais, acoplamentos indevidos e quebra de invariantes
+description: Valida arquitetura e invariantes do projeto
 compatibility: opencode
 ---
 

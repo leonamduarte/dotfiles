@@ -1,6 +1,6 @@
 ---
 name: code_debug
-description: Diagnose and fix complex bugs
+description: Debug e correção de bugs complexos
 compatibility: opencode
 ---
 

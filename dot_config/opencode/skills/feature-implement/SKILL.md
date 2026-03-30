@@ -1,6 +1,6 @@
 ---
 name: feature-implement
-description: Implementa feature seguindo estado atual e regras arquiteturais do projeto
+description: Implementa features novas
 compatibility: opencode
 ---
 
