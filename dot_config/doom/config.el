@@ -46,8 +46,8 @@
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
                      "JetBrainsMono Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 15)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+  (setq doom-font (font-spec :family font-family :size 14)
+        doom-variable-pitch-font (font-spec :family font-family :size 14)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
@@ -337,7 +337,7 @@
 ;; File explorer atalhos (Neovim-style)
 (map! :leader
       :desc "Dired here (Oil.nvim style)" "f e" #'dired-jump
-       :desc "Dired at root" "f E" (lambda () (interactive) (dired (or (projectile-project-root) default-directory))))
+      :desc "Dired at root" "f E" (lambda () (interactive) (dired (or (projectile-project-root) default-directory))))
 
 ;; Otimização de Garbage Collection (GCMH)
 (use-package! gcmh
@@ -816,4 +816,4 @@
 
 ;; Final popup rules
 (set-popup-rule! "^\*Dirvish" :side 'left :size 0.3 :select t :quit t)
-(set-popup-rule! "^\*harpoon" :side 'bottom :size 0.25 :select t))
+(set-popup-rule! "^\*harpoon" :side 'bottom :size 0.25 :select t)
