@@ -5,7 +5,7 @@ return {
     enabled = true,
     priority = 1000,
     opts = {
-      transparent = true,
+      transparent = false,
       background = "dark",
       styles = {
         comments = { italic = true },
