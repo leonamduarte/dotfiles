@@ -116,6 +116,10 @@ if status is-interactive
     abbr --add install 'sudo pacman -S --noconfirm --needed'
     abbr --add search 'pacman -Ss'
 
+    # --- Sistema (DNF / FEDORA) ---
+    abbr --add finstall 'sudo dnf install -y'
+    abbr --add fsearch 'dnf search'
+
     # Remoção Segura e Recursiva
     # -R (Remove), -s (Recursive/Dependencies), -n (No backup files)
     abbr --add remove 'sudo pacman -Rsn'
