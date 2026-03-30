@@ -45,9 +45,9 @@
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
-                     "JetBrainsMono Nerd Font Mono")))
-  (setq doom-font (font-spec :family font-family :size 15 :weight 'medium)
-        doom-variable-pitch-font (font-spec :family font-family :size 15 :weight 'medium)))
+                     "GeistMono Nerd Font")))
+  (setq doom-font (font-spec :family font-family :size 16 :weight 'medium)
+        doom-variable-pitch-font (font-spec :family font-family :size 16 :weight 'medium)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
