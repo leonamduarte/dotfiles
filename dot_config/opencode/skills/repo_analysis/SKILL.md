@@ -1,6 +1,6 @@
 ---
 name: repo_analysis
-description: Mapeia repo, identifica hotspots e produz plano de implementação ou analysis.md
+description: Mapeia repo e identifica hotspots
 compatibility: opencode
 ---
 

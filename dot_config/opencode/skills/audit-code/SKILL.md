@@ -1,6 +1,6 @@
 ---
 name: audit-code
-description: Audita a implementacao e aponta bugs, edge cases, inconsistencias e riscos
+description: Audita código para bugs, edge cases e riscos
 compatibility: opencode
 ---
 

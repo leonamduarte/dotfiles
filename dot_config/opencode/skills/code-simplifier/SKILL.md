@@ -1,6 +1,6 @@
 ---
 name: code-simplifier
-description: Refina código para clareza e manutenção sem alterar comportamento
+description: Simplifica código mantendo comportamento
 compatibility: opencode
 ---
 

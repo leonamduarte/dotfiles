@@ -1,6 +1,6 @@
 ---
 name: repo-docs
-description: Mantém documentação derivada do repo: memory/*.md e blueprints.md
+description: Mantém docs estruturais do repo
 compatibility: opencode
 ---
 

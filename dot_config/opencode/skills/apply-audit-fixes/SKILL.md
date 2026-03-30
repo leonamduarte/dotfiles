@@ -1,6 +1,6 @@
 ---
 name: apply-audit-fixes
-description: Corrige problemas apontados pelo auditor priorizando severidades altas
+description: Aplica correções de auditoria priorizadas
 compatibility: opencode
 ---
 

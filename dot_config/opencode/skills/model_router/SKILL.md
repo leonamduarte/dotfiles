@@ -1,6 +1,6 @@
 ---
 name: model_router
-description: Route tasks to the correct model and skill based on task type
+description: Roteia tarefas para modelos e skills corretas
 compatibility: opencode
 ---
 
