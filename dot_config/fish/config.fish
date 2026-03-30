@@ -160,6 +160,10 @@ if status is-interactive
     abbr --add doomupd './.config/emacs/bin/doom upgrade'
     abbr --add dotsize 'du -sh .git && git count-objects -vH'
     abbr --add cl clear
+    abbr --add mnti 'sudo mount -t drvfs I: /mnt/i'
+    abbr --add mntc 'sudo mount -t drvfs I: /mnt/c'
+    abbr --add cdc 'cd /mnt/c'
+    abbr --add cdi 'cd /mnt/i'
 
     # ----------------------------------------------------------
     # 5) Funções
