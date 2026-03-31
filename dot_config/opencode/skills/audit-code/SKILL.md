@@ -49,6 +49,16 @@ Find technical bugs, security vulnerabilities, and edge case issues in code chan
 - Categorize severity clearly
 - If no issues found, explicitly state "No issues found"
 
+## Optional Focuses
+
+If the user adds one of these focuses, narrow the audit accordingly:
+
+- `focus: security` -> prioritize injection risks, auth/authz gaps, secrets exposure, unsafe execution
+- `focus: edge-cases` -> prioritize null handling, empty inputs, boundary values, retries, and fallback paths
+- `focus: concurrency` -> prioritize races, ordering issues, shared mutable state, and missing awaits
+- `focus: data-validation` -> prioritize schema gaps, unchecked inputs, coercion mistakes, and trust boundaries
+- `focus: performance` -> allow a narrow technical performance pass for obvious hot-path bugs only; broader optimization still belongs to `qa-review`
+
 ## Objective Criteria (Yes/No)
 
 - [ ] Checked for logic bugs and errors
@@ -101,3 +111,4 @@ No issues found.
 - For comprehensive quality review including tests and process, use `qa-review`
 - For code simplification and refactoring, use `code-simplifier`
 - For architecture validation, use `architecture-guard`
+- If you already know the area of risk, pass a `focus:` hint to make the audit faster and sharper

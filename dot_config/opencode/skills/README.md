@@ -119,9 +119,9 @@ skills/
 │
 ├── apply-audit-fixes/     Existing
 ├── architecture-guard/    Existing
-├── audit-code/            ✅ Updated - Bug/security focus
-├── code_debug/            Existing
-├── code-simplifier/       Existing
+├── audit-code/            ✅ Updated - Bug/security focus + optional focus hints
+├── code_debug/            ✅ Updated - Smart debug workflow
+├── code-simplifier/       ✅ Updated - Refactor helper workflow
 ├── feature-implement/     Existing
 ├── qa-review/             ✅ Updated - Quality/process focus
 ├── repo_analysis/         ✅ Updated - Now with memory mode
@@ -149,6 +149,11 @@ skills/
 - ✅ **parallel**: User-facing multi-agent orchestration (uses fork internally)
 - **Rule**: Use parallel for multi-skill reviews, fork for isolated single-skill execution
 
+**4. Hybrid Upgrade Instead of Skill Sprawl**
+- ✅ **code_debug**: Upgraded into a smart debug workflow (reproduce -> isolate -> hypothesize -> fix -> verify)
+- ✅ **code-simplifier**: Upgraded into a refactor helper (dedupe, readability, function-size, cleanup, testability)
+- ✅ **audit-code / qa-review**: Keep their simple identities, but now accept focus hints for sharper runs
+
 **Result**: 13 skills → 11 skills (eliminated 2 duplicates, specialized 2 skills)
 
 ---
@@ -165,7 +170,7 @@ task: "Implement user authentication"
 Routes to:
 - If planning needed → minimax-m2.7 + repo_analysis
 - If implementing → codex-5.4-mini + feature-implement
-- If debugging → codex-5.3 + code_debug
+- If debugging → codex-5.3 + code_debug (smart debug workflow)
 
 ### 2. Parallel Review
 
@@ -202,9 +207,19 @@ Runs audit in isolated context with separate budget.
 |------|----------|-----------|
 | Find bugs, security issues, edge cases | **audit-code** | qa-review (process focused) |
 | Check tests, merge readiness, docs | **qa-review** | audit-code (technical bugs only) |
-| Simplify/refactor code | **code-simplifier** | Either above |
+| Reproduce and fix a concrete failure | **code_debug** | audit-code (broad sweep) |
+| Simplify/refactor code safely | **code-simplifier** | code_debug (failure focused) |
 | Architecture validation | **architecture-guard** | Either above |
 | Apply audit fixes | **apply-audit-fixes** | Any review skill |
+
+### Focus Hints
+
+These skills stay simple, but accept lightweight focus hints when useful:
+
+- `audit-code`: `security`, `edge-cases`, `concurrency`, `data-validation`, `performance`
+- `qa-review`: `tests`, `merge-readiness`, `docs`, `observability`, `generate-tests`
+- `code_debug`: `stack-trace`, `flaky-test`, `regression`, `data-flow`, `async`
+- `code-simplifier`: `dedupe`, `readability`, `function-size`, `cleanup`, `testability`
 
 ### Repository Context: Which to Use?
 
