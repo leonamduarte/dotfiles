@@ -45,6 +45,16 @@ Ensure code is ready to merge by reviewing test coverage, code quality standards
 - Never modify files - only review and report
 - Give clear merge recommendation (Approved / Approved with conditions / Not ready)
 
+## Optional Focuses
+
+If the user adds one of these focuses, bias the review accordingly:
+
+- `focus: tests` -> spend extra effort on missing scenarios, brittle tests, and verification gaps
+- `focus: merge-readiness` -> prioritize release blockers, rollout confidence, and unresolved follow-ups
+- `focus: docs` -> prioritize README, public API docs, examples, and operator guidance
+- `focus: observability` -> prioritize logging, metrics, debugging signals, and actionable failures
+- `focus: generate-tests` -> in addition to the review, propose concrete test cases or skeletons for the biggest gaps
+
 ## Objective Criteria (Yes/No)
 
 - [ ] Reviewed test coverage (critical logic, edge cases, error paths)
@@ -119,3 +129,4 @@ Ensure code is ready to merge by reviewing test coverage, code quality standards
 - For code simplification, use `code-simplifier`
 - For architecture validation, use `architecture-guard`
 - Use both `audit-code` AND `qa-review` before merging important changes
+- If you need help filling test gaps, pass `focus: generate-tests` so the review includes concrete test suggestions
