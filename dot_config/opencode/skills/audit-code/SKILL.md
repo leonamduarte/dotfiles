@@ -1,6 +1,6 @@
 ---
 name: audit-code
-description: Audit code for bugs, security vulnerabilities, and edge cases
+description: Audita bugs, seguranca e edge cases
 compatibility: opencode
 when_to_use: When you need to find technical bugs, security issues, and edge cases in code
 allowed-tools: []
@@ -57,7 +57,7 @@ If the user adds one of these focuses, narrow the audit accordingly:
 - `focus: edge-cases` -> prioritize null handling, empty inputs, boundary values, retries, and fallback paths
 - `focus: concurrency` -> prioritize races, ordering issues, shared mutable state, and missing awaits
 - `focus: data-validation` -> prioritize schema gaps, unchecked inputs, coercion mistakes, and trust boundaries
-- `focus: performance` -> allow a narrow technical performance pass for obvious hot-path bugs only; broader optimization still belongs to `qa-review`
+- `focus: performance` -> allow a narrow technical performance pass for obvious hot-path correctness risks only; broader optimization still belongs to `qa-review`
 
 ## Objective Criteria (Yes/No)
 
@@ -77,6 +77,7 @@ If the user adds one of these focuses, narrow the audit accordingly:
 - Diff, branch, or list of changed files
 - Brief context of the change (feature/bug/refactor)
 - Any relevant invariants or constraints
+- Optional `focus: ...` hint when a risk area is already known
 
 ## Expected Output
 
@@ -95,9 +96,9 @@ If the user adds one of these focuses, narrow the audit accordingly:
 **Output:**
 | File | Severity | Issue Type | Description | Location |
 |------|----------|------------|-------------|----------|
-| auth.ts | Critical | Security | SQL injection possible | Line 45 |
-| login.ts | High | Bug | Null pointer on edge case | Line 120 |
-| session.ts | Medium | Edge Case | Token expiration not handled | Line 88 |
+| auth.ts | Critical | Security | SQL injection possible | auth.ts:45 |
+| login.ts | High | Bug | Null pointer on edge case | login.ts:120 |
+| session.ts | Medium | Edge Case | Token expiration not handled | session.ts:88 |
 
 Total: 1 Critical, 1 High, 1 Medium
 

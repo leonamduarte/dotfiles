@@ -1,6 +1,6 @@
 ---
 name: fork
-description: Execute skills in isolated fork contexts (sub-agents)
+description: Executa skills em contextos isolados
 compatibility: opencode
 when_to_use: When you need isolated execution, separate token budgets, or bubble-up permissions
 allowed-tools: ["skill", "Agent", "Read", "Bash"]

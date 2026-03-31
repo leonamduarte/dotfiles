@@ -159,6 +159,32 @@ skills/
 
 ---
 
+## Stable Skill Map
+
+This is the intended long-term boundary for the current set:
+
+- **Routing**: `model_router`
+- **Repository understanding**: `repo_analysis`
+- **Implementation**: `feature-implement`
+- **Debugging concrete failures**: `code_debug`
+- **Behavior-preserving cleanup**: `code-simplifier`
+- **Technical audit**: `audit-code`
+- **Quality / merge readiness**: `qa-review`
+- **Architecture validation**: `architecture-guard`
+- **Apply audit findings**: `apply-audit-fixes`
+- **Parallel orchestration**: `parallel`
+- **Isolated execution**: `fork`
+
+Rule of thumb:
+
+- If code is **broken**, use `code_debug`
+- If code **works but is messy**, use `code-simplifier`
+- If code needs a **bug/security sweep**, use `audit-code`
+- If code needs a **merge-readiness review**, use `qa-review`
+- If code needs to be **built**, use `feature-implement`
+
+---
+
 ## Quick Start
 
 ### 1. Route a Task

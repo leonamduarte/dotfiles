@@ -1,6 +1,6 @@
 ---
 name: validate-example
-description: Example skill demonstrating Zod input validation patterns
+description: Exemplo de skill com validacao Zod
 compatibility: opencode
 when_to_use: As a reference for implementing input validation in skills
 allowed-tools: ["Read", "Edit", "Write", "Bash"]
