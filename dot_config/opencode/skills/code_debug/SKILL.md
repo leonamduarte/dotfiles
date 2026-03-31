@@ -1,6 +1,6 @@
 ---
 name: code_debug
-description: Smart debugging for failing code, tests, and multi-file bugs
+description: Debug de falhas concretas
 compatibility: opencode
 when_to_use: When there is a concrete failure to reproduce, explain, isolate, and fix
 allowed-tools: ["Read", "Glob", "Grep", "Bash", "Edit", "Write"]

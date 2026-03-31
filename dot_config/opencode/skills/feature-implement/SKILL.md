@@ -1,6 +1,6 @@
 ---
 name: feature-implement
-description: Implement new features with minimal scope and practical validation
+description: Implementa features novas
 compatibility: opencode
 when_to_use: When a feature or small functional improvement is defined well enough to build safely
 allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]

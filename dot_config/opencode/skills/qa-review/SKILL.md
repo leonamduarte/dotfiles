@@ -1,6 +1,6 @@
 ---
 name: qa-review
-description: Quality review for merge - tests, process, and overall readiness
+description: Revisao de qualidade para merge
 compatibility: opencode
 when_to_use: Before merging code to ensure it meets quality standards for tests and process
 allowed-tools: []

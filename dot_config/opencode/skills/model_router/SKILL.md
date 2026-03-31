@@ -1,6 +1,6 @@
 ---
 name: model_router
-description: Route tasks to the correct model and skill
+description: Roteia tarefas para modelos corretos
 compatibility: opencode
 when_to_use: Before executing any complex task or when uncertain which skill to apply
 allowed-tools: ["Read", "Glob", "Bash", "skill"]
@@ -45,8 +45,13 @@ Route tasks to the most appropriate model and skill based on the type of work.
 **For debugging (model: codex-5.3, reasoning: high, skill: code_debug):**
 - Debugging failing code
 - Fixing broken tests
-- Refactoring complex logic
 - Resolving multi-file bugs
+
+**For behavior-preserving cleanup (model: codex-5.4-mini, reasoning: medium, skill: code-simplifier):**
+- Simplifying working code
+- Refactoring complex logic without changing behavior
+- Improving readability and maintainability
+- Reducing duplication and unnecessary complexity
 
 ### Objective Criteria (Yes/No)
 
@@ -65,7 +70,7 @@ Route tasks to the most appropriate model and skill based on the type of work.
 ## Expected Output
 
 - Recommended model identification (minimax-m2.7, codex-5.4-mini, or codex-5.3)
-- Selected skill (repo_analysis, feature-implement, code_debug)
+- Selected skill (repo_analysis, feature-implement, code_debug, or code-simplifier)
 - Task forwarding with preserved context
 
 ## Execution Flow
@@ -77,6 +82,7 @@ Route tasks to the most appropriate model and skill based on the type of work.
    - Is it about understanding/planning? → model: minimax-m2.7 + repo_analysis
    - Is it about writing/implementing? → model: codex-5.4-mini + feature-implement
    - Is it about debugging/fixing? → model: codex-5.3 + code_debug
+   - Is it about cleanup/refactoring without behavior change? → model: codex-5.4-mini + code-simplifier
 
 3. Forward to selected skill with:
    - The same original input

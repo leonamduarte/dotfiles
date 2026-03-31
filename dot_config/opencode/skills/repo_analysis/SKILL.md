@@ -1,6 +1,6 @@
 ---
 name: repo_analysis
-description: Maps repository and generates structural documentation
+description: Mapeia repositorio e gera documentacao
 compatibility: opencode
 when_to_use: When starting work on a repository, need analysis.md, or missing memory files
 allowed-tools: ["Read", "Glob", "Grep", "Write"]

@@ -1,6 +1,6 @@
 ---
 name: code-simplifier
-description: Refactor helper for simplifying code without changing behavior
+description: Simplifica codigo sem mudar comportamento
 compatibility: opencode
 when_to_use: When code works but is harder to read, maintain, or extend than it needs to be
 allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]
