@@ -122,7 +122,7 @@ skills/
 ├── audit-code/            ✅ Updated - Bug/security focus + optional focus hints
 ├── code_debug/            ✅ Updated - Smart debug workflow
 ├── code-simplifier/       ✅ Updated - Refactor helper workflow
-├── feature-implement/     Existing
+├── feature-implement/     ✅ Updated - Implementation with lightweight test focus hints
 ├── qa-review/             ✅ Updated - Quality/process focus
 ├── repo_analysis/         ✅ Updated - Now with memory mode
 └── SKILL-TEMPLATE.md      Template
@@ -153,6 +153,7 @@ skills/
 - ✅ **code_debug**: Upgraded into a smart debug workflow (reproduce -> isolate -> hypothesize -> fix -> verify)
 - ✅ **code-simplifier**: Upgraded into a refactor helper (dedupe, readability, function-size, cleanup, testability)
 - ✅ **audit-code / qa-review**: Keep their simple identities, but now accept focus hints for sharper runs
+- ✅ **feature-implement**: Keeps implementation simple, but now accepts lightweight testing-oriented hints
 
 **Result**: 13 skills → 11 skills (eliminated 2 duplicates, specialized 2 skills)
 
@@ -169,7 +170,7 @@ task: "Implement user authentication"
 
 Routes to:
 - If planning needed → minimax-m2.7 + repo_analysis
-- If implementing → codex-5.4-mini + feature-implement
+- If implementing → codex-5.4-mini + feature-implement (with optional test-focused hints)
 - If debugging → codex-5.3 + code_debug (smart debug workflow)
 
 ### 2. Parallel Review
@@ -209,6 +210,7 @@ Runs audit in isolated context with separate budget.
 | Check tests, merge readiness, docs | **qa-review** | audit-code (technical bugs only) |
 | Reproduce and fix a concrete failure | **code_debug** | audit-code (broad sweep) |
 | Simplify/refactor code safely | **code-simplifier** | code_debug (failure focused) |
+| Implement a feature with lightweight validation | **feature-implement** | qa-review (review only) |
 | Architecture validation | **architecture-guard** | Either above |
 | Apply audit fixes | **apply-audit-fixes** | Any review skill |
 
@@ -220,6 +222,7 @@ These skills stay simple, but accept lightweight focus hints when useful:
 - `qa-review`: `tests`, `merge-readiness`, `docs`, `observability`, `generate-tests`
 - `code_debug`: `stack-trace`, `flaky-test`, `regression`, `data-flow`, `async`
 - `code-simplifier`: `dedupe`, `readability`, `function-size`, `cleanup`, `testability`
+- `feature-implement`: `minimal`, `tests`, `generate-tests`, `safety`, `integration`
 
 ### Repository Context: Which to Use?
 

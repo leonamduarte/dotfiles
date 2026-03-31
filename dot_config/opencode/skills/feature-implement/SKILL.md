@@ -1,51 +1,79 @@
 ---
 name: feature-implement
-description: Implementa features novas
+description: Implement new features with minimal scope and practical validation
 compatibility: opencode
+when_to_use: When a feature or small functional improvement is defined well enough to build safely
+allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]
+model: inherit
+user-invocable: true
+context: inline
 ---
 
-## Objetivo
+## Goal
 
-Implementar a menor solucao funcional para a feature solicitada sem quebrar invariantes.
+Implement the smallest useful version of the requested feature without breaking project invariants.
 
-## Quando usar
+## When to use
 
-- Nova feature com escopo definido.
-- Melhoria funcional de baixo a medio impacto.
-- Correcao de comportamento quando nao ha relatorio de auditoria formal.
+- New feature with defined scope
+- Low-to-medium impact functional improvement
+- Targeted behavior correction when there is no formal audit report
 
-## Regras
+## Rules
 
-- Escopo: implementar apenas o que foi solicitado no ticket/contexto.
-- Nao escopo: corrigir backlog completo de auditoria -> delegar para `apply-audit-fixes`.
-- Nao escopo: diagnostico profundo de bug intermitente -> delegar para `surgical-debug`.
-- Nao escopo: atualizar documentacao estrutural -> delegar para `repo_analysis` ou `repo-docs`.
-- Arquivos proibidos: `AGENTS.md`, `project.md`, `blueprints.md`, `architecture-decisions.md`, `current-state.md`.
+- Scope: implement only what was requested in the ticket or prompt
+- Not in scope: full audit backlog cleanup -> delegate to `apply-audit-fixes`
+- Not in scope: deep diagnosis of intermittent bugs -> delegate to `code_debug`
+- Not in scope: structural repository documentation -> delegate to `repo_analysis`
+- Protected files: `AGENTS.md`, `project.md`, `blueprints.md`, `architecture-decisions.md`, `current-state.md`
 
-### Criterios objetivos (Sim/Nao)
+## Workflow
 
-- [ ] Le os arquivos de contexto existentes entre `project.md`, `current-state.md`, `blueprints.md` e `architecture-decisions.md`.
-- [ ] Nao altera arquivos de governanca.
-- [ ] Se houver mudanca arquitetural, declara explicitamente antes de aplicar.
-- [ ] Inclui teste para novo comportamento ou para bug corrigido quando houver suite de testes.
-- [ ] Responde com: `O que mudou`, `Por que`, `Como testar`, `Limitacoes e proximos passos`.
+1. Read the relevant context and nearby code first
+2. Implement the smallest complete slice that satisfies the request
+3. Keep changes local and avoid unrelated rewrites
+4. Add or update validation where it gives confidence
+5. Explain what changed, why, and how to verify it
 
-## Input esperado
+## Optional Focuses
 
-- Requisito funcional claro (ticket, prompt ou historia).
-- Contexto do estado atual do modulo afetado.
-- Restricoes tecnicas relevantes (performance, seguranca, compatibilidade).
+If the user adds one of these focuses, bias the implementation accordingly:
 
-## Output esperado
+- `focus: minimal` -> do the narrowest possible implementation with minimal surface area
+- `focus: tests` -> prioritize adding or updating targeted tests along with the feature
+- `focus: generate-tests` -> if the implementation is straightforward, also create test cases or test skeletons for the new behavior
+- `focus: safety` -> prioritize validation, error handling, and backward-compatible changes
+- `focus: integration` -> prioritize wiring between existing modules instead of introducing new abstractions
 
-- Codigo implementado no menor escopo util.
-- Testes e instrucoes objetivas de validacao.
+## Objective Criteria (Yes/No)
 
-## Modo execute
+- [ ] Read the existing context files among `project.md`, `current-state.md`, `blueprints.md`, and `architecture-decisions.md` when they exist
+- [ ] Did not change governance files
+- [ ] If there is architectural impact, stated it explicitly before applying broad changes
+- [ ] Included a test for new behavior or a fixed bug when a test suite exists
+- [ ] Responded with: `What changed`, `Why`, `How to test`, `Limitations and next steps`
 
-Quando ja existe um plano tecnico detalhado (plano de `repo_analysis` ou equivalente):
-- Siga o plano exatamente.
-- Modifique apenas arquivos necessarios.
-- Produza patches minimos.
-- Nao reescreva secoes grandes.
-- Inclua teste se houver suite de testes.
+## Expected Input
+
+- Clear functional requirement (ticket, prompt, or story)
+- Context about the current state of the affected module
+- Relevant technical constraints (performance, security, compatibility)
+
+## Expected Output
+
+- Implemented code with the smallest useful scope
+- Tests and objective validation steps
+
+## Execute Mode
+
+When a detailed technical plan already exists (from `repo_analysis` or equivalent):
+- Follow the plan closely
+- Modify only the necessary files
+- Produce minimal patches
+- Avoid rewriting large sections
+- Include a test when a test suite exists
+
+## Notes
+
+- This skill stays implementation-focused; it does not become a dedicated test generator.
+- Use `focus: tests` or `focus: generate-tests` when you want lightweight test help without introducing a separate skill.
