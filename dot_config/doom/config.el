@@ -104,7 +104,7 @@
 ;; -------------------------------
 
 ;; Tuning JS/TS
-;; ( DISABLED: Redundant with :tools tree-sitter enabled? )
+;; ( DISABLED: preferindo tree-sitter e o suporte padrao do Doom por enquanto )
 ;; (after! js2-mode
 ;;   (setq js2-basic-offset 2
 ;;         js2-bounce-indent-p nil
@@ -215,12 +215,15 @@
   (or (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules/typescript")
       (locate-dominating-file (or (buffer-file-name) default-directory) ".git")))
 
+(defun +lsp-run-if-project-ready-a (old-fn &rest args)
+  "Run OLD-FN only when the current project is ready for LSP."
+  (when (+lsp-ensure-typescript-h)
+    (apply old-fn args)))
+
 (after! lsp-mode
   (when (and (fboundp 'lsp!)
-             (not (advice-member-p #'+lsp-ensure-typescript-h 'lsp!)))
-    (advice-add 'lsp! :around (lambda (old-fn &rest args)
-                                (when (+lsp-ensure-typescript-h)
-                                  (apply old-fn args)))))
+             (not (advice-member-p #'+lsp-run-if-project-ready-a 'lsp!)))
+    (advice-add 'lsp! :around #'+lsp-run-if-project-ready-a))
 
   ;; Configs Gerais
   (setq lsp-go-use-gofumpt t
@@ -348,6 +351,10 @@
 
 ;; Otimização de Scrolling
 (setq fast-but-imprecise-scrolling t)
+(setq scroll-conservatively 101
+      scroll-margin 5
+      scroll-preserve-screen-position t
+      auto-window-vscroll nil)
 
 ;; Personal Keybindings
 
@@ -355,6 +362,12 @@
 (map! :leader
       :desc "Kill buffer (force)" "b D" #'kill-buffer-and-window
       :desc "Kill other buffers" "b O" #'doom/kill-other-buffers)
+
+(defun +leo/windows-mounted-path-p (&optional path)
+  "Return non-nil when PATH points to a Windows-mounted /mnt filesystem."
+  (let ((target (or path buffer-file-name default-directory)))
+    (and target
+         (string-prefix-p "/mnt/" (expand-file-name target)))))
 
 ;; Navegação de janelas tipo Neovim (C-w hjkl)
 (map! :n "C-w h" #'evil-window-left
@@ -495,7 +508,7 @@
   :commands (dirvish dirvish-quick-access dirvish-side)
   :init
   ;; Ativar dirvish ao entrar em dired, adicionando o hook ao final da lista.
-  (add-hook 'dired-mode-hook #'dirvish-override-dired-mode 90)
+  (add-hook 'dired-mode-hook #'dirvish-override-dired-mode t)
   :config
   (setq dirvish-attributes '(vc-state subtree-state all-the-icons collapse))
   (setq dirvish-mode-line-format '(:left (sort symlink) :right (omit yank index)))
@@ -631,18 +644,25 @@
 (add-hook 'compilation-mode-hook #'+close-buffer-with-q)
 
 ;; Auto-format on save (LazyVim style)
-(add-hook 'before-save-hook
-          (lambda ()
-            (when (and (fboundp '+format/buffer)
-                       buffer-file-name
-                       (not (eq major-mode 'org-mode)))
-              (condition-case err
-                  (+format/buffer)
-                (error
-                 (message "[doom-format] %s: %s" major-mode (error-message-string err)))))))
+(defun +leo/format-buffer-on-save-h ()
+  "Format the current buffer on save when it is cheap and safe to do so."
+  (when (and (fboundp '+format/buffer)
+             buffer-file-name
+             (not (eq major-mode 'org-mode))
+             (not (+leo/windows-mounted-path-p buffer-file-name)))
+    (condition-case err
+        (+format/buffer)
+      (error
+       (message "[doom-format] %s: %s" major-mode (error-message-string err))))))
+
+(add-hook 'before-save-hook #'+leo/format-buffer-on-save-h)
 
 ;; Conceallevel para arquivos específicos
-(add-hook 'json-mode-hook (lambda () (setq-local conceal-level 0)))
+(defun +leo/json-mode-setup-h ()
+  "Keep JSON buffers readable without conceal."
+  (setq-local conceal-level 0))
+
+(add-hook 'json-mode-hook #'+leo/json-mode-setup-h)
 
 ;; -----------------------------
 ;; 12. INCREMENTAL RENAME (Inc-replace)
@@ -706,13 +726,14 @@
 ;; 16. PULSAR (Highlight após movimentos)
 ;; -----------------------------
 (use-package! pulsar
-  :hook (after-init . pulsar-global-mode)
+  ;; Desativado por padrao durante investigacao de lentidao em arquivos sob /mnt/*.
+  ;; :hook (after-init . pulsar-global-mode)
   :config
   (setq pulsar-delay 0.05
         pulsar-iterations 10
         pulsar-face 'pulsar-magenta)
 
-  ;; Pulsar após certos comandos
+  ;; Mantem a lista pronta caso o modo seja reativado depois.
   (add-to-list 'pulsar-pulse-functions 'evil-scroll-page-down)
   (add-to-list 'pulsar-pulse-functions 'evil-scroll-page-up)
   (add-to-list 'pulsar-pulse-functions 'recenter-top-bottom)
@@ -805,11 +826,6 @@
 (setq auto-save-default t
       auto-save-interval 300
       auto-save-timeout 30)
-
-;; Scroll performance
-(setq scroll-conservatively 101
-      scroll-margin 5
-      scroll-preserve-screen-position t)
 
 ;; Better grep/fd integration
 (setq consult-fd-args "fd --hidden --color=never --full-path")
