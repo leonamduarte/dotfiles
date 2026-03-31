@@ -22,7 +22,7 @@ Repositorio de dotfiles para Linux, organizado com chezmoi. Contem configs de sh
 ## Instalacao rapida
 
 ```bash
-git clone https://github.com/paesmont/dotfiles.git ~/.local/share/chezmoi
+git clone https://github.com/leonamduarte/dotfiles.git ~/.local/share/chezmoi
 cd ~/.local/share/chezmoi
 git checkout linux
 chezmoi apply --force

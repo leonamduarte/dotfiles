@@ -1,59 +1,121 @@
 ---
 name: qa-review
-description: Revisão de qualidade completa antes do merge
+description: Quality review for merge - tests, process, and overall readiness
 compatibility: opencode
+when_to_use: Before merging code to ensure it meets quality standards for tests and process
+allowed-tools: []
+model: inherit
+user-invocable: true
+context: inline
 ---
 
-## Objetivo
+## Goal
 
-Garantir que o código atenda a padrões de alta qualidade antes de ser mergeado ou executado.
+Ensure code is ready to merge by reviewing test coverage, code quality standards, documentation, and merge readiness. Focus on PROCESS and READINESS, not technical bug detection.
 
-## Quando usar
+## When to use
 
-- Ao revisar pull requests ou code changes.
-- Antes de mergear código novo ou modificado.
-- Ao revisar código gerado automaticamente.
-- Após correções de bugs para validação final.
+- Before merging pull requests or code changes
+- When preparing code for release
+- When reviewing auto-generated code for production readiness
+- After bug fixes for final validation before merge
+- When assessing if feature is "done" (Definition of Done)
 
-## Regras
+## Scope (What THIS skill does)
 
-- Escopo: revisão completa de qualidade focando em: corretude, manutenibilidade, testabilidade, segurança, performance e clareza.
-- Não escopo: correção automática de código -> delegar para `apply-audit-fixes`.
-- Não escopo: análise profunda de bugs específicos -> delegar para `code_debug`.
-- Não escopo: verificação de violações arquiteturais -> delegar para `architecture-guard`.
-- Não escopo: auditoria de bugs e edge cases -> delegar para `audit-code`.
-- Arquivos permitidos: nenhum (apenas leitura e revisão).
+**YES - Quality & Process:**
+- Test coverage and quality (unit tests, integration tests, edge case coverage)
+- Code quality standards (naming, function size, separation of concerns)
+- Documentation completeness (README, API docs, inline comments)
+- Error handling quality (proper propagation, clear messages)
+- Performance considerations (obvious bottlenecks, N+1 patterns)
+- Logging and observability
+- Merge readiness assessment (approval recommendation)
 
-### Critérios objetivos (Sim/Não)
+**NO - Delegate to other skills:**
+- Technical bugs and security issues → `audit-code`
+- Deep architecture violations → `architecture-guard`
+- Code refactoring/simplification → `code-simplifier`
+- Complex bug diagnosis → `code_debug`
 
-- [ ] Verifica corretude: lógica, edge cases, null handling, race conditions.
-- [ ] Avalia qualidade do código: naming, tamanho de funções, separation of concerns.
-- [ ] Confere cobertura de testes: lógica crítica, edge cases, determinismo.
-- [ ] Valida error handling: propagação adequada, mensagens claras, sem falhas silenciosas.
-- [ ] Inspeciona segurança: injeções, eval inseguro, input não validado, secrets.
-- [ ] Analisa performance: loops desnecessários, I/O redundante, N+1 patterns.
-- [ ] Confere logging e observabilidade: logs úteis, capacidade de debug.
-- [ ] Entrega feedback estruturado com categorias definidas.
-- [ ] Não modifica nenhum arquivo do repositório.
+## Rules
 
-## Input esperado
+- Focus on READINESS to merge, not just correctness
+- Check "Definition of Done" items
+- Never modify files - only review and report
+- Give clear merge recommendation (Approved / Approved with conditions / Not ready)
 
-- Diff, branch ou lista de arquivos a revisar.
-- Contexto da mudança (feature/bug/refatoração).
-- Requisitos de qualidade específicos, se existirem.
+## Objective Criteria (Yes/No)
 
-## Output esperado
+- [ ] Reviewed test coverage (critical logic, edge cases, error paths)
+- [ ] Reviewed code quality (naming, function size, separation of concerns)
+- [ ] Reviewed documentation (README, API docs, inline where needed)
+- [ ] Reviewed error handling (proper propagation, clear messages)
+- [ ] Reviewed performance (obvious issues, N+1 patterns)
+- [ ] Reviewed logging/observability (debuggability)
+- [ ] Assessed merge readiness
+- [ ] Did NOT check: technical bugs, security issues (delegated to audit-code)
+- [ ] Did NOT modify any files
+- [ ] Delivered clear merge recommendation
 
-- **Critical Issues**: Bugs, vulnerabilidades de segurança, race conditions.
-- **Improvements**: Sugestões de melhorias claras e objetivas.
-- **Suggested Refactors**: Oportunidades de refatoração com benefícios.
-- **Missing Tests**: Áreas sem cobertura de testes identificadas.
-- **Overall Assessment**: Avaliação geral da qualidade e recomendação de merge (Aprovado / Aprovado com ressalvas / Reprovado).
+## Expected Input
 
-### Formato de saída
+- Diff, branch, or list of files to review
+- Context of the change (feature/bug/refactor)
+- Specific quality requirements (if any)
+- Definition of Done checklist (if available)
 
-Para cada item identificado, incluir:
-- **Localização**: arquivo:linha ou símbolo
-- **Severidade**: Critical | High | Medium | Low
-- **Descrição**: problema identificado
-- **Sugestão**: correção ou melhoria proposta (com código quando aplicável)
+## Expected Output
+
+**Quality Assessment by Category:**
+
+### Tests
+- Coverage status for critical paths
+- Missing test scenarios identified
+- Test quality observations
+
+### Code Quality
+- Naming and clarity issues
+- Function/module size concerns
+- Separation of concerns
+
+### Documentation
+- README/API docs completeness
+- Missing inline documentation
+- Clarity of public interfaces
+
+### Error Handling & Observability
+- Error propagation quality
+- Logging adequacy
+- Debuggability
+
+### Performance
+- Obvious bottlenecks
+- Redundant operations
+- Resource usage concerns
+
+### Merge Recommendation
+- **Approved**: Ready to merge
+- **Approved with conditions**: Minor issues, address before merge
+- **Not ready**: Significant issues must be resolved
+
+## Examples
+
+**Input:** "Review feature for merge readiness"
+
+**Output:**
+
+**Tests**: ✅ Well covered (unit + integration)
+**Code Quality**: ⚠️ Some functions too long (suggested refactoring)
+**Documentation**: ❌ API docs missing
+**Error Handling**: ✅ Proper error propagation
+**Performance**: ✅ No obvious issues
+**Merge Recommendation**: Approved with conditions - add API docs before merge
+
+## Notes
+
+- This is a QUALITY ASSURANCE skill - focus on process and readiness
+- For technical bugs and security, use `audit-code`
+- For code simplification, use `code-simplifier`
+- For architecture validation, use `architecture-guard`
+- Use both `audit-code` AND `qa-review` before merging important changes
