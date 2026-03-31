@@ -1,61 +1,149 @@
 ---
 name: repo_analysis
-description: Mapeia repo e identifica hotspots
+description: Maps repository and generates structural documentation
 compatibility: opencode
+when_to_use: When starting work on a repository, need analysis.md, or missing memory files
+allowed-tools: ["Read", "Glob", "Grep", "Write"]
+model: inherit
+user-invocable: true
+context: inline
 ---
 
-## Objetivo
+## Goal
 
-Analisar a estrutura do repositório e produzir um dos dois outputs:
-- **Modo scan**: `analysis.md` com Overview, Structure, Hotspots, Risks, Invariants, Next Steps
-- **Modo plan**: Plano de implementação com arquivos, módulos, mudanças e riscos
+Analyze repository structure and generate documentation:
+- **Mode scan**: `analysis.md` with hotspots, risks, invariants
+- **Mode plan**: Implementation plan with files, modules, changes
+- **Mode memory**: `memory/*.md` files (repo_summary, architecture, recent_changes)
 
-## Quando usar
+## When to use
 
-- Inicio de trabalho em repositorio desconhecido.
-- Antes de planejar feature relevante.
-- Quando `analysis.md` estiver ausente ou desatualizado.
-- Quando existe um plano tecnico que precisa ser implementado.
+- Starting work on unknown repository
+- When `analysis.md` is missing or outdated
+- When memory files are missing or outdated
+- Before planning a feature (need context)
+- When technical plan needs implementation
 
-## Regras
+## Scope
 
-- Escopo: leitura estrutural do codigo e producao de output documental ou plano.
-- Nao escopo: implementar codigo -> delegar para `feature-implement`.
-- Nao escopo: atualizar desenho alvo futuro -> delegar para `repo-docs`.
-- Nao escopo: revisar conformidade arquitetural detalhada -> delegar para `architecture-guard`.
-- Arquivos permitidos: apenas `analysis.md` (modo scan).
+**YES - Analysis & Documentation:**
+- Scan repository structure
+- Identify hotspots and risks
+- Generate `analysis.md`
+- Generate/update `memory/*.md` files
+- Create implementation plans
 
-### Criterios objetivos — Modo scan (Sim/Nao)
+**NO - Delegate to other skills:**
+- Implement code → `feature-implement`
+- Detailed architecture validation → `architecture-guard`
+- Code review → `audit-code` or `qa-review`
 
-- [ ] Le os arquivos de contexto existentes entre `project.md`, `current-state.md`, `blueprints.md` e `architecture-decisions.md`.
-- [ ] `analysis.md` contem secoes: `Overview`, `Structure`, `Hotspots`, `Risks`, `Invariants` e `Recommended Next Steps`.
-- [ ] Lista ao menos 3 hotspots ou declara explicitamente `Sem hotspots relevantes`.
-- [ ] Lista ao menos 2 invariantes ou declara explicitamente `Invariantes nao definidos`.
-- [ ] Nao altera arquivos fora de `analysis.md`.
+## Modes
 
-### Criterios objetivos — Modo plan (Sim/Nao)
+### Mode: scan (default)
+Generates `analysis.md` with:
+- Overview
+- Structure
+- Hotspots (minimum 3 or "No relevant hotspots")
+- Risks
+- Invariants (minimum 2 or "Invariants not defined")
+- Recommended Next Steps
 
-- [ ] Le os arquivos de contexto relevantes.
-- [ ] Plano contem: Files to modify, New modules or functions, Required changes, Potential risks.
-- [ ] Identifica pontos de implementacao claros.
-
-## Input esperado
-
-- Caminho do repositorio alvo.
-- Contexto de negocio/produto disponivel.
-- Documentos de governanca existentes, se houver.
-
-## Output esperado
-
-**Modo scan**: Arquivo `analysis.md` criado/atualizado com foco estrutural e resumo dos principais hotspots e riscos.
-
-**Modo plan**: Plano estruturado:
-
-PLAN
-
+### Mode: plan
+Generates implementation plan with:
 1. Files to modify
 2. New modules or functions
 3. Required changes
 4. Potential risks
 
+### Mode: memory
+Generates/updates memory files:
+- `memory/repo_summary.md` - Repository overview
+- `memory/architecture.md` - Architecture description
+- `memory/recent_changes.md` - Recent modifications
+
+## Rules
+
+- Read existing context files first (project.md, current-state.md, blueprints.md, architecture-decisions.md)
+- Generate requested output format
+- Never modify source code files
+- Only write to documentation files (analysis.md, memory/*.md)
+
+## Objective Criteria (Yes/No)
+
+### For scan mode:
+- [ ] Read existing context files
+- [ ] analysis.md has: Overview, Structure, Hotspots, Risks, Invariants, Next Steps
+- [ ] Lists at least 3 hotspots or explicitly states "No relevant hotspots"
+- [ ] Lists at least 2 invariants or explicitly states "Invariants not defined"
+
+### For plan mode:
+- [ ] Read relevant context files
+- [ ] Plan contains: Files, Modules, Changes, Risks
+- [ ] Clear implementation points identified
+
+### For memory mode:
+- [ ] Generated repo_summary.md with repository overview
+- [ ] Generated architecture.md with structure description
+- [ ] Generated recent_changes.md with modifications
+- [ ] All files in `memory/` directory
+
+## Expected Input
+
+- Repository path
+- Mode: scan | plan | memory
+- Business/product context (if available)
+- Existing governance documents (if any)
+
+## Expected Output
+
+**Mode scan**: `analysis.md` created/updated
+
+**Mode plan**: Structured plan:
+```
+PLAN
+1. Files to modify
+2. New modules or functions
+3. Required changes
+4. Potential risks
 END PLAN
+```
+
+**Mode memory**: Updated `memory/` directory with:
+- `repo_summary.md`
+- `architecture.md`
+- `recent_changes.md`
+
+## Examples
+
+**Scan mode:**
+```
+skill: repo_analysis
+mode: scan
+target: ./my-project
+Output: analysis.md with hotspots and risks
+```
+
+**Plan mode:**
+```
+skill: repo_analysis
+mode: plan
+task: "Add payment processing"
+Output: Implementation plan with files and changes
+```
+
+**Memory mode:**
+```
+skill: repo_analysis
+mode: memory
+target: ./my-project
+Output: memory/repo_summary.md, memory/architecture.md, memory/recent_changes.md
+```
+
+## Notes
+
+- Mode `memory` replaces the removed `repo-docs` skill
+- Use `scan` when starting on new repository
+- Use `plan` when you have a technical spec to implement
+- Use `memory` when memory files are missing/outdated
+- Analysis is structural, not code-level (use audit-code for that)
