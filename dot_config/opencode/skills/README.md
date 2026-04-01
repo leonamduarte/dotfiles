@@ -117,6 +117,13 @@ skills/
 ├── _utils/
 │   └── zod-validator.md   NEW - Validation library
 │
+├── test-jest-unit/        ⭐ NEW - Testes unitarios com Jest
+├── test-jest-integration/ ⭐ NEW - Testes de integracao com mocks
+├── test-component/        ⭐ NEW - Testes de componentes React Native
+├── test-e2e-maestro/      ⭐ NEW - Testes E2E com Maestro
+├── test-types/            ⭐ NEW - Analise de cobertura de tipos
+├── test-lint/             ⭐ NEW - ESLint com regras de qualidade
+│
 ├── apply-audit-fixes/     Existing
 ├── architecture-guard/    Existing
 ├── audit-code/            ✅ Updated - Bug/security focus + optional focus hints
@@ -185,6 +192,92 @@ Rule of thumb:
 
 ---
 
+## Testing Skills (Execution-Focused)
+
+Seis skills especialistas para geração e execução de testes:
+
+### Testes Unitários
+- **Skill**: `test-jest-unit`
+- **Descrição**: Gera e executa testes unitários com Jest
+- **Para**: Funções puras, parsers, cálculos, lógica de negócio
+- **Gera**: Arquivos `.test.ts` com casos básicos + edge cases
+- **Executa**: `jest` com relatório de cobertura
+
+### Testes de Integração
+- **Skill**: `test-jest-integration`
+- **Descrição**: Testes de integração com Jest + MSW (mocks)
+- **Para**: Fluxos completos com APIs mockadas
+- **Gera**: `.integration.test.ts` + setup de mocks
+- **Executa**: `jest` com mocks de serviços externos
+
+### Testes de Componente
+- **Skill**: `test-component`
+- **Descrição**: Testes de componentes React Native
+- **Para**: Componentes RN sem emulador (RNTL)
+- **Gera**: `.test.tsx` com queries e interações
+- **Executa**: `jest` com React Native Testing Library
+
+### Testes E2E
+- **Skill**: `test-e2e-maestro`
+- **Descrição**: Testes end-to-end com Maestro para Expo
+- **Para**: Fluxos de usuário real em devices
+- **Gera**: Flows `.yaml` com comandos Maestro
+- **Executa**: `maestro test flows/`
+
+### Type Coverage
+- **Skill**: `test-types`
+- **Descrição**: Análise de cobertura de tipos TypeScript
+- **Para**: Auditar `any`s implícitos
+- **Gera**: Relatório HTML/JSON de cobertura
+- **Executa**: `typescript-coverage-report`
+
+### Lint de Qualidade
+- **Skill**: `test-lint`
+- **Descrição**: ESLint com plugins específicos
+- **Para**: Qualidade automatizada de código
+- **Gera**: Configuração ESLint se necessário
+- **Executa**: `eslint --fix` com plugins (hooks, imports, no-any)
+
+### Quando usar cada um?
+
+| Etapa | Skill | O que faz |
+|-------|-------|-----------|
+| Unitário | `test-jest-unit` | Testa funções isoladas |
+| Integração | `test-jest-integration` | Testa fluxos com mocks |
+| Componente | `test-component` | Testa UI sem emulador |
+| E2E | `test-e2e-maestro` | Testa em device real |
+| Types | `test-types` | Audita anys |
+| Lint | `test-lint` | Qualidade automática |
+
+### Workflow de Testes
+
+```
+1. Durante implementação:
+   skill: feature-implement focus: generate-tests
+   
+2. Testes unitários:
+   skill: test-jest-unit
+   target: src/utils/
+   
+3. Testes de integração:
+   skill: test-jest-integration
+   target: src/services/api.ts
+   
+4. Testes de componente:
+   skill: test-component
+   target: src/components/Button.tsx
+   
+5. E2E antes de release:
+   skill: test-e2e-maestro
+   target: flows/critical/
+   
+6. Qualidade e tipos:
+   skill: parallel
+   agents: [test-types, test-lint]
+```
+
+---
+
 ## Quick Start
 
 ### 1. Route a Task
@@ -239,6 +332,17 @@ Runs audit in isolated context with separate budget.
 | Implement a feature with lightweight validation | **feature-implement** | qa-review (review only) |
 | Architecture validation | **architecture-guard** | Either above |
 | Apply audit fixes | **apply-audit-fixes** | Any review skill |
+
+### Testing: Which to Use?
+
+| Test Type | Use This | Gera | Executa |
+|-----------|----------|------|---------|
+| Unit tests (Jest) | **test-jest-unit** | `.test.ts` | `jest` |
+| Integration tests | **test-jest-integration** | `.integration.test.ts` + mocks | `jest` |
+| Component tests (RN) | **test-component** | `.test.tsx` (RNTL) | `jest` |
+| E2E tests (Maestro) | **test-e2e-maestro** | `flows/*.yaml` | `maestro` |
+| Type coverage | **test-types** | HTML/JSON report | `typescript-coverage-report` |
+| Lint quality | **test-lint** | ESLint config | `eslint --fix` |
 
 ### Focus Hints
 
@@ -384,4 +488,4 @@ Potential additions:
 **Last Updated**: 2024 (Eliminated duplicates, specialized skills)  
 **Pattern**: Claude Code-inspired  
 **Status**: Production Ready  
-**Total Skills**: 11 (no duplicates)
+**Total Skills**: 17 (11 core + 6 testing specialists, no duplicates)
