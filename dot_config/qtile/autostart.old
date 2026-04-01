@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+COLORSCHEME=DoomOne
+
+# Função utilitária: inicia só se o binário existir e não houver instância
+run() {
+    local cmd="$1"
+    local name="${2:-$(basename "$1" | awk '{print $1}')}"
+    command -v ${cmd%% *} >/dev/null 2>&1 || {
+        echo "skip: $cmd (não encontrado)"
+        return
+    }
+    pgrep -u "$USER" -x "$name" >/dev/null 2>&1 && {
+        echo "ok: $name já em execução"
+        return
+    }
+    echo "start: $cmd"
+    nohup bash -lc "$cmd" >/dev/null 2>&1 &
+}
+
+# --- Notificações ---
+# Em muitos sistemas o xfce4-notifyd sobe via DBus sozinho.
+# Se no seu não subir, descomente a linha abaixo:
+# run "/usr/lib/xfce4/notifyd/xfce4-notifyd" "xfce4-notifyd"
+
+### AUTOSTART PROGRAMS ###
+#starting utility applications at boot time
+
+~/.config/autostart/xinputI3.sh &
+
+~/.config/autostart/screenResolution.sh &
+
+variety &
+# --- Energia / Bateria ---
+# Fornece avisos de bateria via xfce4-notifyd e controles de suspensão etc.
+run "xfce4-power-manager" "xfce4-power-man"
+
+# --- Bluetooth (opcional) ---
+run "blueman-applet" "blueman-applet"
+
+# --- Área de transferência (opcional) ---
+# Requer xclip/xsel instalados
+run "xfce4-clipman" "xfce4-clipman"
+
+numlockx on &
+
+killall rofi &
+
+killall picom &
+
+dunst &
+
+lxsession &
+
+steam -silent &
+
+# picom --daemon &
+
+/usr/bin/emacs --daemon &
+
+# --- Rede (NetworkManager Applet) ---
+run "nm-applet"
+
+"$HOME"/.screenlayout/layout.sh &
+
+sleep 1
+# "$HOME"/home/lm/.config/qtile/sxhkd/sxhkdrc &
+# feh --bg-fill --randomize ~/Documentos/git/walls/abstract ~/Documentos/git/walls/abstract/
+# conky -c "$HOME"/.config/conky/qtile/01/"$COLORSCHEME".conf || echo "Couldn't start conky."
+
+### UNCOMMENT ONLY ONE OF THE FOLLOWING THREE OPTIONS! ###
+# 1. Uncomment to restore last saved wallpaper
+#xargs xwallpaper --stretch <~/.cache/wall &
+# 2. Uncomment to set a random wallpaper on login
+# find /usr/share/backgrounds/dtos-backgrounds/ -type f | shuf -n 1 | xargs xwallpaper --stretch &
+# 3. Uncomment to set wallpaper with nitrogen
+# nitrogen --restore &
+# $HOME/.config/autostart/xinputI3.sh &
+# xrandr --output HDMI-A-0 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DisplayPort-0 --mode 1440x900 --pos 1920x0 --rotate normal &
+
+#start sxhkd to replace Qtile native key-bindings
+# run sxhkd -c /home/lm/.config/qtile/sxhkd/sxhkdrc &
