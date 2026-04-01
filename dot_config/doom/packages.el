@@ -15,6 +15,19 @@
 (package! org-super-agenda)
 (package! org-modern) ;; Você usou configurações dele no config.el
 
+;; --- UI & UX ---
+(package! pulsar)
+(package! evil-escape)
+(package! diff-hl)
+
+;; --- FILE MANAGEMENT ---
+(package! dirvish)
+(package! dired-subtree)
+(package! consult-dir)
+
+;; --- EDITING ---
+(package! iedit)
+
 ;; --- DEV & TOOLS ---
 (package! treesit-auto)
 (package! harpoon)
