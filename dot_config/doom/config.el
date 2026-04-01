@@ -45,9 +45,9 @@
 ;; Fontes (Monospace & Variable Pitch)
 (let ((font-family (if (eq system-type 'windows-nt)
                        "Terminess Nerd Font"
-                     "JetBrainsMono Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 16)
-        doom-variable-pitch-font (font-spec :family font-family :size 16)))
+                     "Iosevka Nerd Font")))
+  (setq doom-font (font-spec :family font-family :size 17)
+        doom-variable-pitch-font (font-spec :family font-family :size 17)))
 
 ;; UI / Tema
 (setq doom-theme 'doom-one)
@@ -813,10 +813,10 @@
       "C-l" #'evil-window-right)
 
 ;; Disable arrow keys in insert mode (force hjkl)
-(map! :i "<left>" (lambda () (interactive) (message "Use h"))
-      :i "<right>" (lambda () (interactive) (message "Use l"))
-      :i "<up>" (lambda () (interactive) (message "Use k"))
-      :i "<down>" (lambda () (interactive) (message "Use j")))
+(map! :n "<left>" (lambda () (interactive) (message "Use h"))
+      :n "<right>" (lambda () (interactive) (message "Use l"))
+      :n "<up>" (lambda () (interactive) (message "Use k"))
+      :n "<down>" (lambda () (interactive) (message "Use j")))
 
 ;; Auto-save improvements
 (setq auto-save-default t
