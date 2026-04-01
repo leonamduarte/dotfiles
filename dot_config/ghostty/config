@@ -3,8 +3,8 @@ font-family = "GeistMono Nerd Font"
 font-style = Regular
 font-size = 11
 
-theme = Matte Black
-# theme = Eldritch
+# theme = Matte Black
+theme = Eldritch
 # theme = Catppuccin Macchiato
 
 # Window
