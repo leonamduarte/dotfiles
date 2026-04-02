@@ -1,5 +1,5 @@
 ---
-name: code_debug
+name: 20-code_debug
 description: Debug de falhas concretas
 compatibility: opencode
 when_to_use: When there is a concrete failure to reproduce, explain, isolate, and fix
@@ -32,10 +32,10 @@ Debug failing code with a practical workflow: reproduce, isolate, identify root 
 - Re-run the relevant verification after the fix
 
 **NO - Delegate to other skills:**
-- Broad architecture review -> `architecture-guard`
-- General code cleanup without a concrete failure -> `code-simplifier`
-- New feature work -> `feature-implement`
-- Broad bug/security sweep without a specific failure -> `audit-code`
+- Broad architecture review -> `40-architecture-guard`
+- General code cleanup without a concrete failure -> `20-code-simplifier`
+- New feature work -> `20-feature-implement`
+- Broad bug/security sweep without a specific failure -> `40-audit-code`
 
 ## Workflow
 

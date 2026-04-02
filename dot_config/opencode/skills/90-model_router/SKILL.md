@@ -1,5 +1,5 @@
 ---
-name: model_router
+name: 90-model_router
 description: Roteia tarefas para modelos corretos
 compatibility: opencode
 when_to_use: Before executing any complex task or when uncertain which skill to apply

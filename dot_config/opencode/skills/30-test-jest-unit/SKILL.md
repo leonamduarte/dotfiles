@@ -1,5 +1,5 @@
 ---
-name: test-jest-unit
+name: 30-test-jest-unit
 description: Gera e executa testes unitarios com Jest
 compatibility: opencode
 when_to_use: Para testar funcoes puras, parsers, calculos e logica de negocio isolada

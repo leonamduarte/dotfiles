@@ -1,5 +1,5 @@
 ---
-name: apply-audit-fixes
+name: 50-apply-audit-fixes
 description: Aplica correções de auditoria priorizadas
 compatibility: opencode
 ---
@@ -10,16 +10,16 @@ Aplicar correcoes objetivas para os achados do auditor, priorizando risco.
 
 ## Quando usar
 
-- Apos execucao de `audit-code`.
+- Apos execucao de `40-audit-code`.
 - Quando existir lista de achados com severidade.
 - Antes de nova rodada de auditoria.
 
 ## Regras
 
 - Escopo: corrigir somente itens reportados no audit atual.
-- Nao escopo: encontrar novos problemas amplos -> delegar para `audit-code`.
+- Nao escopo: encontrar novos problemas amplos -> delegar para `40-audit-code`.
 - Nao escopo: investigacao extensa de causa raiz fora do achado -> delegar para `surgical-debug`.
-- Nao escopo: redefinir arquitetura -> delegar para `architecture-guard` + decisao explicita.
+- Nao escopo: redefinir arquitetura -> delegar para `40-architecture-guard` + decisao explicita.
 - Arquivos permitidos: apenas os necessarios para corrigir os achados.
 
 ### Criterios objetivos (Sim/Nao)

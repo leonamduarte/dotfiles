@@ -1,5 +1,5 @@
 ---
-name: test-lint
+name: 30-test-lint
 description: Executa ESLint com regras de qualidade especificas
 compatibility: opencode
 when_to_use: Para garantir qualidade de codigo com linting automatizado

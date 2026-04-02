@@ -1,5 +1,5 @@
 ---
-name: parallel
+name: 90-parallel
 description: Executa multiplas skills em paralelo
 compatibility: opencode
 when_to_use: When you need multiple perspectives on code changes or complex tasks

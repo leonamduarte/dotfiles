@@ -1,5 +1,5 @@
 ---
-name: test-e2e-maestro
+name: 30-test-e2e-maestro
 description: Gera e executa testes E2E com Maestro para Expo
 compatibility: opencode
 when_to_use: Para simular usuario real em fluxos criticos do app

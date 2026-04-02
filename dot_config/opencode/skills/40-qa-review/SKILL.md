@@ -1,5 +1,5 @@
 ---
-name: qa-review
+name: 40-40-qa-review
 description: Revisao de qualidade para merge
 compatibility: opencode
 when_to_use: Before merging code to ensure it meets quality standards for tests and process
@@ -33,10 +33,10 @@ Ensure code is ready to merge by reviewing test coverage, code quality standards
 - Merge readiness assessment (approval recommendation)
 
 **NO - Delegate to other skills:**
-- Technical bugs and security issues → `audit-code`
-- Deep architecture violations → `architecture-guard`
-- Code refactoring/simplification → `code-simplifier`
-- Complex bug diagnosis → `code_debug`
+- Technical bugs and security issues → `40-audit-code`
+- Deep architecture violations → `40-architecture-guard`
+- Code refactoring/simplification → `20-code-simplifier`
+- Complex bug diagnosis → `20-code_debug`
 
 ## Rules
 
@@ -64,7 +64,7 @@ If the user adds one of these focuses, bias the review accordingly:
 - [ ] Reviewed performance (obvious issues, N+1 patterns)
 - [ ] Reviewed logging/observability (debuggability)
 - [ ] Assessed merge readiness
-- [ ] Did NOT check: technical bugs, security issues (delegated to audit-code)
+- [ ] Did NOT check: technical bugs, security issues (delegated to 40-audit-code)
 - [ ] Did NOT modify any files
 - [ ] Delivered clear merge recommendation
 
@@ -125,8 +125,8 @@ If the user adds one of these focuses, bias the review accordingly:
 ## Notes
 
 - This is a QUALITY ASSURANCE skill - focus on process and readiness
-- For technical bugs and security, use `audit-code`
-- For code simplification, use `code-simplifier`
-- For architecture validation, use `architecture-guard`
-- Use both `audit-code` AND `qa-review` before merging important changes
+- For technical bugs and security, use `40-audit-code`
+- For code simplification, use `20-code-simplifier`
+- For architecture validation, use `40-architecture-guard`
+- Use both `40-audit-code` AND `40-qa-review` before merging important changes
 - If you need help filling test gaps, pass `focus: generate-tests` so the review includes concrete test suggestions

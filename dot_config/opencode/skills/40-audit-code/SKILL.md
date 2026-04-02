@@ -1,5 +1,5 @@
 ---
-name: audit-code
+name: 40-audit-code
 description: Audita bugs, seguranca e edge cases
 compatibility: opencode
 when_to_use: When you need to find technical bugs, security issues, and edge cases in code
@@ -33,13 +33,13 @@ Find technical bugs, security vulnerabilities, and edge case issues in code chan
 - Resource leaks
 
 **NO - Delegate to other skills:**
-- Code style or naming issues → `code-simplifier`
-- Architecture violations → `architecture-guard`
-- Test coverage gaps → `qa-review`
-- General quality assessment → `qa-review`
-- Performance optimization → `qa-review`
-- Refactoring suggestions → `code-simplifier`
-- Documentation review → `qa-review`
+- Code style or naming issues → `20-code-simplifier`
+- Architecture violations → `40-architecture-guard`
+- Test coverage gaps → `40-qa-review`
+- General quality assessment → `40-qa-review`
+- Performance optimization → `40-qa-review`
+- Refactoring suggestions → `20-code-simplifier`
+- Documentation review → `40-qa-review`
 
 ## Rules
 
@@ -57,7 +57,7 @@ If the user adds one of these focuses, narrow the audit accordingly:
 - `focus: edge-cases` -> prioritize null handling, empty inputs, boundary values, retries, and fallback paths
 - `focus: concurrency` -> prioritize races, ordering issues, shared mutable state, and missing awaits
 - `focus: data-validation` -> prioritize schema gaps, unchecked inputs, coercion mistakes, and trust boundaries
-- `focus: performance` -> allow a narrow technical performance pass for obvious hot-path correctness risks only; broader optimization still belongs to `qa-review`
+- `focus: performance` -> allow a narrow technical performance pass for obvious hot-path correctness risks only; broader optimization still belongs to `40-qa-review`
 
 ## Objective Criteria (Yes/No)
 
@@ -109,7 +109,7 @@ No issues found.
 ## Notes
 
 - This is a TECHNICAL audit skill - focus on correctness and security only
-- For comprehensive quality review including tests and process, use `qa-review`
-- For code simplification and refactoring, use `code-simplifier`
-- For architecture validation, use `architecture-guard`
+- For comprehensive quality review including tests and process, use `40-qa-review`
+- For code simplification and refactoring, use `20-code-simplifier`
+- For architecture validation, use `40-architecture-guard`
 - If you already know the area of risk, pass a `focus:` hint to make the audit faster and sharper

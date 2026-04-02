@@ -1,19 +1,19 @@
 ---
-name: fork
+name: 90-90-fork
 description: Executa skills em contextos isolados
 compatibility: opencode
 when_to_use: When you need isolated execution, separate token budgets, or bubble-up permissions
 allowed-tools: ["skill", "Agent", "Read", "Bash"]
 model: inherit
 user-invocable: true
-context: fork
+context: 90-fork
 agent: worker
 effort: 2
 ---
 
 ## Goal
 
-Execute skills in isolated fork contexts with separate token budgets and permission bubbling. Creates clean execution environment that doesn't pollute parent conversation.
+Execute skills in isolated 90-fork contexts with separate token budgets and permission bubbling. Creates clean execution environment that doesn't pollute parent conversation.
 
 ## When to use
 
@@ -27,48 +27,48 @@ Execute skills in isolated fork contexts with separate token budgets and permiss
 ## Rules
 
 - Fork creates new isolated context with own token budget
-- Parent context is preserved but not modified by fork
+- Parent context is preserved but not modified by 90-fork
 - Results bubble up to parent for review/approval
-- Multiple forks can run in parallel
+- Multiple 90-forks can run in 90-parallel
 - Fork inherits parent's tool pool unless overridden
 
 ### Fork Execution Modes
 
 **1. Simple Fork (skill delegation)**
 ```
-fork → skill: audit-code
+90-fork → skill: audit-code
 Result: Returns to parent when complete
 Use for: Simple isolated tasks
 ```
 
 **2. Agent Fork (sub-agent with custom system prompt)**
 ```
-fork → Agent with subagent_type="worker"
+90-fork → Agent with subagent_type="worker"
 Result: Streamed execution, parent can monitor
 Use for: Complex multi-step work
 ```
 
 **3. Permission Bubble Fork**
 ```
-fork with permission_mode="bubble"
+90-fork with permission_mode="bubble"
 Result: All changes require parent approval
 Use for: Destructive operations
 ```
 
 ### Objective Criteria (Yes/No)
 
-- [ ] Determined if fork is necessary (isolation/budget/bubbling)
-- [ ] Selected appropriate fork mode
+- [ ] Determined if 90-fork is necessary (isolation/budget/bubbling)
+- [ ] Selected appropriate 90-fork mode
 - [ ] Configured token budget (effort level)
 - [ ] Set up permission mode correctly
-- [ ] Launched fork with full context
+- [ ] Launched 90-fork with full context
 - [ ] Collected and presented results
-- [ ] Cleaned up fork context if needed
+- [ ] Cleaned up 90-fork context if needed
 
 ## Expected Input
 
-- Skill or agent to execute in fork
-- Target files/context for the fork
+- Skill or agent to execute in 90-fork
+- Target files/context for the 90-fork
 - Token budget level (effort: 1-5)
 - Permission mode (acceptEdits, bubble, plan)
 - Optional: custom system prompt
@@ -85,8 +85,8 @@ Use for: Destructive operations
 ### Phase 1: Fork Configuration
 
 1. **Determine Fork Type**:
-   - Simple skill fork → direct delegation
-   - Complex agent fork → use Agent tool
+   - Simple skill 90-fork → direct delegation
+   - Complex agent 90-fork → use Agent tool
    - Permission bubble → set mode appropriately
 
 2. **Configure Budget**:
@@ -98,32 +98,32 @@ Use for: Destructive operations
 
 3. **Set Context**:
    - Prepare all relevant files/context
-   - Ensure fork has everything needed
+   - Ensure 90-fork has everything needed
    - Don't rely on parent conversation history
 
 ### Phase 2: Fork Execution
 
 1. **Launch Fork**:
    ```
-   context: fork
+   context: 90-fork
    agent: worker
    Launch skill/agent with isolated context
    ```
 
 2. **Monitor (optional)**:
-   - For long-running forks, stream progress
+   - For long-running 90-forks, stream progress
    - Parent can review intermediate results
    - Cancel if needed
 
 ### Phase 3: Result Collection
 
 1. **Collect Output**:
-   - Gather all results from fork
+   - Gather all results from 90-fork
    - Extract relevant findings
    - Preserve formatting
 
 2. **Present to Parent**:
-   - Summarize fork execution
+   - Summarize 90-fork execution
    - Show key findings/changes
    - Include token usage if available
 
@@ -168,13 +168,13 @@ Fork: Agent with mode="bubble"
 
 ## Fork vs. Inline Comparison
 
-| Aspect | Inline (context: inline) | Fork (context: fork) |
+| Aspect | Inline (context: inline) | Fork (context: 90-fork) |
 |--------|-------------------------|---------------------|
 | **Context** | Shares parent conversation | Isolated, clean slate |
 | **Token Budget** | Shared with parent | Separate (effort-based) |
 | **History** | Full conversation history | Only provided context |
 | **Permissions** | Inherited from parent | Configurable (bubble mode) |
-| **Performance** | Faster (no setup) | Slower (fork overhead) |
+| **Performance** | Faster (no setup) | Slower (90-fork overhead) |
 | **Use for** | Quick tasks, conversation | Heavy work, isolation |
 
 ## Advanced Configuration
@@ -182,9 +182,9 @@ Fork: Agent with mode="bubble"
 ### Custom System Prompt
 ```yaml
 ---
-name: custom-fork-task
-description: Specialized fork with custom prompt
-context: fork
+name: custom-90-fork-task
+description: Specialized 90-fork with custom prompt
+context: 90-fork
 agent: worker
 effort: 3
 system_prompt: |
@@ -224,24 +224,24 @@ effort: 5  → ~50K tokens  (Deep analysis)
 
 1. **Use sparingly** - Forks have overhead, use inline for simple tasks
 2. **Full context** - Always provide complete context, no conversation history
-3. **Clear scope** - Define exactly what the fork should accomplish
+3. **Clear scope** - Define exactly what the 90-fork should accomplish
 4. **Budget appropriately** - Don't waste tokens on simple tasks
 5. **Bubble for safety** - Use bubble mode for destructive operations
-6. **Parallel wisely** - Only parallelize truly independent work
+6. **Parallel wisely** - Only 90-parallelize truly independent work
 7. **Clean up** - Document any side effects
 
 ## Integration with Parallel Skill
 
-The `fork` skill works great with `parallel`:
+The `90-fork` skill works great with `90-parallel`:
 
 ```
-parallel {
-  fork → skill: audit-code
-  fork → skill: code-simplifier
-  fork → skill: architecture-guard
+90-parallel {
+  90-fork → skill: audit-code
+  90-fork → skill: code-simplifier
+  90-fork → skill: architecture-guard
 }
-All three run in isolated forks simultaneously
-Results aggregated by parallel skill
+All three run in isolated 90-forks simultaneously
+Results aggregated by 90-parallel skill
 ```
 
 ## Error Handling
@@ -253,7 +253,7 @@ Results aggregated by parallel skill
 
 ## Notes
 
-- `context: fork` requires `agent: worker` specification
+- `context: 90-fork` requires `agent: worker` specification
 - Forks inherit parent's allowed-tools by default
 - Use `isolation: remote` for maximum safety
 - Token budgets are estimates, not strict limits

@@ -1,5 +1,5 @@
 ---
-name: repo_analysis
+name: 10-repo_analysis
 description: Mapeia repositorio e gera documentacao
 compatibility: opencode
 when_to_use: When starting work on a repository, need analysis.md, or missing memory files
@@ -34,9 +34,9 @@ Analyze repository structure and generate documentation:
 - Create implementation plans
 
 **NO - Delegate to other skills:**
-- Implement code → `feature-implement`
-- Detailed architecture validation → `architecture-guard`
-- Code review → `audit-code` or `qa-review`
+- Implement code → `10-feature-implement`
+- Detailed architecture validation → `40-architecture-guard`
+- Code review → `40-audit-code` or `40-qa-review`
 
 ## Modes
 
@@ -142,8 +142,8 @@ Output: memory/repo_summary.md, memory/architecture.md, memory/recent_changes.md
 
 ## Notes
 
-- Mode `memory` replaces the removed `repo-docs` skill
+- Mode `memory` replaces the removed `10-repo-docs` skill
 - Use `scan` when starting on new repository
 - Use `plan` when you have a technical spec to implement
 - Use `memory` when memory files are missing/outdated
-- Analysis is structural, not code-level (use audit-code for that)
+- Analysis is structural, not code-level (use 40-audit-code for that)
