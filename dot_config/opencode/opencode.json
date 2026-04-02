@@ -25,14 +25,14 @@
           "find *": "allow"
         },
         "skill": {
-          "repo_analysis": "allow",
-          "repo-docs": "allow",
-          "architecture-guard": "allow",
-          "feature-implement": "deny",
-          "audit-code": "deny",
-          "apply-audit-fixes": "deny",
-          "model_router": "allow",
-          "code_debug": "allow",
+          "10-repo_analysis": "allow",
+          "10-repo-docs": "allow",
+          "40-architecture-guard": "allow",
+          "20-feature-implement": "deny",
+          "40-audit-code": "deny",
+          "50-apply-audit-fixes": "deny",
+          "90-model_router": "allow",
+          "20-code_debug": "allow",
           "surgical-debug": "deny"
         }
       },
@@ -69,15 +69,15 @@
           "go list*": "allow"
         },
         "skill": {
-          "repo_analysis": "allow",
-          "repo-docs": "allow",
-          "architecture-guard": "allow",
-          "feature-implement": "allow",
-          "audit-code": "deny",
-          "apply-audit-fixes": "allow",
-          "model_router": "allow",
-          "code_debug": "allow",
-          "code-simplifier": "allow",
+          "10-repo_analysis": "allow",
+          "10-repo-docs": "allow",
+          "40-architecture-guard": "allow",
+          "20-feature-implement": "allow",
+          "40-audit-code": "deny",
+          "50-apply-audit-fixes": "allow",
+          "90-model_router": "allow",
+          "20-code_debug": "allow",
+          "20-code-simplifier": "allow",
           "surgical-debug": "deny"
         }
       },
@@ -105,12 +105,12 @@
           "git status*": "allow"
         },
         "skill": {
-          "repo_analysis": "allow",
-          "repo-docs": "deny",
-          "architecture-guard": "allow",
-          "feature-implement": "deny",
-          "audit-code": "allow",
-          "apply-audit-fixes": "deny",
+          "10-repo_analysis": "allow",
+          "10-repo-docs": "deny",
+          "40-architecture-guard": "allow",
+          "20-feature-implement": "deny",
+          "40-audit-code": "allow",
+          "50-apply-audit-fixes": "deny",
           "surgical-debug": "deny"
         }
       },
@@ -139,8 +139,8 @@
           "git status*": "allow"
         },
         "skill": {
-          "repo_analysis": "allow",
-          "code-simplifier": "allow"
+          "10-repo_analysis": "allow",
+          "20-code-simplifier": "allow"
         }
       },
       "temperature": 0.1,
