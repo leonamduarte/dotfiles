@@ -1,5 +1,5 @@
 ---
-name: code-simplifier
+name: 20-code-simplifier
 description: Simplifica codigo sem mudar comportamento
 compatibility: opencode
 when_to_use: When code works but is harder to read, maintain, or extend than it needs to be
@@ -31,10 +31,10 @@ Act as a refactor helper: identify the highest-value simplifications, remove unn
 - Tighten control flow so the main path is easier to read
 
 **NO - Delegate to other skills:**
-- Root-cause analysis for a failing bug -> `code_debug`
-- New functionality -> `feature-implement`
-- Broad architecture redesign -> `architecture-guard`
-- Technical bug audit -> `audit-code`
+- Root-cause analysis for a failing bug -> `20-code_debug`
+- New functionality -> `20-feature-implement`
+- Broad architecture redesign -> `40-architecture-guard`
+- Technical bug audit -> `40-audit-code`
 
 ## Workflow
 
@@ -103,4 +103,4 @@ Verification:
 
 - This skill replaces the vague "simplify anything" behavior with a practical refactor-helper workflow.
 - Prefer deleting complexity over adding abstractions.
-- If a cleanup uncovers a real bug, hand it to `code_debug` or `audit-code` depending on the situation.
+- If a cleanup uncovers a real bug, hand it to `20-code_debug` or `40-audit-code` depending on the situation.

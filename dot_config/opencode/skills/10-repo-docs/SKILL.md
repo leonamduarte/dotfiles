@@ -1,5 +1,5 @@
 ---
-name: repo-docs
+name: 10-repo-docs
 description: Mantém docs estruturais do repo
 compatibility: opencode
 ---
@@ -22,9 +22,9 @@ Manter documentação estrutural consistente com o codigo atual:
 ## Regras
 
 - Escopo: atualizar apenas arquivos de documentacao listados.
-- Nao escopo: analisar hotspots -> delegar para `repo_analysis`.
-- Nao escopo: validar violacoes arquiteturais -> delegar para `architecture-guard`.
-- Nao escopo: implementar codigo -> delegar para `feature-implement`.
+- Nao escopo: analisar hotspots -> delegar para `10-repo_analysis`.
+- Nao escopo: validar violacoes arquiteturais -> delegar para `40-architecture-guard`.
+- Nao escopo: implementar codigo -> delegar para `20-feature-implement`.
 - Arquivos permitidos: `memory/*.md`, `blueprints.md`.
 
 ### Criterios objetivos — Memory (Sim/Nao)

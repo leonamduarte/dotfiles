@@ -1,5 +1,5 @@
 ---
-name: test-jest-integration
+name: 30-test-jest-integration
 description: Gera e executa testes de integracao com Jest e mocks
 compatibility: opencode
 when_to_use: Para testar fluxos completos com APIs e servicos mockados

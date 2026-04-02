@@ -1,5 +1,5 @@
 ---
-name: feature-implement
+name: 20-feature-implement
 description: Implementa features novas
 compatibility: opencode
 when_to_use: When a feature or small functional improvement is defined well enough to build safely
@@ -22,9 +22,9 @@ Implement the smallest useful version of the requested feature without breaking 
 ## Rules
 
 - Scope: implement only what was requested in the ticket or prompt
-- Not in scope: full audit backlog cleanup -> delegate to `apply-audit-fixes`
-- Not in scope: deep diagnosis of intermittent bugs -> delegate to `code_debug`
-- Not in scope: structural repository documentation -> delegate to `repo_analysis`
+- Not in scope: full audit backlog cleanup -> delegate to `50-apply-audit-fixes`
+- Not in scope: deep diagnosis of intermittent bugs -> delegate to `20-code_debug`
+- Not in scope: structural repository documentation -> delegate to `10-repo_analysis`
 - Protected files: `AGENTS.md`, `project.md`, `blueprints.md`, `architecture-decisions.md`, `current-state.md`
 
 ## Workflow
@@ -66,7 +66,7 @@ If the user adds one of these focuses, bias the implementation accordingly:
 
 ## Execute Mode
 
-When a detailed technical plan already exists (from `repo_analysis` or equivalent):
+When a detailed technical plan already exists (from `10-repo_analysis` or equivalent):
 - Follow the plan closely
 - Modify only the necessary files
 - Produce minimal patches

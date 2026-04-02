@@ -1,5 +1,5 @@
 ---
-name: test-component
+name: 30-test-component
 description: Gera e executa testes de componentes React Native
 compatibility: opencode
 when_to_use: Para testar componentes sem emulador usando React Native Testing Library

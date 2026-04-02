@@ -1,5 +1,5 @@
 ---
-name: test-types
+name: 30-test-types
 description: Analisa cobertura de tipos TypeScript
 compatibility: opencode
 when_to_use: Para auditar anys implicitos e garantir protecao do TypeScript
