@@ -1,0 +1,34 @@
+# Doom One Theme for Alacritty
+# Inspired by Atom's One Dark color scheme
+
+[colors.primary]
+foreground = "#bbc2cf"
+background = "#282c34"
+
+[colors.cursor]
+text = "#282c34"
+cursor = "#bbc2cf"
+
+[colors.selection]
+text = "#bbc2cf"
+background = "#3f444a"
+
+[colors.normal]
+black = "#2a2e38"
+red = "#ff6c6b"
+green = "#98be65"
+yellow = "#ECBE7B"
+blue = "#51afef"
+magenta = "#c678dd"
+cyan = "#46D9FF"
+white = "#DFDFDF"
+
+[colors.bright]
+black = "#3f444a"
+red = "#ff6655"
+green = "#99bb66"
+yellow = "#ECBE7B"
+blue = "#51afef"
+magenta = "#c678dd"
+cyan = "#46D9FF"
+white = "#bbc2cf"

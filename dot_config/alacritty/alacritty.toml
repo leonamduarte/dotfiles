@@ -2,24 +2,51 @@
 TERM = "xterm-256color"
 
 [general]
-import = ["~/.config/alacritty/themes/cyberdream.toml"]
+import = ["~/.config/alacritty/themes/doom-one.toml"]
 
 [font]
-normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
-size = 11
+normal = { family = "Iosevka Nerd Font", style = "Regular" }
+bold = { family = "Iosevka Nerd Font", style = "Bold" }
+italic = { family = "Iosevka Nerd Font", style = "Italic" }
+size = 12.0
 
 [window]
 padding.x = 14
 padding.y = 14
 decorations = "None"
 
+[mouse]
+hide_when_typing = true
+
+[cursor]
+style.shape = "Block"
+style.blinking = "Never"
+
+[terminal]
+osc52 = "CopyPaste"
+
 [keyboard]
 bindings = [
   { key = "Insert", mods = "Shift", action = "Paste" },
   { key = "Insert", mods = "Control", action = "Copy" },
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
+  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+  { key = "Key0", mods = "Control", action = "ResetFontSize" },
+  { key = "Space", mods = "Control|Shift", mode = "~Search", action = "ToggleViMode" },
+  { key = "Q", mode = "Vi|~Search", action = "ClearSelection" },
+  { key = "Q", mode = "Vi|~Search", action = "ToggleViMode" },
+  { key = "Escape", mode = "Vi|~Search", action = "ClearSelection" },
+  { key = "Escape", mode = "Vi|~Search", action = "ToggleViMode" },
+  { key = "U", mods = "Control|Shift", action = "ScrollHalfPageUp" },
+  { key = "D", mods = "Control|Shift", action = "ScrollHalfPageDown" },
 ]
 
-[terminal]
-osc52 = "CopyPaste"
+[[hints.enabled]]
+command = "xdg-open"
+post_processing = true
+persist = false
+mouse.enabled = true
+binding = { key = "U", mods = "Control|Shift" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
