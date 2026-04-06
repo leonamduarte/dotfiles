@@ -1,5 +1,5 @@
 ---
-name: 40-40-qa-review
+name: 40-qa-review
 description: Revisao de qualidade para merge
 compatibility: opencode
 when_to_use: Before merging code to ensure it meets quality standards for tests and process
@@ -12,6 +12,12 @@ context: inline
 ## Goal
 
 Ensure code is ready to merge by reviewing test coverage, code quality standards, documentation, and merge readiness. Focus on PROCESS and READINESS, not technical bug detection.
+
+## Agent Boundary
+
+- This skill complements `auditor-gpt`.
+- Use `auditor-gpt` as the critical reviewer agent.
+- Use this skill when the review must emphasize merge readiness, tests, docs, and process.
 
 ## When to use
 

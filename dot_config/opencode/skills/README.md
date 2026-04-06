@@ -2,6 +2,21 @@
 
 This directory contains advanced skills implementing patterns from Claude Code's architecture.
 
+## Agent Architecture
+
+Current preferred agent layout:
+
+- `router` - primary entrypoint, classifies and delegates
+- `planner-gpt` - planning, architecture, repo analysis, trade-offs
+- `ui-glm` - UI exploration and visual alternatives
+- `executor` - implementation and tests
+- `auditor-gpt` - final critical review
+
+Notes:
+
+- Skills support the agents; they do not replace the top-level routing architecture.
+- `ui-glm` currently uses a safe fallback model until a dedicated GLM model is configured.
+
 ## New Skills Added
 
 ### 1. model_router ⭐ (Updated)

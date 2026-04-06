@@ -2,13 +2,27 @@
 name: mcp-bootstrap
 description: Configura MCP por projeto no OpenCode com filesystem, git e memory
 compatibility: opencode
+when_to_use: Ao iniciar ou padronizar um repositório para uso com MCP
+allowed-tools: ["Read", "Glob", "Write", "Edit", "List", "Bash"]
+model: inherit
+user-invocable: true
+context: inline
 ---
 
-## Objetivo
+# Objetivo
 
 Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, segura e reutilizável.
 
-## Regras
+# Contexto
+
+- MCP por projeto, não globalmente
+- Setup para projetos locais em desenvolvimento
+- Foco inicial: filesystem, git, memory (preparado mas desabilitado)
+- Filesystem restrito à raiz do projeto usando "."
+- Sem hardcode de caminhos absolutos
+- Solução fácil de copiar para outros repositórios
+
+# Regras
 
 - Nunca usar caminhos absolutos
 - Sempre usar "." como raiz do projeto
@@ -17,23 +31,24 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
 - Fazer mudanças mínimas
 - Manter configuração legível
 
-## Passos
+# Passos
 
 1. Verificar se existe `.opencode/`
 2. Verificar se existe `.opencode/opencode.json`
 
 3. Se não existir:
-   - criar `.opencode/opencode.json`
+   - criar `.opencode/opencode.json` com $schema e bloco MCP
 
 4. Se existir:
    - preservar conteúdo atual
-   - adicionar apenas o necessário
+   - adicionar/atualizar apenas o bloco MCP necessário
+   - não duplicar configurações
 
-## Configuração MCP
+# Configuração MCP
 
-Garantir a existência deste bloco (sem duplicação):
-
+```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "filesystem": {
       "type": "local",
@@ -50,7 +65,7 @@ Garantir a existência deste bloco (sem duplicação):
       "command": "npx",
       "args": [
         "-y",
-        "@cyanheads/git-mcp-server"
+        "@modelcontextprotocol/server-git"
       ],
       "enabled": true
     },
@@ -65,29 +80,55 @@ Garantir a existência deste bloco (sem duplicação):
     }
   }
 }
+```
 
-## Documentação
+# Documentação
 
-- Se existir README ou AGENTS.md:
-  - adicionar seção curta sobre MCP
+- Se existir README, AGENTS.md, CLAUDE.md ou similar:
+  - Adicionar seção curta explicando MCP configurado
+  - Não reescrever tudo
 
 - Se não existir documentação adequada:
-  - criar `.opencode/MCP.md` explicando:
-    - o que é MCP no projeto
-    - por que usar "."
-    - por que memory começa desabilitado
+  - Criar `.opencode/MCP.md` curto explicando:
+    - O que foi configurado
+    - Por que filesystem usa "."
+    - Por que memory começa desabilitado
+    - Como habilitar no futuro
 
-## Output esperado
+# Critérios Objetivos (Sim/Não)
 
-- lista de arquivos criados
-- lista de arquivos modificados
-- resumo das alterações
-- instruções simples de validação
+- [ ] Verificou estrutura atual do repositório
+- [ ] Criou ou atualizou `.opencode/opencode.json`
+- [ ] Adicionou $schema se não existia
+- [ ] Configurou filesystem com args usando "."
+- [ ] Configurou git com npx e server-git
+- [ ] Configurou memory com enabled: false
+- [ ] Preservou configurações existentes
+- [ ] Não usou caminhos absolutos
+- [ ] Adicionou documentação curta se necessário
 
-## Validação
+# Input Esperado
 
-O usuário deve conseguir:
+- Repositório atual (diretório de trabalho)
+- Contexto sobre qual projeto configurar
 
-- abrir o projeto no OpenCode
-- pedir leitura de arquivos
-- pedir git diff
+# Output Esperado
+
+- Lista de arquivos criados
+- Lista de arquivos alterados
+- Diff resumido das alterações
+- Instruções curtas de validação manual
+
+# Validação Esperada
+
+- Usuário consegue abrir o projeto no OpenCode
+- Usuário consegue fazer leitura de arquivos
+- Usuário consegue fazer git diff
+- Memory pode ser habilitado no futuro mudando enabled: false para true
+
+# Notas
+
+- Não instalar dependências globalmente
+- Não mexer em package.json, go.mod, CI/pipelines
+- Preferir patch pequeno e seguro
+- Se houver conflito com config existente, preservar config do projeto

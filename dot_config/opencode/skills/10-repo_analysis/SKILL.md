@@ -34,7 +34,7 @@ Analyze repository structure and generate documentation:
 - Create implementation plans
 
 **NO - Delegate to other skills:**
-- Implement code → `10-feature-implement`
+- Implement code -> `20-feature-implement`
 - Detailed architecture validation → `40-architecture-guard`
 - Code review → `40-audit-code` or `40-qa-review`
 
@@ -142,7 +142,7 @@ Output: memory/repo_summary.md, memory/architecture.md, memory/recent_changes.md
 
 ## Notes
 
-- Mode `memory` replaces the removed `10-repo-docs` skill
+- Mode `memory` replaces the old `10-repo-docs` role
 - Use `scan` when starting on new repository
 - Use `plan` when you have a technical spec to implement
 - Use `memory` when memory files are missing/outdated

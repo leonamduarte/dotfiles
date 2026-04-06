@@ -11,7 +11,7 @@ context: inline
 
 ## Goal
 
-Route tasks to the most appropriate model and skill based on the type of work.
+Route tasks to the most appropriate agent and supporting skill based on the type of work.
 
 ## When to use
 
@@ -23,42 +23,64 @@ Route tasks to the most appropriate model and skill based on the type of work.
 
 - Always load repository memory files before routing
 - If memory/ is outdated, call skill: repo_analysis mode: memory first
-- Choose model based on task complexity
-- Delegate to the correct specialized skill
-- Never execute tasks directly - only route
+- Choose the simplest safe path
+- Delegate to the correct specialized agent first
+- Use skills as support, not as a second competing architecture
+- Never execute medium or large tasks directly - only route
 
 ### Routing Criteria
 
-**For analysis and planning (model: minimax-m2.7, reasoning: xhigh, skill: repo_analysis):**
+**planner-gpt** (`openai/gpt-5.3-codex`):
 - Understanding repository structure
-- Reading many files
 - Planning architecture
 - Creating feature plans
-- Generating implementation steps
+- Breaking work into steps
+- Identifying risks and trade-offs
+- Pre-implementation review
 
-**For code implementation (model: codex-5.4-mini, reasoning: medium, skill: feature-implement):**
+Supporting skills when useful:
+- `10-repo_analysis`
+- `40-architecture-guard`
+
+**ui-glm** (`opencode-go/minimax-m2.5` fallback until a dedicated GLM model is configured):
+- Exploring UI directions
+- Generating layout alternatives
+- Suggesting screen structure
+- Comparing visual approaches
+
+**executor** (`openai/gpt-5.3-codex`):
 - Writing code
 - Editing functions
 - Implementing planned features
 - Generating tests
+- Applying targeted fixes
 
-**For debugging (model: codex-5.3, reasoning: high, skill: code_debug):**
-- Debugging failing code
-- Fixing broken tests
-- Resolving multi-file bugs
+Supporting skills when useful:
+- `20-feature-implement`
+- `20-code_debug`
+- `20-code-simplifier`
+- `30-test-*`
+- `50-apply-audit-fixes`
 
-**For behavior-preserving cleanup (model: codex-5.4-mini, reasoning: medium, skill: code-simplifier):**
-- Simplifying working code
-- Refactoring complex logic without changing behavior
-- Improving readability and maintainability
-- Reducing duplication and unnecessary complexity
+**auditor-gpt** (`openai/gpt-5.3-codex`):
+- Final review
+- Edge case review
+- Maintenance risk review
+- Architecture or quality verification
+- Difficult bug scrutiny without implementation
+
+Supporting skills when useful:
+- `40-audit-code`
+ - `40-qa-review`
+- `40-architecture-guard`
+- `90-parallel`
 
 ### Objective Criteria (Yes/No)
 
 - [ ] Loaded memory files (repo_summary.md, architecture.md, recent_changes.md)
 - [ ] Analyzed task type correctly
-- [ ] Selected appropriate model and skill
-- [ ] Delegated task to chosen skill
+- [ ] Selected appropriate agent and supporting skill
+- [ ] Delegated task to chosen agent
 - [ ] Did not modify files directly (only routed)
 
 ## Expected Input
@@ -69,28 +91,31 @@ Route tasks to the most appropriate model and skill based on the type of work.
 
 ## Expected Output
 
-- Recommended model identification (minimax-m2.7, codex-5.4-mini, or codex-5.3)
-- Selected skill (repo_analysis, feature-implement, code_debug, or code-simplifier)
+- Recommended agent identification (`planner-gpt`, `ui-glm`, `executor`, or `auditor-gpt`)
+- Optional supporting skill when it sharpens execution
 - Task forwarding with preserved context
 
 ## Execution Flow
 
 1. Check if memory/ exists and is up to date
-   - If missing or outdated → call skill: repo_analysis mode: memory
+   - If missing or outdated -> call skill: repo_analysis mode: memory when documentation refresh is needed
 
 2. Analyze the task:
-   - Is it about understanding/planning? → model: minimax-m2.7 + repo_analysis
-   - Is it about writing/implementing? → model: codex-5.4-mini + feature-implement
-   - Is it about debugging/fixing? → model: codex-5.3 + code_debug
-   - Is it about cleanup/refactoring without behavior change? → model: codex-5.4-mini + code-simplifier
+   - Understanding, planning, architecture, repo analysis -> `planner-gpt`
+   - UI, screen UX, layout variations, component structure -> `ui-glm`
+   - Writing, editing, fixing, testing, applying a plan -> `executor`
+   - Final review, audit, edge cases, maintenance risk -> `auditor-gpt`
 
-3. Forward to selected skill with:
+3. Add a supporting skill only when it reduces ambiguity or execution cost
+
+4. Forward to the selected agent with:
    - The same original input
    - Complete repository context
-   - Appropriate model settings
+   - The smallest necessary handoff
 
 ## Notes
 
 - This skill should never execute code directly
-- Only escalate to codex-5.3 when necessary
-- Preserve all context when delegating to other skills
+- Keep the router thin: classify, delegate, stop
+- Prefer planner before executor when scope is medium or large
+- Preserve all context when delegating
