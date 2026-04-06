@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "tokyonight",
+        colorscheme = "doom-one",
       },
     },
     -- ai
@@ -31,7 +31,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.coding.luasnip" },
     -- formating
     { import = "lazyvim.plugins.extras.formatting.prettier" },
-    { import = "lazyvim.plugins.extras.formatting.biome" },
+    { import = "lazyvim.plugins.extras.lang.typescript.biome" },
     -- editor
     { import = "lazyvim.plugins.extras.editor.harpoon2" },
     { import = "lazyvim.plugins.extras.editor.mini-diff" },
