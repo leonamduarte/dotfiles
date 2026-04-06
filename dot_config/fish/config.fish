@@ -99,6 +99,7 @@ if status is-interactive
     alias vim='nvim'
 
     abbr --add nkitty 'nvim ~/.config/kitty/kitty.conf'
+    abbr --add nalac 'nvim ~/.config/alacritty/alacritty.toml'
     abbr --add nwez 'nvim ~/.config/wezterm/wezterm.lua'
     abbr --add nzsh 'nvim ~/.zshrc'
     abbr --add nfish 'nvim ~/.config/fish/config.fish'
