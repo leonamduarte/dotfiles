@@ -1,6 +1,6 @@
 return {
-  -- upstream renamed from ggandor/leap.nvim to andyg/leap.nvim on Codeberg
-  "https://codeberg.org/andyg/leap.nvim.git",
+  -- upstream moved; use Disroot mirror as requested
+  "https://git.disroot.org/andyg/leap.nvim",
   event = "VeryLazy",
   opts = {},
 }
