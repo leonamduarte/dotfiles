@@ -2,48 +2,100 @@
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
   "plugin": ["opencode-gemini-auth@latest"],
+  "default_agent": "router",
   "agent": {
-    "architect": {
-      "mode": "subagent",
-      "description": "Arquitetura: mapeia o repo e atualiza blueprints.md.",
+    "router": {
+      "mode": "primary",
+      "description": "Router principal: classifica a tarefa e delega para o subagente certo.",
       "model": "opencode-go/minimax-m2.5",
-      "prompt": "{file:./prompts/architect.txt}",
+      "prompt": "{file:./prompts/router.txt}",
       "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
+        "write": false,
+        "edit": false,
+        "bash": false
       },
       "permission": {
-        "write": "ask",
-        "edit": "ask",
-        "bash": {
-          "*": "deny",
-          "grep *": "allow",
-          "git diff*": "allow",
-          "git log*": "allow",
-          "git status*": "allow",
-          "find *": "allow"
-        },
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "write": "deny",
+        "edit": "deny",
+        "bash": "deny",
+        "task": "allow",
         "skill": {
-          "10-repo_analysis": "allow",
-          "10-repo-docs": "allow",
-          "40-architecture-guard": "allow",
-          "20-feature-implement": "deny",
-          "40-audit-code": "deny",
-          "50-apply-audit-fixes": "deny",
           "90-model_router": "allow",
+          "90-parallel": "allow",
+          "10-repo_analysis": "allow",
+          "20-feature-implement": "allow",
           "20-code_debug": "allow",
-          "surgical-debug": "deny"
+          "20-code-simplifier": "allow",
+          "40-audit-code": "allow",
+          "40-architecture-guard": "allow",
+          "40-qa-review": "allow",
+          "30-test-jest-unit": "allow",
+          "30-test-jest-integration": "allow",
+          "30-test-component": "allow",
+          "30-test-e2e-maestro": "allow",
+          "30-test-types": "allow",
+          "30-test-lint": "allow"
         }
       },
-      "temperature": 0.2,
+      "temperature": 0.1,
       "steps": 4
     },
-
+    "planner-gpt": {
+      "mode": "subagent",
+      "description": "Planner GPT: arquitetura, analise de repositorio, plano, riscos e trade-offs.",
+      "model": "openai/gpt-5.3-codex",
+      "prompt": "{file:./prompts/planner-gpt.txt}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      },
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "write": "deny",
+        "edit": "deny",
+        "bash": "deny",
+        "task": "deny",
+        "skill": "deny"
+      },
+      "temperature": 0.2,
+      "steps": 5
+    },
+    "ui-glm": {
+      "mode": "subagent",
+      "description": "UI GLM: explora UI, UX de tela, alternativas visuais e estrutura inicial de componentes.",
+      "model": "opencode-go/minimax-m2.5",
+      "prompt": "{file:./prompts/ui-glm.txt}",
+      "tools": {
+        "write": false,
+        "edit": false,
+        "bash": false
+      },
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "write": "deny",
+        "edit": "deny",
+        "bash": "deny",
+        "task": "deny",
+        "skill": "deny"
+      },
+      "temperature": 0.3,
+      "steps": 4
+    },
     "executor": {
       "mode": "subagent",
-      "description": "Executor: implementa features e testes.",
-      "model": "openai/gpt-5.3-codex",
+      "description": "Executor: implementa codigo, altera arquivos, cria testes e aplica o plano definido.",
+      "model": "opencode-go/minimax-m2.5",
       "prompt": "{file:./prompts/executor.txt}",
       "tools": {
         "write": true,
@@ -51,6 +103,10 @@
         "bash": true
       },
       "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
         "write": "allow",
         "edit": "allow",
         "bash": {
@@ -68,33 +124,74 @@
           "go fmt*": "allow",
           "go list*": "allow"
         },
+        "task": "deny",
         "skill": {
           "10-repo_analysis": "allow",
-          "10-repo-docs": "allow",
-          "40-architecture-guard": "allow",
           "20-feature-implement": "allow",
-          "40-audit-code": "deny",
-          "50-apply-audit-fixes": "allow",
-          "90-model_router": "allow",
           "20-code_debug": "allow",
           "20-code-simplifier": "allow",
-          "surgical-debug": "deny"
+          "30-test-component": "allow",
+          "30-test-e2e-maestro": "allow",
+          "30-test-jest-integration": "allow",
+          "30-test-jest-unit": "allow",
+          "30-test-lint": "allow",
+          "30-test-types": "allow",
+          "40-architecture-guard": "allow",
+          "50-apply-audit-fixes": "allow",
+          "90-model_router": "deny",
+          "90-parallel": "deny"
         }
       },
       "temperature": 0.2
     },
-
-    "auditor": {
+    "copilot-worker": {
       "mode": "subagent",
-      "description": "Auditoria: QA impiedoso, só leitura + relatório.",
-      "model": "opencode-go/kimi-k2.5",
-      "prompt": "{file:./prompts/auditor.txt}",
+      "description": "Copilot Worker: executor intermediario para tarefas simples e rapidas.",
+      "model": "openai/gpt-5-mini",
+      "prompt": "{file:./prompts/executor.txt}",
+      "tools": {
+        "write": true,
+        "edit": true,
+        "bash": true
+      },
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "write": "allow",
+        "edit": "allow",
+        "bash": {
+          "*": "ask",
+          "git status*": "allow",
+          "git diff*": "allow",
+          "git log*": "allow",
+          "grep *": "allow"
+        },
+        "task": "deny",
+        "skill": {
+          "20-code-simplifier": "allow",
+          "30-test-lint": "allow",
+          "30-test-types": "allow"
+        }
+      },
+      "temperature": 0.3
+    },
+    "auditor-gpt": {
+      "mode": "subagent",
+      "description": "Auditor GPT: revisao final critica, edge cases, manutencao e qualidade.",
+      "model": "openai/gpt-5.3-codex",
+      "prompt": "{file:./prompts/auditor-gpt.txt}",
       "tools": {
         "write": false,
         "edit": false,
         "bash": true
       },
       "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
         "write": "deny",
         "edit": "deny",
         "bash": {
@@ -104,50 +201,23 @@
           "git log*": "allow",
           "git status*": "allow"
         },
+        "task": "deny",
         "skill": {
-          "10-repo_analysis": "allow",
-          "10-repo-docs": "deny",
-          "40-architecture-guard": "allow",
-          "20-feature-implement": "deny",
           "40-audit-code": "allow",
-          "50-apply-audit-fixes": "deny",
-          "surgical-debug": "deny"
+          "40-architecture-guard": "allow",
+          "40-qa-review": "allow",
+          "90-parallel": "allow",
+          "10-repo_analysis": "allow",
+          "20-feature-implement": "deny",
+          "20-code_debug": "deny",
+          "20-code-simplifier": "deny",
+          "50-apply-audit-fixes": "deny"
         }
       },
       "temperature": 0.1,
       "steps": 4
-    },
-
-    "code-simplifier": {
-      "mode": "subagent",
-      "description": "Simplificador: refina código recém-modificado para clareza e manutenção sem alterar comportamento.",
-      "model": "openai/gpt-5.3-codex",
-      "prompt": "{file:./prompts/code-simplifier.txt}",
-      "tools": {
-        "write": true,
-        "edit": true,
-        "bash": true
-      },
-      "permission": {
-        "write": "allow",
-        "edit": "allow",
-        "bash": {
-          "*": "deny",
-          "grep *": "allow",
-          "git diff*": "allow",
-          "git log*": "allow",
-          "git status*": "allow"
-        },
-        "skill": {
-          "10-repo_analysis": "allow",
-          "20-code-simplifier": "allow"
-        }
-      },
-      "temperature": 0.1,
-      "steps": 5
     }
   },
-
   "mcp": {
     "filesystem": {
       "type": "local",
