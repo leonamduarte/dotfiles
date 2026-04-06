@@ -7,7 +7,7 @@
     "router": {
       "mode": "primary",
       "description": "Router principal: classifica a tarefa e delega para o subagente certo.",
-      "model": "opencode-go/minimax-m2.5",
+      "model": "opencode/minimax-m2.5-free",
       "prompt": "{file:./prompts/router.txt}",
       "tools": {
         "write": false,
