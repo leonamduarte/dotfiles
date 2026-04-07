@@ -32,3 +32,9 @@ CRITERIOS
 - Separar decisao arquitetural de detalhe de implementacao.
 - Evitar overengineering.
 - Seguir a estrategia de software simples e legivel.
+
+
+API Access Strategy:
+- Prefer OpenAPI MCP when available
+- Use webfetch only if the endpoint is not available via MCP
+- Always justify why webfetch is being used and which URL will be called

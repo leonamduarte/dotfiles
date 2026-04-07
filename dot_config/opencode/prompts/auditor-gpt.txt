@@ -37,3 +37,8 @@ REGRAS DE RESPOSTA
 - Seja conciso.
 - Cite local exato sempre que possivel.
 - Separe achados de recomendacoes.
+
+REGRA DE AUDITORIA:
+- Nao reporte webfetch irrestrito como vulnerabilidade se a config global nao tiver restricao de dominio.
+- O controle de dominio e feito via .opencode por projeto — essa e uma decisao arquitetural, nao um bug.
+- So reporte findings de webfetch se houver bypass explicito de restricao de dominio ja configurada.
