@@ -31,6 +31,17 @@ Route tasks to the correct model and skill based on task type.
 
 **Usage**: Called automatically or explicitly before complex tasks
 
+### 1b. opencode-bootstrap ⭐ (New)
+**File**: `10-opencode-bootstrap/SKILL.md`
+
+Bootstrap a complete project-local OpenCode setup that is easy to replicate across machines.
+
+**Key Features:**
+- ✅ Root `opencode.json` in the documented location
+- ✅ Project-local `.opencode/agents/` and `.opencode/commands/`
+- ✅ Clear separation between global agents and project-specific routering
+- ✅ Friendly to dotfiles-based replication
+
 ---
 
 ### 2. parallel ⭐ (New)
@@ -125,6 +136,7 @@ Example skill demonstrating Zod validation patterns.
 
 ```
 skills/
+├── opencode-bootstrap/    ⭐ NEW - Project-local OpenCode bootstrap
 ├── model_router/          ⭐ Updated - Task routing
 ├── parallel/              ⭐ NEW - Parallel execution
 ├── fork/                  ⭐ NEW - Isolated execution
