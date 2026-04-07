@@ -4,6 +4,7 @@ dot_config/fish/fish_variables
 # Opencode - local plugin version
 dot_config/opencode/package.json
 dot_config/opencode/bun.lock
+dot_config/opencode/node_modules/
 
 # OS generated files
 .DS_Store
