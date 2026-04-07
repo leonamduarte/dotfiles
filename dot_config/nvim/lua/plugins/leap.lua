@@ -1,6 +1,6 @@
 return {
-  -- use concise owner/name spec
   "andyg/leap.nvim",
+  url = "https://git.disroot.org/andyg/leap.nvim",
   event = "VeryLazy",
   opts = {},
 }
