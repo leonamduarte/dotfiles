@@ -11,7 +11,7 @@
       "prompt": "{file:./prompts/router.txt}",
       "color": "#7c3aed",
       "temperature": 0.1,
-      "steps": 5,
+      "steps": 2,
       "permission": {
         "read": "deny",
         "glob": "deny",
@@ -31,21 +31,14 @@
           "claude-surgeon": "ask"
         },
         "skill": {
-          "90-model_router": "allow",
-          "90-parallel": "allow",
-          "10-repo_analysis": "allow",
-          "20-feature-implement": "allow",
-          "20-code_debug": "allow",
-          "20-code-simplifier": "allow",
-          "40-audit-code": "allow",
-          "40-architecture-guard": "allow",
-          "40-qa-review": "allow",
           "30-test-jest-unit": "allow",
           "30-test-jest-integration": "allow",
           "30-test-component": "allow",
           "30-test-e2e-maestro": "allow",
           "30-test-types": "allow",
-          "30-test-lint": "allow"
+          "30-test-lint": "allow",
+          "90-model_router": "deny",
+          "90-parallel": "deny"
         }
       }
     },
