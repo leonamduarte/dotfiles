@@ -1,0 +1,1 @@
+{"$schema": "https://opencode.ai/config.json", "agent": {"planner-gpt": {"permission": {"webfetch": "allow"}}, "executor": {"permission": {"webfetch": "allow"}}, "auditor-gpt": {"permission": {"webfetch": "allow"}}, "copilot-worker": {"permission": {"webfetch": "ask"}}}}
