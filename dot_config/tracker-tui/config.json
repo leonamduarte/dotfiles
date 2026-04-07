@@ -1,0 +1,18 @@
+{
+  "opat_start_number": 1626,
+  "opat_per_month": 200,
+  "opat_ranges": [
+    {
+      "base": "OPAT-0001",
+      "max_suffix": 9999
+    }
+  ],
+  "cache_ttl_days": 90,
+  "preload_on_start": true,
+  "theme": "dark",
+  "view_compact": false,
+  "history_max_items": 20,
+  "max_opat_entries": 0,
+  "max_serial_entries": 0,
+  "parallel": 10
+}
