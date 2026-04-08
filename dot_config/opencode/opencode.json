@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "plugin": ["opencode-gemini-auth@latest"],
+  "default_agent": "build",
+  "agent": {
+    "build": {
+      "permission": {
+        "task": {
+          "*": "deny",
+          "auditor": "allow",
+          "tester": "allow",
+          "implementer": "allow"
+        }
+      }
+    }
+  },
+  "permission": {
+    "doom_loop": "ask",
+    "external_directory": {
+      "~/**": "ask"
+    }
+  }
+}
