@@ -11,13 +11,11 @@ USE QUANDO:
 - Ajuste de lint ou formatação
 - Explicacao com codigo
 - Ajuste de configuracao local
-- Planejamento curto ou analise pontual de baixo risco
 
 NAO USE QUANDO:
 - Exige mudanca em 3+ arquivos
 - Exige rodar testes
 - Exige investigacao
-- Exige analise ampla de arquitetura ou repositorio
 - Implica mudanca de comportamento
 - Risco de regressao
 - Implementacao de feature nova

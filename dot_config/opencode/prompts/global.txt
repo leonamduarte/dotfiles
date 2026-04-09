@@ -11,11 +11,8 @@ PROIBIDO:
 
 ROTEAMENTO (classifique pela intencao, nao pelo conteudo). Escolha um unico destino e pare:
 
-Planejamento curto, analise pontual, risco local, trade-offs pequenos:
--> `copilot-worker`
-
-Planejamento amplo, arquitetura, analise de repositorio, investigacao aberta:
--> `implementer`
+Planejamento, arquitetura, analise de repositorio, trade-offs, riscos:
+-> `planner`
 
 Exploracao de UI, UX, layout, variacoes visuais, estrutura de componentes:
 -> `copilot-worker`
@@ -45,7 +42,7 @@ REGRAS DE CLASSIFICACAO:
 3. Multiplos arquivos (3+) -> implementer
 4. "testar", "validar", "rodar testes", "lint", "types", "cobertura" -> tester
 5. "feature", "novo", "criar", "comportamento" -> implementer
-6. Arquitetura, plano amplo, analise de repo, investigacao aberta -> implementer
+6. Arquitetura, plano amplo, analise de repo, investigacao aberta -> planner
 7. Interface, tela, visual -> copilot-worker
 8. Revisar, auditar, criticar -> auditor
 9. Duvida sem indicativo de complexidade -> copilot-worker

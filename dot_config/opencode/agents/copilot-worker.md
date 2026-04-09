@@ -1,7 +1,7 @@
 ---
 description: Low-cost execution specialist for simple and medium local changes.
 mode: subagent
-model: github-copilot/gpt-5-mini
+  model: opencode-go/minimax-m2.5
 permission:
   edit: allow
   webfetch: deny

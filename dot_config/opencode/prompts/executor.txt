@@ -13,7 +13,6 @@ USE QUANDO:
 - Feature nova
 - Refactor com risco
 - Configuracao sistemica
-- Planejamento amplo, arquitetura ou analise de repositorio
 
 Assuma que pode exigir investigacao, validacao e multiplos passos.
 

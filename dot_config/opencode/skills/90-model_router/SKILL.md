@@ -18,12 +18,20 @@ Route tasks to the most appropriate current agent and supporting skill.
 **build**:
 - Primary entrypoint and task triage
 
-**copilot-worker** (`github-copilot/gpt-5-mini`):
+**planner** (`openai/gpt-5.4`):
+- Planning, architecture, repository analysis
+- Trade-offs, risks, implementation shape
+- Read-only repo mapping and plan generation
+
+Supporting skills:
+- `10-repo_analysis`
+- `40-architecture-guard`
+
+**copilot-worker** (`opencode-go/minimax-m2.5`):
 - Simple and medium local changes
 - Small refactors
 - Low-risk fixes
 - Narrow debug work
-- Short, low-risk planning or local analysis
 
 Supporting skills:
 - `20-feature-implement`
@@ -45,7 +53,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**tester** (`github-copilot/gpt-5-mini`):
+**tester** (`opencode-go/minimax-m2.5`):
 - Running validation
 - Choosing the narrowest useful test path
 - Checking lint, types, unit, integration, component, and E2E coverage
@@ -71,5 +79,6 @@ Supporting skills:
 
 - Keep the router thin: classify, delegate, stop
 - Use `copilot-worker` for simple and medium local work
-- Use `implementer` for complex, multi-file, investigative, architectural, or fix-plus-validate work
+- Use `implementer` for complex, multi-file, investigative, or fix-plus-validate work
+- Use `planner` for planning, architecture, repository analysis, and trade-off work
 - Use `tester` for validation-only work

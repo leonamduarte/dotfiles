@@ -1,7 +1,7 @@
 ---
 description: Stack-aware validation specialist that selects the smallest relevant test skills and native test commands.
 mode: subagent
-model: github-copilot/gpt-5-mini
+  model: opencode-go/minimax-m2.5
 permission:
   edit: deny
   webfetch: deny

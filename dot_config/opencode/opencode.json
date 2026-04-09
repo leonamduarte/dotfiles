@@ -1,8 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
-  "model": "github-copilot/gpt-5-mini",
-  "small_model": "github-copilot/gpt-5-mini",
+  "model": "opencode-go/minimax-m2.7",
+  "small_model": "opencode-go/minimax-m2.5",
   "plugin": [],
   "default_agent": "build",
   "agent": {
@@ -12,6 +12,7 @@
           "*": "deny",
           "auditor": "allow",
           "copilot-worker": "allow",
+          "planner": "allow",
           "tester": "allow",
           "implementer": "allow"
         }
