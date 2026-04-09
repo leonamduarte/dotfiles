@@ -1,6 +1,7 @@
 ---
 description: Review-first specialist for technical audits, merge readiness, and audit follow-up.
 mode: subagent
+model: openai/gpt-5.4
 permission:
   edit: deny
   webfetch: deny
