@@ -10,12 +10,6 @@ stow.sh
 dot_config/qtile/**
 dot_config/waybar/**
 dot_config/picom/**
-dot_config/alacritty/**
-dot_config/doom/**
-dot_config/fish/**
-dot_config/ghostty/**
-dot_config/kitty/**
 dot_config/neovide/**
 dot_config/rofi-bashln/**
-dot_config/autostart/**
 dot_config/go/telemetry/**
