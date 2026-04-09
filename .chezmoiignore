@@ -18,3 +18,4 @@ dot_config/kitty/**
 dot_config/neovide/**
 dot_config/rofi-bashln/**
 dot_config/autostart/**
+dot_config/go/telemetry/**
