@@ -1,65 +1,89 @@
 ---
 name: sync-dotfiles
-description: Sincroniza dotfiles entre local e remote usando timestamps e pastas gerenciadas pelo chezmoi
+description: Sincroniza dotfiles entre ~/.config, ~/dotfiles e remote
 ---
 
 # Sync Dotfiles
 
-Sincronização automática baseada em timestamps - sempre mantém a versão mais recente.
+Sincronizacao automatica de tudo que estiver sendo gerenciado pelo chezmoi em `~/.local/share/chezmoi/dot_config/`.
 
-## Conceito
+## Estrutura de diretorios
 
-- `~/.config/dot_config/` - arquivos locais modificados
-- `~/dotfiles/` - repositório git
-- `~/.local/share/chezmoi/dot_config/` - define quais pastas são gerenciadas (source of truth)
+- `~/.config/` - arquivos locais modificados (fonte real)
+- `~/.local/share/chezmoi/dot_config/` - source of truth dos itens gerenciados
+- `~/dotfiles/` - repositorio git
 
-Apenas pastas rastreadas pelo chezmoi são sincronizadas automaticamente.
+## Escopo gerenciado
 
-## Fluxo de execução
+- A skill nao deve manter lista hardcoded de pastas.
+- A lista de verificacao vem dinamicamente dos itens de primeiro nivel existentes em `~/.local/share/chezmoi/dot_config/`.
+- Isso inclui diretorios e arquivos, por exemplo `nvim/`, `kitty/` e `mimeapps.list`.
+- Tudo dentro de cada diretorio gerenciado deve ser sincronizado recursivamente.
+- Se uma nova pasta for adicionada manualmente ao chezmoi/repo, ela entra automaticamente na proxima execucao.
+
+Na pratica, isso equivale a usar o `tree -L 2 ~/.local/share/chezmoi` apenas para visualizar, mas a lista efetiva deve vir dos itens de primeiro nivel dentro de `dot_config/`.
+
+## Fluxo de execucao
 
 ### Passo 1: Preparar ambiente
 ```bash
 cd ~/dotfiles && git fetch origin
 ```
 
-### Passo 2: Identificar pastas gerenciadas
+### Passo 2: Identificar itens gerenciados
 ```bash
-# Lista pastas que existem no source do chezmoi
-MANAGED_DIRS=$(ls -d ~/.local/share/chezmoi/dot_config/*/ 2>/dev/null | xargs -n1 basename)
+CHEZMOI_ROOT="$HOME/.local/share/chezmoi/dot_config"
+REPO_ROOT="$HOME/dotfiles/dot_config"
+
+MANAGED_ENTRIES=$(for path in "$CHEZMOI_ROOT"/*; do
+  [[ -e "$path" ]] || continue
+  basename "$path"
+done | sort)
 ```
 
-### Passo 3: Sincronizar arquivos locais para repo
+### Passo 3: Sincronizar tudo para o repo
 ```bash
-# Para cada pasta gerenciada, copia arquivos mais novos
-for dir in $MANAGED_DIRS; do
-  if [[ -d "$HOME/.config/dot_config/$dir" ]]; then
-    rsync -av --update "$HOME/.config/dot_config/$dir/" "$HOME/dotfiles/dot_config/$dir/"
+for entry in $MANAGED_ENTRIES; do
+  SRC="$HOME/.config/$entry"
+  DEST="$REPO_ROOT/$entry"
+
+  if [[ -d "$SRC" ]]; then
+    mkdir -p "$DEST"
+    rsync -a --delete --checksum "$SRC/" "$DEST/"
+  elif [[ -f "$SRC" ]]; then
+    mkdir -p "$(dirname "$DEST")"
+    rsync -a --checksum "$SRC" "$DEST"
+  else
+    echo "Ignorado: $entry nao existe em ~/.config"
   fi
 done
 ```
 
-### Passo 4: Commitar se houver mudanças
+Observacoes:
+- Diretorios novos dentro de `nvim/`, `kitty/`, `opencode/` etc. entram automaticamente porque o `rsync` e recursivo.
+- Arquivos de primeiro nivel, como `mimeapps.list`, tambem entram na verificacao.
+- A fonte confiavel para saber se algo mudou e `git status --short` depois da sincronizacao, nao parse de output do `rsync`.
+
+### Passo 4: Commitar se houver mudancas
 ```bash
 cd ~/dotfiles
-if git diff --quiet HEAD; then
-  echo "Sem mudanças no repo - verificando remote"
+if git diff --quiet HEAD && git diff --cached --quiet HEAD; then
+  echo "Sem mudancas no repo"
 else
   git add -A
-  git commit -m "sync: $(date +'%Y-%m-%d %H:%M') - atualização automática"
+  git commit -m "sync: $(date +'%Y-%m-%d %H:%M') - atualizacao automatica"
 fi
 ```
 
-### Passo 5: Comparar timestamps e decidir direção
+### Passo 5: Comparar timestamps e decidir direcao
 ```bash
 LOCAL_TIME=$(git log -1 --format="%at" HEAD 2>/dev/null || echo "0")
 REMOTE_TIME=$(git log -1 --format="%at" origin/main 2>/dev/null || echo "0")
 
 if [[ $LOCAL_TIME -gt $REMOTE_TIME ]]; then
-  echo "Local mais novo - executando push"
   git push origin main
   PUSHED=1
 elif [[ $REMOTE_TIME -gt $LOCAL_TIME ]]; then
-  echo "Remote mais novo - executando pull"
   git pull origin main --rebase
   PULLED=1
 else
@@ -70,44 +94,24 @@ fi
 ### Passo 6: Aplicar chezmoi se fez pull
 ```bash
 if [[ $PULLED -eq 1 ]]; then
-  chezmoi apply
+  chezmoi apply --force
 fi
 ```
 
-## Lógica de decisão
+## Logica de decisao
 
-| Situação | Ação |
+| Situacao | Acao |
 |----------|------|
-| Arquivo novo no local (dentro de pasta gerenciada) | Copiar para repo, commitar, push |
-| Arquivo local mais novo | Copiar para repo, commitar, push |
+| Arquivo ou pasta nova dentro de item gerenciado | Sincroniza para repo, commit, push |
+| Arquivo local diferente dentro de item gerenciado | Sincroniza para repo, commit, push |
+| Arquivo removido localmente dentro de item gerenciado | Remove no repo, commit, push |
 | Arquivo remote mais novo | Pull, apply |
-| Commits sincronizados | Nenhuma ação |
+| Commits sincronizados | Nenhuma acao |
 
-## Pastas gerenciadas
+## Detalhes tecnicos
 
-O sync só atua nas 14 pastas rastreadas pelo chezmoi:
-
-```
-alacritty, autostart, doom, fish, ghostty, kitty,
-lazygit, mimeapps.list, niri, nvim, opencode, wezterm, yazi
-```
-
-Arquivos em pastas fora destas são ignorados.
-
-## Exemplo de saída
-
-```
-Sincronizando dotfiles...
-Fetch origin: OK
-Pastas gerenciadas: alacritty doom fish niri nvim opencode wezterm yazi ...
-Sync ~/.config → ~/dotfiles: 3 arquivos atualizados
-Commit: feito (sync: 2026-04-10 10:30)
-Push: origin/main → 3 commits ahead
-```
-
-## Notas técnicas
-
-- Usa `rsync --update` para copiar apenas arquivos mais novos
-- Timestamps do commit Git (`--format="%at"`) para comparar
-- `chezmoi apply` após pull para aplicar ao sistema
-- Arquivos como `node_modules`, `.git`, telemetria Go são ignorados automaticamente pelo `.chezmoiignore`
+- A lista de verificacao vem do conteudo real de `~/.local/share/chezmoi/dot_config/`, nao de uma lista fixa na skill
+- `rsync --delete` remove do repo arquivos que nao existem mais no local
+- `rsync --checksum` compara por hash, nao so timestamp
+- `git status --short` apos o sync e a forma confiavel de verificar mudancas
+- `chezmoi apply --force` evita prompt interativo quando algum arquivo ja mudou localmente
