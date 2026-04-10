@@ -1,7 +1,7 @@
 return {
   "folke/tokyonight.nvim",
   lazy = false,
-  enabled = false,
+  enabled = true,
   priority = 1000,
   opts = {
     style = "storm", -- The theme comes in three styles, `storm`, a darker variant `night` and `day`
