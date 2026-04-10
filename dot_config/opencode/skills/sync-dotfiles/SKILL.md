@@ -1,66 +1,113 @@
 ---
 name: sync-dotfiles
-description: Sincroniza alterações do dotfiles entre repositório local e remoto
+description: Sincroniza dotfiles entre local e remote usando timestamps e pastas gerenciadas pelo chezmoi
 ---
 
 # Sync Dotfiles
 
-Sincroniza as alterações do dotfiles entre o repositório local (chezmoi) e o remoto.
+Sincronização automática baseada em timestamps - sempre mantém a versão mais recente.
 
-## Passo 1: Verificar alterações locais
+## Conceito
 
-Executar análise do repositório local:
-```bash
-cd ~/dotfiles && git status
-```
+- `~/.config/dot_config/` - arquivos locais modificados
+- `~/dotfiles/` - repositório git
+- `~/.local/share/chezmoi/dot_config/` - define quais pastas são gerenciadas (source of truth)
 
-Executar diff para ver exatamente o que mudou:
-```bash
-cd ~/dotfiles && git diff --stat
-```
+Apenas pastas rastreadas pelo chezmoi são sincronizadas automaticamente.
 
-## Passo 2: Verificar alterações remotas
+## Fluxo de execução
 
-Buscar alterações do remoto:
+### Passo 1: Preparar ambiente
 ```bash
 cd ~/dotfiles && git fetch origin
 ```
 
-Verificar commits no remoto vs local:
+### Passo 2: Identificar pastas gerenciadas
 ```bash
-cd ~/dotfiles && git log --oneline HEAD..origin/main
+# Lista pastas que existem no source do chezmoi
+MANAGED_DIRS=$(ls -d ~/.local/share/chezmoi/dot_config/*/ 2>/dev/null | xargs -n1 basename)
 ```
 
-## Passo 3: Comparar datas e decidir direção
-
-Verificar data da última alteração de arquivos modificados:
+### Passo 3: Sincronizar arquivos locais para repo
 ```bash
-cd ~/dotfiles && git log -1 --format="%ai" HEAD
-cd ~/dotfiles && git log -1 --format="%ai" origin/main
+# Para cada pasta gerenciada, copia arquivos mais novos
+for dir in $MANAGED_DIRS; do
+  if [[ -d "$HOME/.config/dot_config/$dir" ]]; then
+    rsync -av --update "$HOME/.config/dot_config/$dir/" "$HOME/dotfiles/dot_config/$dir/"
+  fi
+done
 ```
 
-## Passo 4: Solicitar permissão do usuário
-
-Apresentar resumo das alterações e perguntar se deseja:
-- Push das alterações locais para o remoto
-- Pull das alterações remotas para o local
-- Cancelar operação
-
-## Passo 5: Executar ação
-
-### Push (se usuário permitir)
+### Passo 4: Commitar se houver mudanças
 ```bash
-cd ~/dotfiles && git add -A && git commit -m "sync: sincronização de alterações" && git push origin main
+cd ~/dotfiles
+if git diff --quiet HEAD; then
+  echo "Sem mudanças no repo - verificando remote"
+else
+  git add -A
+  git commit -m "sync: $(date +'%Y-%m-%d %H:%M') - atualização automática"
+fi
 ```
 
-### Pull (se usuário permitir)
+### Passo 5: Comparar timestamps e decidir direção
 ```bash
-cd ~/dotfiles && git pull origin main
+LOCAL_TIME=$(git log -1 --format="%at" HEAD 2>/dev/null || echo "0")
+REMOTE_TIME=$(git log -1 --format="%at" origin/main 2>/dev/null || echo "0")
+
+if [[ $LOCAL_TIME -gt $REMOTE_TIME ]]; then
+  echo "Local mais novo - executando push"
+  git push origin main
+  PUSHED=1
+elif [[ $REMOTE_TIME -gt $LOCAL_TIME ]]; then
+  echo "Remote mais novo - executando pull"
+  git pull origin main --rebase
+  PULLED=1
+else
+  echo "Commits sincronizados"
+fi
 ```
 
-## Fluxo de decisão
+### Passo 6: Aplicar chezmoi se fez pull
+```bash
+if [[ $PULLED -eq 1 ]]; then
+  chezmoi apply
+fi
+```
 
-1. Se há alterações locais E remoto está atrás → sugerir push
-2. Se há alterações remotas E local está atrás → sugerir pull
-3. Se há alterações em ambos → avisar sobre possível conflito e sugerir merge ou rebase
-4. Se estão sincronizados → informar que não há alterações pendentes
+## Lógica de decisão
+
+| Situação | Ação |
+|----------|------|
+| Arquivo novo no local (dentro de pasta gerenciada) | Copiar para repo, commitar, push |
+| Arquivo local mais novo | Copiar para repo, commitar, push |
+| Arquivo remote mais novo | Pull, apply |
+| Commits sincronizados | Nenhuma ação |
+
+## Pastas gerenciadas
+
+O sync só atua nas 14 pastas rastreadas pelo chezmoi:
+
+```
+alacritty, autostart, doom, fish, ghostty, kitty,
+lazygit, mimeapps.list, niri, nvim, opencode, wezterm, yazi
+```
+
+Arquivos em pastas fora destas são ignorados.
+
+## Exemplo de saída
+
+```
+Sincronizando dotfiles...
+Fetch origin: OK
+Pastas gerenciadas: alacritty doom fish niri nvim opencode wezterm yazi ...
+Sync ~/.config → ~/dotfiles: 3 arquivos atualizados
+Commit: feito (sync: 2026-04-10 10:30)
+Push: origin/main → 3 commits ahead
+```
+
+## Notas técnicas
+
+- Usa `rsync --update` para copiar apenas arquivos mais novos
+- Timestamps do commit Git (`--format="%at"`) para comparar
+- `chezmoi apply` após pull para aplicar ao sistema
+- Arquivos como `node_modules`, `.git`, telemetria Go são ignorados automaticamente pelo `.chezmoiignore`
