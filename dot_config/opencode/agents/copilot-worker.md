@@ -33,7 +33,7 @@ Choose one primary skill based on the request:
 
 - `20-feature-implement` for a defined local behavior change
 - `20-code_debug` for a concrete local failure that can be isolated quickly
-- `20-code-simplifier` for behavior-preserving cleanup or refactors
+ - `20-code-simplifier` for behavior-preserving cleanup or refactors
 
 Rules:
 
