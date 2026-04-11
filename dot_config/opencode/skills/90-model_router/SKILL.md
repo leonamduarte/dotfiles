@@ -27,7 +27,7 @@ Supporting skills:
 - `10-repo_analysis`
 - `40-architecture-guard`
 
-**copilot-worker** (`opencode-go/minimax-m2.5`):
+**copilot-worker** (`openai/codex-mini-latest`):
 - Simple and medium local changes
 - Small refactors
 - Low-risk fixes
@@ -38,7 +38,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**implementer** (`openai/gpt-5.3-codex`):
+**implementer** (`openai/gpt-5.1-codex-max`):
 - Writing code
 - Editing functions
 - Implementing planned features
@@ -53,7 +53,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**tester** (`opencode-go/minimax-m2.5`):
+**tester** (`openai/gpt-5.1-codex-mini`):
 - Running validation
 - Choosing the narrowest useful test path
 - Checking lint, types, unit, integration, component, and E2E coverage

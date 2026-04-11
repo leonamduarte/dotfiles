@@ -1,7 +1,7 @@
 ---
 description: Low-cost execution specialist for simple and medium local changes.
 mode: subagent
-  model: opencode-go/minimax-m2.5
+model: openai/codex-mini-latest
 permission:
   edit: allow
   webfetch: deny

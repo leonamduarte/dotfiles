@@ -43,10 +43,17 @@ Rule of thumb:
 
 ## Model Tiers
 
-- Primary cheap tier: `opencode-go/minimax-m2.7` for build triage, `opencode-go/minimax-m2.5` for worker/tester
-- Premium tier: `openai/gpt-5.4` for planner and auditor, `openai/gpt-5.3-codex` for implementer
-- Optional free fallback models: `opencode/minimax-m2.5-free`, `opencode/big-pickle`, `opencode/nemotron-3-super-free`
-- Optional OpenCode Go note: treat `opencode-go/glm-5.1` as workspace-dependent documentation only unless the selector confirms it; use `opencode-go/glm-5` as the confirmed GLM reference
+- Default reasoning tier: `openai/gpt-5.4` for build triage, inherited skill execution, `planner`, and `auditor`
+- Lightweight general tier: `openai/gpt-5.4-mini` for `small_model` fallback and low-cost non-coding routing
+- Fast coding tier: `openai/codex-mini-latest` for `copilot-worker` when the task is local, simple, and edit-heavy
+- Validation tier: `openai/gpt-5.1-codex-mini` for `tester`, favoring structured codebase checks at lower cost
+- Heavy coding tier: `openai/gpt-5.1-codex-max` for `implementer`, favoring harder multi-file implementation and investigation work
+
+### OpenAI Catalog Notes
+
+- `openai/gpt-5-codex`, `openai/gpt-5.1-codex`, `openai/gpt-5.2-codex`, and `openai/gpt-5.3-codex` remain good project-specific alternates when a repository prefers a different codex generation.
+- `openai/gpt-5.2` is a reasonable middle ground for general reasoning, but `openai/gpt-5.4` is the stronger default for planning and audit quality.
+- `openai/gpt-5.3-codex-spark` is best treated as a latency-oriented experimental coding option rather than the default global route.
 
 ## Maintenance Notes
 

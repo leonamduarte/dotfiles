@@ -1,7 +1,7 @@
 ---
 description: Heavy execution specialist for complex implementations, investigations, and multi-file changes.
 mode: subagent
-model: openai/gpt-5.3-codex
+model: openai/gpt-5.1-codex-max
 permission:
   edit: allow
   webfetch: deny

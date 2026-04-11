@@ -20,4 +20,4 @@ NÃO USE QUANDO:
 - Risco de regressão
 - Implementação de feature nova
 
-SE ESCALAR EM COMPLEXIDADE → interrompa e delegue para executor
+SE ESCALAR EM COMPLEXIDADE -> interrompa e delegue para implementer
