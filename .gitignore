@@ -26,6 +26,22 @@
 !.gitignore
 !.zshrc
 !.bashrc
+!dot_config/
+
+# Permite dot_config
+!dot_config/alacritty/
+!dot_config/autostart/
+!dot_config/doom/
+!dot_config/fish/
+!dot_config/ghostty/
+!dot_config/kitty/
+!dot_config/mimeapps.list
+!dot_config/niri/
+!dot_config/nvim/
+!dot_config/opencode/
+!dot_config/starship.toml
+!dot_config/wezterm/
+!dot_config/yazi/
 
 # Permite pastas específicas na raiz
 !.config/
