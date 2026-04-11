@@ -43,10 +43,11 @@ Rule of thumb:
 
 ## Model Tiers
 
-- Default reasoning tier: `openai/gpt-5.4` for build triage, inherited skill execution, `planner`, and `auditor`
-- Lightweight general tier: `openai/gpt-5.4-mini` for `small_model` fallback and low-cost non-coding routing
+- Default routing tier: `openai/gpt-5.4-mini` for build triage and inherited low-cost skill execution
+- Smallest coding tier: `openai/codex-mini-latest` for `small_model` fallback and `copilot-worker`
 - Fast coding tier: `openai/codex-mini-latest` for `copilot-worker` when the task is local, simple, and edit-heavy
 - Validation tier: `openai/gpt-5.1-codex-mini` for `tester`, favoring structured codebase checks at lower cost
+- Premium reasoning tier: `openai/gpt-5.4` for `planner` and `auditor`, where routing quality matters less than judgment quality
 - Heavy coding tier: `openai/gpt-5.1-codex-max` for `implementer`, favoring harder multi-file implementation and investigation work
 
 ### OpenAI Catalog Notes
