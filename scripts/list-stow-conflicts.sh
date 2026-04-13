@@ -13,8 +13,14 @@ printf 'Conflitos em ~/.config:\n'
 if [[ -d "$DOTFILES_ROOT/config/.config" ]]; then
 	while IFS= read -r path; do
 		[[ -n "$path" ]] || continue
-		if [[ -e "$HOME/.config/$path" || -L "$HOME/.config/$path" ]]; then
-			printf 'CONFLICT: %s\n' "$HOME/.config/$path"
+		target="$HOME/.config/$path"
+		source="$DOTFILES_ROOT/config/.config/$path"
+		if [[ -e "$target" || -L "$target" ]]; then
+			if [[ "$(readlink -f "$target")" == "$(readlink -f "$source")" ]]; then
+				continue
+			fi
+			printf 'CONFLICT: %s\n' "$target"
+			continue
 		fi
 	done < <(cd "$DOTFILES_ROOT/config/.config" && find . -type f -printf '%P\n' | sort)
 fi
@@ -23,8 +29,17 @@ printf '\nConflitos em ~/:\n'
 if [[ -d "$DOTFILES_ROOT/home" ]]; then
 	while IFS= read -r path; do
 		[[ -n "$path" ]] || continue
-		if [[ -e "$HOME/$path" || -L "$HOME/$path" ]]; then
-			printf 'CONFLICT: %s\n' "$HOME/$path"
+		target_path="$path"
+		if [[ "$target_path" == dot-* ]]; then
+			target_path=".${target_path#dot-}"
+		fi
+		target="$HOME/$target_path"
+		source="$DOTFILES_ROOT/home/$path"
+		if [[ -e "$target" || -L "$target" ]]; then
+			if [[ "$(readlink -f "$target")" == "$(readlink -f "$source")" ]]; then
+				continue
+			fi
+			printf 'CONFLICT: %s\n' "$target"
 		fi
 	done < <(cd "$DOTFILES_ROOT/home" && find . -maxdepth 1 -type f -printf '%P\n' | sort)
 fi

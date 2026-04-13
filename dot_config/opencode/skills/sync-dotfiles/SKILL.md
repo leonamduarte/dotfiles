@@ -42,13 +42,13 @@ mv ~/.config/fish ~/.local/share/dotfiles-conflicts-backup/fish-$(date +%s)
 ### Passo 4: Dry-run
 ```bash
 cd ~/dotfiles
-stow -n -t ~ config home
+stow --dotfiles -n -t ~ config home
 ```
 
 ### Passo 5: Aplicar manualmente so quando o dry-run estiver limpo
 ```bash
-stow -t ~ config
-stow -t ~ home
+stow --dotfiles -t ~ config
+stow --dotfiles -t ~ home
 ```
 
 ## Script de sync
@@ -56,7 +56,7 @@ stow -t ~ home
 `~/dotfiles/sync.sh` deve:
 
 1. rodar `git pull --ff-only`
-2. rodar `stow -n -t "$HOME" config home`
+2. rodar `stow --dotfiles -n -t "$HOME" config home`
 3. aplicar so com `--apply`
 
 Exemplo:

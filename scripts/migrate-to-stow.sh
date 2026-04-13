@@ -119,11 +119,11 @@ for item in "${migrate_items[@]}"; do
 done
 
 if [[ -f "$CHEZMOI_ROOT/dot_gitignore" ]]; then
-	if [[ ! -f "$DOTFILES_ROOT/home/.gitignore" ]]; then
-		rsync -a "$CHEZMOI_ROOT/dot_gitignore" "$DOTFILES_ROOT/home/.gitignore"
-		printf '  - home/.gitignore criado a partir de dot_gitignore\n'
+	if [[ ! -f "$DOTFILES_ROOT/home/dot-gitignore" ]]; then
+		rsync -a "$CHEZMOI_ROOT/dot_gitignore" "$DOTFILES_ROOT/home/dot-gitignore"
+		printf '  - home/dot-gitignore criado a partir de dot_gitignore\n'
 	else
-		printf '  - SKIP: %s/home/.gitignore ja existe\n' "$DOTFILES_ROOT"
+		printf '  - SKIP: %s/home/dot-gitignore ja existe\n' "$DOTFILES_ROOT"
 	fi
 fi
 
@@ -145,18 +145,18 @@ cd "$HOME/dotfiles"
 git pull --ff-only
 
 echo ">> Dry-run"
-stow -n -t "$HOME" config home
+stow --dotfiles -n -t "$HOME" config home
 
 if [[ "${1:-}" == "--apply" ]]; then
 	echo
 	echo ">> Applying"
-	stow -t "$HOME" config
-	stow -t "$HOME" home
+	stow --dotfiles -t "$HOME" config
+	stow --dotfiles -t "$HOME" home
 	else
 	echo
 	echo ">> Revise conflitos antes de aplicar."
 	echo ">> Se estiver tudo ok, rode:"
-	echo "stow -t ~ config && stow -t ~ home"
+	echo "stow --dotfiles -t ~ config && stow --dotfiles -t ~ home"
 fi
 EOF
 	chmod +x "$sync_script"
@@ -178,5 +178,5 @@ printf '\n== Potenciais conflitos ==\n'
 printf '\n== Proximo passo ==\n'
 printf '  1. Revise conflitos acima.\n'
 printf '  2. Nunca use stow --adopt.\n'
-printf '  3. Rode: stow -n -t ~ config home\n'
-printf '  4. Se estiver limpo, aplique manualmente: stow -t ~ config && stow -t ~ home\n'
+printf '  3. Rode: stow --dotfiles -n -t ~ config home\n'
+printf '  4. Se estiver limpo, aplique manualmente: stow --dotfiles -t ~ config && stow --dotfiles -t ~ home\n'
