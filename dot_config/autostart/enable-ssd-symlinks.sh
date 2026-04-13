@@ -8,6 +8,13 @@ SRC="$HOME/.local/share/chezmoi"
 T1="/run/media/dev/stow/dotfiles/config/autostart/autostart.conf"
 T2="/run/media/dev/stow/dotfiles/config/autostart/autostart/walker.desktop"
 
+# If run as a systemd --user unit, the working directory where the unit installs files
+# will be `~/.local/share/chezmoi`. Ensure the script locates the chezmoi source correctly.
+if [ ! -d "$SRC" ]; then
+	# try alternate common path
+	SRC="$HOME/.local/share/chezmoi"
+fi
+
 echo "Using chezmoi source: $SRC"
 
 if [ ! -d "$SRC" ]; then
