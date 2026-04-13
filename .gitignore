@@ -1,6 +1,10 @@
 # Fish shell - generated files
 dot_config/fish/fish_variables
 
+# Guardrail: never track dependency vendor folders
+**/node_modules
+**/node_modules/
+
 # Opencode - local plugin version
 dot_config/opencode/package.json
 dot_config/opencode/bun.lock
@@ -15,6 +19,12 @@ Thumbs.db
 *.swp
 *.tmp
 *~
+*.orig
+*.rej
+*.broken.*
+*.broken_restore.*
+*.file_restore.*
+*.backup*
 
 # IDE
 .idea/
