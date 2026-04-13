@@ -1,0 +1,5 @@
+{{ if exists "/run/media/dev/stow/dotfiles/config/autostart/autostart/autostart.conf" -}}
+{{- exec "ln -sfn /run/media/dev/stow/dotfiles/config/autostart/autostart/autostart.conf ~/.config/autostart/autostart.conf" -}}
+{{- else -}}
+{{- include "autostart.conf.broken.1776074596" -}}
+{{- end }}

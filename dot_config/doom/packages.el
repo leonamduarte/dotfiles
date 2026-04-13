@@ -9,11 +9,10 @@
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 
 ;; --- ORG MODE ---
-;; 'toc-org' e 'org-superstar' já vêm com o módulo :lang org +pretty.
-;; Mantive apenas o que é extra:
+;; org-superstar, org-appear, org-modern já vêm com :lang org +pretty
+;; Mantive apenas extras:
 (package! org-auto-tangle)
 (package! org-super-agenda)
-(package! org-modern) ;; Você usou configurações dele no config.el
 
 ;; --- UI & UX ---
 (package! pulsar)
@@ -36,7 +35,7 @@
   :recipe (:local-repo "lisp/grease"))
   ;; :recipe (:host github :repo "mwac-dev/grease.el"  :files ("*.el")))
 
-;; (package! gcmh)
+(package! gcmh)
 (package! kdl-mode)
 (package! consult-lsp)
 

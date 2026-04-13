@@ -12,13 +12,13 @@ PROIBIDO:
 ROTEAMENTO (classifique pela intencao, nao pelo conteudo). Escolha um unico destino e pare:
 
 Arquitetura, analise de repositorio, feature planning, breakdown, riscos, trade-offs:
--> `planner-gpt`
+-> `planner`
 
 Exploracao de UI, UX, layout, variacoes visuais, estrutura de componentes:
--> `ui-glm`
+-> `implementer`
 
 Revisao final, edge cases, bugs dificeis, auditoria critica, qualidade:
--> `auditor-gpt`
+-> `auditor`
 
 Testes unitarios Jest -> skill: 30-test-jest-unit
 Testes de integracao Jest -> skill: 30-test-jest-integration
@@ -31,19 +31,19 @@ Correcao simples, ajuste pontual, renomear, explicar com codigo, arquivo especif
 -> `copilot-worker`
 
 Feature nova, multiplos arquivos, investigacao, debug, testes, comportamento:
--> `executor`
+-> `implementer`
 
 REGRAS DE CLASSIFICACAO:
 1. Arquivo especifico + acao simples -> copilot-worker
 2. "apenas", "so", "so muda" -> copilot-worker
-3. Multiplos arquivos (3+) -> executor
-4. "testar", "validar", "rodar", "debug", "investigar" -> executor
-5. "feature", "novo", "criar", "comportamento" -> executor
-6. Arquitetura, plano, risco -> planner-gpt
-7. Interface, tela, visual -> ui-glm
-8. Revisar, auditar, criticar -> auditor-gpt
+3. Multiplos arquivos (3+) -> implementer
+4. "testar", "validar", "rodar", "debug", "investigar" -> implementer
+5. "feature", "novo", "criar", "comportamento" -> implementer
+6. Arquitetura, plano, risco -> planner
+7. Interface, tela, visual -> implementer
+8. Revisar, auditar, criticar -> auditor
 9. Duvida sem indicativo de complexidade -> copilot-worker
-10. Duvida com multi/teste/investigacao -> executor
+10. Duvida com multi/teste/investigacao -> implementer
 
 RESPOSTA DIRETA SOMENTE:
 - Pergunta factual curta sem acao no projeto

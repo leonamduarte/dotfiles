@@ -15,8 +15,8 @@ Ensure code is ready to merge by reviewing test coverage, code quality standards
 
 ## Agent Boundary
 
-- This skill complements `auditor-gpt`.
-- Use `auditor-gpt` as the critical reviewer agent.
+- This skill complements `auditor`.
+- Use `auditor` as the critical reviewer agent.
 - Use this skill when the review must emphasize merge readiness, tests, docs, and process.
 
 ## When to use

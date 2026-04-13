@@ -4,5 +4,11 @@ return {
   opts = {
     -- allow mouse interactions
     disable_mouse = false,
+    disabled_keys = {
+      ["<Up>"] = { "" },
+      ["<Down>"] = { "" },
+      ["<Left>"] = { "" },
+      ["<Right>"] = { "" },
+    },
   },
 }

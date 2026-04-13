@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+cd "$HOME/dotfiles"
+git pull --ff-only
+
+echo ">> Dry-run"
+stow -n -t "$HOME" config home
+
+if [[ "${1:-}" == "--apply" ]]; then
+	echo
+	echo ">> Applying"
+	stow -t "$HOME" config
+	stow -t "$HOME" home
+	else
+	echo
+	echo ">> Revise conflitos antes de aplicar."
+	echo ">> Se estiver tudo ok, rode:"
+	echo "stow -t ~ config && stow -t ~ home"
+fi

@@ -195,23 +195,34 @@ function M.browse_path(start_dir)
     return
   end
 
-  local ok_snacks, Snacks = pcall(require, "snacks")
-  if not ok_snacks then
+  local ok_fzf, fzf = pcall(require, "fzf-lua")
+  if not ok_fzf then
     return M.open_oil(start_dir)
   end
 
-  Snacks.picker({
-    title = " " .. start_dir,
-    items = items,
-    format = function(item, _)
-      return { { item.text, item._is_dir and "Directory" or "Normal" } }
-    end,
-    confirm = function(picker, item)
-      picker:close()
-      if item._is_dir then
-        M.browse_path(item._full_path)
-      else
-        M.open_find_path(item._full_path)
+  local items_str = {}
+  for _, item in ipairs(items) do
+    table.insert(items_str, item.text)
+  end
+
+  fzf.fzf(items_str, {
+    prompt = start_dir .. " ",
+    actions = function(selected)
+      if selected and selected[1] then
+        local selected_item = nil
+        for _, item in ipairs(items) do
+          if item.text == selected[1] then
+            selected_item = item
+            break
+          end
+        end
+        if selected_item then
+          if selected_item._is_dir then
+            M.browse_path(selected_item._full_path)
+          else
+            M.open_find_path(selected_item._full_path)
+          end
+        end
       end
     end,
   })

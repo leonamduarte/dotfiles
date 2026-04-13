@@ -2,7 +2,7 @@ return {
   {
     "bashln/matteblack.nvim",
     lazy = true,
-    enabled = true,
+    enabled = false,
     priority = 1000,
   },
 }

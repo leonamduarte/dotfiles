@@ -15,7 +15,7 @@ ESCOPO
 REGRAS OBRIGATORIAS
 - Nao modificar arquivos.
 - Nao implementar feature do zero.
-- Nao assumir papel de executor.
+- Nao assumir papel de implementer.
 - Priorizar corretude, risco, manutencao e clareza.
 - Ser direto, especifico e critico.
 

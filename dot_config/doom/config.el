@@ -1,66 +1,30 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; Shell POSIX (resolve warning do doom doctor)
+;; Shell & PATH
 (setq shell-file-name (executable-find "bash"))
 (setq-default vterm-shell "/bin/fish")
 (setq-default explicit-shell-file-name "/bin/fish")
 
 ;; Go tools PATH
-(setenv "PATH" (concat (getenv "HOME") "/go/bin:" (getenv "PATH")))
+(setenv "PATH" (concat (or (getenv "HOME") "") "/go/bin:" (or (getenv "PATH") "")))
 (push "/home/bashln/go/bin" exec-path)
 
+;; Fontes
+(let ((font-family (if (eq system-type 'windows-nt) "CommitMono Nerd Font" "Maple Mono NF")))
+  (setq doom-font (font-spec :family font-family :size 15)
+        doom-variable-pitch-font (font-spec :family font-family :size 15)))
+
+;; Tema
+;; (setq doom-theme 'doom-rose-pine-moon)
+
 ;; ----------------------------------------------------------------------------
-;; REQUISITOS DO SISTEMA (PARA PARIDADE TOTAL COM NEOVIM)
+;; REQUISITOS DO SISTEMA
 ;; ----------------------------------------------------------------------------
-;; Para que esta configuração funcione perfeitamente (LSP, Formatters, Linters):
-;;
-;; 1. NPM (Global):
-;;    npm install -g typescript typescript-language-server vscode-langservers-extracted
-;;    npm install -g pyright bash-language-server dockerfile-language-server-nodejs
-;;    npm install -g yaml-language-server @hashicorp/terraform-ls diagnostic-languageserver
-;;    npm install -g prettier eslint @tailwindcss/language-server markdownlint-cli
-;;
-;; 2. OUTROS (Go, Python, Lua, Shell):
-;;    - Go: go install golang.org/x/tools/gopls@latest
-;;    - Python: pipx install black ruff isort pyflakes
-;;    - Lua: (Mason-like) sudo pacman -S lua-language-server stylua (ou via brew/scoop)
-;;    - Shell: sudo pacman -S shellcheck shfmt
-;;
-;; 3. TOOLS:
-;;    - fd & ripgrep (Essenciais para busca e consult-fd)
-;;    - emacs-lsp-booster (Para performance do LSP)
-;; ----------------------------------------------------------------------------
-
-;; --- FIX: TRANSIENT ---
-;; ( INVESTIGATING: Check if this workaround is still needed in 2026 )
-;; (let ((lfile (concat doom-local-dir "straight/repos/transient/lisp/transient.el")))
-;;   (if (file-exists-p lfile) (load lfile)))
+;; LSP, Formatters, Linters - ver README do projeto
 
 ;; -------------------------------
-;; 1. IDENTIDADE & SISTEMA
+;; 1. ORG MODE CUSTOMIZATIONS
 ;; -------------------------------
-(setq user-full-name "bashln"
-      user-mail-address "lpdmonteiro+doom@gmail.com")
-
-;; Fontes (Monospace & Variable Pitch)
-(let ((font-family (if (eq system-type 'windows-nt)
-                       "Terminess Nerd Font"
-                     "Iosevka Nerd Font")))
-  (setq doom-font (font-spec :family font-family :size 17)
-        doom-variable-pitch-font (font-spec :family font-family :size 17)))
-
-;; UI / Tema
-(setq doom-theme 'doom-one)
-;; (setq doom-theme 'catppuccin)
-;; (setq catppuccin-flavor 'macchiato)
-(setq display-line-numbers-type t
-      confirm-kill-emacs nil)
-(setq-default tab-width 2)
-
-;; -------------------------------
-;; 2. ORG MODE
-;; -------------------------------
-
 (after! org
   (setq org-default-notes-file (expand-file-name "inbox.org" org-directory)
         org-ellipsis " ◉ "
@@ -69,20 +33,19 @@
         org-hide-emphasis-markers t
         org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAIT(w)" "PROJ(p)" "|" "DONE(d)" "CANCELLED(c)")))
-  (add-to-list 'org-modules 'org-habit))
+  (add-to-list 'org-modules 'org-habit)
+  (add-to-list 'org-modules 'org-tempo))
 
-(use-package! org-modern
-  :hook (org-mode . org-modern-mode)
-  :config
-  (setq org-modern-table t
-        org-modern-hide-stars t))
+;; Custom bullets - org-modern configuration (used by +pretty flag)
+(setq org-modern-star 'replace
+      org-modern-replace-stars '("◉" "○" "✸" "✿" "◉" "○")
+      org-modern-hide-stars nil)
 
 (use-package! org-auto-tangle
   :hook (org-mode . org-auto-tangle-mode)
   :config (setq org-auto-tangle-default t))
 
-(map! :leader
-      :desc "Org babel tangle" "m B" #'org-babel-tangle)
+(map! :leader :desc "Org babel tangle" "m B" #'org-babel-tangle)
 
 (after! ispell
   (setq ispell-program-name "hunspell"
@@ -93,22 +56,9 @@
                  '("pt_BR" "[[:alpha:]]" "[^[:alpha:]]" "[']" t
                    ("-d" "pt_BR") nil utf-8))))
 
-(defun +org-set-pt-br-spellcheck-h ()
-  (setq-local ispell-local-dictionary "pt_BR")
-  (ispell-change-dictionary "pt_BR"))
-
-(add-hook 'org-mode-hook #'+org-set-pt-br-spellcheck-h)
-
 ;; -------------------------------
 ;; 3. DESENVOLVIMENTO & LSP
 ;; -------------------------------
-
-;; Tuning JS/TS
-;; ( DISABLED: preferindo tree-sitter e o suporte padrao do Doom por enquanto )
-;; (after! js2-mode
-;;   (setq js2-basic-offset 2
-;;         js2-bounce-indent-p nil
-;;         js2-strict-missing-semi-warning nil))
 
 ;; Typescript/Web defaults
 (after! typescript-mode
@@ -129,8 +79,9 @@
   (setq treesit-font-lock-level 4)
   (add-to-list 'treesit-language-source-alist
                '(kotlin "https://github.com/fwcd/tree-sitter-kotlin"))
-  (unless (treesit-language-available-p 'kotlin)
-    (message "Kotlin treesit grammar ausente. Instale manualmente com M-x treesit-install-language-grammar")))
+  (when (fboundp 'treesit-language-available-p)
+    (unless (treesit-language-available-p 'kotlin)
+      (message "Kotlin treesit grammar ausente. Instale manualmente com M-x treesit-install-language-grammar"))))
 
 (after! smartparens
   (remove-hook 'doom-first-buffer-hook #'smartparens-global-mode)
@@ -153,20 +104,17 @@
   :mode "\\.kdl\\'")
 
 ;; -------------------------------
-;; 4. COMPLETION (Vertico/Corfu)
+;; 3. COMPLETION CUSTOMIZATIONS (Vertico/Corfu)
 ;; -------------------------------
-(after! marginalia (marginalia-mode))
-
 (after! corfu
   (setq corfu-auto t
-        corfu-auto-delay 0.1
-        corfu-auto-prefix 2
+        corfu-auto-delay 0.05
+        corfu-auto-prefix 1
         corfu-cycle t
-        corfu-quit-no-match 'separator  ;; FIX: Evita o erro de nil
-        corfu-preselect 'prompt         ;; Não pré-seleciona primeira opção
+        corfu-quit-no-match 'separator
+        corfu-preselect 'prompt
         corfu-popupinfo-delay 0.5
         corfu-popupinfo-max-height 6)
-  ;; IMPORTANTE: Garante que TAB funciona com corfu
   (map! :map corfu-map
         "TAB" #'corfu-next
         [tab] #'corfu-next
@@ -178,46 +126,45 @@
         completion-category-defaults nil
         completion-category-overrides '((file (styles basic partial-completion)))))
 
+(after! eldoc
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-display-functions '(eldoc-display-in-echo-area)))
+
 (map! :leader
       "b b" #'consult-buffer
       "f r" #'consult-recent-file)
 (map! "C-." #'embark-act)
 
-(after! eldoc
-  (setq eldoc-echo-area-use-multiline-p nil
-        eldoc-display-functions '(eldoc-display-in-echo-area)))
-
 ;; -------------------------------
-;; 5. FORMATAÇÃO (ESTILO NEOVIM)
+;; 5. FORMATAÇÃO & AUTO-SAVE
 ;; -------------------------------
 
-;; 1. Desativa o 'mordomo' (ws-butler) que protege espaços
-(setq ws-butler-mode nil)
-
-;; 2. Configura Apheleia (Formatador Assíncrono)
-;; (Removido: O módulo :format +onsave já configura isso de forma otimizada)
-
-;; 3. Hooks de Limpeza Nuclear (Igual ao Nvim)
-;; Garante remoção de espaços e nova linha no final SEMPRE.
+;; Hooks de Limpeza (Igual ao Nvim)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq require-final-newline t)
 
-;; 4. Prioridade de Formatação
-(setq-hook! 'lua-mode-hook +format-with-lsp nil) ;; Usa stylua, não lua-lsp
-(setq-hook! 'python-mode-hook +format-with-lsp nil) ;; Usa black/ruff, não pyright
+;; Org-mode: indentação automática (não precisa de formatter externo)
+(setq org-startup-indented t)
+
+;; Auto-format on save via módulo :editor format (doom já faz isso)
+;; Apenas prioritizamos linguagens específicas
+(setq-hook! 'lua-mode-hook +format-with-lsp nil)
+(setq-hook! 'python-mode-hook +format-with-lsp nil)
 
 ;; -------------------------------
-;; 6. LSP TUNING & BOOSTER (PERFORMANCE CRÍTICA)
+;; 4. LSP TUNING & BOOSTER
 ;; -------------------------------
 
-(defun +lsp-ensure-typescript-h (&rest _)
-  "Only start LSP if TypeScript is available in the project."
-  (or (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules/typescript")
-      (locate-dominating-file (or (buffer-file-name) default-directory) ".git")))
+(defvar +lsp-ensure-typescript-h nil)
+(setq +lsp-ensure-typescript-h
+      (lambda ()
+        "Only start LSP if TypeScript is available in the project."
+        (or (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules/typescript")
+            (locate-dominating-file (or (buffer-file-name) default-directory) ".git"))))
 
 (defun +lsp-run-if-project-ready-a (old-fn &rest args)
   "Run OLD-FN only when the current project is ready for LSP."
-  (when (+lsp-ensure-typescript-h)
+  (when (funcall +lsp-ensure-typescript-h)
     (apply old-fn args)))
 
 (after! lsp-mode
@@ -225,18 +172,15 @@
              (not (advice-member-p #'+lsp-run-if-project-ready-a 'lsp!)))
     (advice-add 'lsp! :around #'+lsp-run-if-project-ready-a))
 
-  ;; Configs Gerais
   (setq lsp-go-use-gofumpt t
-        lsp-go-analyses '((nilness . t) (unusedparams . t) (unusedwrite . t)))
-
-  ;; Tuning de Performance
-  (setq lsp-use-plists t
+        lsp-go-analyses '((nilness . t) (unusedparams . t) (unusedwrite . t))
+        lsp-use-plists t
         lsp-idle-delay 0.500
         lsp-log-io nil
         lsp-enable-file-watchers nil
-        lsp-completion-provider :none  ;; FIX: Desativa completion do LSP, usa só corfu
-        lsp-headerline-breadcrumb-enable nil ;; Desativa breadcrumbs (menos ruído visual/proc)
-        +format-with-lsp nil)) ;; Desativa globalmente, confiamos no módulo :editor format
+        lsp-completion-provider :none
+        lsp-headerline-breadcrumb-enable nil
+        +format-with-lsp nil))
 
 (after! lsp-eslint
   (setq lsp-eslint-enable t
@@ -244,17 +188,10 @@
         lsp-eslint-run "onType"))
 
 (after! lsp-sqls
-  (setq lsp-sqls-workspace-config
-        '((formatter
-           (language "sql"
-                     (indent 2)))
-          (lint
-           (colon true))
-          (connections
-           ())))
+  (setq lsp-sqls-workspace-config '((formatter (language "sql" (indent 2))) (lint (colon true)) (connections ())))
   (add-hook 'sql-mode-hook #'lsp-deferred))
 
-;; Emacs LSP Booster Wrapper
+;; Emacs LSP Booster
 (defun lsp-booster--advice-json-parse (old-fn &rest args)
   "Try to parse bytecode instead of json."
   (or
@@ -264,12 +201,9 @@
          (funcall bytecode))))
    (apply old-fn args)))
 
-(advice-add (if (progn (require 'json)
-                       (fboundp 'json-parse-buffer))
-                'json-parse-buffer
-              'json-read)
-            :around
-            #'lsp-booster--advice-json-parse)
+(when (fboundp (if (progn (require 'json nil t) (fboundp 'json-parse-buffer)) 'json-parse-buffer 'json-read))
+  (advice-add (if (progn (require 'json nil t) (fboundp 'json-parse-buffer)) 'json-parse-buffer 'json-read)
+              :around #'lsp-booster--advice-json-parse))
 
 (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
   "Prepend emacs-lsp-booster command to lsp CMD."
@@ -279,13 +213,14 @@
              lsp-use-plists
              (not (functionp 'json-rpc-connection))
              (executable-find "emacs-lsp-booster"))
-        (progn
-          (cons "emacs-lsp-booster" orig-result))
+        (cons "emacs-lsp-booster" orig-result)
       orig-result)))
-(advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command)
 
-;; Limites de I/O
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(when (fboundp 'lsp-resolve-final-command)
+  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
+
+;; I/O Tuning
+(setq read-process-output-max (* 1024 1024))
 (setenv "LSP_USE_PLISTS" "true")
 
 ;; -------------------------------
@@ -552,69 +487,38 @@
 ;; -----------------------------
 ;; 10. MARKDOWN FOLDING (Neovim zj/zk/zl/zu/zi)
 ;; -----------------------------
-;; Configuração avançada de folding para Markdown igual ao Neovim
+;; MARKDOWN FOLDING (Neovim zj/zk/zl/zu/zi)
+;; -----------------------------
 
 (defun +markdown-fold-level (level)
   "Fold all markdown headings of LEVEL or above."
   (interactive "nFold level (1-6): ")
   (save-excursion
-    (widen)
-    (outline-show-all)
-    (outline-hide-sublevels level)
-    (recenter)))
-
-(defun +markdown-fold-all ()
-  "Fold all markdown headings (level 1+)."
-  (interactive)
-  (+markdown-fold-level 1))
-
-(defun +markdown-fold-level-2 ()
-  "Fold headings level 2+."
-  (interactive)
-  (+markdown-fold-level 2))
-
-(defun +markdown-fold-level-3 ()
-  "Fold headings level 3+."
-  (interactive)
-  (+markdown-fold-level 3))
-
-(defun +markdown-fold-level-4 ()
-  "Fold headings level 4+."
-  (interactive)
-  (+markdown-fold-level 4))
+    (widen) (outline-show-all) (outline-hide-sublevels level) (recenter)))
 
 (defun +markdown-fold-unfold ()
   "Unfold all headings."
   (interactive)
   (save-excursion
-    (widen)
-    (outline-show-all)
-    (recenter)))
+    (widen) (outline-show-all) (recenter)))
 
 (defun +markdown-fold-toggle-current ()
-  "Toggle fold on current heading (zi equivalent)."
+  "Toggle fold on current heading."
   (interactive)
   (save-excursion
-    (outline-back-to-heading)
-    (outline-toggle-children)
-    (recenter)))
+    (outline-back-to-heading) (outline-toggle-children) (recenter)))
 
 (after! markdown-mode
-  ;; Ativar outline-minor-mode para folding
   (add-hook 'markdown-mode-hook #'outline-minor-mode)
-
-  ;; Keymaps tipo Neovim
   (map! :map markdown-mode-map
-        :nv "zj" #'+markdown-fold-all           ;; Fold all (level 1+)
-        :nv "zk" #'+markdown-fold-level-2      ;; Fold level 2+
-        :nv "zl" #'+markdown-fold-level-3       ;; Fold level 3+
-        :nv "z;" #'+markdown-fold-level-4       ;; Fold level 4+
-        :nv "zu" #'+markdown-fold-unfold       ;; Unfold all
-        :nv "zi" #'+markdown-fold-toggle-current ;; Toggle current heading
-        :nv "zo" #'outline-show-subtree         ;; Open fold
-        :nv "zc" #'outline-hide-subtree)        ;; Close fold
-
-  ;; Configurar outline-regexp para markdown
+        :nv "zj" (lambda () (interactive) (+markdown-fold-level 1))
+        :nv "zk" (lambda () (interactive) (+markdown-fold-level 2))
+        :nv "zl" (lambda () (interactive) (+markdown-fold-level 3))
+        :nv "z;" (lambda () (interactive) (+markdown-fold-level 4))
+        :nv "zu" #'+markdown-fold-unfold
+        :nv "zi" #'+markdown-fold-toggle-current
+        :nv "zo" #'outline-show-subtree
+        :nv "zc" #'outline-hide-subtree)
   (setq-hook! 'markdown-mode-hook
     outline-regexp "^#\\{1,6\\}\\s-"
     outline-level (lambda () (1- (length (match-string 0))))))
@@ -644,11 +548,12 @@
 (add-hook 'compilation-mode-hook #'+close-buffer-with-q)
 
 ;; Auto-format on save (LazyVim style)
+;; NOTA: org-mode não tem formatter nativo no Apheleia, então ignoramos
 (defun +leo/format-buffer-on-save-h ()
   "Format the current buffer on save when it is cheap and safe to do so."
   (when (and (fboundp '+format/buffer)
              buffer-file-name
-             (not (eq major-mode 'org-mode))
+             (not (memq major-mode '(org-mode)))
              (not (+leo/windows-mounted-path-p buffer-file-name)))
     (condition-case err
         (+format/buffer)
@@ -681,15 +586,7 @@
       :desc "Rename in defun" "c D" #'iedit-mode-toggle-on-function)
 
 ;; -----------------------------
-;; 13. CORFU ENHANCED (Blink.cmp parity)
-;; -----------------------------
-(after! corfu
-  ;; Ajustar timing para ser mais responsivo (Blink.cmp style)
-  (setq corfu-auto-delay 0.05
-        corfu-auto-prefix 1))
-
-;; -----------------------------
-;; 14. DIFF-HL (Git gutter)
+;; 13. DIFF-HL (Git gutter)
 ;; -----------------------------
 (use-package! diff-hl
   :hook ((prog-mode . diff-hl-mode)
@@ -807,10 +704,11 @@
       which-key-min-display-lines 4)
 
 ;; Fast window switching
-(map! "C-h" #'evil-window-left
-      "C-j" #'evil-window-down
-      "C-k" #'evil-window-up
-      "C-l" #'evil-window-right)
+;; REMOVED: Duplicado de C-w hjkl nas linhas 378-385
+;; (map! "C-h" #'evil-window-left
+;;       "C-j" #'evil-window-down
+;;       "C-k" #'evil-window-up
+;;       "C-l" #'evil-window-right)
 
 ;; Disable arrow keys in insert mode (force hjkl)
 (map! :n "<left>" (lambda () (interactive) (message "Use h"))

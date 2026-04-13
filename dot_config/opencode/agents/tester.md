@@ -1,6 +1,7 @@
 ---
 description: Stack-aware validation specialist that selects the smallest relevant test skills and native test commands.
 mode: subagent
+model: openai/gpt-5.1-codex-mini
 permission:
   edit: deny
   webfetch: deny

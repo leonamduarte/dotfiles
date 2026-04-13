@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "doom-one",
+        colorscheme = "tokyonight",
       },
     },
     -- ai
@@ -35,7 +35,7 @@ require("lazy").setup({
     -- editor
     { import = "lazyvim.plugins.extras.editor.harpoon2" },
     { import = "lazyvim.plugins.extras.editor.mini-diff" },
-    { import = "lazyvim.plugins.extras.editor.snacks_picker" },
+    { import = "lazyvim.plugins.extras.editor.fzf" },
     { import = "lazyvim.plugins.extras.editor.snacks_explorer" },
     { import = "lazyvim.plugins.extras.editor.dial" },
     { import = "lazyvim.plugins.extras.editor.inc-rename" },
@@ -57,12 +57,14 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
     { import = "lazyvim.plugins.extras.util.project" },
     { import = "lazyvim.plugins.extras.util.dot" },
+    { import = "lazyvim.plugins.extras.util.chezmoi" },
+    { import = "lazyvim.plugins.extras.util.gh" },
     -- lsp
     -- { import = "lazyvim.plugins.extras.lsp.none-ls" },
     -- linting
     { import = "lazyvim.plugins.extras.linting.eslint" },
     -- ui
-    -- { import = "lazyvim.plugins.extras.ui.mini-animate" },
+    { import = "lazyvim.plugins.extras.ui.mini-animate" },
     -- test
     { import = "lazyvim.plugins.extras.test.core" },
     -- dap
@@ -72,6 +74,8 @@ require("lazy").setup({
     -- import/override with your plugins
     { import = "plugins" },
     { import = "plugins/colorscheme" },
+    -- workspaces
+    { import = "plugins.bufstate" },
   },
   defaults = {
     -- By default, only LazyVim plugins will be lazy-loaded. Your custom plugins will load during startup.
@@ -89,17 +93,16 @@ require("lazy").setup({
   }, -- automatically check for plugin updates
   performance = {
     rtp = {
-      -- disable some rtp plugins
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
         "tarPlugin",
         "tohtml",
         "tutor",
         "zipPlugin",
       },
+    },
+    cache = {
+      enabled = true,
     },
   },
 })

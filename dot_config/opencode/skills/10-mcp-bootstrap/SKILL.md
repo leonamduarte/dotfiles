@@ -46,31 +46,38 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
 
 Garantir a existência deste bloco (sem duplicação):
 
-```json
 {
   "mcp": {
     "filesystem": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ],
       "enabled": true
     },
     "git": {
       "type": "local",
-      "command": ["npx", "-y", "git-mcp-server"],
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git"
+      ],
       "enabled": true
     },
     "memory": {
       "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
       "enabled": false
     }
   }
 }
-```
-
-Notas:
-- `command` deve ser um array (não separar command e args)
-- O pacote `@modelcontextprotocol/server-git` não existe; usar `git-mcp-server`
 
 ## Documentação
 

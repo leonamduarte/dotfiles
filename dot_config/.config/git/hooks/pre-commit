@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Pre-commit hook: run opencode minimax guard
+REPO_ROOT=$(git rev-parse --show-toplevel)
+"$REPO_ROOT/dot_config/scripts/check-minimax-precommit.sh"
+"$REPO_ROOT/dot_config/scripts/check-no-codex-default.sh"
+"$REPO_ROOT/dot_config/scripts/check-planner-required.sh"
