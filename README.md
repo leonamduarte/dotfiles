@@ -59,6 +59,7 @@ O `.gitignore` bloqueia arquivos sensiveis (ex.: `.ssh`, `.gnupg`, `.aws`, chave
 - Inventario de conflitos: `bash scripts/list-stow-conflicts.sh`
 - Exemplo de sync manual: `scripts/stow-sync.sh.example`
 - Regra fixa: nunca usar `stow --adopt`
+- Para dotfiles em `~/`, use `stow --dotfiles`
 
 ## Creditos
 Parte das configs (ex.: Qtile) vem de bases publicas e foram ajustadas localmente.

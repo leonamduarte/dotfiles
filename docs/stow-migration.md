@@ -16,12 +16,12 @@ Objetivo: sair do chezmoi sem perder dados locais e sem deixar configuracoes loc
    - manter local e nao linkar ainda;
    - mover local para `~/.local/share/dotfiles-conflicts-backup/` e depois linkar;
    - remover o item do pacote Stow antes do primeiro commit.
-5. Rode `stow -n -t ~ config home`.
+5. Rode `stow --dotfiles -n -t ~ config home`.
 6. Se o dry-run estiver limpo, aplique manualmente:
 
 ```bash
-stow -t ~ config
-stow -t ~ home
+stow --dotfiles -t ~ config
+stow --dotfiles -t ~ home
 ```
 
 ## O que o bootstrap faz
@@ -30,7 +30,7 @@ stow -t ~ home
 - monta `~/dotfiles/config/.config/...` e `~/dotfiles/home/...`;
 - copia apenas itens aprovados, sem mover nada e sem sobrescrever destinos existentes;
 - deixa `opencode/`, `dot_config/dot_config`, `templates/` e placeholders fora da migracao automatica;
-- cria `~/dotfiles/.gitignore` e um `~/dotfiles/sync.sh` em modo seguro.
+- cria `~/dotfiles/home/dot-gitignore` e um `~/dotfiles/sync.sh` em modo seguro.
 
 ## Itens fora da migracao automatica
 - `dot_config/dot_config`
@@ -43,7 +43,7 @@ stow -t ~ home
 ## Sync do dia a dia
 Use `~/dotfiles/sync.sh`.
 
-- sem argumentos: faz `git pull --ff-only` e `stow -n`
-- com `--apply`: aplica `stow -t ~ config` e `stow -t ~ home`
+- sem argumentos: faz `git pull --ff-only` e `stow --dotfiles -n`
+- com `--apply`: aplica `stow --dotfiles -t ~ config` e `stow --dotfiles -t ~ home`
 
 Isso mantem o fluxo previsivel: primeiro revisar, depois aplicar.
