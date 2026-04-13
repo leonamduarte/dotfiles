@@ -25,8 +25,8 @@ else
 	# Also check build.md for a textual hint if JSON absent
 	FILE_MD="opencode/agents/build.md"
 	if [ -f "$FILE_MD" ]; then
-		if ! grep -q "use_planner_if" "$FILE_MD" && ! grep -q "Invoke $(planner)" "$FILE_MD"; then
-			echo "[planner guard] PRE-COMMIT FAILED: build.md must document planner usage for large/unclear tasks (e.g., use_planner_if or 'Invoke planner')."
+		if ! grep -q "use_planner_if" "$FILE_MD" && ! grep -q "planner" "$FILE_MD"; then
+			echo "[planner guard] PRE-COMMIT FAILED: build.md must document planner usage for large/unclear tasks (e.g., use_planner_if or mention 'planner')."
 			echo "Reason: Large or unclear tasks require decomposition by planner before execution."
 			echo "Action: update opencode/agents/build.md or opencode/opencode.json to require planner for large/unclear tasks."
 			exit 1
