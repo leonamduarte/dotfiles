@@ -228,3 +228,4 @@ end
 
 # opencode
 fish_add_path $HOME/.opencode/bin
+/home/linuxbrew/.linuxbrew/bin/brew shellenv | source

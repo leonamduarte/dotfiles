@@ -1,24 +1,53 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "autoupdate": false,
-  "plugin": ["opencode-gemini-auth@latest"],
-  "default_agent": "build",
-  "agent": {
+  "version": "1.0",
+  "default_router": "build",
+  "agents": {
     "build": {
-      "permission": {
-        "task": {
-          "*": "deny",
-          "auditor": "allow",
-          "tester": "allow",
-          "implementer": "allow"
-        }
+      "model": "gpt-5.4-mini",
+      "role": "router",
+      "description": "Lightweight router and decision maker. Prefers copilot-worker, escalates when needed.",
+      "routing": {
+        "prefer": ["copilot-worker"],
+        "escalate_to": "implementer",
+        "use_planner_if": ["unclear_task", "large_task"],
+        "audit_after": "implementer"
       }
+    },
+    "copilot-worker": {
+      "model": "gpt-5-mini (copilot)",
+      "role": "executor",
+      "description": "Default low-cost executor: high-volume simple features, refactors, tests, small bug fixes."
+    },
+    "implementer": {
+      "model": "gpt-5.3-codex",
+      "role": "heavy_executor",
+      "description": "Precision, multi-file and complex changes. Used only when escalated or explicitly requested."
+    },
+    "planner": {
+      "model": "gpt-5.4",
+      "role": "planner",
+      "description": "Creates step plans for unclear or large tasks. Invoked by build when task needs structuring."
+    },
+    "auditor": {
+      "model": "gpt-5.4",
+      "role": "auditor",
+      "description": "Post-execution review and validation. Runs after heavy execution or on demand."
+    },
+    "minimax": {
+      "model": "opencode-go (minimax)",
+      "role": "analysis_optional",
+      "optional": true,
+      "manual": true,
+      "description": "Optional analysis helper; 100% manual. Not used by router unless explicitly requested."
     }
   },
-  "permission": {
-    "doom_loop": "ask",
-    "external_directory": {
-      "~/**": "ask"
-    }
+  "cost_controls": {
+    "prefer_low_cost": true,
+    "copilot_usage_target": 0.8,
+    "codex_usage_threshold": 0.05
+  },
+  "prompts": {
+    "max_prompt_length": 600,
+    "style": "short_objective"
   }
 }

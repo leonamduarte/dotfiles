@@ -1,6 +1,6 @@
 # dotfiles
 
-Repositorio de dotfiles para Linux, organizado com chezmoi. Contem configs de shell, WM/DE e apps de terminal.
+Repositorio de dotfiles para Linux. A `main` ainda reflete o fluxo atual com chezmoi; a branch `linux` concentra a migracao controlada para GNU Stow.
 
 ## Destaques
 - Shells: Bash e Zsh
@@ -24,7 +24,7 @@ Repositorio de dotfiles para Linux, organizado com chezmoi. Contem configs de sh
 ```bash
 git clone https://github.com/leonamduarte/dotfiles.git ~/.local/share/chezmoi
 cd ~/.local/share/chezmoi
-git checkout linux
+git checkout main
 chezmoi apply --force
 ```
 
@@ -39,13 +39,26 @@ chezmoi apply --force
 1. Edite os arquivos dentro de `dot_config/` e `dot_gitignore`.
 2. Reaplique com `chezmoi apply --force`.
 
+## Guardrails (anti-drift)
+- `node_modules` e arquivos transientes sao bloqueados por `.gitignore`.
+- Validacao local: `bash scripts/guardrails-check.sh`
+- Validacao em CI: `.github/workflows/chezmoi-guardrails.yml`
+- Fluxo multi-maquina e recuperacao: `docs/chezmoi-guardrails.md`
+
 ## Seguranca
 O `.gitignore` bloqueia arquivos sensiveis (ex.: `.ssh`, `.gnupg`, `.aws`, chaves privadas). Nao commit arquivos de credenciais.
 
 ## Workflow
-- A branch `main` nao deve ser alterada diretamente.
-- A branch principal para Linux e `linux`.
-- Trabalhe em uma branch separada quando necessario e abra PR.
+- A branch principal multi-maquina e `main`.
+- Prefira branch separada + PR para mudancas grandes.
+- Antes de editar, sincronize com `origin/main` e reaplique com `chezmoi apply --force`.
+
+## Migracao para Stow
+- Guia: `docs/stow-migration.md`
+- Bootstrap seguro: `bash scripts/migrate-to-stow.sh`
+- Inventario de conflitos: `bash scripts/list-stow-conflicts.sh`
+- Exemplo de sync manual: `scripts/stow-sync.sh.example`
+- Regra fixa: nunca usar `stow --adopt`
 
 ## Creditos
 Parte das configs (ex.: Qtile) vem de bases publicas e foram ajustadas localmente.

@@ -3,48 +3,22 @@
 -- Add any additional options here
 
 local opt = vim.opt
-local g = vim.g
 
--- Líder
-g.mapleader = " "
+-- Líder (LazyVim já tem, mas mantemos por costume)
+vim.g.mapleader = " "
 
--- ========== UI / Edição ==========
-opt.number = true
-opt.relativenumber = true
-opt.cursorline = true
-opt.termguicolors = true
-opt.signcolumn = "yes"
-opt.wrap = false
-opt.scrolloff = 10 -- manter “folga” vertical
-opt.sidescrolloff = 8
+-- ===== Performance =====
+opt.ttimeoutlen = 50       -- timeout mais curto para keycodes
 
--- Mostrar caracteres invisíveis (útil p/ revisão)
+-- ===== Configurações personalizadas (diferentes do LazyVim) =====
+opt.showtabline = 2  -- mostrar abas no topo
+opt.wrap = false     -- não quebrar linha
+opt.hlsearch = false -- não highlight search automático
+
+-- Mostrar caracteres invisíveis
 opt.list = true
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
--- ========== Indentação ==========
-opt.expandtab = true
-opt.shiftwidth = 2
-opt.tabstop = 2
-opt.smartindent = true
-
--- ========== Busca ==========
-opt.ignorecase = true
-opt.smartcase = true
-opt.incsearch = true
-opt.hlsearch = false
-
--- ========== Desempenho ==========
-opt.updatetime = 150
-opt.timeoutlen = 400
-
--- ========== Outros ==========
-opt.splitbelow = true
-opt.splitright = true
-opt.conceallevel = 2
-
 -- ===== LazyVim specifics =====
 -- ESLint autoformat (se estiver usando extras linting.eslint)
-g.lazyvim_eslint_auto_format = true
--- Toggle global de autoformat no save (do LazyVim); deixe comentado se não quiser mexer.
-g.autoformat = true
+vim.g.lazyvim_eslint_auto_format = true

@@ -1,20 +1,28 @@
 README.md
 stow.sh
 .git
+docs/**
+.github/**
+scripts/**
 **/node_modules
+**/node_modules/**
 **/__pycache__
 **/*.pyc
 **/*.bak
+**/*.tmp
+**/*.swp
+**/*~
+**/*.orig
+**/*.rej
+**/*.broken.*
+**/*.broken_restore.*
+**/*.file_restore.*
+**/*.backup*
 
-# Linux-only configs (ignore on Windows)
+# Always ignored from chezmoi source state
 dot_config/qtile/**
 dot_config/waybar/**
 dot_config/picom/**
-dot_config/alacritty/**
-dot_config/doom/**
-dot_config/fish/**
-dot_config/ghostty/**
-dot_config/kitty/**
 dot_config/neovide/**
 dot_config/rofi-bashln/**
-dot_config/autostart/**
+dot_config/go/telemetry/**
