@@ -1,6 +1,14 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
-wezterm.color.load_scheme(os.getenv("HOME") .. "/.config/wezterm/colors/matteblack.toml")
+
+local function get_home_dir()
+	return wezterm.home_dir or os.getenv("HOME") or os.getenv("USERPROFILE")
+end
+
+local home_dir = get_home_dir()
+if home_dir then
+	wezterm.color.load_scheme(home_dir .. "/.config/wezterm/colors/matteblack.toml")
+end
 
 -- ============================================================================
 -- CONFIGURAÇÕES GLOBAIS (Windows + Linux)

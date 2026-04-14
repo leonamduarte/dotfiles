@@ -26,8 +26,8 @@ if status is-interactive
     # Editor Padrão
     set -gx EDITOR nvim
 
-    # Doom Emacs: aponta para source do chezmoi
-    set -gx DOOMDIR "$HOME/.local/share/chezmoi/dot_config/doom"
+    # Doom Emacs no layout atual via stow
+    set -gx DOOMDIR "$HOME/.config/doom"
 
     # ----------------------------------------------------------
     # 2) Configurações Nativas do Fish
@@ -159,8 +159,8 @@ if status is-interactive
     abbr --add ask gemini
     abbr --add yay paru
     abbr --add vpninova 'sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
-    abbr --add doomsync './.config/emacs/bin/doom sync'
-    abbr --add doomupd './.config/emacs/bin/doom upgrade'
+    abbr --add doomsync '$HOME/.config/emacs/bin/doom sync'
+    abbr --add doomupd '$HOME/.config/emacs/bin/doom upgrade'
     abbr --add dotsize 'du -sh .git && git count-objects -vH'
     abbr --add cl clear
     abbr --add mnti 'sudo mount -t drvfs I: /mnt/i'
