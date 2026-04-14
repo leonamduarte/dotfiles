@@ -1,6 +1,6 @@
 ---
 name: mcp-bootstrap
-description: Configura MCP por projeto no OpenCode com filesystem, git e memory
+description: Configura MCP por projeto no OpenCode com filesystem e memory
 compatibility: opencode
 when_to_use: Ao iniciar ou padronizar um repositório para uso com MCP
 allowed-tools: ["Read", "Glob", "Write", "Edit", "List", "Bash"]
@@ -17,7 +17,8 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
 
 - MCP por projeto, não globalmente
 - Setup para projetos locais em desenvolvimento
-- Foco inicial: filesystem, git, memory (preparado mas desabilitado)
+- Foco inicial: filesystem, memory (preparado mas desabilitado)
+- Git via bash funciona nativamente, não precisa de servidor MCP
 - Filesystem restrito à raiz do projeto usando "."
 - Sem hardcode de caminhos absolutos
 - Solução fácil de copiar para outros repositórios
@@ -55,11 +56,6 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
       "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
       "enabled": true
     },
-    "git": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-git"],
-      "enabled": true
-    },
     "memory": {
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
@@ -88,7 +84,6 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
 - [ ] Criou ou atualizou `.opencode/opencode.json`
 - [ ] Adicionou $schema se não existia
 - [ ] Configurou filesystem com args usando "."
-- [ ] Configurou git com npx e server-git
 - [ ] Configurou memory com enabled: false
 - [ ] Preservou configurações existentes
 - [ ] Não usou caminhos absolutos
@@ -110,7 +105,6 @@ Preparar o repositório atual para uso com MCP no OpenCode, de forma simples, se
 
 - Usuário consegue abrir o projeto no OpenCode
 - Usuário consegue fazer leitura de arquivos
-- Usuário consegue fazer git diff
 - Memory pode ser habilitado no futuro mudando enabled: false para true
 
 # Notas
