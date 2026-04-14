@@ -1,12 +1,28 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
-  "plugin": ["opencode-gemini-auth@latest"],
+  "model": "openai/gpt-5.4-mini",
+  "small_model": "openai/codex-mini-latest",
+  "plugin": [],
+  "default_agent": "build",
   "agent": {
+    "build": {
+      "description": "Agente padrao: coordena planejamento, execucao, QA e testes.",
+      "permission": {
+        "task": {
+          "*": "deny",
+          "auditor": "allow",
+          "copilot-worker": "allow",
+          "planner": "allow",
+          "tester": "allow",
+          "implementer": "allow"
+        }
+      }
+    },
     "architect": {
       "mode": "subagent",
-      "description": "Arquitetura: mapeia o repo e atualiza blueprints.md.",
-      "model": "opencode-go/minimax-m2.5",
+      "description": "Mapeia o repositorio e propõe plano de implementação.",
+      "model": "openai/gpt-5.4-mini",
       "prompt": "{file:./prompts/architect.txt}",
       "tools": {
         "write": true,
@@ -18,29 +34,18 @@
         "edit": "ask",
         "bash": {
           "*": "deny",
-          "grep *": "allow",
+          "rg *": "allow",
           "git diff*": "allow",
           "git log*": "allow",
-          "git status*": "allow",
-          "find *": "allow"
-        },
-        "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "allow",
-          "architecture-guard": "allow",
-          "feature-implement": "deny",
-          "audit-code": "deny",
-          "apply-audit-fixes": "deny",
-          "surgical-debug": "deny"
+          "git status*": "allow"
         }
       },
       "temperature": 0.2,
       "steps": 4
     },
-
     "executor": {
       "mode": "subagent",
-      "description": "Executor: implementa features e testes.",
+      "description": "Implementa features e correcoes com validacao local.",
       "model": "openai/gpt-5.3-codex",
       "prompt": "{file:./prompts/executor.txt}",
       "tools": {
@@ -53,36 +58,20 @@
         "edit": "allow",
         "bash": {
           "*": "ask",
-          "git status*": "allow",
+          "rg *": "allow",
           "git diff*": "allow",
           "git log*": "allow",
-          "grep *": "allow",
-          "./gradlew *": "allow",
-          "git push*": "deny",
-          "go build*": "allow",
-          "go run*": "allow",
-          "go test*": "allow",
-          "go mod *": "allow",
-          "go fmt*": "allow",
-          "go list*": "allow"
-        },
-        "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "deny",
-          "architecture-guard": "allow",
-          "feature-implement": "allow",
-          "audit-code": "deny",
-          "apply-audit-fixes": "allow",
-          "surgical-debug": "deny"
+          "git status*": "allow",
+          "git push*": "deny"
         }
       },
-      "temperature": 0.2
+      "temperature": 0.2,
+      "steps": 6
     },
-
     "auditor": {
       "mode": "subagent",
-      "description": "Auditoria: QA impiedoso, só leitura + relatório.",
-      "model": "opencode-go/kimi-k2.5",
+      "description": "Revisao de qualidade focada em bugs, riscos e regressao.",
+      "model": "openai/gpt-5.4-mini",
       "prompt": "{file:./prompts/auditor.txt}",
       "tools": {
         "write": false,
@@ -94,28 +83,18 @@
         "edit": "deny",
         "bash": {
           "*": "deny",
-          "grep *": "allow",
+          "rg *": "allow",
           "git diff*": "allow",
           "git log*": "allow",
           "git status*": "allow"
-        },
-        "skill": {
-          "repo-scan": "allow",
-          "blueprint-sync": "deny",
-          "architecture-guard": "allow",
-          "feature-implement": "deny",
-          "audit-code": "allow",
-          "apply-audit-fixes": "deny",
-          "surgical-debug": "deny"
         }
       },
       "temperature": 0.1,
       "steps": 4
     },
-
     "code-simplifier": {
       "mode": "subagent",
-      "description": "Simplificador: refina código recém-modificado para clareza e manutenção sem alterar comportamento.",
+      "description": "Refina codigo para clareza sem mudar comportamento.",
       "model": "openai/gpt-5.3-codex",
       "prompt": "{file:./prompts/code-simplifier.txt}",
       "tools": {
@@ -128,7 +107,7 @@
         "edit": "allow",
         "bash": {
           "*": "deny",
-          "grep *": "allow",
+          "rg *": "allow",
           "git diff*": "allow",
           "git log*": "allow",
           "git status*": "allow"
@@ -136,6 +115,12 @@
       },
       "temperature": 0.1,
       "steps": 5
+    }
+  },
+  "permission": {
+    "doom_loop": "ask",
+    "external_directory": {
+      "~/**": "ask"
     }
   }
 }
