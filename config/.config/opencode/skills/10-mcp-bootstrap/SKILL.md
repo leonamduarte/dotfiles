@@ -50,30 +50,17 @@ Garantir a existência deste bloco (sem duplicação):
   "mcp": {
     "filesystem": {
       "type": "local",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "."
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."],
       "enabled": true
     },
     "git": {
       "type": "local",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-git"
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-git"],
       "enabled": true
     },
     "memory": {
       "type": "local",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
       "enabled": false
     }
   }
