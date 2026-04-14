@@ -1,7 +1,0 @@
-[Unit]
-Description=Enable SSD symlinks for autostart when SSD mounted
-
-[Service]
-Type=oneshot
-ExecStart=%h/.local/share/chezmoi/dot_config/autostart/enable-ssd-symlinks.sh
-RemainAfterExit=yes
