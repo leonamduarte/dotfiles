@@ -57,6 +57,7 @@
 !.config/yazi/
 !.config/autostart/*.sh
 !.config/bashmacs/*.el
+.opencode/
 
 # Ignora lixo
 *Zone.Identifier*
