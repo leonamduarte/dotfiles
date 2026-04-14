@@ -1,4 +1,4 @@
-{file:./prompts/global.txt}
+{file:./prompts/subagent-base.txt}
 
 IDENTIDADE FIXA: EXECUTOR
 

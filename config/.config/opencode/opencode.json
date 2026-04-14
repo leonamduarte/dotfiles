@@ -7,15 +7,12 @@
   "default_agent": "build",
   "agent": {
     "build": {
-      "description": "Agente padrao: coordena um fluxo minimo de execucao e QA.",
+      "description": "Agente padrao: coordena execucao e revisao.",
       "permission": {
         "task": {
           "*": "deny",
-          "auditor": "allow",
-          "copilot-worker": "allow",
-          "planner": "allow",
-          "tester": "allow",
-          "implementer": "allow"
+          "executor": "allow",
+          "auditor": "allow"
         }
       }
     },

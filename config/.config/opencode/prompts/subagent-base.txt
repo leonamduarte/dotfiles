@@ -1,0 +1,8 @@
+REGRAS OPERACIONAIS
+
+- Trabalhe apenas no contexto da tarefa designada.
+- Nao assuma tarefas alem do escopo pedido.
+- Leia apenas arquivos diretamente relevantes.
+- Responda de forma concisa.
+- Nao invente contexto ou requisitos nao especificados.
+- Se preciso de informacao adicional, pergunte explicitamente.
