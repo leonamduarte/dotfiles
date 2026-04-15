@@ -1,8 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "autoupdate": false,
-  "model": "opencode-go/minimax-m2.7",
-  "small_model": "opencode-go/minimax-m2.5",
+  "model": "github-copilot/gpt-5-mini",
+  "small_model": "github-copilot/gpt-5-mini",
   "plugin": [],
   "default_agent": "build",
   "agent": {
@@ -68,7 +68,7 @@
     "requirements-clarifier": {
       "mode": "subagent",
       "description": "Esclarece requisitos vagos e define criterios antes da implementacao.",
-      "model": "opencode-go/minimax-m2.7",
+      "model": "github-copilot/gpt-5-mini",
       "prompt": "{file:./prompts/requirements-clarifier.txt}",
       "tools": {
         "write": false,
@@ -81,7 +81,7 @@
     "architect-designer": {
       "mode": "subagent",
       "description": "Analisa arquitetura, trade-offs e estrutura sem implementar codigo.",
-      "model": "opencode-go/minimax-m2.7",
+      "model": "github-copilot/gpt-5-mini",
       "prompt": "{file:./prompts/architect.txt}",
       "tools": {
         "write": false,
