@@ -60,14 +60,13 @@ end)
 -- ===== Fontes e Cores =====
 config.font_size = 11
 config.font = wezterm.font_with_fallback({
-  "JetBrainsMonoNL Nerd Font Mono",
+  "JetBrainsMono Nerd Font",
   "Terminess Nerd Font Mono",
   "BlexMono Nerd Font Mono",
-  "JetBrainsMono Nerd Font",
 })
 
 config.force_reverse_video_cursor = true
-config.color_scheme = "Catppuccin Macchiato"
+config.color_scheme = "Eldritch"
 
 -- ===== Renderizacao =====
 config.enable_wayland = true
