@@ -157,7 +157,6 @@ if status is-interactive
     abbr --add cdaula 'cd ~/gitlab/maisPraTi/'
     abbr --add exithypr 'hyprctl dispatch exit'
     abbr --add ask gemini
-    abbr --add yay paru
     abbr --add vpninova 'sudo openvpn --config ~/Downloads/sslvpn-itinerario@inova.local-client-config.ovpn --daemon'
     abbr --add doomsync '$HOME/.config/emacs/bin/doom sync'
     abbr --add doomupd '$HOME/.config/emacs/bin/doom upgrade'
