@@ -3,10 +3,10 @@
   "default_agent": "build",
   "agent": {
     "build": {
-      "description": "Default execution agent for general coding and local validation.",
+      "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
       "model": "github-copilot/gpt-5-mini",
       "prompt": "{file:./prompts/build.txt}",
-      "maxSteps": 40,
+      "maxSteps": 120,
       "permission": {
         "edit": "allow",
         "bash": "allow",
@@ -14,85 +14,8 @@
         "task": {
           "*": "deny",
           "auditor": "allow",
-          "copilot-worker": "allow",
           "planner": "allow",
-          "tester": "allow",
-          "implementer": "allow"
-        }
-      }
-    },
-    "triage": {
-      "description": "Optional read-only router for explicit triage-only sessions.",
-      "model": "github-copilot/gpt-5-mini",
-      "prompt": "{file:./prompts/triage.txt}",
-      "maxSteps": 3,
-      "permission": {
-        "edit": "deny",
-        "bash": "deny",
-        "webfetch": "deny",
-        "task": {
-          "*": "deny",
-          "auditor": "allow",
-          "copilot-worker": "allow",
-          "planner": "allow",
-          "tester": "allow",
-          "implementer": "allow"
-        }
-      }
-    },
-    "implementer": {
-      "description": "Heavy execution for complex multi-file implementation and debugging.",
-      "model": "openai/gpt-5.1-codex-max",
-      "prompt": "{file:./prompts/implementer.txt}",
-      "maxSteps": 120,
-      "permission": {
-        "edit": "allow",
-        "bash": "allow",
-        "webfetch": "deny",
-        "task": {
-          "*": "deny"
-        }
-      }
-    },
-    "copilot-auditor": {
-      "description": "Test agent: auditor",
-      "model": "github-copilot/claude-sonnet-4",
-      "prompt": "{file:./prompts/auditor.txt}",
-      "maxSteps": 30,
-      "permission": {
-        "edit": "deny",
-        "bash": "deny",
-        "webfetch": "deny",
-        "task": {
-          "*": "deny"
-        }
-      }
-    },
-    "copilot-planner": {
-      "description": "Test agent: planner",
-      "model": "github-copilot/claude-sonnet-4",
-      "prompt": "{file:./prompts/planner.txt}",
-      "maxSteps": 20,
-      "permission": {
-        "edit": "deny",
-        "bash": "deny",
-        "webfetch": "deny",
-        "task": {
-          "*": "deny"
-        }
-      }
-    },
-    "copilot-implementer": {
-      "description": "Test agent: implementer",
-      "model": "github-copilot/gemini-3.1-pro-preview",
-      "prompt": "{file:./prompts/implementer.txt}",
-      "maxSteps": 120,
-      "permission": {
-        "edit": "allow",
-        "bash": "allow",
-        "webfetch": "deny",
-        "task": {
-          "*": "deny"
+          "tester": "allow"
         }
       }
     }
