@@ -84,7 +84,7 @@
     },
     "copilot-implementer": {
       "description": "Test agent: implementer",
-      "model": "github-copilot/gemini-3.1-pro",
+      "model": "github-copilot/gemini-3.1-pro-preview",
       "prompt": "{file:./prompts/implementer.txt}",
       "maxSteps": 120,
       "permission": {
