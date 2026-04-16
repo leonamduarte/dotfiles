@@ -1,42 +1,57 @@
 ---
 name: 40-architecture-guard
-description: Valida arquitetura e invariantes do projeto
+description: Valida arquitetura e invariantes
 compatibility: opencode
+when_to_use: Quando houver mudanca estrutural, risco de acoplamento ou duvida sobre invariantes
+allowed-tools: ["Read", "Glob", "Grep", "Bash"]
+model: inherit
+user-invocable: true
+context: inline
 ---
 
 ## Objetivo
 
-Detectar violacoes de arquitetura e invariantes para evitar degradacao estrutural.
+Detectar violacoes arquiteturais e quebra de invariantes com evidencias objetivas.
 
 ## Quando usar
 
-- Apos feature ou refatoracao com impacto em camadas.
-- Antes de merge de mudancas estruturais.
-- Quando houver suspeita de acoplamento indevido.
+- Antes de merge de mudancas estruturais
+- Apos refatoracao com impacto entre camadas
+- Quando houver suspeita de dependencia proibida
 
-## Regras
+## Escopo
 
-- Escopo: validar dependencias entre camadas e invariantes arquiteturais.
-- Nao escopo: corrigir codigo -> delegar para `50-apply-audit-fixes` ou `20-feature-implement`.
-- Nao escopo: auditoria funcional geral -> delegar para `40-audit-code`.
-- Nao escopo: mapeamento completo do repositorio -> delegar para `10-repo_analysis`.
-- Arquivos permitidos: nenhum.
+**Faz:** revisao arquitetural e de invariantes.
 
-### Criterios objetivos (Sim/Nao)
+**Nao faz:**
+- Corrigir codigo -> `50-apply-audit-fixes` ou `20-feature-implement`
+- Auditoria funcional ampla -> `40-audit-code`
+- Mapeamento geral de repositorio -> `10-repo-analysis`
 
-- [ ] Todo achado referencia `arquivo:linha` ou simbolo unico.
-- [ ] Todo achado indica dependencia proibida ou invariante quebrado.
-- [ ] Todo achado possui severidade: `Critico`, `Alto`, `Medio` ou `Baixo`.
-- [ ] Nao modifica arquivos do repositorio.
-- [ ] Se nao houver violacoes, retorna explicitamente `Sem violacoes arquiteturais`.
+## Workflow
+
+1. Ler regras arquiteturais existentes
+2. Inspecionar diff/arquivos afetados
+3. Apontar violacoes com local e severidade
+4. Listar invariantes preservados e quebrados
+
+## Criterios objetivos
+
+- [ ] Achados com `arquivo:linha` ou simbolo unico
+- [ ] Severidade definida
+- [ ] Nao modifica arquivos
+- [ ] Se nada encontrar, retorna `Sem violacoes arquiteturais`
 
 ## Input esperado
 
-- Diff ou lista de arquivos alterados.
-- Regras de arquitetura documentadas (`blueprints.md`, `architecture-decisions.md`).
-- Contexto de camadas/modulos, se necessario.
+- Diff ou lista de arquivos alterados
+- Regras de arquitetura/invariantes
 
 ## Output esperado
 
-- Tabela de violacoes com severidade e sugestao de ajuste.
-- Lista curta de invariantes validados e invariantes quebrados.
+- Tabela de violacoes
+- Resumo de invariantes validados/quebrados
+
+## Notes
+
+- Seja estrito em evidencias, nao em opinioes.

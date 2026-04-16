@@ -1,79 +1,58 @@
 ---
 name: 20-feature-implement
-description: Implementa features novas
+description: Implementa features e melhorias funcionais
 compatibility: opencode
-when_to_use: When a feature or small functional improvement is defined well enough to build safely
+when_to_use: Quando existe requisito funcional claro para implementar com escopo controlado
 allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]
 model: inherit
 user-invocable: true
 context: inline
 ---
 
-## Goal
+## Objetivo
 
-Implement the smallest useful version of the requested feature without breaking project invariants.
+Entregar a menor implementacao util para o requisito, com validacao proporcional ao risco.
 
-## When to use
+## Quando usar
 
-- New feature with defined scope
-- Low-to-medium impact functional improvement
-- Targeted behavior correction when there is no formal audit report
+- Feature nova com escopo definido
+- Melhoria funcional de baixo/medio impacto
+- Correcao funcional pontual sem relatorio formal de auditoria
 
-## Rules
+## Escopo
 
-- Scope: implement only what was requested in the ticket or prompt
-- Not in scope: full audit backlog cleanup -> delegate to `50-apply-audit-fixes`
-- Not in scope: deep diagnosis of intermittent bugs -> delegate to `20-code_debug`
-- Not in scope: structural repository documentation -> delegate to `10-repo_analysis`
-- Protected files: `AGENTS.md`, `project.md`, `blueprints.md`, `architecture-decisions.md`, `current-state.md`
+**Faz:** implementacao e ajustes funcionais no escopo pedido.
+
+**Nao faz:**
+- Backlog de achados de auditoria -> `50-apply-audit-fixes`
+- Debug profundo de bug intermitente -> `20-code-debug`
+- Mapeamento/documentacao estrutural -> `10-repo-analysis`
 
 ## Workflow
 
-1. Read the relevant context and nearby code first
-2. Implement the smallest complete slice that satisfies the request
-3. Keep changes local and avoid unrelated rewrites
-4. Add or update validation where it gives confidence
-5. Explain what changed, why, and how to verify it
+1. Ler contexto e padrao local
+2. Implementar o menor slice completo
+3. Evitar refatoracao paralela fora do escopo
+4. Executar validacao objetiva
+5. Reportar mudanca, motivo e teste
 
-## Optional Focuses
+## Criterios objetivos
 
-If the user adds one of these focuses, bias the implementation accordingly:
+- [ ] Escopo pedido foi respeitado
+- [ ] Arquivos de governanca nao foram alterados sem pedido
+- [ ] Validacao executada ou lacuna explicitada
+- [ ] Resposta inclui: `O que mudou`, `Por que`, `Como testar`
 
-- `focus: minimal` -> do the narrowest possible implementation with minimal surface area
-- `focus: tests` -> prioritize adding or updating targeted tests along with the feature
-- `focus: generate-tests` -> if the implementation is straightforward, also create test cases or test skeletons for the new behavior
-- `focus: safety` -> prioritize validation, error handling, and backward-compatible changes
-- `focus: integration` -> prioritize wiring between existing modules instead of introducing new abstractions
+## Input esperado
 
-## Objective Criteria (Yes/No)
+- Requisito funcional/ticket
+- Contexto tecnico relevante
 
-- [ ] Read the existing context files among `project.md`, `current-state.md`, `blueprints.md`, and `architecture-decisions.md` when they exist
-- [ ] Did not change governance files
-- [ ] If there is architectural impact, stated it explicitly before applying broad changes
-- [ ] Included a test for new behavior or a fixed bug when a test suite exists
-- [ ] Responded with: `What changed`, `Why`, `How to test`, `Limitations and next steps`
+## Output esperado
 
-## Expected Input
-
-- Clear functional requirement (ticket, prompt, or story)
-- Context about the current state of the affected module
-- Relevant technical constraints (performance, security, compatibility)
-
-## Expected Output
-
-- Implemented code with the smallest useful scope
-- Tests and objective validation steps
-
-## Execute Mode
-
-When a detailed technical plan already exists (from `10-repo_analysis` or equivalent):
-- Follow the plan closely
-- Modify only the necessary files
-- Produce minimal patches
-- Avoid rewriting large sections
-- Include a test when a test suite exists
+- Implementacao no menor escopo util
+- Passos objetivos de validacao
 
 ## Notes
 
-- This skill stays implementation-focused; it does not become a dedicated test generator.
-- Use `focus: tests` or `focus: generate-tests` when you want lightweight test help without introducing a separate skill.
+- Se houver impacto arquitetural, sinalize antes de ampliar escopo.
