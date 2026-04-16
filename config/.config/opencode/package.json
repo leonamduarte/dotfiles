@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test": "jest",
     "test:triage": "jest __tests__/triage-policy.test.js"
   },
   "devDependencies": {
