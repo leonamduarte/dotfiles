@@ -53,6 +53,48 @@
           "*": "deny"
         }
       }
+    },
+    "copilot-auditor": {
+      "description": "Test agent: auditor",
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "{file:./prompts/auditor.txt}",
+      "maxSteps": 30,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "webfetch": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "copilot-planner": {
+      "description": "Test agent: planner",
+      "model": "github-copilot/claude-sonnet-4",
+      "prompt": "{file:./prompts/planner.txt}",
+      "maxSteps": 20,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "webfetch": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    },
+    "copilot-implementer": {
+      "description": "Test agent: implementer",
+      "model": "github-copilot/gemini-3.1-pro",
+      "prompt": "{file:./prompts/implementer.txt}",
+      "maxSteps": 120,
+      "permission": {
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "deny",
+        "task": {
+          "*": "deny"
+        }
+      }
+    }
     }
   }
-}
