@@ -1,5 +1,11 @@
 {
+  "scripts": {
+    "test:triage": "jest __tests__/triage-policy.test.js"
+  },
+  "devDependencies": {
+    "jest": "^30.0.0"
+  },
   "dependencies": {
-    "@opencode-ai/plugin": "1.4.3"
+    "@opencode-ai/plugin": "1.4.6"
   }
 }
