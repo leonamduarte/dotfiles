@@ -142,7 +142,7 @@ Output: memory/repo_summary.md, memory/architecture.md, memory/recent_changes.md
 
 ## Notes
 
-- Mode `memory` replaces the old `10-repo-docs` role
+- Mode `memory` is the built-in path for generating or refreshing memory files
 - Use `scan` when starting on new repository
 - Use `plan` when you have a technical spec to implement
 - Use `memory` when memory files are missing/outdated

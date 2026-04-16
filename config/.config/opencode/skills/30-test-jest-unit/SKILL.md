@@ -36,7 +36,7 @@ Primeiro verifique se Jest esta instalado:
 
 2. **Gere o arquivo de teste**
    - Nome: `{funcao}.test.ts` ou `{modulo}.test.ts`
-   - Local: proximo ao arquivo testado ou em `__tests__/`
+   - Local: proximo ao arquivo testado ou em uma pasta de testes do proprio projeto
 
 3. **Casos de teste obrigatorios**
    - Caso basico (happy path)
