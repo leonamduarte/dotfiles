@@ -4,7 +4,8 @@ This directory contains the active skill set used by the current OpenCode agent 
 
 ## Current Runtime Layout
 
-- `build`: cheap entrypoint that classifies and delegates once
+- `build`: default executor for general implementation and local validation
+- `triage`: optional read-only router, only when explicitly invoked
 - `planner`: planning, architecture, and repository analysis
 - `copilot-worker`: low-cost execution for simple and medium local work
 - `implementer`: heavy execution for complex, multi-file, investigative, or fix-plus-validate work
@@ -12,6 +13,9 @@ This directory contains the active skill set used by the current OpenCode agent 
 - `auditor`: final technical audit and merge-readiness review
 
 ## Routing Policy
+
+- Default path: execute with `build`
+- Use `triage` only when explicit routing-only behavior is desired
 
 - Send planning, architecture, repository analysis, and trade-off work to `planner`
 - Send simple, local, low-risk work to `copilot-worker`
@@ -43,7 +47,8 @@ Rule of thumb:
 
 ## Model Tiers
 
-- Default routing tier: `openai/gpt-5.4-mini` for build triage and inherited low-cost skill execution
+- Default execution tier: `github-copilot/gpt-5-mini` for `build`
+- Optional triage tier: `github-copilot/gpt-5-mini` for `triage`
 - Smallest coding tier: `openai/codex-mini-latest` for `small_model` fallback and `copilot-worker`
 - Fast coding tier: `openai/codex-mini-latest` for `copilot-worker` when the task is local, simple, and edit-heavy
 - Validation tier: `openai/gpt-5.1-codex-mini` for `tester`, favoring structured codebase checks at lower cost

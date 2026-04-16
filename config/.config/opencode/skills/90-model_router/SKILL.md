@@ -11,12 +11,21 @@ context: inline
 
 ## Goal
 
-Route tasks to the most appropriate current agent and supporting skill.
+Route tasks to the most appropriate current agent and supporting skill when triage is explicitly requested.
 
 ## Routing
 
-**build**:
-- Primary entrypoint and task triage
+**build** (`github-copilot/gpt-5-mini`):
+- Default execution agent
+- Handles most implementation and validation flows directly
+- Delegates only when a specialist is clearly needed
+
+**triage** (`github-copilot/gpt-5-mini`):
+- Optional read-only router
+- Should be used only when explicit routing-only behavior is requested
+- Thin router only: classify, delegate once, stop
+- May answer directly only for short factual questions
+- Must not edit files, run bash, or call MCP tools
 
 **planner** (`openai/gpt-5.4`):
 - Planning, architecture, repository analysis
@@ -27,7 +36,7 @@ Supporting skills:
 - `10-repo_analysis`
 - `40-architecture-guard`
 
-**copilot-worker** (`openai/codex-mini-latest`):
+**copilot-worker** (`github-copilot/gpt-5-mini`):
 - Simple and medium local changes
 - Small refactors
 - Low-risk fixes
@@ -38,7 +47,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**implementer** (`openai/gpt-5.1-codex-max`):
+**implementer** (`openai/gpt-5.3-codex`):
 - Writing code
 - Editing functions
 - Implementing planned features
@@ -53,7 +62,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**tester** (`openai/gpt-5.1-codex-mini`):
+**tester** (`github-copilot/gpt-5-mini`):
 - Running validation
 - Choosing the narrowest useful test path
 - Checking lint, types, unit, integration, component, and E2E coverage
@@ -77,7 +86,9 @@ Supporting skills:
 
 ## Notes
 
-- Keep the router thin: classify, delegate, stop
+- Keep triage thin: classify, delegate, stop
+- Treat triage as intentionally weak for execution and use it only when explicitly invoked
+- Keep build as the default execution path
 - Use `copilot-worker` for simple and medium local work
 - Use `implementer` for complex, multi-file, investigative, or fix-plus-validate work
 - Use `planner` for planning, architecture, repository analysis, and trade-off work
