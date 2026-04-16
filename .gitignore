@@ -95,3 +95,6 @@ __pycache__/
 # Ignore opencode generated files
 config/.config/opencode/.codex*
 config/.config/opencode/*.log
+
+# Ignore local agent instructions (not for git)
+AGENTS.md
