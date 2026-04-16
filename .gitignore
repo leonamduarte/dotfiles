@@ -91,3 +91,7 @@ __pycache__/
 !.local/share/
 .local/share/*
 !.local/share/fonts/
+
+# Ignore opencode generated files
+config/.config/opencode/.codex*
+config/.config/opencode/*.log
