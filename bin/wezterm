@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-# Wrapper to force WezTerm to always start a new GUI process
-exec /usr/bin/wezterm start --always-new-process "$@"
+# Wrapper: força WezTerm a abrir sempre uma nova janela GUI
+exec /usr/bin/wezterm start --always-new-process ""
