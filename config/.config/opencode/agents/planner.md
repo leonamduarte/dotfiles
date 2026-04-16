@@ -33,5 +33,5 @@ Rules:
 - Keep the work read-only and plan-focused.
 - Do not implement code changes.
 - Do not perform broad review or validation; use `auditor` or `tester` for that.
-- If the task becomes implementation-heavy, escalate to `implementer`.
+- If the task becomes implementation-heavy, hand the execution back to `build` with a focused plan.
 - Report `What I found`, `Plan`, and `Risks`.
