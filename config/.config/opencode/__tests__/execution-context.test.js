@@ -15,6 +15,7 @@ describe("ExecutionContext", () => {
     expect(ctx.remainingSteps).toBe(0);
     expect(ctx.tryConsume()).toBe(false);
     expect(ctx.budgetExhausted).toBe(true);
+    expect(ctx.budget_exhausted).toBe(true);
   });
 
   test("operationCosts overrides default cost by operation", () => {
@@ -53,5 +54,22 @@ describe("ExecutionContext", () => {
     const { context } = createExecutionContext({ request: {}, agentConfig: {} });
     expect(context.remainingSteps).toBe(50);
     expect(BUDGET_EXHAUSTED_PROMPT).toMatch(/^AVISO:/);
+  });
+
+  test("createExecutionContext picks operationCosts from config.agent.operationCosts", () => {
+    const { context } = createExecutionContext({
+      request: {},
+      agentConfig: {},
+      config: {
+        agent: {
+          operationCosts: {
+            "shell.exec": 4
+          }
+        }
+      }
+    });
+
+    expect(context.tryConsume(1, "shell.exec")).toBe(true);
+    expect(context.remainingSteps).toBe(46);
   });
 });
