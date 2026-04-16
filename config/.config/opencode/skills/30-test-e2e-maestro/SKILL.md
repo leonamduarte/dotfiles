@@ -1,105 +1,54 @@
 ---
 name: 30-test-e2e-maestro
-description: Gera e executa testes E2E com Maestro para Expo
+description: Gera e executa testes E2E com Maestro
 compatibility: opencode
-when_to_use: Para simular usuario real em fluxos criticos do app
-allowed-tools: ["Read", "Write", "Bash", "Glob"]
+when_to_use: Para validar fluxos criticos completos em app React Native/Expo
+allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]
 model: inherit
 user-invocable: true
 context: inline
 ---
 
-## Goal
+## Objetivo
 
-Gerar e executar testes end-to-end com Maestro para React Native/Expo, simulando interacoes reais do usuario.
+Automatizar fluxos E2E com Maestro para garantir comportamento em nivel de jornada.
 
-## When to use
+## Quando usar
 
-- Fluxos criticos de usuario (login, compra, cadastro)
+- Login, cadastro, compra e fluxos criticos
 - Navegacao entre telas
-- Integracao com recursos nativos (camera, GPS, notificacoes)
-- Testes em devices reais
 - Smoke tests de release
 
-## Dependencies Check
+## Escopo
 
-Verifique instalacao:
-- `maestro` CLI - obrigatorio
-- App compilado (APK para Android, IPA para iOS) ou Expo Dev Client
+**Faz:** criar flows YAML, executar e reportar falhas de fluxo.
 
-Se faltando Maestro: "Instale Maestro: curl -fsSL "https://get.maestro.mobile.dev" | bash"
-Se faltando app: "Compile o app primeiro: expo prebuild && eas build --local"
+**Nao faz:**
+- Teste unitario/integracao de modulo -> `30-test-jest-unit` / `30-test-jest-integration`
 
 ## Workflow
 
-1. **Mapeie o fluxo do usuario**
-   - Tela inicial
-   - Acoes (tap, input, swipe)
-   - Verificacoes (assertVisible, assertNotVisible)
-   - Fluxos alternativos (erros, voltar)
+1. Mapear jornada e checkpoints
+2. Criar/atualizar flow Maestro (`flows/*.yaml`)
+3. Executar fluxo(s)
+4. Reportar passos que falharam e evidencias
 
-2. **Gere o flow YAML**
-   - Arquivo: `flows/{fluxo}.yaml`
-   - Use IDs de teste (testID) para elementos
-   - Comandos: tapOn, inputText, assertVisible, swipe
+## Criterios objetivos
 
-3. **Organize os flows**
-   - `flows/login.yaml`
-   - `flows/scan_nfce.yaml`
-   - `flows/compra_completa.yaml`
+- [ ] Fluxo critico coberto
+- [ ] Execucao realizada
+- [ ] Falhas e reproducoes descritas
 
-4. **Execute**
-   - `maestro test flows/login.yaml`
-   - ou: `maestro test flows/` (roda todos)
+## Input esperado
 
-## Exemplo de Output
+- Fluxo alvo
+- testIDs/telas disponiveis
 
-```yaml
-# flows/scan_nfce.yaml
-appId: com.seuapp.expo
-tags:
-  - critical
-  - nfce
----
-- launchApp
-- assertVisible: "Escanear NFC-e"
+## Output esperado
 
-- tapOn: "Escanear NFC-e"
-- assertVisible: "Aproxime o celular do QR code"
-
-- tapOn: 
-    id: "camera-permission-allow"
-- assertVisible: "Camera ativa"
-
-# Simula scan (em teste pode usar mock)
-- tapOn: 
-    id: "mock-scan-button"
-    optional: true
-
-- assertVisible: "Nota adicionada com sucesso"
-- assertVisible: "Total: R$"
-
-- tapOn: "Ver detalhes"
-- assertVisible: "Itens da compra"
-```
-
-## Expected Input
-
-- Fluxo de usuario a automatizar
-- IDs de elementos (testID) disponiveis
-- Screenshots ou descricao das telas
-- Cenarios de sucesso e erro
-
-## Expected Output
-
-- Arquivo `.yaml` do flow Maestro
-- Page objects/helpers se necessario
-- Relatorio de execucao (pass/fail/passos)
+- Flow(s) Maestro
+- Resultado de execucao E2E
 
 ## Notes
 
-- Adicione `testID` aos componentes no codigo RN
-- Use `optional: true` para elementos que podem nao aparecer
-- Tags ajudam a rodar grupos de testes: `maestro test --include-tags=critical`
-- Grave flows com `maestro record` para facilitar
-- CI: rode em emulador ou device farm
+- Use testIDs estaveis para reduzir flakiness.

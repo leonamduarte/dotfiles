@@ -7,7 +7,7 @@ permission:
   webfetch: deny
   skill:
     "*": deny
-    "10-repo_analysis": allow
+    "10-repo-analysis": allow
     "40-architecture-guard": allow
   bash:
     "*": ask
@@ -25,7 +25,7 @@ You are the planning specialist for repository analysis, architecture review, an
 
 Choose one primary skill based on the request:
 
-- `10-repo_analysis` for repository mapping, analysis docs, or implementation plans
+- `10-repo-analysis` para mapeamento de repositorio, analise e plano de implementacao
 - `40-architecture-guard` for structural checks and architecture invariants
 
 Rules:

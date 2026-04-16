@@ -1,138 +1,61 @@
 ---
 name: 40-qa-review
-description: Revisao de qualidade para merge
+description: Revisa qualidade e prontidao para merge
 compatibility: opencode
-when_to_use: Before merging code to ensure it meets quality standards for tests and process
-allowed-tools: []
+when_to_use: Antes de merge/release para avaliar testes, docs, observabilidade e riscos operacionais
+allowed-tools: ["Read", "Glob", "Grep", "Bash"]
 model: inherit
 user-invocable: true
 context: inline
 ---
 
-## Goal
+## Objetivo
 
-Ensure code is ready to merge by reviewing test coverage, code quality standards, documentation, and merge readiness. Focus on PROCESS and READINESS, not technical bug detection.
+Avaliar prontidao para merge com foco em qualidade de entrega e processo.
 
-## Agent Boundary
+## Quando usar
 
-- This skill complements `auditor`.
-- Use `auditor` as the critical reviewer agent.
-- Use this skill when the review must emphasize merge readiness, tests, docs, and process.
+- Revisao final de PR
+- Validacao de Definition of Done
+- Preparacao para release
 
-## When to use
+## Escopo
 
-- Before merging pull requests or code changes
-- When preparing code for release
-- When reviewing auto-generated code for production readiness
-- After bug fixes for final validation before merge
-- When assessing if feature is "done" (Definition of Done)
+**Faz:**
+- Cobertura e qualidade de testes
+- Documentacao e clareza operacional
+- Tratamento de erro, logs e observabilidade
+- Recomendacao final de merge
 
-## Scope (What THIS skill does)
+**Nao faz:**
+- Bug/security hunting profundo -> `40-audit-code`
+- Correcao de codigo -> `50-apply-audit-fixes` ou `20-feature-implement`
+- Analise arquitetural profunda -> `40-architecture-guard`
 
-**YES - Quality & Process:**
-- Test coverage and quality (unit tests, integration tests, edge case coverage)
-- Code quality standards (naming, function size, separation of concerns)
-- Documentation completeness (README, API docs, inline comments)
-- Error handling quality (proper propagation, clear messages)
-- Performance considerations (obvious bottlenecks, N+1 patterns)
-- Logging and observability
-- Merge readiness assessment (approval recommendation)
+## Workflow
 
-**NO - Delegate to other skills:**
-- Technical bugs and security issues → `40-audit-code`
-- Deep architecture violations → `40-architecture-guard`
-- Code refactoring/simplification → `20-code-simplifier`
-- Complex bug diagnosis → `20-code_debug`
+1. Revisar diff e contexto de entrega
+2. Avaliar categorias de qualidade
+3. Apontar bloqueios e condicoes
+4. Emitir recomendacao: `Aprovado`, `Aprovado com condicoes` ou `Nao pronto`
 
-## Rules
+## Criterios objetivos
 
-- Focus on READINESS to merge, not just correctness
-- Check "Definition of Done" items
-- Never modify files - only review and report
-- Give clear merge recommendation (Approved / Approved with conditions / Not ready)
+- [ ] Cobertura/gaps de testes reportados
+- [ ] Docs e observabilidade avaliados
+- [ ] Recomendacao de merge explicita
+- [ ] Nao modifica arquivos
 
-## Optional Focuses
+## Input esperado
 
-If the user adds one of these focuses, bias the review accordingly:
+- Diff/branch/arquivos
+- Criterios de qualidade do time (se houver)
 
-- `focus: tests` -> spend extra effort on missing scenarios, brittle tests, and verification gaps
-- `focus: merge-readiness` -> prioritize release blockers, rollout confidence, and unresolved follow-ups
-- `focus: docs` -> prioritize README, public API docs, examples, and operator guidance
-- `focus: observability` -> prioritize logging, metrics, debugging signals, and actionable failures
-- `focus: generate-tests` -> in addition to the review, propose concrete test cases or skeletons for the biggest gaps
+## Output esperado
 
-## Objective Criteria (Yes/No)
-
-- [ ] Reviewed test coverage (critical logic, edge cases, error paths)
-- [ ] Reviewed code quality (naming, function size, separation of concerns)
-- [ ] Reviewed documentation (README, API docs, inline where needed)
-- [ ] Reviewed error handling (proper propagation, clear messages)
-- [ ] Reviewed performance (obvious issues, N+1 patterns)
-- [ ] Reviewed logging/observability (debuggability)
-- [ ] Assessed merge readiness
-- [ ] Did NOT check: technical bugs, security issues (delegated to 40-audit-code)
-- [ ] Did NOT modify any files
-- [ ] Delivered clear merge recommendation
-
-## Expected Input
-
-- Diff, branch, or list of files to review
-- Context of the change (feature/bug/refactor)
-- Specific quality requirements (if any)
-- Definition of Done checklist (if available)
-
-## Expected Output
-
-**Quality Assessment by Category:**
-
-### Tests
-- Coverage status for critical paths
-- Missing test scenarios identified
-- Test quality observations
-
-### Code Quality
-- Naming and clarity issues
-- Function/module size concerns
-- Separation of concerns
-
-### Documentation
-- README/API docs completeness
-- Missing inline documentation
-- Clarity of public interfaces
-
-### Error Handling & Observability
-- Error propagation quality
-- Logging adequacy
-- Debuggability
-
-### Performance
-- Obvious bottlenecks
-- Redundant operations
-- Resource usage concerns
-
-### Merge Recommendation
-- **Approved**: Ready to merge
-- **Approved with conditions**: Minor issues, address before merge
-- **Not ready**: Significant issues must be resolved
-
-## Examples
-
-**Input:** "Review feature for merge readiness"
-
-**Output:**
-
-**Tests**: ✅ Well covered (unit + integration)
-**Code Quality**: ⚠️ Some functions too long (suggested refactoring)
-**Documentation**: ❌ API docs missing
-**Error Handling**: ✅ Proper error propagation
-**Performance**: ✅ No obvious issues
-**Merge Recommendation**: Approved with conditions - add API docs before merge
+- Relatorio por categoria
+- Recomendacao final de merge
 
 ## Notes
 
-- This is a QUALITY ASSURANCE skill - focus on process and readiness
-- For technical bugs and security, use `40-audit-code`
-- For code simplification, use `20-code-simplifier`
-- For architecture validation, use `40-architecture-guard`
-- Use both `40-audit-code` AND `40-qa-review` before merging important changes
-- If you need help filling test gaps, pass `focus: generate-tests` so the review includes concrete test suggestions
+- Esta skill complementa `40-audit-code`; use ambas em mudancas importantes.
