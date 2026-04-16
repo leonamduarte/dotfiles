@@ -2,7 +2,7 @@
 name: 10-repo_analysis
 description: Mapeia repositorio e gera documentacao
 compatibility: opencode
-when_to_use: When starting work on a repository, need analysis.md, or missing memory files
+when_to_use: When starting work on a repository, need analysis.md, or need an implementation plan
 allowed-tools: ["Read", "Glob", "Grep", "Write"]
 model: inherit
 user-invocable: true
@@ -14,13 +14,11 @@ context: inline
 Analyze repository structure and generate documentation:
 - **Mode scan**: `analysis.md` with hotspots, risks, invariants
 - **Mode plan**: Implementation plan with files, modules, changes
-- **Mode memory**: `memory/*.md` files (repo_summary, architecture, recent_changes)
 
 ## When to use
 
 - Starting work on unknown repository
 - When `analysis.md` is missing or outdated
-- When memory files are missing or outdated
 - Before planning a feature (need context)
 - When technical plan needs implementation
 
@@ -30,7 +28,6 @@ Analyze repository structure and generate documentation:
 - Scan repository structure
 - Identify hotspots and risks
 - Generate `analysis.md`
-- Generate/update `memory/*.md` files
 - Create implementation plans
 
 **NO - Delegate to other skills:**
@@ -56,18 +53,12 @@ Generates implementation plan with:
 3. Required changes
 4. Potential risks
 
-### Mode: memory
-Generates/updates memory files:
-- `memory/repo_summary.md` - Repository overview
-- `memory/architecture.md` - Architecture description
-- `memory/recent_changes.md` - Recent modifications
-
 ## Rules
 
 - Read existing context files first (project.md, current-state.md, blueprints.md, architecture-decisions.md)
 - Generate requested output format
 - Never modify source code files
-- Only write to documentation files (analysis.md, memory/*.md)
+- Only write to documentation files (`analysis.md`) when scan output is requested
 
 ## Objective Criteria (Yes/No)
 
@@ -82,16 +73,10 @@ Generates/updates memory files:
 - [ ] Plan contains: Files, Modules, Changes, Risks
 - [ ] Clear implementation points identified
 
-### For memory mode:
-- [ ] Generated repo_summary.md with repository overview
-- [ ] Generated architecture.md with structure description
-- [ ] Generated recent_changes.md with modifications
-- [ ] All files in `memory/` directory
-
 ## Expected Input
 
 - Repository path
-- Mode: scan | plan | memory
+- Mode: scan | plan
 - Business/product context (if available)
 - Existing governance documents (if any)
 
@@ -108,11 +93,6 @@ PLAN
 4. Potential risks
 END PLAN
 ```
-
-**Mode memory**: Updated `memory/` directory with:
-- `repo_summary.md`
-- `architecture.md`
-- `recent_changes.md`
 
 ## Examples
 
@@ -132,18 +112,8 @@ task: "Add payment processing"
 Output: Implementation plan with files and changes
 ```
 
-**Memory mode:**
-```
-skill: repo_analysis
-mode: memory
-target: ./my-project
-Output: memory/repo_summary.md, memory/architecture.md, memory/recent_changes.md
-```
-
 ## Notes
 
-- Mode `memory` is the built-in path for generating or refreshing memory files
 - Use `scan` when starting on new repository
 - Use `plan` when you have a technical spec to implement
-- Use `memory` when memory files are missing/outdated
 - Analysis is structural, not code-level (use 40-audit-code for that)
