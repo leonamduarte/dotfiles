@@ -47,7 +47,7 @@ Supporting skills:
 - `20-code_debug`
 - `20-code-simplifier`
 
-**implementer** (`openai/gpt-5.3-codex`):
+**implementer** (`openai/gpt-5.1-codex-max`):
 - Writing code
 - Editing functions
 - Implementing planned features
