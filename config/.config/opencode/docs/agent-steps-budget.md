@@ -12,15 +12,15 @@ Este repositório não contém o runner oficial de execução do OpenCode, entã
     3. default `50`
   - cap global: `config.agent.maxStepsCap` (default `1000`)
   - `tryConsume(cost = 1, opName?)`
-  - suporte a `operationCosts` (ex.: `{"git.merge": 3}`)
-  - `budgetExhausted` quando não há budget
+  - suporte a `operationCosts` (ex.: `{"git.merge": 3}`), incluindo leitura de `config.agent.operationCosts`
+  - `budgetExhausted` / `budget_exhausted` quando não há budget
 
 - Runner de referência em `src/runner/agent-runner.js`
   - bloqueia mutações quando orçamento esgota
   - injeta prompt de aviso em PT-BR e força modo texto-only no próximo turno
 
 - Wrappers de mutação em `src/tools/mutation-tools.js`
-  - `writeFile`, `gitCommit`, `gitMerge`, `spawnSubagent`, `execShell`, `networkMutatingCall`
+  - `writeFile`, `git` (`git.*` genérico), `gitCommit`, `gitMerge`, `spawnSubagent`, `execShell`, `networkMutatingCall`
   - todas checam budget antes de executar
 
 ## Prompt de orçamento esgotado

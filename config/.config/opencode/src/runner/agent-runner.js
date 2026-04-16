@@ -17,6 +17,7 @@ class AgentRunner {
     this.warnings = built.warnings;
     this.injectedSystemPrompts = [];
     this.forceTextOnly = false;
+    this.budget_exhausted = false;
   }
 
   ensureBudgetExhaustedPromptQueued() {
@@ -24,6 +25,7 @@ class AgentRunner {
       this.injectedSystemPrompts.push(BUDGET_EXHAUSTED_PROMPT);
     }
     this.forceTextOnly = true;
+    this.budget_exhausted = true;
   }
 
   executeMutation(opName, execute, options = {}) {
@@ -35,6 +37,7 @@ class AgentRunner {
         ok: false,
         blocked: true,
         reason: "budget_exhausted",
+        budget_exhausted: true,
         remainingSteps: this.executionContext.remainingSteps
       };
     }
@@ -51,7 +54,8 @@ class AgentRunner {
   prepareNextTurn() {
     return {
       systemPrompts: [...this.injectedSystemPrompts],
-      forceTextOnly: this.forceTextOnly
+      forceTextOnly: this.forceTextOnly,
+      budget_exhausted: this.budget_exhausted || this.executionContext.budget_exhausted
     };
   }
 }

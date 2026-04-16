@@ -8,12 +8,39 @@ function createMutationTools({ runner, adapters = {} } = {}) {
       return runner.executeMutation("workspace.writeFile", () => adapters.writeFile?.(payload));
     },
 
+    git(payload = {}) {
+      const action = typeof payload.action === "string" && payload.action.trim()
+        ? payload.action.trim()
+        : "operation";
+      const opName = `git.${action}`;
+
+      return runner.executeMutation(opName, () => {
+        if (typeof adapters.git === "function") {
+          return adapters.git(payload);
+        }
+
+        return adapters.gitCommit?.(payload);
+      });
+    },
+
     gitCommit(payload) {
-      return runner.executeMutation("git.commit", () => adapters.gitCommit?.(payload));
+      return runner.executeMutation("git.commit", () => {
+        if (typeof adapters.gitCommit === "function") {
+          return adapters.gitCommit(payload);
+        }
+
+        return adapters.git?.({ ...payload, action: "commit" });
+      });
     },
 
     gitMerge(payload) {
-      return runner.executeMutation("git.merge", () => adapters.gitMerge?.(payload));
+      return runner.executeMutation("git.merge", () => {
+        if (typeof adapters.gitMerge === "function") {
+          return adapters.gitMerge(payload);
+        }
+
+        return adapters.git?.({ ...payload, action: "merge" });
+      });
     },
 
     spawnSubagent(payload) {

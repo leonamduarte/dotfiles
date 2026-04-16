@@ -13,6 +13,30 @@ function clampToCap(value, cap) {
   return Math.max(0, Math.min(value, cap));
 }
 
+function normalizeOperationCosts(costs) {
+  if (!costs || typeof costs !== "object") {
+    return {};
+  }
+
+  return Object.entries(costs).reduce((acc, [name, rawCost]) => {
+    const parsed = toFiniteNumber(rawCost);
+    if (parsed === null) {
+      return acc;
+    }
+
+    acc[name] = Math.max(1, Math.floor(parsed));
+    return acc;
+  }, {});
+}
+
+function resolveOperationCosts({ config, operationCosts } = {}) {
+  if (operationCosts && typeof operationCosts === "object") {
+    return normalizeOperationCosts(operationCosts);
+  }
+
+  return normalizeOperationCosts(config?.agent?.operationCosts);
+}
+
 function resolveInitialSteps({ request, agentConfig, config, logger } = {}) {
   const warnings = [];
   const maxStepsCap =
@@ -75,8 +99,9 @@ class ExecutionContext {
       toFiniteNumber(initialSteps) ?? DEFAULT_STEPS,
       this.maxStepsCap
     );
-    this.operationCosts = operationCosts || {};
+    this.operationCosts = normalizeOperationCosts(operationCosts);
     this.budgetExhausted = false;
+    this.budget_exhausted = false;
     this.history = [];
   }
 
@@ -93,6 +118,7 @@ class ExecutionContext {
 
     if (this.remainingSteps < finalCost) {
       this.budgetExhausted = true;
+      this.budget_exhausted = true;
       this.history.push({ opName: opName || "unknown", cost: finalCost, consumed: false });
       return false;
     }
@@ -105,10 +131,11 @@ class ExecutionContext {
 
 function createExecutionContext({ request, agentConfig, config, operationCosts, logger } = {}) {
   const resolved = resolveInitialSteps({ request, agentConfig, config, logger });
+  const resolvedOperationCosts = resolveOperationCosts({ config, operationCosts });
   const context = new ExecutionContext({
     initialSteps: resolved.initialSteps,
     maxStepsCap: resolved.maxStepsCap,
-    operationCosts
+    operationCosts: resolvedOperationCosts
   });
 
   return {
@@ -125,5 +152,6 @@ module.exports = {
   BUDGET_EXHAUSTED_PROMPT,
   ExecutionContext,
   createExecutionContext,
+  resolveOperationCosts,
   resolveInitialSteps
 };
