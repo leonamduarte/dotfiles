@@ -1,42 +1,60 @@
 ---
 name: 50-apply-audit-fixes
-description: Aplica correções de auditoria priorizadas
+description: Aplica correcoes objetivas dos achados de auditoria
 compatibility: opencode
+when_to_use: Apos auditoria com achados priorizados por severidade
+allowed-tools: ["Read", "Glob", "Grep", "Edit", "Write", "Bash"]
+model: inherit
+user-invocable: true
+context: inline
 ---
 
 ## Objetivo
 
-Aplicar correcoes objetivas para os achados do auditor, priorizando risco.
+Corrigir apenas os achados reportados, na ordem de severidade.
 
 ## Quando usar
 
-- Apos execucao de `40-audit-code`.
-- Quando existir lista de achados com severidade.
-- Antes de nova rodada de auditoria.
+- Depois de `40-audit-code`
+- Antes de nova rodada de auditoria
+- Com lista objetiva de achados
 
-## Regras
+## Escopo
 
-- Escopo: corrigir somente itens reportados no audit atual.
-- Nao escopo: encontrar novos problemas amplos -> delegar para `40-audit-code`.
-- Nao escopo: investigacao extensa de causa raiz fora do achado -> delegar para `surgical-debug`.
-- Nao escopo: redefinir arquitetura -> delegar para `40-architecture-guard` + decisao explicita.
-- Arquivos permitidos: apenas os necessarios para corrigir os achados.
+**Faz:** aplicar correcoes pontuais e validar.
 
-### Criterios objetivos (Sim/Nao)
+**Nao faz:**
+- Encontrar novos problemas amplos -> `40-audit-code`
+- Redefinir arquitetura -> `40-architecture-guard`
+- Feature nova fora dos achados -> `20-feature-implement`
+- Investigacao profunda de falha nova -> `20-code-debug`
 
-- [ ] Processa os achados em ordem de severidade: `Critico`, `Alto`, `Medio`, `Baixo`.
-- [ ] Cada correcao referencia o achado de origem (`arquivo` + descricao curta).
-- [ ] Nao implementa feature nova nem refatoracao fora do escopo dos achados.
-- [ ] Executa validacao objetiva (teste/comando) para as correcoes aplicadas.
-- [ ] Lista explicitamente achados resolvidos e pendentes.
+## Workflow
+
+1. Ordenar achados por severidade
+2. Corrigir com patch minimo
+3. Validar cada correcao com comando/teste objetivo
+4. Reportar resolvidos e pendentes
+
+## Criterios objetivos
+
+- [ ] Ordem: Critico > Alto > Medio > Baixo
+- [ ] Cada correcao referencia achado de origem
+- [ ] Sem feature/refatoracao fora do escopo
+- [ ] Validacao executada
+- [ ] Lista de resolvidos e pendentes
 
 ## Input esperado
 
-- Relatorio de auditoria com severidade e local.
-- Diff ou branch com o estado atual.
-- Restricoes de escopo definidas para a rodada.
+- Relatorio de auditoria
+- Diff/branch atual
+- Restricoes de escopo
 
 ## Output esperado
 
-- Correcoes aplicadas por prioridade de severidade.
-- Relatorio curto com `Resolvidos`, `Pendentes` e `Como validar`.
+- Correcoes aplicadas por prioridade
+- Relatorio curto: `Resolvidos`, `Pendentes`, `Como validar`
+
+## Notes
+
+- Se surgir problema novo fora do achado, sinalize e nao amplie escopo sozinho.
