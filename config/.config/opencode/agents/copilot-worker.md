@@ -1,7 +1,7 @@
 ---
 description: Low-cost execution specialist for simple and medium local changes.
 mode: subagent
-model: openai/codex-mini-latest
+model: github-copilot/gpt-5-mini
 permission:
   edit: allow
   webfetch: deny

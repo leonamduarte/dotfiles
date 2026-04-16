@@ -227,3 +227,6 @@ end
 
 # opencode
 fish_add_path $HOME/.opencode/bin
+
+# Homebrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
