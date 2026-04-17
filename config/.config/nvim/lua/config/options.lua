@@ -48,3 +48,12 @@ opt.conceallevel = 2
 g.lazyvim_eslint_auto_format = true
 -- Toggle global de autoformat no save (do LazyVim); deixe comentado se não quiser mexer.
 g.autoformat = true
+
+-- Ensure Neovim sees user-installed binaries (prettier/biome) in ~/.local/bin
+-- This helps conform locate the executables when running formatters.
+if vim.env.HOME then
+  local local_bin = vim.fn.expand("~/.local/bin")
+  if local_bin and local_bin ~= "" then
+    vim.env.PATH = local_bin .. ":" .. (vim.env.PATH or "")
+  end
+end

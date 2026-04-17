@@ -22,12 +22,15 @@ Mapear a estrutura do repositorio e produzir documentacao de apoio (`analysis.md
 ## Escopo
 
 **Faz:**
+
 - Ler estrutura, modulos e dependencias relevantes
 - Identificar hotspots, riscos e invariantes
 - Gerar `analysis.md` (modo scan)
 - Gerar plano tecnico (modo plan)
+- adiciona todo e qualquer .md (que não seja o README.md) ao gitignore para que não seja versionado
 
 **Nao faz:**
+
 - Implementar codigo -> `20-feature-implement`
 - Auditar bugs/seguranca -> `40-audit-code`
 - Revisao de merge readiness -> `40-qa-review`
