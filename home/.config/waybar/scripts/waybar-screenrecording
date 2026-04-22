@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Simple Waybar script to indicate screen recording
+# Outputs JSON expected by waybar when return-type = json
+
+HOME_DIR=${HOME:-/home/$(whoami)}
+
+while true; do
+  # check common recorders
+  if pgrep -x wf-recorder >/dev/null 2>&1 || pgrep -f "simplescreenrecorder" >/dev/null 2>&1 || pgrep -f ffmpeg.*-f x11grab >/dev/null 2>&1; then
+    echo '{"text":"󰍬","class":"active"}'
+  else
+    echo '{"text":"","class":""}'
+  fi
+  sleep 2
+done
