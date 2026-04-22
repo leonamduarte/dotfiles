@@ -1,6 +1,7 @@
 return {
   "m4xshen/hardtime.nvim",
   event = "VeryLazy",
+  enabled = false,
   opts = {
     disable_mouse = false,
     disabled_keys = {
