@@ -59,6 +59,7 @@ undo/
 # Ignore opencode generated files
 home/.config/opencode/.codex*
 home/.config/opencode/*.log
+home/.config/opencode/node_modules/
 
 # ============================================================
 # Documentação do projeto (não rastrear)
