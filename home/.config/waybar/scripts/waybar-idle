@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Waybar idle indicator - checks swayidle/session idle state
+
+while true; do
+  # heuristic: check if swayidle is active by looking for swayidle process
+  if pgrep -x swayidle >/dev/null 2>&1; then
+    # If swayidle exists, assume not idle by default; advanced integration requires socket
+    echo '{"text":"","class":""}'
+  else
+    echo '{"text":"","class":""}'
+  fi
+  sleep 5
+done
