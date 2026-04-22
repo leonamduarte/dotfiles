@@ -48,7 +48,7 @@
     "format": "{:L%A %H:%M}",
     "format-alt": "{:L%d %B W%V %Y}",
     "tooltip": false,
-    "on-click": "alacritty -e cal -3",
+    "on-click": "toolbox run -c dev alacritty alacritty -e cal -3",
     "on-click-right": "sh -c 'date +%Y-%m-%d | wl-copy'"
   },
 
@@ -62,7 +62,7 @@
     "tooltip-format-ethernet": "Connected",
     "tooltip-format-disconnected": "Disconnected",
     "interval": 3,
-    "on-click": "alacritty -e nm-connection-editor",
+    "on-click": "toolbox run -c dev alacritty alacritty -e nm-connection-editor",
     "on-click-right": "sh -c 'nmcli radio wifi off; sleep 1; nmcli radio wifi on'"
   },
 
@@ -73,13 +73,13 @@
     "format-connected": "󰂱",
     "format-no-controller": "",
     "tooltip-format": "Devices connected: {device_connections}",
-    "on-click": "alacritty -e blueman-manager",
+    "on-click": "toolbox run -c dev alacritty alacritty -e blueman-manager",
     "interval": 5
   },
 
   "pulseaudio": {
     "format": "{icon}",
-    "on-click": "alacritty -e pavucontrol",
+    "on-click": "toolbox run -c dev alacritty alacritty -e pavucontrol",
     "on-click-right": "pamixer -t",
     "tooltip-format": "{desc} — {volume}%",
     "scroll-step": 5,
@@ -95,8 +95,8 @@
   "cpu": {
     "interval": 5,
     "format": "󰍛 {usage}%",
-    "on-click": "alacritty -e btop",
-    "on-click-right": "alacritty"
+    "on-click": "toolbox run -c dev alacritty alacritty -e btop",
+    "on-click-right": "toolbox run -c dev alacritty alacritty"
   },
 
   "battery": {
@@ -112,7 +112,7 @@
     "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
     "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
     "interval": 5,
-    "on-click": "alacritty -e sh -c 'upower -i /org/freedesktop/UPower/devices/battery_BAT0; read -n 1 -s -r -p ""'",
+    "on-click": "toolbox run -c dev alacritty alacritty -e sh -c 'upower -i /org/freedesktop/UPower/devices/battery_BAT0; read -n 1 -s -r -p ""'",
     "states": {
       "warning": 20,
       "critical": 10
