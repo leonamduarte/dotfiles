@@ -65,3 +65,26 @@ vim.api.nvim_create_autocmd("VimResized", {
 
 -- Format-on-save is handled by conform.setup(format_on_save = {...}) in conform.lua
 -- We remove the manual BufWritePre autocmd to avoid duplicate/competing format calls.
+
+-- ===== Workspaces + Persistence integration =====
+-- Auto-save session on directory change
+vim.api.nvim_create_autocmd("DirChanged", {
+  group = augroup("persistence_dir_changed"),
+  callback = function()
+    local ok, persistence = pcall(require, "persistence")
+    if ok then
+      persistence.save()
+    end
+  end,
+})
+
+-- Save session before leaving Neovim
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = augroup("persistence_vim_leave"),
+  callback = function()
+    local ok, persistence = pcall(require, "persistence")
+    if ok then
+      persistence.save()
+    end
+  end,
+})
