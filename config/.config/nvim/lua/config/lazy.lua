@@ -21,7 +21,7 @@ require("lazy").setup({
       "LazyVim/LazyVim",
       import = "lazyvim.plugins",
       opts = {
-        colorscheme = "eldritch",
+        colorscheme = "cyberdream",
       },
     },
     -- ai
@@ -55,7 +55,7 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.tailwind" },
     -- util
     { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-    { import = "lazyvim.plugins.extras.util.project" },
+    -- { import = "lazyvim.plugins.extras.util.project" }, -- disabled: replaced by workspaces.nvim
     { import = "lazyvim.plugins.extras.util.dot" },
     -- lsp
     -- { import = "lazyvim.plugins.extras.lsp.none-ls" },
@@ -82,7 +82,7 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "eldritch", "habamax" } },
+  install = { colorscheme = { "cyberdream", "habamax" } },
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update

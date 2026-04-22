@@ -383,3 +383,33 @@ end
 
 vim.keymap.set({ "n", "v", "i" }, "<M-f>", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
 vim.keymap.set("n", "<leader>fO", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
+
+-- ===== Workspaces keymaps =====
+local ws_ok, workspaces = pcall(require, "workspaces")
+if ws_ok then
+  local wopts = { noremap = true, silent = true }
+
+  vim.keymap.set("n", "<leader>ww", function()
+    workspaces.open()
+  end, vim.tbl_extend("force", wopts, { desc = "Open workspace" }))
+
+  vim.keymap.set("n", "<leader>wr", function()
+    workspaces.rename()
+  end, vim.tbl_extend("force", wopts, { desc = "Rename workspace" }))
+
+  vim.keymap.set("n", "<leader>wa", function()
+    workspaces.add()
+  end, vim.tbl_extend("force", wopts, { desc = "Add workspace" }))
+
+  vim.keymap.set("n", "<leader>wA", function()
+    workspaces.add_dir()
+  end, vim.tbl_extend("force", wopts, { desc = "Add workspace dir" }))
+
+  vim.keymap.set("n", "<leader>wl", function()
+    workspaces.list()
+  end, vim.tbl_extend("force", wopts, { desc = "List workspaces" }))
+
+  vim.keymap.set("n", "<leader>wd", function()
+    workspaces.remove()
+  end, vim.tbl_extend("force", wopts, { desc = "Remove workspace" }))
+end

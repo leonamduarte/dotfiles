@@ -1,12 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "build",
+  "default_agent": "router",
   "agent": {
     "build": {
       "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
       "model": "github-copilot/gpt-5-mini",
       "prompt": "{file:./prompts/build.txt}",
-      "maxSteps": 120,
+      "steps": 120,
       "permission": {
         "edit": "allow",
         "bash": "allow",
@@ -18,6 +18,41 @@
           "tester": "allow"
         }
       }
+    },
+    "router": {
+      "description": "Orquestrador principal. Analisa a tarefa e delega ao subagente correto.",
+      "model": "github-copilot/gpt-5-mini",
+      "mode": "primary",
+      "prompt": "Você é um orquestrador. Antes de executar qualquer tarefa, classifique-a e delegue ao subagente correto via Task:\n- @executor: boilerplate, renomear, mover arquivos, tarefas mecânicas sem raciocínio\n- @analista: raciocínio médio, contexto grande, sessões longas, refatorações\n- @debug: debug complexo, features multi-camada, problemas travados — use com critério, limite de requests\n- @arquiteto: planejamento arquitetural, decisões que afetam múltiplas partes — recurso escasso, 300 req/mês\nNunca execute diretamente o que um subagente pode fazer melhor.",
+      "permission": {
+        "task": {
+          "*": "deny",
+          "executor": "allow",
+          "analista": "allow",
+          "debug": "allow",
+          "arquiteto": "allow"
+        }
+  }
+    },
+    "executor": {
+      "description": "Tarefas mecânicas e boilerplate sem raciocínio debug",
+      "model": "github-copilot/gpt-5-mini",
+      "mode": "subagent"
+    },
+    "analista": {
+      "description": "Raciocínio médio, contexto longo (1M tokens), sessões extensas",
+      "model": "opencode-go/qwen3.6-plus",
+      "mode": "subagent"
+    },
+    "debug": {
+      "description": "Debug complexo, features multi-camada, problemas travados",
+      "model": "opencode-go/kimi-k2.6",
+      "mode": "subagent"
+    },
+    "arquiteto": {
+      "description": "Planejamento arquitetural e decisões críticas de design",
+      "model": "openai/gpt-5.4",
+      "mode": "subagent"
     }
   }
 }
