@@ -43,34 +43,6 @@ opt.splitbelow = true
 opt.splitright = true
 opt.conceallevel = 2
 
--- ===== ShaDa Configuration (fixes E138 & recent files persistence) =====
--- Configure ShaDa to store recent files, history, marks, etc.
-opt.shada = {
-  "!'", -- Last cursor position for all files
-  "<50", -- Last 50 lines in registers
-  "@/", -- Search history
-  "b1", -- Marked files (buffers)
-  "c100", -- Last 100 copied/deleted strings
-  "f1", -- Global marks
-  "r50", -- 50 recent files (this fixes SPC f r!)
-  "s10", -- 10 last substituted patterns
-  "h100", -- 100 items in search history
-  "%", -- Buffer list (for sessions)
-}
-
--- Handle ShaDa write errors gracefully
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  pattern = "*",
-  callback = function()
-    local ok, err = pcall(function()
-      vim.cmd("wshada!")
-    end)
-    if not ok then
-      vim.notify("ShaDa write failed: " .. tostring(err), vim.log.levels.WARN)
-    end
-  end,
-})
-
 -- ===== LazyVim specifics =====
 -- ESLint autoformat (se estiver usando extras linting.eslint)
 g.lazyvim_eslint_auto_format = true
