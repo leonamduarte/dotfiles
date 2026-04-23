@@ -1,0 +1,100 @@
+
+# Ignora tudo na raiz
+/*
+
+# ============================================================
+# SEGURANÇA CRÍTICA
+# ============================================================
+
+# NUNCA rastreie dados sensíveis (mesmo que permitidos depois)
+.ssh/
+.gnupg/
+.password-store/
+*.pem
+*.key
+*_rsa
+*_ed25519
+*id_rsa*
+*id_ed25519*
+*.ppk
+.aws/
+.kube/
+.config/fish/conf.d/secrets.fish
+.config/fish/fish_variables
+
+# Permite arquivos específicos na raiz
+!.gitignore
+!.zshrc
+!.bashrc
+
+# Permite pastas específicas na raiz
+!config/
+!.config/
+!scripts/
+!.local/
+
+# Ignora tudo dentro de .config
+.config/*
+
+# Permite apenas o que importa dentro de .config
+!.config/hypr/*.conf
+!.config/hypr/dms/
+!.config/hypr/
+!.config/qtile/
+!.config/alacritty/
+!.config/ghostty/
+!.config/kitty/
+!.config/wezterm/
+!.config/doom/
+!.config/lazyvim/
+!.config/leovim/
+!.config/neovide/
+!.config/nvim/
+!.config/opencode/
+!.config/polybar/
+!.config/picom/
+!.config/rio/
+!.config/rofi/
+!.config/yazi/
+!.config/autostart/*.sh
+!.config/bashmacs/*.el
+.opencode/
+
+# Ignora lixo
+*Zone.Identifier*
+node_modules/
+__pycache__/
+*.pyc
+*.bak
+
+# Neovim / Vim swap & undo
+*.swp
+*.swo
+undo/
+.netrwhist
+shada/
+
+# Doom Emacs / Emacs
+.dir-locals.el
+.elc
+*~
+\#*\#
+.projectile
+
+mimeapps.list
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+# Permite fontes
+!.local/share/
+.local/share/*
+!.local/share/fonts/
+
+# Ignore opencode generated files
+config/.config/opencode/.codex*
+config/.config/opencode/*.log
+
+# Ignore local agent instructions (not for git)
+AGENTS.md
