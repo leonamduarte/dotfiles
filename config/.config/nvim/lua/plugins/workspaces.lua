@@ -12,10 +12,8 @@ return {
       hooks = {
         open = {
           function(name, path)
-            local ok, persistence = pcall(require, "persistence")
-            if ok then
-              persistence.load({ last = true })
-            end
+            -- Just cd to the workspace path, let workspaces handle the rest
+            vim.cmd("cd " .. vim.fn.fnameescape(path))
           end,
         },
       },

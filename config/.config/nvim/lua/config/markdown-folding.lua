@@ -45,8 +45,10 @@ local function set_markdown_folding()
   vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
   vim.opt_local.foldlevel = 99
 
-  -- Detect frontmatter closing line
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- Detect frontmatter closing line (limit to first 50 lines for performance)
+  local total_lines = vim.api.nvim_buf_line_count(0)
+  local lines_to_check = math.min(total_lines, 50)
+  local lines = vim.api.nvim_buf_get_lines(0, 0, lines_to_check, false)
   local found_first = false
   local frontmatter_end = nil
   for i, line in ipairs(lines) do
@@ -81,47 +83,44 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Function to fold all headings of a specific level
 local function fold_headings_of_level(level)
-  -- Move to the top of the file without adding to jumplist
-  vim.cmd("keepjumps normal! gg")
-  -- Get the total number of lines
-  local total_lines = vim.fn.line("$")
-  for line = 1, total_lines do
-    -- Get the content of the current line
-    local line_content = vim.fn.getline(line)
-    if vim.bo.filetype == "typst" then
-      if line_content:match("^" .. string.rep("=", level) .. "%s") then
-        -- Move the cursor to the current line without adding to jumplist
-        vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
-        -- Check if the current line has a fold level > 0
-        local current_foldlevel = vim.fn.foldlevel(line)
-        if current_foldlevel > 0 then
-          -- Fold the heading if it matches the level
-          if vim.fn.foldclosed(line) == -1 then
-            vim.cmd("normal! za")
-          end
-          -- else
-          --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
-        end
+  -- Get all lines at once for performance
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local heading_pattern = vim.bo.filetype == "typst"
+      and "^" .. string.rep("=", level) .. "%s"
+      or "^" .. string.rep("#", level) .. "%s"
+
+  -- Collect all matching line numbers first
+  local lines_to_fold = {}
+  for line_num, line_content in ipairs(lines) do
+    if line_content:match(heading_pattern) then
+      local foldlevel = vim.fn.foldlevel(line_num)
+      if foldlevel > 0 and vim.fn.foldclosed(line_num) == -1 then
+        table.insert(lines_to_fold, line_num)
       end
-    else
-      -- "^" -> Ensures the match is at the start of the line
-      -- string.rep("#", level) -> Creates a string with 'level' number of "#" characters
-      -- "%s" -> Matches any whitespace character after the "#" characters
-      -- So this will match `## `, `### `, `#### ` for example, which are markdown headings
-      if line_content:match("^" .. string.rep("#", level) .. "%s") then
-        -- Move the cursor to the current line without adding to jumplist
-        vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
-        -- Check if the current line has a fold level > 0
-        local current_foldlevel = vim.fn.foldlevel(line)
-        if current_foldlevel > 0 then
-          -- Fold the heading if it matches the level
-          if vim.fn.foldclosed(line) == -1 then
-            vim.cmd("normal! za")
-          end
-          -- else
-          --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
-        end
+    end
+  end
+
+  -- Fold all collected lines using range command without moving cursor
+  if #lines_to_fold > 0 then
+    -- Build fold ranges and apply in batch
+    local ranges = {}
+    local range_start = lines_to_fold[1]
+    local range_end = lines_to_fold[1]
+
+    for i = 2, #lines_to_fold do
+      if lines_to_fold[i] == range_end + 1 then
+        range_end = lines_to_fold[i]
+      else
+        table.insert(ranges, { range_start, range_end })
+        range_start = lines_to_fold[i]
+        range_end = lines_to_fold[i]
       end
+    end
+    table.insert(ranges, { range_start, range_end })
+
+    -- Apply folds in batch using foldopen/foldclose
+    for _, range in ipairs(ranges) do
+      vim.cmd(string.format("%d,%dfold", range[1], range[2]))
     end
   end
 end

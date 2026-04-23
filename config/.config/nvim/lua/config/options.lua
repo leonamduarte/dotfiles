@@ -54,6 +54,7 @@ g.autoformat = true
 if vim.env.HOME then
   local local_bin = vim.fn.expand("~/.local/bin")
   if local_bin and local_bin ~= "" then
-    vim.env.PATH = local_bin .. ":" .. (vim.env.PATH or "")
+    local sep = (vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1) and ";" or ":"
+    vim.env.PATH = local_bin .. sep .. (vim.env.PATH or "")
   end
 end

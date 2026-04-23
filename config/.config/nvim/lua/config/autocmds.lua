@@ -61,18 +61,20 @@ vim.api.nvim_create_autocmd("VimResized", {
   command = "tabdo wincmd =",
 })
 
--- Format on save using conform
-
--- Format-on-save is handled by conform.setup(format_on_save = {...}) in conform.lua
--- We remove the manual BufWritePre autocmd to avoid duplicate/competing format calls.
-
 -- ===== Workspaces + Persistence integration =====
--- Auto-save session on directory change
+-- Combined DirChanged handler to avoid race conditions
 vim.api.nvim_create_autocmd("DirChanged", {
-  group = augroup("persistence_dir_changed"),
+  group = augroup("dir_changed_handler"),
   callback = function()
-    local ok, persistence = pcall(require, "persistence")
-    if ok then
+    -- Sync path_nav first (fast, no I/O)
+    local ok_nav, path_nav = pcall(require, "config.path_navigation")
+    if ok_nav then
+      path_nav._last_dir = path_nav.normalize_path(vim.uv.cwd())
+    end
+
+    -- Then save persistence (I/O operation)
+    local ok_persist, persistence = pcall(require, "persistence")
+    if ok_persist then
       persistence.save()
     end
   end,
@@ -83,8 +85,13 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
   group = augroup("persistence_vim_leave"),
   callback = function()
     local ok, persistence = pcall(require, "persistence")
-    if ok then
-      persistence.save()
+    if not ok then
+      vim.notify("persistence.nvim not available - session not saved", vim.log.levels.WARN)
+      return
+    end
+    local save_ok, err = pcall(persistence.save)
+    if not save_ok then
+      vim.notify("Failed to save session: " .. tostring(err), vim.log.levels.ERROR)
     end
   end,
 })
