@@ -2,7 +2,9 @@
 # VERSION: 3.0
 SETUVAR __fish_initialized:3800
 SETUVAR fish_greeting:
-SETUVAR fish_user_paths:/home/leonamduarte/bin\x1e/home/bashln/\x2elocal/share/fnm\x1e/home/bashln/\x2enpm\x2dglobal/bin\x1e/home/bashln/go/bin\x1e/home/bashln/\x2elocal/bin\x1e/home/bashln/\x2eopencode/bin\x1e/home/leonamduarte/go/bin\x1e/home/leonamduarte/\x2elocal/bin\x1e/usr/local/bin
+## fish_user_paths: removed hardcoded home-specific paths to avoid leaking usernames
+## These are environment-specific and should be managed at runtime (e.g., via fish_add_path)
+SETUVAR fish_user_paths:/usr/local/bin
 SETUVAR pure_begin_prompt_with_current_directory:true
 SETUVAR pure_check_for_new_release:false
 SETUVAR pure_color_at_sign:pure_color_mute
