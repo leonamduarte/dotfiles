@@ -5,3 +5,4 @@ if [ -n "\$PS1" ] || [ -n "\$BASH_VERSION" ]; then
     *) export PATH="$HOME/bin:$PATH" ;;
   esac
 fi
+. "$HOME/.cargo/env"
