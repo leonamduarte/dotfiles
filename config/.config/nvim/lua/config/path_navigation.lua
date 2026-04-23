@@ -173,24 +173,34 @@ function M.browse_path(start_dir)
 
   -- Read directory contents
   local ok, handle = pcall(uv.fs_opendir, start_dir, nil, 100)
-  if ok and handle then
-    while true do
-      local entries = uv.fs_readdir(handle)
-      if not entries then
-        break
-      end
-      for _, entry in ipairs(entries) do
-        local full = M.join_path(start_dir, entry.name)
-        local is_dir = entry.type == "directory"
-        table.insert(items, {
-          text = entry.name .. (is_dir and "/" or ""),
-          _full_path = full,
-          _is_dir = is_dir,
-        })
-      end
+  if not ok or not handle then
+    vim.notify("Cannot read directory: " .. start_dir, vim.log.levels.WARN)
+    return
+  end
+
+  local read_ok = true
+  while true do
+    local entries = uv.fs_readdir(handle)
+    if not entries then
+      read_ok = false
+      break
     end
-    uv.fs_closedir(handle)
-  else
+    if #entries == 0 then
+      break
+    end
+    for _, entry in ipairs(entries) do
+      local full = M.join_path(start_dir, entry.name)
+      local is_dir = entry.type == "directory"
+      table.insert(items, {
+        text = entry.name .. (is_dir and "/" or ""),
+        _full_path = full,
+        _is_dir = is_dir,
+      })
+    end
+  end
+  uv.fs_closedir(handle)
+
+  if not read_ok then
     vim.notify("Cannot read directory: " .. start_dir, vim.log.levels.WARN)
     return
   end
@@ -222,22 +232,15 @@ function M.is_hidden_windows(path)
     return false
   end
 
-  local escaped = vim.fn.shellescape(path)
-  local output = vim.fn.systemlist("attrib " .. escaped)
-  if vim.v.shell_error ~= 0 or not output or #output == 0 then
+  -- Use list form to avoid shell injection
+  local ok, output = pcall(vim.fn.systemlist, { "attrib", path })
+  if not ok or vim.v.shell_error ~= 0 or not output or #output == 0 then
     return false
   end
 
   local first_line = output[1] or ""
   return first_line:match("%f[%a]H%f[%A]") ~= nil
 end
-
--- Auto-sync _last_dir quando o cwd do Neovim muda (qualquer ferramenta)
-vim.api.nvim_create_autocmd("DirChanged", {
-  callback = function()
-    M._last_dir = M.normalize_path(vim.uv.cwd())
-  end,
-})
 
 -- Auto-sync _last_dir ao navegar em buffers oil (oil não muda o cwd)
 vim.api.nvim_create_autocmd("BufEnter", {
