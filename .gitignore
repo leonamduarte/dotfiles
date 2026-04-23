@@ -1,6 +1,6 @@
-
-# Ignora tudo na raiz
-/*
+# ============================================================
+# .gitignore — dotfiles (stow)
+# ============================================================
 
 # ============================================================
 # SEGURANÇA CRÍTICA
@@ -28,7 +28,24 @@
 !.bashrc
 
 # Permite pastas específicas na raiz
-!config/
+!dot_config/
+
+# Permite dot_config
+!dot_config/alacritty/
+!dot_config/autostart/
+!dot_config/doom/
+!dot_config/fish/
+!dot_config/ghostty/
+!dot_config/kitty/
+!dot_config/mimeapps.list
+!dot_config/niri/
+!dot_config/nvim/
+!dot_config/opencode/
+!dot_config/starship.toml
+!dot_config/wezterm/
+!dot_config/yazi/
+
+# Permite pastas específicas na raiz
 !.config/
 !scripts/
 !.local/
@@ -98,3 +115,45 @@ config/.config/opencode/*.log
 
 # Ignore local agent instructions (not for git)
 AGENTS.md
+
+# ============================================================
+# OTIMIZAÇÃO: Dados gerados e binários (não são configurações)
+# ============================================================
+
+# Emacs - dados gerados (straight instala isso post-clone)
+.config/emacs/.local/
+.config/emacs/straight/repos/
+.config/emacs/straight/build-*/
+.config/emacs-vanilla/elpaca/
+.config/emacs-vanilla/elpa/
+.config/emacs-vanilla/eln-cache/
+.config/emacs-vanilla/auto-save-list/
+.config/emacs-vanilla/transient/
+.config/emacs-vanilla/.local/
+
+# Binários nativos (tree-sitter compila localmente)
+*.dll
+*.so
+*.dylib
+*.exe
+
+# Mídia de documentação (GIFs de demos, screenshots)
+*.gif
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mov
+
+# Fontes grandes (baixar post-clone se necessário)
+*.ttf
+*.otf
+*.woff
+*.woff2
+
+# ============================================================
+# SHALLOW CLONES: Configuração para submódulos futuros
+# ============================================================
+# Para clonar com depth=1:
+#   git submodule add --depth 1 <repo>
+#   git clone --depth 1 --recurse-submodules ...
