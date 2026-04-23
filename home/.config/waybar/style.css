@@ -1,15 +1,11 @@
-@import "../../.config/kitty/dank-theme.conf";
-
-:root {
-  --bg: #100f0f;
-  --fg: #cecdc3;
-  --accent: #4385be;
-  --danger: #a55555;
-}
+@define-color bg #100f0f;
+@define-color fg #cecdc3;
+@define-color accent #4385be;
+@define-color danger #a55555;
 
 * {
-  background-color: var(--bg);
-  color: var(--fg);
+  background-color: @bg;
+  color: @fg;
   border: none;
   border-radius: 0;
   min-height: 0;
@@ -88,12 +84,12 @@ tooltip {
 }
 
 #custom-screenrecording-indicator.active {
-  color: var(--danger);
+  color: @danger;
 }
 
 #custom-idle-indicator.active,
 #custom-notification-silencing-indicator.active {
-  color: var(--danger);
+  color: @danger;
 }
 
 #custom-voxtype {
@@ -102,12 +98,12 @@ tooltip {
 }
 
 #custom-voxtype.recording {
-  color: var(--danger);
+  color: @danger;
 }
 
 .tooltip {
   background: rgba(0,0,0,0.6);
-  color: var(--fg);
+  color: @fg;
   border-radius: 4px;
   padding: 4px 6px;
   font-size: 11px;
