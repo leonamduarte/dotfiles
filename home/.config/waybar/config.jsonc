@@ -112,7 +112,7 @@
     "tooltip-format-discharging": "{power:>1.0f}W↓ {capacity}%",
     "tooltip-format-charging": "{power:>1.0f}W↑ {capacity}%",
     "interval": 5,
-    "on-click": "toolbox run -c dev alacritty alacritty -e sh -c 'upower -i /org/freedesktop/UPower/devices/battery_BAT0; read -n 1 -s -r -p ""'",
+    "on-click": "toolbox run -c dev alacritty alacritty -e sh -c 'upower -i /org/freedesktop/UPower/devices/battery_BAT0; read -n 1 -s -r -p \"\"'",
     "states": {
       "warning": 20,
       "critical": 10
