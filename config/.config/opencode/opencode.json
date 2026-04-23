@@ -1,10 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "router",
+  "default_agent": "build",
   "agent": {
     "build": {
       "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
-      "model": "github-copilot/gpt-5-mini",
+      "model": "opencode-go/qwen3.5-plus",
       "prompt": "{file:./prompts/build.txt}",
       "steps": 120,
       "permission": {
@@ -23,7 +23,7 @@
       "description": "Orquestrador principal. Analisa a tarefa e delega ao subagente correto.",
       "model": "github-copilot/gpt-5-mini",
       "mode": "primary",
-      "prompt": "Você é um orquestrador. Antes de executar qualquer tarefa, classifique-a e delegue ao subagente correto via Task:\n- @executor: boilerplate, renomear, mover arquivos, tarefas mecânicas sem raciocínio\n- @analista: raciocínio médio, contexto grande, sessões longas, refatorações\n- @debug: debug complexo, features multi-camada, problemas travados — use com critério, limite de requests\n- @arquiteto: planejamento arquitetural, decisões que afetam múltiplas partes — recurso escasso, 300 req/mês\nNunca execute diretamente o que um subagente pode fazer melhor.",
+      "prompt": "Você é um orquestrador. Antes de executar qualquer tarefa, classifique-a e delegue ao subagente correto via Task:\n- @executor: boilerplate, renomear, mover arquivos, tarefas mecânicas sem raciocínio\n- @analista: raciocínio médio, contexto grande, sessões longas, refatorações\n- @debug: debug complexo, features multi-camada, problemas travados — use com critério, limite de requests\n- @arquiteto: planejamento arquitetural, decisões que afetam múltiplas partes — recurso escasso, 300 req/mês\nNunca execute diretamente o que um subagente pode fazer melhor. Após a Task completar, copie o resultado completo do subagente na sua resposta antes de parar. Nunca diga 'o plano foi entregue' sem incluir o conteúdo na resposta atual",
       "permission": {
         "task": {
           "*": "deny",
@@ -32,10 +32,60 @@
           "debug": "allow",
           "arquiteto": "allow"
         }
-  }
+      }
+    },
+    "tutor": {
+      "mode": "primary",
+      "description": "Tutor técnico manual. Analisa o repositório, usa skills de revisão e ensina o que fazer, por que fazer e como validar, sem editar arquivos.",
+      "model": "github-copilot/gpt-5-mini",
+      "prompt": "{file:./prompts/tutor.txt}",
+      "steps": 80,
+
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "patch": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+
+        "bash": {
+          "*": "deny",
+
+          "pwd": "allow",
+          "ls": "allow",
+          "ls *": "allow",
+          "tree": "allow",
+          "tree *": "allow",
+
+          "find *": "allow",
+          "rg *": "allow",
+          "grep *": "allow",
+
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "sed -n *": "allow",
+
+          "git status": "allow",
+          "git diff *": "allow",
+          "git log *": "allow",
+          "git show *": "allow",
+          "git ls-files": "allow"
+        },
+
+        "skill": {
+          "*": "deny",
+          "analysis_repo": "allow",
+          "qa_review": "allow"
+        },
+
+        "task": {
+          "*": "deny"
+        }
+      }
     },
     "executor": {
-      "description": "Tarefas mecânicas e boilerplate sem raciocínio debug",
+      "description": "Tarefas mecânicas e boilerplate sem raciocínio profundo",
       "model": "github-copilot/gpt-5-mini",
       "mode": "subagent"
     },
