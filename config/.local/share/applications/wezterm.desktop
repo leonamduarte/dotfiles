@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=WezTerm
-Exec=/home/leonamduarte/bin/wezterm start --always-new-process %F
+Exec=wezterm start --always-new-process %F
 Terminal=false
 Categories=System;TerminalEmulator;
 StartupWMClass=org.wezfurlong.wezterm
