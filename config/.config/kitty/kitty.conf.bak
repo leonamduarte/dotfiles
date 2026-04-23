@@ -1,0 +1,40 @@
+# Font (alinhar com Wezterm)
+font_family JetBrainsMono Nerd Font
+bold_italic_font auto
+font_size        11.0
+
+# PERFORMANCE OPTIMIZATIONS FOR WSLg
+# Disable background image (causes lag on WSLg)
+# background_image ../wezterm/bg-blurred.png
+background_image none
+background_opacity 0.95
+background_image_layout scaled
+
+# Window
+window_padding_width 14
+hide_window_decorations yes
+confirm_os_window_close 0
+
+# Keybindings
+map ctrl+insert copy_to_clipboard
+map shift+insert paste_from_clipboard
+
+# Allow remote access
+allow_remote_control socket-only
+
+# Aesthetics
+cursor_shape block
+cursor_trail 3
+cursor_trail_decay 0.0 0.4
+enable_audio_bell no
+
+# Minimal Tab bar styling
+tab_bar_edge                bottom
+tab_bar_style               powerline
+tab_powerline_style         slanted
+tab_title_template          {title}{' :{}:'.format(num_windows) if num_windows > 1 else ''}
+
+# BEGIN_KITTY_THEME
+# Eldritch
+include current-theme.conf
+# END_KITTY_THEME
