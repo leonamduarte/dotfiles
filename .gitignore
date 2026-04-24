@@ -117,6 +117,28 @@ config/.config/opencode/*.log
 AGENTS.md
 
 # ============================================================
+# Gemini CLI runtime state (home/.codex is runtime, not config)
+# Config lives in home/.agents/codex/ and home/.agents/gemini/
+# ============================================================
+home/.codex/.sandbox/
+home/.codex/.sandbox-secrets/
+home/.codex/.tmp/
+home/.codex/auth.json
+home/.codex/cache/
+home/.codex/cap_sid
+home/.codex/installation_id
+home/.codex/log/
+home/.codex/logs_*.sqlite
+home/.codex/models_cache.json
+home/.codex/sandbox.log
+home/.codex/skills/
+home/.codex/state_*.sqlite
+home/.codex/version.json
+home/.codex/.personality_migration
+home/.codex/tmp/
+home/.codex/memories/
+
+# ============================================================
 # OTIMIZAÇÃO: Dados gerados e binários (não são configurações)
 # ============================================================
 
