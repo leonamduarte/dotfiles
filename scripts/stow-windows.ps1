@@ -36,8 +36,7 @@ function Stow-Dotfiles {
                 Write-Host "  [conflict] $target exists as directory" -ForegroundColor Red
             }
         } else {
-            New-Item -ItemType SymbolicLink -Path $target -Target $source | Out-Null
-            Write-Host "  [link] $config -> $source" -ForegroundColor Cyan
+            TryCreateLink -LinkPath $target -TargetPath $source -IsDirectory $true
         }
     }
 
@@ -49,8 +48,7 @@ function Stow-Dotfiles {
             Write-Host "  [conflict] .bashrc exists" -ForegroundColor Red
         }
     } else {
-        New-Item -ItemType SymbolicLink -Path $bashrcTarget -Target $bashrcSource | Out-Null
-        Write-Host "  [link] .bashrc" -ForegroundColor Cyan
+        TryCreateLink -LinkPath $bashrcTarget -TargetPath $bashrcSource -IsDirectory $false
     }
 
     # .zshrc
@@ -61,11 +59,81 @@ function Stow-Dotfiles {
             Write-Host "  [conflict] .zshrc exists" -ForegroundColor Red
         }
     } else {
-        New-Item -ItemType SymbolicLink -Path $zshrcTarget -Target $zshrcSource | Out-Null
-        Write-Host "  [link] .zshrc" -ForegroundColor Cyan
+        TryCreateLink -LinkPath $zshrcTarget -TargetPath $zshrcSource -IsDirectory $false
+    }
+
+    # .gemini
+    $geminiTarget = Join-Path $HomeDir ".gemini"
+    $geminiSource = Join-Path $DotfilesDir ".gemini"
+    if (Test-Path $geminiTarget) {
+        if (-not (Get-Item $geminiTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .gemini exists" -ForegroundColor Red
+        }
+    } else {
+        TryCreateLink -LinkPath $geminiTarget -TargetPath $geminiSource -IsDirectory $true
+    }
+
+    # .agents
+    $agentsTarget = Join-Path $HomeDir ".agents"
+    $agentsSource = Join-Path $DotfilesDir "home\.agents"
+    if (Test-Path $agentsTarget) {
+        if (-not (Get-Item $agentsTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .agents exists" -ForegroundColor Red
+        }
+    } else {
+        TryCreateLink -LinkPath $agentsTarget -TargetPath $agentsSource -IsDirectory $true
+    }
+
+    # .codex
+    $codexTarget = Join-Path $HomeDir ".codex"
+    $codexSource = Join-Path $DotfilesDir "home\.codex"
+    if (Test-Path $codexTarget) {
+        if (-not (Get-Item $codexTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .codex exists" -ForegroundColor Red
+        }
+    } else {
+        TryCreateLink -LinkPath $codexTarget -TargetPath $codexSource -IsDirectory $true
     }
 
     Write-Host "Done!" -ForegroundColor Green
+}
+
+# Helper: try to create a symlink, fallback to junction for directories or copy for files
+function TryCreateLink {
+    param(
+        [Parameter(Mandatory=$true)] [string]$LinkPath,
+        [Parameter(Mandatory=$true)] [string]$TargetPath,
+        [Parameter(Mandatory=$true)] [bool]$IsDirectory
+    )
+
+    try {
+        New-Item -ItemType SymbolicLink -Path $LinkPath -Target $TargetPath -Force | Out-Null
+        Write-Host "  [link] $LinkPath -> $TargetPath" -ForegroundColor Cyan
+        return
+    } catch {
+        Write-Host "  [warn] Could not create symbolic link: $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+
+    if ($IsDirectory) {
+        try {
+            # attempt a junction as fallback
+            New-Item -ItemType Junction -Path $LinkPath -Target $TargetPath | Out-Null
+            Write-Host "  [junction] $LinkPath -> $TargetPath" -ForegroundColor Cyan
+            return
+        } catch {
+            Write-Host "  [error] Failed to create junction: $($_.Exception.Message)" -ForegroundColor Red
+        }
+    } else {
+        try {
+            Copy-Item -Path $TargetPath -Destination $LinkPath -Force
+            Write-Host "  [copy] $LinkPath (file copied as fallback)" -ForegroundColor Cyan
+            return
+        } catch {
+            Write-Host "  [error] Failed to copy file fallback: $($_.Exception.Message)" -ForegroundColor Red
+        }
+    }
+
+    Write-Host "  [fail] Could not create link or fallback for $LinkPath" -ForegroundColor Red
 }
 
 function Unstow-Dotfiles {
@@ -83,7 +151,7 @@ function Unstow-Dotfiles {
         }
     }
 
-    @(".bashrc", ".zshrc") | ForEach-Object {
+    @(".bashrc", ".zshrc", ".gemini", ".agents", ".codex") | ForEach-Object {
         $target = Join-Path $HomeDir $_
         if (Test-Path $target) {
             if ((Get-Item $target).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {

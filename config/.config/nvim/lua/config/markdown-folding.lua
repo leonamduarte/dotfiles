@@ -81,56 +81,34 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = set_typst_folding,
 })
 
--- Function to fold all headings of a specific level
-local function fold_headings_of_level(level)
-  -- Get all lines at once for performance
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local heading_pattern = vim.bo.filetype == "typst"
-      and "^" .. string.rep("=", level) .. "%s"
-      or "^" .. string.rep("#", level) .. "%s"
-
-  -- Collect all matching line numbers first
-  local lines_to_fold = {}
-  for line_num, line_content in ipairs(lines) do
-    if line_content:match(heading_pattern) then
-      local foldlevel = vim.fn.foldlevel(line_num)
-      if foldlevel > 0 and vim.fn.foldclosed(line_num) == -1 then
-        table.insert(lines_to_fold, line_num)
-      end
-    end
-  end
-
-  -- Fold all collected lines using range command without moving cursor
-  if #lines_to_fold > 0 then
-    -- Build fold ranges and apply in batch
-    local ranges = {}
-    local range_start = lines_to_fold[1]
-    local range_end = lines_to_fold[1]
-
-    for i = 2, #lines_to_fold do
-      if lines_to_fold[i] == range_end + 1 then
-        range_end = lines_to_fold[i]
-      else
-        table.insert(ranges, { range_start, range_end })
-        range_start = lines_to_fold[i]
-        range_end = lines_to_fold[i]
-      end
-    end
-    table.insert(ranges, { range_start, range_end })
-
-    -- Apply folds in batch using foldopen/foldclose
-    for _, range in ipairs(ranges) do
-      vim.cmd(string.format("%d,%dfold", range[1], range[2]))
-    end
-  end
-end
-
 local function fold_markdown_headings(levels)
-  -- I save the view to know where to jump back after folding
+  -- Save view to restore cursor/window position later
   local saved_view = vim.fn.winsaveview()
-  for _, level in ipairs(levels) do
-    fold_headings_of_level(level)
+
+  -- If the buffer/window uses expression folding, don't create manual folds
+  -- (which would raise E350). Instead adjust 'foldlevel' so folds at the
+  -- requested minimum heading level and deeper are closed by the folding
+  -- engine. Then use 'zx' to recompute folds according to the new foldlevel.
+  if vim.wo.foldmethod == "expr" then
+    -- determine the minimum level requested (e.g. {6,5,4,3,2,1} -> 1)
+    local min_level = nil
+    for _, l in ipairs(levels) do
+      if not min_level or l < min_level then
+        min_level = l
+      end
+    end
+    min_level = min_level or 1
+
+    -- foldlevel controls which fold levels remain open. Folds with level
+    -- greater than foldlevel are closed. To close headings at level `min_level`
+    -- and deeper, set foldlevel to min_level - 1 (but at least 0).
+    local target = math.max(0, min_level - 1)
+    vim.opt_local.foldlevel = target
+
+    -- Recompute folds and apply the new foldlevel
+    vim.cmd("silent! normal! zx")
   end
+
   vim.cmd("nohlsearch")
   -- Restore the view to jump to where I was
   vim.fn.winrestview(saved_view)
@@ -144,7 +122,7 @@ vim.keymap.set("n", "zj", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2, 1 })
@@ -160,7 +138,7 @@ vim.keymap.set("n", "zk", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2 })
@@ -175,7 +153,7 @@ vim.keymap.set("n", "zl", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3 })
@@ -190,7 +168,7 @@ vim.keymap.set("n", "z;", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4 })
@@ -225,7 +203,7 @@ vim.keymap.set("n", "zu", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to reflect the changes
-  vim.cmd("edit!")
+  vim.cmd("edit")
   vim.cmd("normal! zR") -- Unfold all headings
   vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Unfold all headings level 2 or above" })
