@@ -67,6 +67,7 @@
 !.config/leovim/
 !.config/neovide/
 !.config/nvim/
+!.config/powershell/
 !.config/opencode/
 !.config/polybar/
 !.config/picom/

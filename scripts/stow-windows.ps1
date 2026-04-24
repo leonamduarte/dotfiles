@@ -62,6 +62,28 @@ function Stow-Dotfiles {
         TryCreateLink -LinkPath $zshrcTarget -TargetPath $zshrcSource -IsDirectory $false
     }
 
+    # PowerShell profiles
+    $psProfileSource = Join-Path $DotfilesDir "config\.config\powershell\Microsoft.PowerShell_profile.ps1"
+    @(
+        (Join-Path ([Environment]::GetFolderPath('MyDocuments')) "PowerShell\Microsoft.PowerShell_profile.ps1"),
+        (Join-Path ([Environment]::GetFolderPath('MyDocuments')) "WindowsPowerShell\Microsoft.PowerShell_profile.ps1")
+    ) | ForEach-Object {
+        $psProfileTarget = $_
+        $psProfileDir = Split-Path $psProfileTarget -Parent
+
+        if (-not (Test-Path $psProfileDir)) {
+            New-Item -ItemType Directory -Path $psProfileDir -Force | Out-Null
+        }
+
+        if (Test-Path $psProfileTarget) {
+            if (-not (Get-Item $psProfileTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+                Write-Host "  [conflict] $psProfileTarget exists" -ForegroundColor Red
+            }
+        } else {
+            TryCreateLink -LinkPath $psProfileTarget -TargetPath $psProfileSource -IsDirectory $false
+        }
+    }
+
     # .gemini
     $geminiTarget = Join-Path $HomeDir ".gemini"
     $geminiSource = Join-Path $DotfilesDir ".gemini"

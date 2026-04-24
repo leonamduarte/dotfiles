@@ -1,3 +1,12 @@
 [agents]
 max_threads = 6
 max_depth = 1
+
+[projects.'c:\users\itinerario\leo\code\tui-rast-api']
+trust_level = "trusted"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 2
+
+[windows]
+sandbox = "elevated"
