@@ -65,6 +65,42 @@ function Stow-Dotfiles {
         Write-Host "  [link] .zshrc" -ForegroundColor Cyan
     }
 
+    # .gemini
+    $geminiTarget = Join-Path $HomeDir ".gemini"
+    $geminiSource = Join-Path $DotfilesDir ".gemini"
+    if (Test-Path $geminiTarget) {
+        if (-not (Get-Item $geminiTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .gemini exists" -ForegroundColor Red
+        }
+    } else {
+        New-Item -ItemType SymbolicLink -Path $geminiTarget -Target $geminiSource | Out-Null
+        Write-Host "  [link] .gemini" -ForegroundColor Cyan
+    }
+
+    # .agents
+    $agentsTarget = Join-Path $HomeDir ".agents"
+    $agentsSource = Join-Path $DotfilesDir "home\.agents"
+    if (Test-Path $agentsTarget) {
+        if (-not (Get-Item $agentsTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .agents exists" -ForegroundColor Red
+        }
+    } else {
+        New-Item -ItemType SymbolicLink -Path $agentsTarget -Target $agentsSource | Out-Null
+        Write-Host "  [link] .agents" -ForegroundColor Cyan
+    }
+
+    # .codex
+    $codexTarget = Join-Path $HomeDir ".codex"
+    $codexSource = Join-Path $DotfilesDir "home\.codex"
+    if (Test-Path $codexTarget) {
+        if (-not (Get-Item $codexTarget).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {
+            Write-Host "  [conflict] .codex exists" -ForegroundColor Red
+        }
+    } else {
+        New-Item -ItemType SymbolicLink -Path $codexTarget -Target $codexSource | Out-Null
+        Write-Host "  [link] .codex" -ForegroundColor Cyan
+    }
+
     Write-Host "Done!" -ForegroundColor Green
 }
 
@@ -83,7 +119,7 @@ function Unstow-Dotfiles {
         }
     }
 
-    @(".bashrc", ".zshrc") | ForEach-Object {
+    @(".bashrc", ".zshrc", ".gemini", ".agents", ".codex") | ForEach-Object {
         $target = Join-Path $HomeDir $_
         if (Test-Path $target) {
             if ((Get-Item $target).Attributes.HasFlag([System.IO.FileAttributes]::ReparsePoint)) {

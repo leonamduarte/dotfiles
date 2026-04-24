@@ -1,0 +1,30 @@
+## Summary
+
+- Apply targeted fixes to Neovim config to resolve startup errors (E527/E526) and unsafe/destructive behaviors.
+- Changes include: remove broken opt.shada, secure system calls, fix keymaps, unify autocmd handlers, optimize markdown folding, and Windows compatibility fixes.
+
+## Files changed (high level)
+
+- config/.config/nvim/lua/config/options.lua
+- config/.config/nvim/lua/config/keymaps.lua
+- config/.config/nvim/lua/config/autocmds.lua
+- config/.config/nvim/lua/config/markdown-folding.lua
+- config/.config/nvim/lua/config/path_navigation.lua
+- config/.config/nvim/lua/plugins/workspaces.lua
+
+## Why
+
+- Startup was failing with E527/E526 due to an invalid shada configuration.
+- Some mappings and system calls were unsafe or destructive; fixes improve security and cross-platform behavior.
+
+## Validation
+
+- Headless validation run during development: `nvim --headless -c "echo 'Neovim OK'" -c "qa"`
+- Recent commits: 460afd8, 685f383
+
+## Notes
+
+- Branch: chore/bump-opencode-ai-plugin-1.14.20 (pushed)
+- Target base branch: windows
+
+Please review and merge when ready.

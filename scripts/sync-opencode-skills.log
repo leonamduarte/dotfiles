@@ -1,0 +1,12 @@
+2026-04-24T09:38:58.6339465-03:00 - Starting sync. DryRun=True
+2026-04-24T09:38:58.6613630-03:00 - Running: robocopy "C:\Users\itinerario\leo\development\dotfiles\home\.agents\skills" "C:\Users\itinerario\leo\development\dotfiles\config\.config\opencode\skills" /L /XD ".git" /XD ".DS_Store" /XD "90-mcp-bootstrap"  /MIR /R:2 /W:1 /NFL /NDL /NP /NJH /NJS
+2026-04-24T09:38:58.7059081-03:00 - Robocopy exit code: 2
+2026-04-24T09:38:58.7113940-03:00 - [DryRun] Would remove legacy directory: C:\Users\itinerario\leo\development\dotfiles\config\.config\opencode\skills\90-mcp-bootstrap
+2026-04-24T09:38:58.7522107-03:00 - Source and target are in sync.
+2026-04-24T09:38:58.7530801-03:00 - Sync completed.
+2026-04-24T09:39:03.7386985-03:00 - Starting sync. DryRun=False
+2026-04-24T09:39:03.7508264-03:00 - Running: robocopy "C:\Users\itinerario\leo\development\dotfiles\home\.agents\skills" "C:\Users\itinerario\leo\development\dotfiles\config\.config\opencode\skills" /XD ".git" /XD ".DS_Store" /XD "90-mcp-bootstrap"  /MIR /R:2 /W:1 /NFL /NDL /NP /NJH /NJS
+2026-04-24T09:39:03.7897081-03:00 - Robocopy exit code: 2
+2026-04-24T09:39:03.7932051-03:00 - Removing legacy directory: C:\Users\itinerario\leo\development\dotfiles\config\.config\opencode\skills\90-mcp-bootstrap
+2026-04-24T09:39:03.8249339-03:00 - Source and target are in sync.
+2026-04-24T09:39:03.8259131-03:00 - Sync completed.

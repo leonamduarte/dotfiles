@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Fix DP-1 Resolution
-Exec=/home/lm/.config/fix-dp1-resolution.sh
-X-GNOME-Autostart-enabled=true
