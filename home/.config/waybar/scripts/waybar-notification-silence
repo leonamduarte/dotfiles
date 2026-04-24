@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-# Waybar indicator for notification silencing (for swaync)
-
-while true; do
-  # swaync provides 'swayncctl status' or check for env/state - fallback: look for a file
-  # Default: no indicator
-  echo '{"text":"","class":""}'
-  sleep 3
-done

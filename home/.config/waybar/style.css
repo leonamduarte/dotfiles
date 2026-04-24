@@ -1,15 +1,13 @@
-@define-color bg #100f0f;
-@define-color fg #cecdc3;
-@define-color accent #4385be;
-@define-color danger #a55555;
+@import "../omarchy/current/theme/waybar.css";
 
 * {
-  background-color: @bg;
-  color: @fg;
+  background-color: @background;
+  color: @foreground;
+
   border: none;
   border-radius: 0;
   min-height: 0;
-  font-family: 'JetBrainsMono Nerd Font', monospace;
+  font-family: 'JetBrainsMono Nerd Font';
   font-size: 12px;
 }
 
@@ -84,12 +82,12 @@ tooltip {
 }
 
 #custom-screenrecording-indicator.active {
-  color: @danger;
+  color: #a55555;
 }
 
 #custom-idle-indicator.active,
 #custom-notification-silencing-indicator.active {
-  color: @danger;
+  color: #a55555;
 }
 
 #custom-voxtype {
@@ -98,13 +96,5 @@ tooltip {
 }
 
 #custom-voxtype.recording {
-  color: @danger;
-}
-
-.tooltip {
-  background: rgba(0,0,0,0.6);
-  color: @fg;
-  border-radius: 4px;
-  padding: 4px 6px;
-  font-size: 11px;
+  color: #a55555;
 }
