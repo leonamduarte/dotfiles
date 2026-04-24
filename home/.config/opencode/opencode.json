@@ -1,10 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "router",
+  "default_agent": "build",
   "agent": {
     "build": {
       "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
-      "model": "github-copilot/gpt-5-mini",
+      "model": "opencode-go/qwen3.5-plus",
       "prompt": "{file:./prompts/build.txt}",
       "steps": 120,
       "permission": {
@@ -32,7 +32,57 @@
           "debug": "allow",
           "arquiteto": "allow"
         }
-  }
+      }
+    },
+    "tutor": {
+      "mode": "primary",
+      "description": "Tutor técnico manual. Analisa o repositório, usa skills de revisão e ensina o que fazer, por que fazer e como validar, sem editar arquivos.",
+      "model": "github-copilot/gpt-5-mini",
+      "prompt": "{file:./prompts/tutor.txt}",
+      "steps": 80,
+
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "patch": "deny",
+        "webfetch": "deny",
+        "websearch": "deny",
+
+        "bash": {
+          "*": "deny",
+
+          "pwd": "allow",
+          "ls": "allow",
+          "ls *": "allow",
+          "tree": "allow",
+          "tree *": "allow",
+
+          "find *": "allow",
+          "rg *": "allow",
+          "grep *": "allow",
+
+          "cat *": "allow",
+          "head *": "allow",
+          "tail *": "allow",
+          "sed -n *": "allow",
+
+          "git status": "allow",
+          "git diff *": "allow",
+          "git log *": "allow",
+          "git show *": "allow",
+          "git ls-files": "allow"
+        },
+
+        "skill": {
+          "*": "deny",
+          "analysis_repo": "allow",
+          "qa_review": "allow"
+        },
+
+        "task": {
+          "*": "deny"
+        }
+      }
     },
     "executor": {
       "description": "Tarefas mecânicas e boilerplate sem raciocínio profundo",
