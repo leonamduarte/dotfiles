@@ -81,49 +81,6 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = set_typst_folding,
 })
 
--- Function to fold all headings of a specific level
-local function fold_headings_of_level(level)
-  -- Get all lines at once for performance
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  local heading_pattern = vim.bo.filetype == "typst"
-      and "^" .. string.rep("=", level) .. "%s"
-      or "^" .. string.rep("#", level) .. "%s"
-
-  -- Collect all matching line numbers first
-  local lines_to_fold = {}
-  for line_num, line_content in ipairs(lines) do
-    if line_content:match(heading_pattern) then
-      local foldlevel = vim.fn.foldlevel(line_num)
-      if foldlevel > 0 and vim.fn.foldclosed(line_num) == -1 then
-        table.insert(lines_to_fold, line_num)
-      end
-    end
-  end
-
-  -- Fold all collected lines using range command without moving cursor
-  if #lines_to_fold > 0 then
-    -- Build fold ranges and apply in batch
-    local ranges = {}
-    local range_start = lines_to_fold[1]
-    local range_end = lines_to_fold[1]
-
-    for i = 2, #lines_to_fold do
-      if lines_to_fold[i] == range_end + 1 then
-        range_end = lines_to_fold[i]
-      else
-        table.insert(ranges, { range_start, range_end })
-        range_start = lines_to_fold[i]
-        range_end = lines_to_fold[i]
-      end
-    end
-    table.insert(ranges, { range_start, range_end })
-
-    -- Apply folds in batch using foldopen/foldclose
-    for _, range in ipairs(ranges) do
-      vim.cmd(string.format("%d,%dfold", range[1], range[2]))
-    end
-end
-
 local function fold_markdown_headings(levels)
   -- Save view to restore cursor/window position later
   local saved_view = vim.fn.winsaveview()
