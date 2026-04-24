@@ -126,11 +126,38 @@ local function fold_headings_of_level(level)
 end
 
 local function fold_markdown_headings(levels)
-  -- I save the view to know where to jump back after folding
+  -- Save view to restore cursor/window position later
   local saved_view = vim.fn.winsaveview()
-  for _, level in ipairs(levels) do
-    fold_headings_of_level(level)
+
+  -- If the buffer/window uses expression folding, don't create manual folds
+  -- (which would raise E350). Instead adjust 'foldlevel' so folds at the
+  -- requested minimum heading level and deeper are closed by the folding
+  -- engine. Then use 'zx' to recompute folds according to the new foldlevel.
+  if vim.wo.foldmethod == "expr" then
+    -- determine the minimum level requested (e.g. {6,5,4,3,2,1} -> 1)
+    local min_level = nil
+    for _, l in ipairs(levels) do
+      if not min_level or l < min_level then
+        min_level = l
+      end
+    end
+    min_level = min_level or 1
+
+    -- foldlevel controls which fold levels remain open. Folds with level
+    -- greater than foldlevel are closed. To close headings at level `min_level`
+    -- and deeper, set foldlevel to min_level - 1 (but at least 0).
+    local target = math.max(0, min_level - 1)
+    vim.opt_local.foldlevel = target
+
+    -- Recompute folds and apply the new foldlevel
+    vim.cmd("silent! normal! zx")
+  else
+    -- Fallback: if not using expr folding, fall back to the manual approach
+    for _, level in ipairs(levels) do
+      fold_headings_of_level(level)
+    end
   end
+
   vim.cmd("nohlsearch")
   -- Restore the view to jump to where I was
   vim.fn.winrestview(saved_view)
