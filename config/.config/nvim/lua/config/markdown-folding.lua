@@ -122,7 +122,6 @@ local function fold_headings_of_level(level)
     for _, range in ipairs(ranges) do
       vim.cmd(string.format("%d,%dfold", range[1], range[2]))
     end
-  end
 end
 
 local function fold_markdown_headings(levels)
@@ -151,11 +150,6 @@ local function fold_markdown_headings(levels)
 
     -- Recompute folds and apply the new foldlevel
     vim.cmd("silent! normal! zx")
-  else
-    -- Fallback: if not using expr folding, fall back to the manual approach
-    for _, level in ipairs(levels) do
-      fold_headings_of_level(level)
-    end
   end
 
   vim.cmd("nohlsearch")
@@ -171,7 +165,7 @@ vim.keymap.set("n", "zj", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2, 1 })
@@ -187,7 +181,7 @@ vim.keymap.set("n", "zk", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2 })
@@ -202,7 +196,7 @@ vim.keymap.set("n", "zl", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3 })
@@ -217,7 +211,7 @@ vim.keymap.set("n", "z;", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
-  vim.cmd("edit!")
+  vim.cmd("edit")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4 })
@@ -252,7 +246,7 @@ vim.keymap.set("n", "zu", function()
   -- "Update" saves only if the buffer has been modified since the last save
   vim.cmd("silent update")
   -- Reloads the file to reflect the changes
-  vim.cmd("edit!")
+  vim.cmd("edit")
   vim.cmd("normal! zR") -- Unfold all headings
   vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Unfold all headings level 2 or above" })
