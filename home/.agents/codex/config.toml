@@ -1,0 +1,35 @@
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+
+[agents]
+max_threads = 6
+max_depth = 1
+
+[projects.'C:\Users\itinerario']
+trust_level = "trusted"
+
+[projects.'c:\\users\\itinerario\\leo\\development\\dotfiles']
+trust_level = "trusted"
+
+[projects.'c:\\users\\itinerario\\leo\\code\\tui-rast-api']
+trust_level = "trusted"
+
+[notice.model_migrations]
+"gpt-5.3-codex" = "gpt-5.4"
+
+[windows]
+sandbox = "elevated"
+
+[tui.model_availability_nux]
+"gpt-5.5" = 3
+
+# MCP servers (user-global defaults)
+[mcp.servers.filesystem]
+type = "stdio"
+command = ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."]
+enabled = true
+
+[mcp.servers.git]
+type = "stdio"
+command = ["npx", "-y", "@cyanheads/git-mcp-server"]
+enabled = true
