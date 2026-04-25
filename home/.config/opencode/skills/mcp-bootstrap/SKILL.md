@@ -30,6 +30,7 @@ runtime links consumed by Codex and Gemini CLI:
   `~/.agents/<tool>/...` only for user-wide defaults
 - If a skill needs MCP dependencies, declare them in `agents/openai.yaml`
   rather than burying them in prose
+- Add .agents to gitignore
 
 ## Workflow
 

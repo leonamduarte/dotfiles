@@ -10,3 +10,14 @@ trust_level = "trusted"
 
 [windows]
 sandbox = "elevated"
+
+# MCP servers (user-global defaults)
+[mcp.servers.filesystem]
+type = "stdio"
+command = ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."]
+enabled = true
+
+[mcp.servers.git]
+type = "stdio"
+command = ["npx", "-y", "@cyanheads/git-mcp-server"]
+enabled = true
