@@ -10,7 +10,7 @@
 (push "/home/bashln/go/bin" exec-path)
 
 ;; Fontes
-(let ((font-family (if (eq system-type 'windows-nt) "Maple Mono NF" "Maple Mono NF")))
+(let ((font-family (if (eq system-type 'windows-nt) "Maple Mono NF" "FiraCode Nerd Font")))
   (setq doom-font (font-spec :family font-family :size 15)
         doom-variable-pitch-font (font-spec :family font-family :size 15)))
 
