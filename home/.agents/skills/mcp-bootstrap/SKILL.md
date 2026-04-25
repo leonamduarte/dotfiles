@@ -1,52 +1,51 @@
 ---
 name: mcp-bootstrap
-description: Bootstraps Codex MCP configuration for a repository or user profile
+description: Configura MCP servers no diretório .agents/ do repositório atual
 ---
 
-## Objective
+## Objetivo
 
-Set up MCP configuration for the shared `.agents` source of truth and the
-runtime links consumed by Codex and Gemini CLI:
+Criar e gerenciar a configuração de MCP servers no repositório atual,
+dentro de `.agents/<tool>/`, sem alterar nada fora do projeto.
 
-- repo-local `.agents/<tool>/` for project-specific config
-- user-wide `~/.agents/<tool>/` for defaults shared across repositories
-- `~/.codex/` and `~/.gemini/` as compatibility/runtime links
-- `~/.agents/skills` for the reusable skill itself
+## Quando usar
 
-## When to use
+- Um repositório novo precisa de MCP servers para Codex e/ou Gemini CLI
+- Um repositório existente precisa de MCP servers adicionais
 
-- A new repository needs MCP servers for Codex
-- An existing Codex setup needs extra MCP servers
-- A user wants shared defaults that apply across repositories
+## Regras
 
-## Rules
-
-- Never use absolute paths inside repo-local config
-- Use `.` as the project root when a local MCP server needs a root path
-- Preserve existing Codex config and append minimally
-- Do not overwrite existing runtime config unless necessary
-- Do not modify application code
-- Prefer repo-local `.agents/<tool>/...` for project-specific servers and
-  `~/.agents/<tool>/...` only for user-wide defaults
-- If a skill needs MCP dependencies, declare them in `agents/openai.yaml`
-  rather than burying them in prose
+- Use apenas caminhos relativos; nunca absolutos
+- Use `.` como raiz do projeto quando um MCP server precisar de um path root
+- Não modifique código de aplicação
+- Se uma skill precisar de dependências MCP (npm), declare em `agents/openai.yaml`
+- Adicione `.agents/` ao `.gitignore` do repositório
 
 ## Workflow
 
-1. Inspect the existing config in the repo and in `HOME`
-2. Decide whether the change is repo-local or user-global
-3. Add only the missing MCP server entries
-4. Validate that Codex can see the servers and that nothing existing was clobbered
+1. Verifique se `.agents/` já existe no repositório
+2. Crie `.agents/<tool>/mcp.toml` com os MCP servers necessários
+3. Crie `.agents/openai.yaml` se houver dependências npm a declarar
+4. Adicione `.agents/` ao `.gitignore` se ainda não estiver lá
+
+## Exemplo
+
+```toml
+# .agents/codex/mcp.toml
+[mcp.servers.filesystem]
+type = "stdio"
+command = ["npx", "-y", "@modelcontextprotocol/server-filesystem", "."]
+enabled = true
+```
 
 ## Output
 
-- Files changed
-- Scope chosen
-- Validation commands
-- Remaining gaps
+- Arquivos criados/modificados em `.agents/`
+- Comando de validação
+- Gaps restantes (se houver)
 
-## Validation
+## Validação
 
-- Confirm the relevant files exist in the expected Codex location
-- Restart Codex if the skill does not appear after a change
-- Verify the configured servers from the Codex UI or the available MCP listing command
+- Confirme que `.agents/<tool>/mcp.toml` existe no repositório
+- Confirme que `.agents/openai.yaml` existe (se declarou dependências)
+- Confirme que `.agents/` está no `.gitignore`
