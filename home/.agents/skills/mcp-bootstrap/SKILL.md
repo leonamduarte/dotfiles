@@ -13,20 +13,30 @@ dentro de `.agents/<tool>/`, sem alterar nada fora do projeto.
 - Um repositório novo precisa de MCP servers para Codex e/ou Gemini CLI
 - Um repositório existente precisa de MCP servers adicionais
 
-## Regras
+## Regras CRÍTICAS
+
+### MCPs são POR PROJETO — NUNCA globais
+
+- **MCP servers** sempre em `<project-root>/.agents/<tool>/mcp.toml`
+- **NUNCA** crie MCP configs em `~/.agents/` (isso é GLOBAL = PROIBIDO)
+- **NUNCA** use `$HOME` como raiz de projeto para o filesystem server
+- **Skills e agentes** ficam em `~/.agents/<tool>/` (esses sim são globais)
+- **MCPs** pertencem ao projeto, skills/agentes pertencem ao usuário
+
+### Outras regras
 
 - Use apenas caminhos relativos; nunca absolutos
 - Use `.` como raiz do projeto quando um MCP server precisar de um path root
 - Não modifique código de aplicação
-- Se uma skill precisar de dependências MCP (npm), declare em `agents/openai.yaml`
 - Adicione `.agents/` ao `.gitignore` do repositório
 
 ## Workflow
 
 1. Verifique se `.agents/` já existe no repositório
-2. Crie `.agents/<tool>/mcp.toml` com os MCP servers necessários
-3. Crie `.agents/openai.yaml` se houver dependências npm a declarar
-4. Adicione `.agents/` ao `.gitignore` se ainda não estiver lá
+2. **VALIDE**: certifique-se de que `pwd` NÃO é `$HOME` — abortar se for
+3. Crie `.agents/<tool>/mcp.toml` com os MCP servers necessários
+4. Crie `.agents/openai.yaml` com as dependências npm necessárias
+5. Adicione `.agents/` ao `.gitignore` se ainda não estiver lá
 
 ## Exemplo
 
@@ -46,6 +56,8 @@ enabled = true
 
 ## Validação
 
-- Confirme que `.agents/<tool>/mcp.toml` existe no repositório
-- Confirme que `.agents/openai.yaml` existe (se declarou dependências)
-- Confirme que `.agents/` está no `.gitignore`
+- ✅ Confirme que `.agents/<tool>/mcp.toml` existe no repositório
+- ✅ Confirme que NENHUM arquivo foi criado em `~/.agents/<tool>/`
+- ✅ Confirme que `.agents/` está no `.gitignore`
+- ✅ Confirme que `pwd != $HOME`
+- ✅ Se uma skill precisar de dependências MCP (npm), declare em `agents/openai.yaml`
