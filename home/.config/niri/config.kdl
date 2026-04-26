@@ -248,6 +248,8 @@ window-rule {
     match app-id=r#"^gnome-control-center$"#
     match app-id=r#"^pavucontrol$"#
     match app-id=r#"^nm-connection-editor$"#
+    match app-id="kitty"
+    match app-id=r#"^org\.gnome\.Nautilus$"#
     default-column-width { proportion 0.5; }
     open-floating false
 }
@@ -256,7 +258,6 @@ window-rule {
     match app-id=r#"^gnome-calculator$"#
     match app-id=r#"^galculator$"#
     match app-id=r#"^blueman-manager$"#
-    match app-id=r#"^org\.gnome\.Nautilus$"#
     match app-id=r#"^xdg-desktop-portal$"#
     open-floating true
 }
@@ -270,7 +271,6 @@ window-rule {
     match app-id="Alacritty"
     match app-id="zen"
     match app-id="com.mitchellh.ghostty"
-    match app-id="kitty"
     draw-border-with-background false
 }
 window-rule {

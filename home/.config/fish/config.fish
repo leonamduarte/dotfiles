@@ -16,7 +16,7 @@ if status is-interactive
     fish_add_path $HOME/go/bin
     fish_add_path $HOME/.cargo/bin
     fish_add_path /usr/local/bin
-    fish_add_path /home/bashln/.npm-global/bin
+    fish_add_path $HOME/.npm-global/bin
 
     # Neovim manual (se existir, embora no Arch usemos o do repo geralmente)
     if test -d /opt/nvim-linux-x86_64/bin
@@ -167,6 +167,8 @@ if status is-interactive
     abbr --add cdc 'cd /mnt/c'
     abbr --add cdi 'cd /mnt/i'
 
+    abbr --add ralph 'distrobox enter ralph-loop'
+
     # ----------------------------------------------------------
     # 5) Funções
     # ----------------------------------------------------------
@@ -230,3 +232,11 @@ fish_add_path $HOME/.opencode/bin
 
 # Homebrew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
