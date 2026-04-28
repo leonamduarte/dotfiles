@@ -64,13 +64,13 @@
 
     "executor": {
       "description": "Tarefas mecânicas e boilerplate",
-      "model": "openai/gpt-5.4-mini",
+      "model": "openai/gpt-5.4-mini-fast",
       "mode": "subagent"
     },
 
     "analista": {
       "description": "Raciocínio médio e contexto longo",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5-fast",
       "mode": "subagent"
     },
 
@@ -100,7 +100,7 @@
 
     "ralph-planner": {
       "description": "Quebra PRDs em tarefas pequenas e ordenadas",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.5-fast",
       "mode": "subagent"
     },
 
@@ -112,7 +112,7 @@
 
     "ralph-analyst": {
       "description": "Analisa impacto entre módulos e dependências",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5-fast",
       "mode": "subagent"
     },
 
@@ -130,7 +130,7 @@
 
     "ralph-reviewer": {
       "description": "Revisão final de escopo, diff e regressões",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5-fast",
       "mode": "subagent"
     },
 
