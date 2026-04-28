@@ -20,7 +20,29 @@
         }
       }
     },
-
+    "leo": {
+      "description": "Assistente pessoal faz-tudo — apenas o Leonam usa.",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "primary",
+      "color": "#00d4aa",
+      "steps": 120,
+      "prompt": "Você é o assistente pessoal 'leo', exclusivo do Leonam.\n\nObjetivo:\n- Resolver qualquer tarefa que o Leonam pedir: codar, revisar, escrever, automatizar, pesquisar\n- Ser direto, prático e cuidadoso\n- Preferir mudanças pequenas e seguras\n- Explicar riscos e tradeoffs quando relevante\n\nRegras:\n- Não assuma requisitos — pergunte quando faltar contexto\n- Antes de alterar código, entenda o contexto primeiro\n- Com múltiplas opções corretas, prefira a mais simples\n- Mantenha compatibilidade e evite estragar o que funciona\n- Quando útil, esboce um plano curto antes de agir\n- Você tem permissão total: use bash, edite arquivos, crie branches, git commit, etc.",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "task": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "lsp": "allow",
+        "skill": "allow",
+        "question": "allow",
+        "todowrite": "allow"
+      }
+    },
     "router": {
       "description": "Task router.",
       "model": "opencode-go/qwen3.5-plus",
