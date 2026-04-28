@@ -1,10 +1,10 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "default_agent": "build",
+  "default_agent": "ralph",
   "agent": {
     "build": {
-      "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
-      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Default execution agent.",
+      "model": "openai/gpt-5.5",
       "prompt": "{file:./prompts/build.txt}",
       "steps": 120,
       "permission": {
@@ -22,10 +22,10 @@
     },
 
     "router": {
-      "description": "Orquestrador principal para uso geral",
+      "description": "Task router.",
       "model": "opencode-go/qwen3.5-plus",
       "mode": "primary",
-      "prompt": "Você é um orquestrador. Classifique a tarefa e delegue ao subagente correto. Nunca execute diretamente se um subagente fizer melhor.",
+      "prompt": "Classify the task first and delegate to the best subagent. Never execute directly when a specialist fits.",
       "permission": {
         "task": {
           "*": "deny",
@@ -39,8 +39,8 @@
     },
 
     "ralph": {
-      "description": "Agente principal para Ralph Loop. Orquestra PRDs, JSONs complexos e builds longos.",
-      "model": "opencode-go/deepseek-v4-flash",
+      "description": "Ralph orchestrator.",
+      "model": "openai/gpt-5.5",
       "mode": "primary",
       "prompt": "{file:./prompts/ralph.txt}",
       "steps": 180,
@@ -63,86 +63,86 @@
     },
 
     "executor": {
-      "description": "Tarefas mecânicas e boilerplate",
-      "model": "github-copilot/gpt-5.4-mini",
+      "description": "Mechanical execution agent.",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "analista": {
-      "description": "Raciocínio médio e contexto longo",
-      "model": "opencode-go/qwen3.6-plus",
+      "description": "Refactor agent.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "debug": {
-      "description": "Debug complexo e problemas travados",
-      "model": "opencode-go/kimi-k2.6",
+      "description": "Debug agent.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "arquiteto": {
-      "description": "Planejamento arquitetural e decisões críticas",
-      "model": "openai/gpt-5.4",
+      "description": "Architecture agent.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "codex": {
-      "description": "Implementação crítica e revisão de código sensível",
-      "model": "github-copilot/gpt-5.3-codex",
+      "description": "Critical code agent.",
+      "model": "openai/gpt-5.3-codex",
       "mode": "subagent"
     },
 
     "tester": {
-      "description": "Executa testes, lint e validação",
-      "model": "github-copilot/gpt-5-mini",
+      "description": "Tester agent.",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-planner": {
-      "description": "Quebra PRDs em tarefas pequenas e ordenadas",
-      "model": "opencode-go/qwen3.6-plus",
+      "description": "Ralph planner.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-executor": {
-      "description": "Implementação rápida e incremental",
+      "description": "Ralph executor.",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-analyst": {
-      "description": "Analisa impacto entre módulos e dependências",
-      "model": "opencode-go/qwen3.6-plus",
+      "description": "Ralph analyst.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-debug": {
-      "description": "Debug pesado para loop travado",
-      "model": "opencode-go/kimi-k2.6",
+      "description": "Ralph debug.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-tester": {
-      "description": "Validação automática e testes",
-      "model": "github-copilot/gpt-5-mini",
+      "description": "Ralph tester.",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-reviewer": {
-      "description": "Revisão final de escopo, diff e regressões",
-      "model": "github-copilot/gpt-5-mini",
+      "description": "Ralph reviewer.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-codex": {
-      "description": "Cirurgia crítica em código, refactors arriscados e bugs difíceis",
-      "model": "github-copilot/gpt-5.3-codex",
+      "description": "Ralph codex.",
+      "model": "openai/gpt-5.3-codex",
       "mode": "subagent"
     },
 
     "ralph-arquiteto": {
-      "description": "Decisões arquiteturais raras e críticas",
-      "model": "openai/gpt-5.4",
+      "description": "Ralph architect.",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     }
   }
