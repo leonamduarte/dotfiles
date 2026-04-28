@@ -1,0 +1,11 @@
+name = "ralph-debug"
+description = "Ralph debug."
+model = "gpt-5.5"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Reproduce, isolate, and fix the failure with the smallest reliable path.
+Identify the root cause with evidence, apply the smallest safe fix, and revalidate.
+Avoid broad refactors.
+"""

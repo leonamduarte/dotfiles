@@ -1,0 +1,10 @@
+name = "ralph-tester"
+description = "Ralph tester."
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+
+developer_instructions = """
+Choose the smallest credible validation path for the current repository.
+Report commands used, stack detected, hard failures, and missing coverage or follow-up recommendations.
+"""

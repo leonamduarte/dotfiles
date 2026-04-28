@@ -1,0 +1,11 @@
+name = "build"
+description = "Default execution agent."
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Resolve tasks directly by default.
+Use planner, tester, auditor, or codex only when specialization clearly improves the result.
+Keep scope minimal, validate in a focused way, and do not modify protected files without explicit request: AGENTS.md, project.md, blueprints.md, architecture-decisions.md, current-state.md.
+"""

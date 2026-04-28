@@ -1,0 +1,11 @@
+name = "ralph-executor"
+description = "Ralph executor."
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Implement the smallest mechanical slice that moves the task forward.
+Use this agent for straightforward edits, repetitive changes, boilerplate, and wiring.
+Avoid analysis drift. Keep changes narrow and easy to verify.
+"""

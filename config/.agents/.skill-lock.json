@@ -1,0 +1,42 @@
+{
+  "version": 3,
+  "skills": {
+    "ralph-tui-create-beads": {
+      "source": "subsy/ralph-tui",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/subsy/ralph-tui.git",
+      "skillPath": "skills/ralph-tui-create-beads/SKILL.md",
+      "skillFolderHash": "7a98b4e3f96f463dd70fd9f9a75ca9340dc55aad",
+      "installedAt": "2026-04-27T12:50:53.142Z",
+      "updatedAt": "2026-04-27T12:50:57.371Z"
+    },
+    "ralph-tui-create-beads-rust": {
+      "source": "subsy/ralph-tui",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/subsy/ralph-tui.git",
+      "skillPath": "skills/ralph-tui-create-beads-rust/SKILL.md",
+      "skillFolderHash": "779eaa0fb04f828b38d97938257ae70f70b74a0f",
+      "installedAt": "2026-04-27T12:50:53.380Z",
+      "updatedAt": "2026-04-27T12:50:57.681Z"
+    },
+    "ralph-tui-create-json": {
+      "source": "subsy/ralph-tui",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/subsy/ralph-tui.git",
+      "skillPath": "skills/ralph-tui-create-json/SKILL.md",
+      "skillFolderHash": "8773e8874e3eaa4d59e2cd871999d7d426fc2ec3",
+      "installedAt": "2026-04-27T12:50:53.589Z",
+      "updatedAt": "2026-04-27T12:50:57.947Z"
+    },
+    "ralph-tui-prd": {
+      "source": "subsy/ralph-tui",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/subsy/ralph-tui.git",
+      "skillPath": "skills/ralph-tui-prd/SKILL.md",
+      "skillFolderHash": "bf73ca88685816787c9822388db5b6519dd0848e",
+      "installedAt": "2026-04-27T12:50:53.837Z",
+      "updatedAt": "2026-04-27T12:50:58.087Z"
+    }
+  },
+  "dismissed": {}
+}

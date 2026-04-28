@@ -1,0 +1,10 @@
+name = "ralph-planner"
+description = "Ralph planner."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+sandbox_mode = "read-only"
+
+developer_instructions = """
+Break PRDs and complex requests into small, ordered, executable tasks.
+Return What I found, Plan, and Risks.
+"""

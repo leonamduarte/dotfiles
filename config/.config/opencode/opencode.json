@@ -3,7 +3,7 @@
   "default_agent": "ralph",
   "agent": {
     "build": {
-      "description": "Default execution agent for general coding, local validation and heavier implementations when appropriate.",
+      "description": "Default execution agent.",
       "model": "openai/gpt-5.4",
       "prompt": "{file:./prompts/build.txt}",
       "steps": 120,
@@ -22,10 +22,10 @@
     },
 
     "router": {
-      "description": "Orquestrador principal para uso geral",
-      "model": "openai/gpt-5.5-fast",
+      "description": "Task router.",
+      "model": "openai/gpt-5.4-mini",
       "mode": "primary",
-      "prompt": "Você é um orquestrador. Classifique a tarefa e delegue ao subagente correto. Nunca execute diretamente se um subagente fizer melhor.",
+      "prompt": "Classify the task first and delegate to the best subagent. Never execute directly when a specialist fits.",
       "permission": {
         "task": {
           "*": "deny",
@@ -39,7 +39,7 @@
     },
 
     "ralph": {
-      "description": "Agente principal para Ralph Loop. Orquestra PRDs, JSONs complexos e builds longos.",
+      "description": "Ralph orchestrator.",
       "model": "openai/gpt-5.4",
       "mode": "primary",
       "prompt": "{file:./prompts/ralph.txt}",
@@ -63,86 +63,86 @@
     },
 
     "executor": {
-      "description": "Tarefas mecânicas e boilerplate",
-      "model": "openai/gpt-5.4-mini-fast",
+      "description": "Mechanical execution agent.",
+      "model": "openai/gpt-5.4-mini",
       "mode": "subagent"
     },
 
     "analista": {
-      "description": "Raciocínio médio e contexto longo",
-      "model": "openai/gpt-5.5-fast",
+      "description": "Refactor agent.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "debug": {
-      "description": "Debug complexo e problemas travados",
-      "model": "openai/gpt-5.5",
+      "description": "Debug agent.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "arquiteto": {
-      "description": "Planejamento arquitetural e decisões críticas",
-      "model": "openai/gpt-5.5",
+      "description": "Architecture agent.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "codex": {
-      "description": "Implementação crítica e revisão de código sensível",
+      "description": "Critical code agent.",
       "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "tester": {
-      "description": "Executa testes, lint e validação",
+      "description": "Tester agent.",
       "model": "openai/gpt-5.4-mini",
       "mode": "subagent"
     },
 
     "ralph-planner": {
-      "description": "Quebra PRDs em tarefas pequenas e ordenadas",
-      "model": "openai/gpt-5.5-fast",
+      "description": "Ralph planner.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "ralph-executor": {
-      "description": "Implementação rápida e incremental",
-      "model": "openai/gpt-5.4-fast",
+      "description": "Ralph executor.",
+      "model": "openai/gpt-5.4-mini",
       "mode": "subagent"
     },
 
     "ralph-analyst": {
-      "description": "Analisa impacto entre módulos e dependências",
-      "model": "openai/gpt-5.5-fast",
+      "description": "Ralph analyst.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "ralph-debug": {
-      "description": "Debug pesado para loop travado",
-      "model": "openai/gpt-5.5",
+      "description": "Ralph debug.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "ralph-tester": {
-      "description": "Validação automática e testes",
+      "description": "Ralph tester.",
       "model": "openai/gpt-5.4-mini",
       "mode": "subagent"
     },
 
     "ralph-reviewer": {
-      "description": "Revisão final de escopo, diff e regressões",
-      "model": "openai/gpt-5.5-fast",
+      "description": "Ralph reviewer.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "ralph-codex": {
-      "description": "Cirurgia crítica em código, refactors arriscados e bugs difíceis",
+      "description": "Ralph codex.",
       "model": "openai/gpt-5.4",
       "mode": "subagent"
     },
 
     "ralph-arquiteto": {
-      "description": "Decisões arquiteturais raras e críticas",
-      "model": "openai/gpt-5.5",
+      "description": "Ralph architect.",
+      "model": "openai/gpt-5.4",
       "mode": "subagent"
     }
   }

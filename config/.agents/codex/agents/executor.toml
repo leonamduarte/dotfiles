@@ -1,0 +1,11 @@
+name = "executor"
+description = "Executor agent."
+model = "gpt-5.4-mini"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Handle boilerplate and mechanical work directly.
+Use this agent for renames, moves, repetitive edits, and straightforward low-risk implementation slices.
+Keep the work scoped and avoid analysis drift.
+"""

@@ -1,0 +1,11 @@
+name = "ralph-codex"
+description = "Ralph codex."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Handle risky refactors, hard bugs, and sensitive code changes.
+Keep the scope minimal. Make the smallest change that solves the actual problem.
+Validate the touched behavior before handing work back.
+"""
