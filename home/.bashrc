@@ -61,36 +61,6 @@ export EDITOR=nvim
 export DOOMDIR="$HOME/.config/doom"
 export NODE_OPTIONS=--no-deprecation
 
-# Toolbox shortcuts
-alias dev='toolbox run -c dev'
-alias deventer='toolbox enter -c dev'
-alias devinstall='toolbox run -c dev sudo dnf install -y'
-alias devsearch='toolbox run -c dev dnf search'
-alias devop='toolbox run -c dev opencode'
-alias devnvim='toolbox run -c dev nvim'
-alias devemacs='toolbox run -c dev emacs'
-
-# Toolbox leo
-alias leo='toolbox run -c leo'
-alias leoenter='toolbox enter -c leo'
-alias leoinstall='toolbox run -c leo sudo dnf install -y'
-
-# Sandbox containers
-alias ralphbox='podman run --rm -it \
-  --name ralph-sandbox \
-  --user root \
-  --security-opt=no-new-privileges \
-  --cap-drop=ALL \
-  --pids-limit=512 \
-  --memory=4g \
-  --cpus=4 \
-  --tmpfs /tmp:rw,nosuid,nodev,size=2g \
-  --tmpfs /run:rw,nosuid,nodev,size=128m \
-  -v "$PWD:/workspace:rw,Z" \
-  -w /workspace \
-  docker.io/oven/bun:latest \
-  bash'
-
 # Editors
 alias v='nvim'
 alias vim='nvim'
@@ -103,11 +73,11 @@ alias nconf='nvim ~/.bashrc'
 alias src='source ~/.bashrc'
 
 # System helpers (mapped from pacman -> toolbox/dnf)
-alias update='toolbox run -c dev sudo dnf upgrade -y'
-alias install='toolbox run -c dev sudo dnf install -y'
-alias search='toolbox run -c dev dnf search'
-alias remove='toolbox run -c dev sudo dnf remove -y'
-alias cleanup='toolbox run -c dev sudo dnf autoremove -y'
+alias update='sudo pacman -Syu --noconfirm'
+alias install='sudo pacman -S --needed --noconfirm'
+alias search='pacman -Ss'
+alias remove='sudo pacman -Rns'
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 alias jctl='journalctl -p 3 -xb'
 
 # Navigation
@@ -167,5 +137,8 @@ if command -v zoxide >/dev/null 2>&1; then
   eval "$(zoxide init bash)"
   alias cd='z'
 fi
+
+# Homebrew (Linux)
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
 
 eval "$(starship init bash)"
