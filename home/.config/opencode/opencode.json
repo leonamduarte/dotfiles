@@ -48,6 +48,7 @@
       "model": "opencode-go/qwen3.5-plus",
       "mode": "primary",
       "prompt": "Classify the task first and delegate to the best subagent. Never execute directly when a specialist fits.",
+      "steps": 20,
       "permission": {
         "task": {
           "*": "deny",
