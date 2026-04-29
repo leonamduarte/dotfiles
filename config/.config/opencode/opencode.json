@@ -4,7 +4,7 @@
   "agent": {
     "build": {
       "description": "Default execution agent.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "prompt": "{file:./prompts/build.txt}",
       "steps": 120,
       "permission": {
@@ -20,12 +20,35 @@
         }
       }
     },
-
+    "leo": {
+      "description": "Assistente pessoal faz-tudo — apenas o Leonam usa.",
+      "model": "opencode-go/deepseek-v4-flash",
+      "mode": "primary",
+      "color": "#00d4aa",
+      "steps": 120,
+      "prompt": "Você é o assistente pessoal 'leo', exclusivo do Leonam.\n\nObjetivo:\n- Resolver qualquer tarefa que o Leonam pedir: codar, revisar, escrever, automatizar, pesquisar\n- Ser direto, prático e cuidadoso\n- Preferir mudanças pequenas e seguras\n- Explicar riscos e tradeoffs quando relevante\n\nRegras:\n- Não assuma requisitos — pergunte quando faltar contexto\n- Antes de alterar código, entenda o contexto primeiro\n- Com múltiplas opções corretas, prefira a mais simples\n- Mantenha compatibilidade e evite estragar o que funciona\n- Quando útil, esboce um plano curto antes de agir\n- Você tem permissão total: use bash, edite arquivos, crie branches, git commit, etc.",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "bash": "allow",
+        "task": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "lsp": "allow",
+        "skill": "allow",
+        "question": "allow",
+        "todowrite": "allow"
+      }
+    },
     "router": {
       "description": "Task router.",
-      "model": "openai/gpt-5.4-mini",
+      "model": "opencode-go/qwen3.5-plus",
       "mode": "primary",
       "prompt": "Classify the task first and delegate to the best subagent. Never execute directly when a specialist fits.",
+      "steps": 20,
       "permission": {
         "task": {
           "*": "deny",
@@ -40,7 +63,7 @@
 
     "ralph": {
       "description": "Ralph orchestrator.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "primary",
       "prompt": "{file:./prompts/ralph.txt}",
       "steps": 180,
@@ -64,85 +87,85 @@
 
     "executor": {
       "description": "Mechanical execution agent.",
-      "model": "openai/gpt-5.4-mini",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "analista": {
       "description": "Refactor agent.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "debug": {
       "description": "Debug agent.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "arquiteto": {
       "description": "Architecture agent.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "codex": {
       "description": "Critical code agent.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.3-codex",
       "mode": "subagent"
     },
 
     "tester": {
       "description": "Tester agent.",
-      "model": "openai/gpt-5.4-mini",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-planner": {
       "description": "Ralph planner.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-executor": {
       "description": "Ralph executor.",
-      "model": "openai/gpt-5.4-mini",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-analyst": {
       "description": "Ralph analyst.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-debug": {
       "description": "Ralph debug.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-tester": {
       "description": "Ralph tester.",
-      "model": "openai/gpt-5.4-mini",
+      "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
 
     "ralph-reviewer": {
       "description": "Ralph reviewer.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     },
 
     "ralph-codex": {
       "description": "Ralph codex.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.3-codex",
       "mode": "subagent"
     },
 
     "ralph-arquiteto": {
       "description": "Ralph architect.",
-      "model": "openai/gpt-5.4",
+      "model": "openai/gpt-5.5",
       "mode": "subagent"
     }
   }
