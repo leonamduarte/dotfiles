@@ -1,6 +1,6 @@
 ---
 name: mcp-bootstrap
-description: Configura MCP servers no repositório atual — suporta .agents/<tool>/mcp.toml (Codex/Gemini) e opencode.json (opencode)
+description: Configura MCP servers (Codex, Gemini, OpenCode) no repositório atual.
 ---
 
 ## Objetivo
