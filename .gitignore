@@ -66,3 +66,13 @@ home/.config/opencode/node_modules/
 # ============================================================
 
 AGENTS.md
+
+# ============================================================
+# Ralph TUI (ferramenta de desenvolvimento)
+# ============================================================
+
+.ralph-tui/
+tasks/
+prd.json
+PLANO-RALPH-TUI.md
+*.ralph-tui.log
