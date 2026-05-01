@@ -13,30 +13,58 @@ keybindings/
 
 ## ⌨️ Keybindings Principais
 
-### Prefix Style (similar ao TMUX Ctrl+b)
+Use **Ctrl+Alt** para ações de panes/janelas Kitty e **Ctrl+Shift** para ações de tabs.
+Em Kitty, cada split/pane é uma `window` dentro da tab atual.
 
-Use **Ctrl+Alt** como tecla modificadora principal:
+### Panes / Janelas Kitty
 
 | Atalho | Ação | Equivalente TMUX |
 |--------|------|------------------|
-| `Ctrl+Alt+Enter` | Nova janela | `prefix + c` |
-| `Ctrl+Alt+5` | Split vertical | `prefix + %` |
-| `Ctrl+Alt+-` | Split horizontal | `prefix + "` |
-| `Ctrl+Alt+←/→/↑/↓` | Navegar entre panes | `prefix + setas` |
-| `Ctrl+Alt+h/j/k/l` | Navegar (vim-style) | - |
-| `Ctrl+Alt+w` | Fechar janela | `prefix + x` |
+| `Ctrl+Shift+Enter` | Nova pane/janela no diretório atual | `prefix + c` |
+| `Ctrl+Alt+5` | Criar split horizontal (`hsplit`) | `prefix + %` |
+| `Ctrl+Alt+-` | Criar split vertical (`vsplit`) | `prefix + "` |
+| `Ctrl+Alt+←/→/↑/↓` | Focar pane à esquerda/direita/acima/abaixo | `prefix + setas` |
+| `Ctrl+Alt+h/j/k/l` | Focar pane usando navegação Vim | `prefix + h/j/k/l` |
+| `Ctrl+Alt+.` | Próxima pane na tab atual | `prefix + o` |
+| `Ctrl+Alt+,` | Pane anterior na tab atual | `prefix + ;` |
+| `Ctrl+Alt+1..9` | Selecionar pane por índice | `prefix + q`, depois índice |
+| `Ctrl+Alt+p` | Alternar para a última pane ativa | `prefix + ;` |
+| `Ctrl+Alt+w` / `Ctrl+Alt+q` | Fechar pane atual | `prefix + x` |
 | `Ctrl+Alt+Space` | Ciclar layout | `prefix + Space` |
-| `Ctrl+Alt+z` | Maximizar/zoom | `prefix + z` |
+| `Ctrl+Alt+z` | Maximizar/restaurar pane | `prefix + z` |
+| `Ctrl+Alt+o` | Mover pane para a próxima tab | `prefix + !` |
 
-### Navegação de Tabs
+### Tabs
 
-| Atalho | Ação |
-|--------|------|
-| `Ctrl+Shift+←/→` | Tab anterior/próxima |
-| `Ctrl+Shift+h/l` | Tab anterior/próxima (vim-style) |
-| `Ctrl+Shift+1-9` | Ir para tab 1-9 |
-| `Ctrl+Shift+p` | Alternar última tab |
-| `Ctrl+Shift+t` | Renomear tab |
+| Atalho | Ação | Equivalente TMUX |
+|--------|------|------------------|
+| `Ctrl+Alt+Enter` | Nova tab no diretório atual | `prefix + c` em nova janela/sessão |
+| `Ctrl+Shift+←` / `Ctrl+Shift+→` | Tab anterior/próxima | `prefix + p` / `prefix + n` |
+| `Ctrl+Shift+h` / `Ctrl+Shift+l` | Tab anterior/próxima usando navegação Vim | `prefix + p` / `prefix + n` |
+| `Ctrl+Shift+1..9` | Ir para tab 1-9 | `prefix + 1..9` |
+| `Ctrl+Shift+p` | Alternar entre a tab atual e a última ativa | `prefix + l` |
+| `Ctrl+Shift+t` | Renomear tab atual | `prefix + ,` |
+| `Ctrl+Shift+w` | Fechar tab atual | `prefix + &` |
+
+### Exemplos de Uso
+
+```text
+# Criar um layout com editor e servidor lado a lado
+Ctrl+Shift+Enter        # abre uma nova pane no diretório atual
+Ctrl+Alt+5              # cria um split horizontal
+Ctrl+Alt+h/l            # alterna o foco entre as panes
+
+# Trabalhar com múltiplas tabs de projeto
+Ctrl+Alt+Enter          # abre uma nova tab
+Ctrl+Shift+t            # renomeia a tab, por exemplo: api
+Ctrl+Shift+1..9         # pula diretamente para uma tab numerada
+Ctrl+Shift+p            # volta rapidamente para a última tab ativa
+
+# Navegar panes sem lembrar a posição exata
+Ctrl+Alt+.              # próxima pane
+Ctrl+Alt+,              # pane anterior
+Ctrl+Alt+p              # última pane ativa
+```
 
 ### Scrollback e Seleção
 
@@ -45,7 +73,7 @@ Use **Ctrl+Alt** como tecla modificadora principal:
 | `Ctrl+Shift+s` | Iniciar seleção |
 | `Ctrl+Shift+c` | Copiar seleção |
 | `Ctrl+Shift+v` | Colar |
-| `Ctrl+Shift+l` | Selecionar linha |
+| `Ctrl+Alt+Shift+l` | Selecionar linha |
 | `Ctrl+Shift+w` | Selecionar palavra |
 | `Ctrl+Shift+o` | Abrir URL (hints) |
 | `Ctrl+Shift+f` | Abrir path (hints) |
