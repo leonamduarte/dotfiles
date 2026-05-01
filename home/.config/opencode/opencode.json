@@ -1,12 +1,12 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": ["opencode-runtime-fallback"],
   "default_agent": "ralph",
   "agent": {
     "build": {
       "description": "Default execution agent.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode-go/deepseek-v4-pro",
       "prompt": "{file:./prompts/build.txt}",
-      "steps": 120,
       "permission": {
         "edit": "allow",
         "bash": "allow",
@@ -45,10 +45,15 @@
     },
     "router": {
       "description": "Task router.",
-      "model": "opencode-go/qwen3.5-plus",
+      "model": "openai/gpt-5.1-codex",
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/kimi-k2.6",
+        "opencode-go/deepseek-v4-flash"
+      ],
       "mode": "primary",
-      "prompt": "Classify the task first and delegate to the best subagent. Never execute directly when a specialist fits.",
-      "steps": 20,
+      "prompt": "Classifique a tarefa primeiro e delegue ao agente correto. Nunca execute diretamente quando um especialista for a melhor escolha.",
+      "steps": 10,
       "permission": {
         "task": {
           "*": "deny",
@@ -60,10 +65,14 @@
         }
       }
     },
-
     "ralph": {
       "description": "Ralph orchestrator.",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.1-codex",
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/kimi-k2.6",
+        "opencode-go/deepseek-v4-flash"
+      ],
       "mode": "primary",
       "prompt": "{file:./prompts/ralph.txt}",
       "steps": 180,
@@ -84,88 +93,84 @@
         }
       }
     },
-
     "executor": {
       "description": "Mechanical execution agent.",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
-
     "analista": {
       "description": "Refactor agent.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode-go/kimi-k2.6",
       "mode": "subagent"
     },
-
     "debug": {
       "description": "Debug agent.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode-go/kimi-k2.6",
       "mode": "subagent"
     },
-
     "arquiteto": {
       "description": "Architecture agent.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode/big-pickle",
       "mode": "subagent"
     },
-
     "codex": {
       "description": "Critical code agent.",
-      "model": "openai/gpt-5.3-codex",
+      "model": "opencode-go/deepseek-v4-pro",
       "mode": "subagent"
     },
-
     "tester": {
       "description": "Tester agent.",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
-
     "ralph-planner": {
       "description": "Ralph planner.",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.1-codex",
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/kimi-k2.6",
+        "opencode-go/deepseek-v4-flash"
+      ],
       "mode": "subagent"
     },
-
     "ralph-executor": {
       "description": "Ralph executor.",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
-
     "ralph-analyst": {
       "description": "Ralph analyst.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode-go/kimi-k2.6",
       "mode": "subagent"
     },
-
     "ralph-debug": {
       "description": "Ralph debug.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode-go/kimi-k2.6",
       "mode": "subagent"
     },
-
     "ralph-tester": {
       "description": "Ralph tester.",
       "model": "opencode-go/deepseek-v4-flash",
       "mode": "subagent"
     },
-
     "ralph-reviewer": {
       "description": "Ralph reviewer.",
-      "model": "openai/gpt-5.5",
+      "model": "openai/gpt-5.1-codex",
+      "fallback_models": [
+        "opencode-go/deepseek-v4-pro",
+        "opencode-go/kimi-k2.6",
+        "opencode-go/deepseek-v4-flash"
+      ],
       "mode": "subagent"
     },
-
     "ralph-codex": {
       "description": "Ralph codex.",
-      "model": "openai/gpt-5.3-codex",
+      "model": "opencode-go/deepseek-v4-pro",
       "mode": "subagent"
     },
-
     "ralph-arquiteto": {
       "description": "Ralph architect.",
-      "model": "openai/gpt-5.5",
+      "model": "opencode/big-pickle",
       "mode": "subagent"
     }
   }

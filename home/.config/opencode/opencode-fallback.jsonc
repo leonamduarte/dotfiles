@@ -1,0 +1,26 @@
+{
+  // Master switch
+  "enabled": true,
+
+  // HTTP codes que disparam fallback
+  "retry_on_errors": [429, 500, 502, 503, 504],
+
+  // Máximo de tentativas na chain
+  "max_fallback_attempts": 5,
+
+  // Cooldown antes de tentar o modelo primário de novo
+  "cooldown_seconds": 60,
+
+  // Timeout de TTFT (segundos). Streaming ativo nunca é interrompido.
+  "timeout_seconds": 30,
+
+  // Mostrar toast quando trocar de modelo
+  "notify_on_fallback": true,
+
+  // Chain global — para agents que não definirem fallback_models próprios
+  "fallback_models": [
+    "opencode-go/deepseek-v4-pro",
+    "opencode-go/kimi-k2.6",
+    "opencode-go/deepseek-v4-flash"
+  ]
+}
