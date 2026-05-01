@@ -1,17 +1,16 @@
 # Font
 font-family = "GeistMono Nerd Font Mono"
 font-style = Regular
-font-size = 12
+font-size = 11
 
 # theme = Matte Black
-theme = Eldritch
+# theme = Doom One
+theme = TokyoNight Storm
 
 # Window
 window-theme = ghostty
-# window-padding-x = 14
-# window-padding-y = 14
-window-padding-x = 0
-window-padding-y = 0
+window-padding-x = 14
+window-padding-y = 14
 confirm-close-surface=false
 resize-overlay = never
 gtk-toolbar-style = flat
