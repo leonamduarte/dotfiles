@@ -5,12 +5,12 @@ TERM = "xterm-256color"
 import = ["~/.config/alacritty/themes/cyberdream.toml"]
 
 [font]
-normal = { family = "JetBrainsMono Nerd Font" }
-bold = { family = "JetBrainsMono Nerd Font" }
-italic = { family = "JetBrainsMono Nerd Font" }
-# normal = { family = "FiraCode Nerd Font" }
-# bold = { family = "FiraCode Nerd Font" }
-# italic = { family = "FiraCode Nerd Font" }
+normal = { family = "GeistMono Nerd Font Mono" }
+bold = { family = "GeistMono Nerd Font Mono" }
+italic = { family = "GeistMono Nerd Font Mono" }
+# normal = { family = "GeistMono Nerd Font Mono" }
+# bold = { family = "GeistMono Nerd Font Mono" }
+# italic = { family = "GeistMono Nerd Font Mono" }
 size = 11
 
 [window]
