@@ -20,6 +20,30 @@
         }
       }
     },
+    "tutor": {
+      "description": "Mentor técnico read-only que ensina sem implementar.",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "{file:./prompts/tutor.txt}",
+      "mode": "primary",
+      "color": "#f0c040",
+      "steps": 120,
+      "permission": {
+        "edit": "deny",
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "read": "allow",
+        "webfetch": "deny",
+        "bash": {
+          "*": "allow"
+        },
+        "task": "deny",
+        "skill": {
+          "*": "deny",
+          "tutor": "allow"
+        }
+      }
+    },
     "leo": {
       "description": "Assistente pessoal faz-tudo — apenas o Leonam usa.",
       "model": "opencode-go/deepseek-v4-flash",
