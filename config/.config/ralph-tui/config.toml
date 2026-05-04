@@ -1,0 +1,77 @@
+# Global Ralph TUI configuration (managed in dotfiles)
+# Deploys to ~/.config/ralph-tui/config.toml
+
+# ── Core settings ──
+defaultAgent = "general"
+tracker = "beads-bv"
+maxIterations = 20
+iterationDelay = 1000
+subagentTracingDetail = "moderate"
+
+# ── Agent profiles (plugin arrays) ──
+
+[[agents]]
+name = "general"
+plugin = "opencode"
+default = true
+
+  [agents.options]
+  provider = "openai"
+  model = "gpt-5.5"
+  agent = "general"
+  timeout = 120000
+
+[[agents]]
+name = "build"
+plugin = "opencode"
+
+  [agents.options]
+  provider = "openai"
+  model = "gpt-5.5"
+  agent = "build"
+  timeout = 120000
+
+[[agents]]
+name = "codex"
+plugin = "opencode"
+
+  [agents.options]
+  provider = "opencode-go"
+  model = "gpt-5.3-codex"
+  agent = "general"
+  timeout = 180000
+
+[[agents]]
+name = "fast"
+plugin = "opencode"
+
+  [agents.options]
+  provider = "opencode-go"
+  model = "deepseek-v4-flash"
+  agent = "general"
+  timeout = 60000
+
+# ── Error handling ──
+[errorHandling]
+strategy = "skip"
+maxRetries = 3
+retryDelayMs = 5000
+continueOnNonZeroExit = false
+
+# ── Rate limit handling ──
+[rateLimitHandling]
+enabled = true
+maxRetries = 3
+baseBackoffMs = 5000
+recoverPrimaryBetweenIterations = true
+
+# ── Notifications ──
+[notifications]
+enabled = true
+sound = "off"
+
+# ── Parallel execution ──
+[parallel]
+mode = "never"
+maxWorkers = 3
+worktreeDir = ".ralph-tui/worktrees"
