@@ -2,8 +2,9 @@
 # SEGURANÇA CRÍTICA - NUNCA rastrear dados sensíveis
 # ============================================================
 
-*.md
+/*.md
 !README.md
+!home/.agents/skills/**/*.md
 
 # Credenciais e chaves
 *.pem
@@ -42,14 +43,14 @@
 # ============================================================
 
 *~
-.*.swp
-.*.swo
 *.pyc
 *.pyo
 __pycache__/
 node_modules/
 *.bak
 *Zone.Identifier*
+.DS_Store
+Thumbs.db
 
 # Neovim / Vim
 *.swp
