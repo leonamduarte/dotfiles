@@ -35,8 +35,6 @@
 !.gitignore
 !home/
 !justfile
-!.ralph-tui/
-!.ralph-tui/**
 
 # ============================================================
 # Lixo e caches
