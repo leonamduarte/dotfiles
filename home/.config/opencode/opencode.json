@@ -3,8 +3,6 @@
   "default_agent": "build",
   "agent": {
     "build": {
-      "description": "Default execution agent.",
-      "prompt": "{file:./prompts/build.txt}",
       "permission": {
         "edit": "allow",
         "bash": "allow",
