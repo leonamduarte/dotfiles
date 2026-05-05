@@ -24,7 +24,9 @@
 set -euo pipefail
 
 # --- Configuração -----------------------------------------------------------
-REPO_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+# REPO_ROOT é o diretório onde o usuário está (projeto alvo)
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || echo "$(pwd)")"
+# OPENCODE_CONFIG_DIR é onde o script está instalado (prompts/ vive junto)
 OPENCODE_CONFIG_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PROMPTS_DIR="${OPENCODE_CONFIG_DIR}/prompts"
 AI_DIR="${REPO_ROOT}/.ai"
@@ -188,64 +190,36 @@ run_once() {
     if [ "$dry_run" = "true" ]; then
         echo ""
         echo "[DRY-RUN] Comando que seria executado:"
-        echo "  opencode --prompt \"${prompt_path}\""
+        echo "  opencode run --agent build < \"${prompt_path}\""
         echo ""
         echo "[DRY-RUN] Log seria salvo em: ${logfile}"
-        echo "[DRY-RUN] Iteração após execução: $((ITERATION + 1))"
         exit 0
     fi
 
-    # --- FASE 1: Análise (planner/auditor) ---
+    # --- Execução: opencode run (headless, não interativo) ---
+    # Lê o conteúdo do prompt e passa como mensagem para opencode run.
+    # O prompt define TODO o workflow: encontrar, corrigir, testar, validar,
+    # usando skills carregadas via `skill <nome>`. O script só aguarda o exit code.
+    # Usa --agent build para garantir permissões de edição quando necessário.
     echo ""
-    echo "--- Fase 1: Análise ---"
+    echo "--- Executando: ${loop} ---"
     if command -v opencode &>/dev/null; then
-        opencode --prompt "${prompt_path}" 2>&1 | tee "${logfile}"
-        local ANALYSIS_EXIT=$?
+        local prompt_content
+        prompt_content=$(cat "${prompt_path}")
+        opencode run --agent build "${prompt_content}" 2>&1 | tee "${logfile}"
+        local OPENCODE_EXIT=$?
     else
-        echo "⚠️  opencode CLI não encontrado. Simulando análise..."
-        echo "opencode --prompt ${prompt_path}" > "${logfile}"
-        local ANALYSIS_EXIT=0
-    fi
-
-    if [ $ANALYSIS_EXIT -ne 0 ]; then
-        echo ""
-        echo "❌ Fase 1 (Análise) falhou com código ${ANALYSIS_EXIT}."
-        save_state "$loop" "$ITERATION" "analysis-failed" "$logfile" "$CONSECUTIVE_EMPTY"
-        exit $ANALYSIS_EXIT
-    fi
-
-    # --- FASE 2: Execução de correções (build) ---
-    echo ""
-    echo "--- Fase 2: Correção ---"
-    # (O prompt de análise já pode ter gerado correções;
-    #  esta fase executa OpenCode no modo build para aplicar)
-
-    # --- FASE 3: Validação (tester) ---
-    echo ""
-    echo "--- Fase 3: Validação ---"
-    if command -v opencode &>/dev/null; then
-        opencode --command "/test" 2>&1 | tee -a "${logfile}"
-        local TEST_EXIT=$?
-    else
-        echo "⚠️  opencode CLI não encontrado. Pulando validação."
-        local TEST_EXIT=0
-    fi
-
-    # --- FASE 4: Revisão de qualidade (auditor) ---
-    echo ""
-    echo "--- Fase 4: Revisão de qualidade ---"
-    if command -v opencode &>/dev/null && [ $TEST_EXIT -eq 0 ]; then
-        opencode --command "/audit" 2>&1 | tee -a "${logfile}"
-        local AUDIT_EXIT=$?
-    else
-        echo "⚠️  Pulando revisão (validação falhou ou opencode não encontrado)."
-        local AUDIT_EXIT=$TEST_EXIT
+        echo "⚠️  opencode CLI não encontrado. Simulando..."
+        echo "opencode run --agent build < \"${prompt_path}\"" > "${logfile}"
+        local OPENCODE_EXIT=0
     fi
 
     # --- Determinar status ---
     local status="passed"
     local new_consecutive=$CONSECUTIVE_EMPTY
-    if [ $TEST_EXIT -ne 0 ] || [ $AUDIT_EXIT -ne 0 ]; then
+    if [ $OPENCODE_EXIT -ne 0 ]; then
+        echo ""
+        echo "❌ Iteração ${ITERATION} falhou (exit code ${OPENCODE_EXIT})."
         status="failed"
         new_consecutive=0
     else
@@ -328,7 +302,7 @@ run_loop() {
 }
 
 run_timed() {
-    local loop="$1" duration="$2"
+    local loop="$1" duration="$2" dry_run="${3:-false}"
 
     validate_loop_name "$loop"
     if ! validate_duration "$duration"; then
@@ -375,7 +349,7 @@ run_timed() {
         local remaining_sec=$(( remaining % 60 ))
         echo -e "⏱️  Tempo restante: ${remaining_min}m${remaining_sec}s\n"
 
-        run_once "$loop"
+        run_once "$loop" "$dry_run"
 
         load_state
         if [ "$LAST_STATUS" = "auto-stopped-clean" ]; then
@@ -423,7 +397,7 @@ cmd_cron_install() {
         *)        cron_expr="0 * * * *" ;;
     esac
 
-    local cron_job="${cron_expr} cd ${REPO_ROOT} && bash ${script_path} once ${loop} ${max} >> ${AI_DIR}/runs/cron-${loop}.log 2>&1"
+    local cron_job="${cron_expr} cd ${REPO_ROOT} && bash ${script_path} once ${loop} >> ${AI_DIR}/runs/cron-${loop}.log 2>&1"
 
     # Verificar se já existe
     if crontab -l 2>/dev/null | grep -q "ai-loop.*${loop}"; then
@@ -502,11 +476,11 @@ case "$MODE" in
         run_loop "$LOOP_NAME" "$INTERVAL"
         ;;
     timed)
-        run_timed "${LOOP_NAME:-interactive-improve}" "${INTERVAL:-30m}"
+        run_timed "${LOOP_NAME:-interactive-improve}" "${INTERVAL:-30m}" "${DRY_RUN:-false}"
         ;;
     improve)
         # Atalho: timed + interactive-improve
-        run_timed "interactive-improve" "${LOOP_NAME:-30m}"
+        run_timed "interactive-improve" "${LOOP_NAME:-30m}" "${DRY_RUN:-false}"
         ;;
     cron-install)
         cmd_cron_install "$LOOP_NAME" "$INTERVAL" "$MAX_ITERATIONS"
