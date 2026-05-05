@@ -29,10 +29,13 @@
 # ignores do Stow
 # ============================================================
 
-# Ignora tudo exceto o pacote 'home'
+# Ignora tudo exceto o pacote 'home' e arquivos de config do repositório
 /*
 !.gitignore
 !home/
+!justfile
+!.ralph-tui/
+!.ralph-tui/**
 
 # ============================================================
 # Lixo e caches
@@ -59,7 +62,10 @@ undo/
 .elc
 .projectile
 
-# Ignore opencode generated files
+# Ignore opencode generated and temporary files
 home/.config/opencode/.codex*
 home/.config/opencode/*.log
 home/.config/opencode/node_modules/
+
+# But track opencode commands (custom .md files)
+!home/.config/opencode/commands/*.md

@@ -142,3 +142,18 @@ fi
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv bash)"
 
 eval "$(starship init bash)"
+
+# ------------------------------------------------------------------
+# AI Loop aliases
+# ------------------------------------------------------------------
+alias ai-bug='bash ~/.config/opencode/scripts/ai-loop.sh once linear-bug-finding'
+alias ai-sec='bash ~/.config/opencode/scripts/ai-loop.sh once security-review'
+alias ai-deps='bash ~/.config/opencode/scripts/ai-loop.sh once dependency-audit'
+alias ai-qa='bash ~/.config/opencode/scripts/ai-loop.sh once qa-review'
+alias ai-loop='bash ~/.config/opencode/scripts/ai-loop.sh loop'
+alias ai-status='bash ~/.config/opencode/scripts/ai-loop.sh status'
+alias ai-dry='DRY_RUN=true bash ~/.config/opencode/scripts/ai-loop.sh once'
+alias ai-cron='bash ~/.config/opencode/scripts/ai-loop.sh cron-install'
+alias ai-cron-rm='bash ~/.config/opencode/scripts/ai-loop.sh cron-remove'
+alias ai-improve='bash ~/.config/opencode/scripts/ai-loop.sh improve'
+alias ai-timed='bash ~/.config/opencode/scripts/ai-loop.sh timed'
