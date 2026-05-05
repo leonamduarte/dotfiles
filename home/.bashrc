@@ -157,3 +157,8 @@ alias ai-cron='bash ~/.config/opencode/scripts/ai-loop.sh cron-install'
 alias ai-cron-rm='bash ~/.config/opencode/scripts/ai-loop.sh cron-remove'
 alias ai-improve='bash ~/.config/opencode/scripts/ai-loop.sh improve'
 alias ai-timed='bash ~/.config/opencode/scripts/ai-loop.sh timed'
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+PATH="$HOME/.local/bin:$PATH"
