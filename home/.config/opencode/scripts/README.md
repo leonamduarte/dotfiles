@@ -36,7 +36,8 @@ chmod +x ~/.config/opencode/scripts/ai-loop.sh
 ## Modos de execução
 
 | Modo | Descrição |
-|---|---|
+|---|---|---|
+| `-p <text\|@file>` | **Flag global:** usa texto inline ou arquivo como prompt (remove `@` para caminho) |
 | `once <loop>` | Executa uma iteração e para |
 | `once-dry <loop>` | Mostra o que faria sem executar |
 | `loop <loop> <interval>` | Loop contínuo com pausa entre iterações |
@@ -101,6 +102,26 @@ Este loop é diferente dos outros — ele **edita o código** e usa as skills do
 3. Carrega skill → testa e valida
 4. Faz commit descritivo
 5. Repete até o tempo acabar ou não haver mais melhorias
+
+## Flag global -p / --prompt
+
+A flag `-p` ou `--prompt` pode ser usada **antes do modo** para substituir o prompt padrão do loop por um texto inline ou arquivo customizado.
+
+**Uso:** `-p "texto inline"` ou `-p ./caminho/arquivo.txt` ou `-p @arquivo.txt`
+
+Funciona com: `once`, `loop`, `timed`, `improve`.
+
+```bash
+# Prompt inline
+bash ai-loop.sh -p "Analise este código e reporte TODOs" once interactive-improve
+
+# Prompt de arquivo (com ou sem @)
+bash ai-loop.sh -p @prompts/loop-qa-review.txt once qa-review
+bash ai-loop.sh -p ./prompts/loop-qa-review.txt once qa-review
+
+# Timed com prompt customizado
+bash ai-loop.sh -p "Melhore a cobertura de testes" improve 10m
+```
 
 ## Como usar
 

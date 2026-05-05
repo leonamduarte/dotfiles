@@ -3,13 +3,19 @@
 # AI Loop System — OpenCode Agent Loop Runner
 # ============================================================================
 # Uso:
+#   bash ai-loop.sh -p <text|@file> once <loop-name>              # Execução única com prompt customizado
 #   bash ai-loop.sh once <loop-name>              # Execução única
+#   bash ai-loop.sh -p <text|@file> loop <loop-name> <interval>   # Loop contínuo com prompt customizado
 #   bash ai-loop.sh loop <loop-name> <interval>   # Loop contínuo
 #   bash ai-loop.sh timed <duration>              # Loop por tempo total
+#   bash ai-loop.sh -p <text|@file> improve [duration]            # Melhoria com prompt customizado
 #   bash ai-loop.sh improve [duration]            # Atalho: timed + interactive-improve
 #   bash ai-loop.sh cron-install <loop-name> <interval> [max]
 #   bash ai-loop.sh cron-remove <loop-name>
 #   bash ai-loop.sh status                        # Mostra estado atual
+#
+# Opções globais:
+#   -p, --prompt <texto|@arquivo>  Usa texto inline ou arquivo como prompt (remove @ para caminho)
 #
 # Loop names:
 #   linear-bug-finding  — caça de bugs no diff (read-only)
@@ -164,8 +170,29 @@ run_once() {
 
     load_state
 
-    local prompt_path
-    prompt_path=$(get_prompt_path "$loop")
+    # Resolve prompt: PROMPT_OVERRIDE (if set) can be:
+    # - a path to a file (optionally prefixed with @), or
+    # - inline text to be used as the prompt.
+    local prompt_path prompt_content prompt_source override
+    if [ -n "${PROMPT_OVERRIDE:-}" ]; then
+        override="${PROMPT_OVERRIDE}"
+        # Support -p @file as well as -p ./prompts/x.txt
+        if [[ "$override" == @* ]]; then
+            override="${override#@}"
+        fi
+        if [ -f "$override" ]; then
+            prompt_path="$override"
+            prompt_content="$(cat "$override")"
+            prompt_source="file:$override"
+        else
+            prompt_content="$PROMPT_OVERRIDE"
+            prompt_source="inline"
+        fi
+    else
+        prompt_path=$(get_prompt_path "$loop")
+        prompt_content="$(cat "${prompt_path}")"
+        prompt_source="file:${prompt_path}"
+    fi
 
     # Limite de iterações
     if [ "$ITERATION" -gt "$MAX_ITERATIONS" ]; then
@@ -190,7 +217,11 @@ run_once() {
     if [ "$dry_run" = "true" ]; then
         echo ""
         echo "[DRY-RUN] Comando que seria executado:"
-        echo "  opencode run --agent build < \"${prompt_path}\""
+        if [[ "${prompt_source}" == file:* ]]; then
+            echo "  opencode run --agent build < \"${prompt_path}\""
+        else
+            echo "  opencode run --agent build '${prompt_content}'"
+        fi
         echo ""
         echo "[DRY-RUN] Log seria salvo em: ${logfile}"
         exit 0
@@ -204,13 +235,15 @@ run_once() {
     echo ""
     echo "--- Executando: ${loop} ---"
     if command -v opencode &>/dev/null; then
-        local prompt_content
-        prompt_content=$(cat "${prompt_path}")
         opencode run --agent build "${prompt_content}" 2>&1 | tee "${logfile}"
         local OPENCODE_EXIT=$?
     else
         echo "⚠️  opencode CLI não encontrado. Simulando..."
-        echo "opencode run --agent build < \"${prompt_path}\"" > "${logfile}"
+        if [[ "${prompt_source}" == file:* ]]; then
+            echo "opencode run --agent build < \"${prompt_path}\"" > "${logfile}"
+        else
+            echo "opencode run --agent build '${prompt_content}'" > "${logfile}"
+        fi
         local OPENCODE_EXIT=0
     fi
 
@@ -452,6 +485,36 @@ cmd_status() {
 }
 
 # --- Main -------------------------------------------------------------------
+
+# Parse global options (must stay before positional MODE parsing).
+# -p|--prompt <text|path> : override the prompt used by opencode (inline text or path to file)
+PROMPT_OVERRIDE=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -p|--prompt)
+            if [ -n "${2:-}" ]; then
+                PROMPT_OVERRIDE="$2"
+                shift 2
+            else
+                echo "ERRO: uso: -p|--prompt <texto-ou-caminho>"
+                exit 1
+            fi
+            ;;
+        --prompt=*)
+            PROMPT_OVERRIDE="${1#*=}"
+            shift
+            ;;
+        --) shift; break ;;
+        -h|--help)
+            print_usage
+            ;;
+        -*)
+            echo "ERRO: opção desconhecida: $1"
+            print_usage
+            ;;
+        *) break ;;
+    esac
+done
 
 MODE="${1:-help}"
 LOOP_NAME="${2:-}"
