@@ -24,7 +24,8 @@
 
 # Fish shell (contém dados sensíveis)
 .config/fish/conf.d/secrets.fish
-.config/fish/fish_variables
+home/.config/fish/fish_variables
+**/fish_variables
 
 # ============================================================
 # ignores do Stow
