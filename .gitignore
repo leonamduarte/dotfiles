@@ -69,3 +69,6 @@ home/.config/opencode/node_modules/
 
 # But track opencode commands (custom .md files)
 !home/.config/opencode/commands/*.md
+
+# Ignore local app caches and installed binaries
+home/.local/
