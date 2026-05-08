@@ -16,7 +16,7 @@ if status is-interactive
     fish_add_path $HOME/go/bin
     fish_add_path $HOME/.cargo/bin
     fish_add_path /usr/local/bin
-    fish_add_path /home/bashln/.npm-global/bin
+    fish_add_path $HOME/.npm-global/bin
 
     # Neovim manual (se existir, embora no Arch usemos o do repo geralmente)
     if test -d /opt/nvim-linux-x86_64/bin
@@ -167,6 +167,21 @@ if status is-interactive
     abbr --add cdc 'cd /mnt/c'
     abbr --add cdi 'cd /mnt/i'
 
+    abbr --add ralph 'distrobox enter ralph-loop'
+
+    # --- AI Loop ---
+    abbr --add ai-bug 'bash ~/.config/opencode/scripts/ai-loop.sh once linear-bug-finding'
+    abbr --add ai-sec 'bash ~/.config/opencode/scripts/ai-loop.sh once security-review'
+    abbr --add ai-deps 'bash ~/.config/opencode/scripts/ai-loop.sh once dependency-audit'
+    abbr --add ai-qa 'bash ~/.config/opencode/scripts/ai-loop.sh once qa-review'
+    abbr --add ai-loop 'bash ~/.config/opencode/scripts/ai-loop.sh loop'
+    abbr --add ai-status 'bash ~/.config/opencode/scripts/ai-loop.sh status'
+    abbr --add ai-dry 'DRY_RUN=true bash ~/.config/opencode/scripts/ai-loop.sh once'
+    abbr --add ai-cron 'bash ~/.config/opencode/scripts/ai-loop.sh cron-install'
+    abbr --add ai-cron-rm 'bash ~/.config/opencode/scripts/ai-loop.sh cron-remove'
+    abbr --add ai-improve 'bash ~/.config/opencode/scripts/ai-loop.sh improve'
+    abbr --add ai-timed 'bash ~/.config/opencode/scripts/ai-loop.sh timed'
+
     # ----------------------------------------------------------
     # 5) Funções
     # ----------------------------------------------------------
@@ -228,7 +243,20 @@ end
 # opencode
 fish_add_path $HOME/.opencode/bin
 
+<<<<<<<< HEAD:config/.config/fish/config.fish
 # Homebrew (guarded)
 if test -x /home/linuxbrew/.linuxbrew/bin/brew
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
 end
+========
+# Homebrew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv fish)"
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
+>>>>>>>> wsl-from-gl:home/.config/fish/config.fish

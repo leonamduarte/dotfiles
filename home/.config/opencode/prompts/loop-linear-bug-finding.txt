@@ -1,0 +1,43 @@
+Analyze bugs in the diff between current branch and base (main/master).
+
+SCOPE:
+- Compare current branch with main/master
+- Find logic bugs, regressions, unhandled edge cases, null pointers, race conditions, resource leaks
+- Report ONLY problems with objective evidence (code path, failing test, unhandled condition)
+
+RULES:
+- Do NOT edit files
+- Do NOT create files
+- Do NOT run destructive commands (rm, git push --force, etc)
+- Do NOT change opencode config
+- If problems found: describe each with file:line, severity, impact explanation
+- If NO problems found: report "No problems found" and stop
+
+PERMISSIONS:
+- Read: full
+- Bash: inspection only (git diff, git log, rg, find, cat)
+- Edit: NONE
+
+OUTPUT FORMAT:
+```
+## Results: bug-finding
+
+### Found: N problems
+
+1. [CRITICAL] file:line — problem description
+   Impact: what can happen
+   Evidence: code path or test
+
+2. [MAJOR] file:line — description
+
+### No problems found
+
+### Stats
+- Files analyzed: N
+- Problems found: N
+- Critical: N | Major: N | Minor: N
+```
+
+PERSISTENCE:
+- Save report to .ai/findings/ if critical issues found
+- Append summary to .ai/progress.md

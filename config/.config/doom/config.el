@@ -10,7 +10,11 @@
 (push "/home/bashln/go/bin" exec-path)
 
 ;; Fontes
+<<<<<<<< HEAD:config/.config/doom/config.el
 (let ((font-family (if (eq system-type 'windows-nt) "Maple Mono NF" "Maple Mono NF")))
+========
+(let ((font-family (if (eq system-type 'windows-nt) "Maple Mono NF" "GeistMono Nerd Font Mono")))
+>>>>>>>> wsl-from-gl:home/.config/doom/config.el
   (setq doom-font (font-spec :family font-family :size 15)
         doom-variable-pitch-font (font-spec :family font-family :size 15)))
 
@@ -711,10 +715,10 @@
 ;;       "C-l" #'evil-window-right)
 
 ;; Disable arrow keys in insert mode (force hjkl)
-(map! :n "<left>" (lambda () (interactive) (message "Use h"))
-      :n "<right>" (lambda () (interactive) (message "Use l"))
-      :n "<up>" (lambda () (interactive) (message "Use k"))
-      :n "<down>" (lambda () (interactive) (message "Use j")))
+;; (map! :n "<left>" (lambda () (interactive) (message "Use h"))
+;;       :n "<right>" (lambda () (interactive) (message "Use l"))
+;;       :n "<up>" (lambda () (interactive) (message "Use k"))
+;;       :n "<down>" (lambda () (interactive) (message "Use j")))
 
 ;; Auto-save improvements
 (setq auto-save-default t

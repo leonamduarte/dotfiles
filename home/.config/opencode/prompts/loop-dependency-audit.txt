@@ -1,0 +1,40 @@
+Audit all project dependencies for vulnerabilities and maintenance issues.
+
+SCOPE:
+- Check package.json, Cargo.toml, go.mod, requirements.txt, etc
+- Run native audit tools: npm audit, cargo audit, pip-audit, etc
+- Identify: outdated deps, deprecations, CVEs, restrictive licenses
+- Report ONLY confirmed problems with evidence
+
+RULES:
+- Do NOT edit files (not even package.json)
+- Do NOT create files
+- Do NOT change opencode config
+- Do NOT suggest updates without vulnerability or deprecation evidence
+
+PERMISSIONS:
+- Read: full
+- Bash: git, rg, find, cat, npm audit, cargo audit, pip-audit (if installed)
+- Edit: NONE
+
+OUTPUT FORMAT:
+```
+## Results: dependency-audit
+
+### Problems found: N
+
+1. [CRITICAL] package@version — type (CVE, deprecated, license)
+   File: path
+   Recommendation: safe version or alternative
+
+### No problems found
+
+### Stats
+- Package managers checked: npm, cargo, pip, go (whichever apply)
+- Dependencies analyzed: N
+- Problems: N | Critical: N | High: N | Medium: N | Low: N
+```
+
+PERSISTENCE:
+- Save to .ai/findings/ if critical issues found
+- Append summary to .ai/progress.md

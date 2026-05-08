@@ -1,0 +1,71 @@
+# ============================================================
+# SEGURANÇA CRÍTICA - NUNCA rastrear dados sensíveis
+# ============================================================
+
+/*.md
+!README.md
+!home/.agents/skills/**/*.md
+
+# Credenciais e chaves
+*.pem
+*.key
+*_rsa
+*_ed25519
+*id_rsa*
+*id_ed25519*
+*.ppk
+
+# Diretórios sensíveis
+.ssh/
+.gnupg/
+.password-store/
+.aws/
+.kube/
+
+# Fish shell (contém dados sensíveis)
+.config/fish/conf.d/secrets.fish
+home/.config/fish/fish_variables
+**/fish_variables
+
+# ============================================================
+# ignores do Stow
+# ============================================================
+
+# Ignora tudo exceto o pacote 'home' e arquivos de config do repositório
+/*
+!.gitignore
+!home/
+!justfile
+
+# ============================================================
+# Lixo e caches
+# ============================================================
+
+*~
+*.pyc
+*.pyo
+__pycache__/
+node_modules/
+*.bak
+*Zone.Identifier*
+.DS_Store
+Thumbs.db
+
+# Neovim / Vim
+*.swp
+*.swo
+undo/
+.netrw*
+
+# Doom Emacs / Emacs
+.dir-locals.el
+.elc
+.projectile
+
+# Ignore opencode generated and temporary files
+home/.config/opencode/.codex*
+home/.config/opencode/*.log
+home/.config/opencode/node_modules/
+
+# But track opencode commands (custom .md files)
+!home/.config/opencode/commands/*.md

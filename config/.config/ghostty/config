@@ -1,9 +1,14 @@
 # Font
+<<<<<<<< HEAD:config/.config/ghostty/config
 font-family = "FiraCode Nerd Font"
+========
+# font-family = "JetBrainsMono Nerd Font Mono"
+>>>>>>>> wsl-from-gl:home/.config/ghostty/config
 font-style = Regular
 font-size = 12
 
 # theme = Matte Black
+<<<<<<<< HEAD:config/.config/ghostty/config
 theme = Eldritch
 
 # Window
@@ -12,6 +17,17 @@ window-theme = ghostty
 # window-padding-y = 14
 window-padding-x = 0
 window-padding-y = 0
+========
+# theme = Doom One
+# theme = TokyoNight Storm
+config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
+
+
+# Window
+window-theme = ghostty
+window-padding-x = 14
+window-padding-y = 14
+>>>>>>>> wsl-from-gl:home/.config/ghostty/config
 confirm-close-surface=false
 resize-overlay = never
 gtk-toolbar-style = flat
