@@ -10,9 +10,40 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
 
-plugins=(git)
+plugins=(
+  git
+  zsh-autosuggestions
+  history-substring-search
+  zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
+
+# ------------------------------------------------------------------
+# Fish-like autosuggestions
+# ------------------------------------------------------------------
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+bindkey '^ ' autosuggest-accept   # Ctrl+Space aceita sugestão
+bindkey '^]' autosuggest-execute  # Ctrl+] executa sugestão diretamente
+
+# ------------------------------------------------------------------
+# Fish-like completion
+# ------------------------------------------------------------------
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' keep-prefix
+zstyle ':completion:*' recent-dirs-insert both
+
+# ------------------------------------------------------------------
+# Fish-like history search (up/down on partial match)
+# ------------------------------------------------------------------
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # ------------------------------------------------------------------
 # PATH
@@ -44,7 +75,7 @@ alias nconf='nvim ~/.zshrc'
 alias src='source ~/.zshrc'
 
 # System helpers (dnf)
-alias update='sudo dnf upgrade -y'
+alias update='sudo dnf upgrade -y; flatpak update -y; npm update -g; command -v fwupdmgr >/dev/null && fwupdmgr update -y; command -v rustup >/dev/null && rustup update'
 alias install='sudo dnf install -y'
 alias search='dnf search'
 alias remove='sudo dnf remove -y'

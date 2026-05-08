@@ -1,7 +1,7 @@
 #!/bin/bash
 # "Things To Do!" script for a fresh Fedora Workstation installation
 
-
+set -euo pipefail
 
 # Check if the script is run with sudo
 if [ "$EUID" -ne 0 ]; then
@@ -51,8 +51,7 @@ handle_error() {
 
 # Function to prompt for reboot
 prompt_reboot() {
-    sudo -u $ACTUAL_USER bash -c 'read -p "It is time to reboot the machine. Would you like to do it now? (y/n): " choice; [[ $choice == [yY] ]]'
-    if [ $? -eq 0 ]; then
+    if sudo -u $ACTUAL_USER bash -c 'read -p "It is time to reboot the machine. Would you like to do it now? (y/n): " choice; [[ $choice == [yY] ]]'; then
         color_echo "green" "Rebooting..."
         reboot
     else
@@ -68,6 +67,24 @@ backup_file() {
         handle_error "Failed to backup $file"
         color_echo "green" "Backed up $file"
     fi
+}
+
+# Function to fix ownership of user directories created as root
+fix_home_ownership() {
+    color_echo "yellow" "Fixing home directory ownership..."
+    local dirs=(
+        "$ACTUAL_HOME/.local"
+        "$ACTUAL_HOME/.config"
+        "$ACTUAL_HOME/.cache"
+        "$ACTUAL_HOME/.npm"
+        "$ACTUAL_HOME/.nvm"
+    )
+    for dir in "${dirs[@]}"; do
+        if [ -d "$dir" ]; then
+            chown -R "$ACTUAL_USER:$ACTUAL_USER" "$dir" 2>/dev/null || true
+        fi
+    done
+    color_echo "green" "Home directory ownership fixed."
 }
 
 echo "";
@@ -174,6 +191,46 @@ color_echo "yellow" "Installing Discord..."
 flatpak install -y flathub com.discordapp.Discord
 color_echo "green" "Discord installed successfully."
 
+# Install Development Tools
+color_echo "yellow" "Installing zoxide..."
+dnf install -y zoxide
+color_echo "green" "zoxide installed successfully."
+
+color_echo "yellow" "Installing neovim..."
+dnf install -y neovim
+color_echo "green" "neovim installed successfully."
+
+color_echo "yellow" "Installing lazygit..."
+dnf copr enable atim/lazygit -y
+dnf install -y lazygit
+color_echo "green" "lazygit installed successfully."
+
+color_echo "yellow" "Installing golang..."
+dnf install -y golang
+color_echo "green" "golang installed successfully."
+
+color_echo "yellow" "Installing nvm and Node.js..."
+sudo -u "$ACTUAL_USER" bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash'
+sudo -u "$ACTUAL_USER" bash -c 'source "$HOME/.nvm/nvm.sh" && nvm install --lts'
+color_echo "green" "nvm and Node.js installed successfully."
+
+# Install AI Coding CLIs
+color_echo "yellow" "Installing opencode..."
+sudo -u "$ACTUAL_USER" bash -c 'source "$HOME/.nvm/nvm.sh" && npm i -g opencode-ai@latest'
+color_echo "green" "opencode installed successfully."
+
+color_echo "yellow" "Installing gemini cli..."
+sudo -u "$ACTUAL_USER" bash -c 'source "$HOME/.nvm/nvm.sh" && npm i -g @google/gemini-cli'
+color_echo "green" "gemini cli installed successfully."
+
+color_echo "yellow" "Installing codex cli..."
+sudo -u "$ACTUAL_USER" bash -c 'source "$HOME/.nvm/nvm.sh" && npm i -g @openai/codex'
+color_echo "green" "codex cli installed successfully."
+
+color_echo "yellow" "Installing claude cli..."
+sudo -u "$ACTUAL_USER" bash -c 'curl -fsSL https://claude.ai/install.sh | bash'
+color_echo "green" "claude cli installed successfully."
+
 # Install Office Productivity applications
 color_echo "yellow" "Installing LibreOffice..."
 dnf remove -y libreoffice*
@@ -258,6 +315,7 @@ wget -O /tmp/google-fonts.zip https://github.com/google/fonts/archive/main.zip
 mkdir -p $ACTUAL_HOME/.local/share/fonts/google
 unzip /tmp/google-fonts.zip -d $ACTUAL_HOME/.local/share/fonts/google
 rm -f /tmp/google-fonts.zip
+chown -R "$ACTUAL_USER:$ACTUAL_USER" "$ACTUAL_HOME/.local/share/fonts/google"
 fc-cache -fv
 color_echo "green" "Google Fonts installed successfully."
 
@@ -267,14 +325,17 @@ mkdir -p $ACTUAL_HOME/.local/share/fonts/adobe-fonts
 git clone --depth 1 https://github.com/adobe-fonts/source-sans.git $ACTUAL_HOME/.local/share/fonts/adobe-fonts/source-sans
 git clone --depth 1 https://github.com/adobe-fonts/source-serif.git $ACTUAL_HOME/.local/share/fonts/adobe-fonts/source-serif
 git clone --depth 1 https://github.com/adobe-fonts/source-code-pro.git $ACTUAL_HOME/.local/share/fonts/adobe-fonts/source-code-pro
+chown -R "$ACTUAL_USER:$ACTUAL_USER" "$ACTUAL_HOME/.local/share/fonts/adobe-fonts"
 fc-cache -f
 color_echo "green" "Adobe Fonts installed successfully."
 
 
 # Custom user-defined commands
-# Custom user-defined commands
 echo "Created with ❤️ for Open Source"
 
+
+# Fix home directory ownership before finishing
+fix_home_ownership
 
 # Before finishing, ensure we're in a safe directory
 cd /tmp || cd $ACTUAL_HOME || cd /
