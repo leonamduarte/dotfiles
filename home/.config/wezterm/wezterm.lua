@@ -66,7 +66,8 @@ config.font = wezterm.font_with_fallback({
 })
 
 config.force_reverse_video_cursor = true
--- config.color_scheme = "Eldritch"
+config.color_scheme = "Eldritch"
+-- config.color_scheme = "Mirage"
 
 -- ===== Renderizacao =====
 config.enable_wayland = true
@@ -102,7 +103,7 @@ if wezterm.target_triple == "x86_64-pc-windows-msvc" then
 	config.initial_rows = 35
 	config.initial_cols = 120
 
-	config.window_background_image = nil
+	-- config.window_background_image = nil
 
 	local candidates = {
 		"C:\\Program Files\\Git\\usr\\bin\\bash.exe",
