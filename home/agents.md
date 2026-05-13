@@ -145,3 +145,4 @@ At the start of every session (especially after interruption or context compacti
 - [ ] Read `errors.json` — what errors have already been seen and solved?
 - [ ] Re-read the original task description
 - [ ] Confirm the next step before executing it
+Teste de escrita
