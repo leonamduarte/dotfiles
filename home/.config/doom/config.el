@@ -1,13 +1,24 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
-;; Shell & PATH
-(setq shell-file-name (executable-find "bash"))
-(setq-default vterm-shell "/bin/fish")
-(setq-default explicit-shell-file-name "/bin/fish")
+;; Shell & PATH (cross-platform: pwsh on Windows, bash/fish on Linux)
+(cond ((eq system-type 'windows-nt)
+       (let ((shell (or (executable-find "pwsh")
+                        (executable-find "powershell")
+                        "cmdproxy.exe")))
+         (setq shell-file-name shell)
+         (setq-default explicit-shell-file-name shell)
+         (setq-default vterm-shell shell)))
+      (t
+       (setq shell-file-name (or (executable-find "bash") "/bin/bash"))
+       (setq-default explicit-shell-file-name (or (executable-find "fish") (executable-find "bash") "/bin/bash"))
+       (setq-default vterm-shell (or (executable-find "fish") (executable-find "bash") "/bin/bash"))))
 
-;; Go tools PATH
-(setenv "PATH" (concat (or (getenv "HOME") "") "/go/bin:" (or (getenv "PATH") "")))
-(push "/home/bashln/go/bin" exec-path)
+;; Go tools PATH (cross-platform)
+(let* ((home (or (getenv "HOME") (getenv "USERPROFILE") ""))
+       (go-bin (expand-file-name "go/bin" home)))
+  (when (file-directory-p go-bin)
+    (setenv "PATH" (concat go-bin (path-separator) (or (getenv "PATH") "")))
+    (push go-bin exec-path)))
 
 ;; Fontes
 (let ((font-family (if (eq system-type 'windows-nt) "JetBrainsMono NF" "GeistMono Nerd Font Mono")))
@@ -69,10 +80,11 @@
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2))
 
-;; Treesitter Auto Install
+;; Treesitter Auto Install — baixa binários pré-compilados (sem precisar de cc/gcc)
 (use-package! treesit-auto
-  :commands (treesit-auto-mode)
-  :hook (prog-mode . treesit-auto-mode))
+  :config
+  (setq treesit-auto-install 'treesit-auto-install-remote)
+  (global-treesit-auto-mode))
 
 ;; FIX: Kotlin Tree-sitter Grammar — registra fonte e auto-instala se ausente
 (after! treesit
@@ -155,23 +167,7 @@
 ;; 4. LSP TUNING & BOOSTER
 ;; -------------------------------
 
-(defvar +lsp-ensure-typescript-h nil)
-(setq +lsp-ensure-typescript-h
-      (lambda ()
-        "Only start LSP if TypeScript is available in the project."
-        (or (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules/typescript")
-            (locate-dominating-file (or (buffer-file-name) default-directory) ".git"))))
-
-(defun +lsp-run-if-project-ready-a (old-fn &rest args)
-  "Run OLD-FN only when the current project is ready for LSP."
-  (when (funcall +lsp-ensure-typescript-h)
-    (apply old-fn args)))
-
 (after! lsp-mode
-  (when (and (fboundp 'lsp!)
-             (not (advice-member-p #'+lsp-run-if-project-ready-a 'lsp!)))
-    (advice-add 'lsp! :around #'+lsp-run-if-project-ready-a))
-
   (setq lsp-go-use-gofumpt t
         lsp-go-analyses '((nilness . t) (unusedparams . t) (unusedwrite . t))
         lsp-use-plists t
@@ -397,14 +393,6 @@
 (map! :v "<" (lambda () (interactive) (evil-shift-left (region-beginning) (region-end)) (evil-normal-state) (evil-visual-restore))
       :v ">" (lambda () (interactive) (evil-shift-right (region-beginning) (region-end)) (evil-normal-state) (evil-visual-restore)))
 
-;; Folding: Markdown headings navigation/folding (zj, zk, z;, zi)
-(after! markdown-mode
-  (map! :map markdown-mode-map
-        :nv "zj" #'markdown-next-visible-heading
-        :nv "zk" #'markdown-previous-visible-heading
-        :nv "z;" #'markdown-cycle
-        :nv "zi" #'markdown-cycle-global))
-
 ;; Harpoon (Quick file access)
 (use-package! harpoon
   :config
@@ -426,8 +414,6 @@
 ;; Popup Rules (Trouble-like Panel)
 (set-popup-rule! "^\\*Flycheck errors\\*$" :side 'bottom :size 0.25 :select nil :quit nil :ttl nil)
 
-(after! flycheck
-  (setq flycheck-global-modes nil))
 (map! :leader
       :desc "LSP Rename (Inc Rename)" "c r" #'lsp-rename)
 
@@ -487,8 +473,6 @@
 ;; -----------------------------
 ;; 10. MARKDOWN FOLDING (Neovim zj/zk/zl/zu/zi)
 ;; -----------------------------
-;; MARKDOWN FOLDING (Neovim zj/zk/zl/zu/zi)
-;; -----------------------------
 
 (defun +markdown-fold-level (level)
   "Fold all markdown headings of LEVEL or above."
@@ -546,21 +530,6 @@
 (add-hook 'Info-mode-hook #'+close-buffer-with-q)
 (add-hook 'flycheck-error-list-mode-hook #'+close-buffer-with-q)
 (add-hook 'compilation-mode-hook #'+close-buffer-with-q)
-
-;; Auto-format on save (LazyVim style)
-;; NOTA: org-mode não tem formatter nativo no Apheleia, então ignoramos
-(defun +leo/format-buffer-on-save-h ()
-  "Format the current buffer on save when it is cheap and safe to do so."
-  (when (and (fboundp '+format/buffer)
-             buffer-file-name
-             (not (memq major-mode '(org-mode)))
-             (not (+leo/windows-mounted-path-p buffer-file-name)))
-    (condition-case err
-        (+format/buffer)
-      (error
-       (message "[doom-format] %s: %s" major-mode (error-message-string err))))))
-
-(add-hook 'before-save-hook #'+leo/format-buffer-on-save-h)
 
 ;; Conceallevel para arquivos específicos
 (setq-hook! 'json-mode-hook conceal-level 0)
