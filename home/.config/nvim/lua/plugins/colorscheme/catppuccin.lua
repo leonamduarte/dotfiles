@@ -7,7 +7,7 @@ return {
       flavour = "macchiato",
       background = {
         light = "latte",
-        dark = "mocha",
+        dark = "macchiato",
       },
       transparent_background = false,
       float = {
