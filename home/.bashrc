@@ -13,6 +13,10 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
 fi
 export PATH
 
+# 7-Zip
+alias enc7z='7zz a -t7z -p -mhe=on'
+alias dec7z='7zz x -p'
+
 # User specific aliases and functions
 if [ -d ~/.bashrc.d ]; then
   for rc in ~/.bashrc.d/*; do
@@ -22,3 +26,5 @@ if [ -d ~/.bashrc.d ]; then
   done
 fi
 unset rc
+
+. "$HOME/.local/share/../bin/env"

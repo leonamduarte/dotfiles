@@ -75,7 +75,7 @@ alias nconf='nvim ~/.zshrc'
 alias src='source ~/.zshrc'
 
 # System helpers (dnf)
-alias update='sudo dnf upgrade -y; flatpak update -y; npm update -g; command -v fwupdmgr >/dev/null && fwupdmgr update -y; command -v rustup >/dev/null && rustup update'
+alias update='sudo dnf upgrade -y; flatpak update -y; npm update -g; command -v fwupdmgr >/dev/null && fwupdmgr update -y; command -v rustup >/dev/null && rustup update && npm -g update'
 alias install='sudo dnf install -y'
 alias search='dnf search'
 alias remove='sudo dnf remove -y'
@@ -105,6 +105,10 @@ alias untar='tar -zxvf '
 alias dotsize='du -sh .git && git count-objects -vH'
 alias cl='clear'
 alias ask='gemini'
+
+# 7-Zip
+alias enc7z='7zz a -t7z -p -mhe=on'
+alias dec7z='7zz x -p'
 
 # ------------------------------------------------------------------
 # Functions
@@ -140,12 +144,6 @@ doomupd() {
 # Initializations
 # ------------------------------------------------------------------
 
-# zoxide
-if command -v zoxide >/dev/null 2>&1; then
-  eval "$(zoxide init zsh)"
-  alias cd='z'
-fi
-
 # Homebrew (Linux)
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 
@@ -164,3 +162,11 @@ export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platfor
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# zoxide (kept last — zoxide recommends being at the end of the file)
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd='z'
+fi
+
+. "$HOME/.local/share/../bin/env"

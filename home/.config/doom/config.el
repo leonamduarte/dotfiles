@@ -10,9 +10,9 @@
 (push "/home/bashln/go/bin" exec-path)
 
 ;; Fontes
-(let ((font-family (if (eq system-type 'windows-nt) "Maple Mono NF" "GeistMono Nerd Font Mono")))
-  (setq doom-font (font-spec :family font-family :size 15)
-        doom-variable-pitch-font (font-spec :family font-family :size 15)))
+(let ((font-family (if (eq system-type 'windows-nt) "JetBrainsMono Nerd Font" "JetBrainsMono Nerd Font")))
+  (setq doom-font (font-spec :family font-family :size 14)
+        doom-variable-pitch-font (font-spec :family font-family :size 14)))
 
 ;; Tema
 ;; (setq doom-theme 'doom-rose-pine-moon)
